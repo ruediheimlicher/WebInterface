@@ -1,0 +1,24 @@
+//
+//  rWochenplan.h
+//  USBInterface
+//
+//  Created by Sysadmin on 05.06.08.
+//  Copyright 2008 Ruedi Heimlicher. All rights reserved.
+//
+
+#import <Cocoa/Cocoa.h>
+#import "rTagplan.h"
+
+@interface rWochenplan : NSView 
+{
+int Raum;
+int anzAktiv;
+
+NSMutableArray*		aktivObjektArray;
+NSMutableArray*		TagplanArray;
+}
+- (void)setTagplanVonObjekt:(int)dasObjekt;
+- (NSArray*)setWochenplanForRaum:(int)derRaum mitWochenplanArray:(NSArray*)derWochenplanArray;
+- (NSArray*)aktivArray;
+
+@end

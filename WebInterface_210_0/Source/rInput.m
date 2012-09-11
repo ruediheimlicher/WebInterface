@@ -198,7 +198,7 @@ NSLog(@"TrackIntf: isTracking: %d",isTracking);
 {
 
     [trackTimer invalidate];
-	NSLog(@"trackTimer retainCount: %d",[trackTimer retainCount]);
+	NSLog(@"trackTimer retainCount: %ld",[trackTimer retainCount]);
 	
     isTracking = YES;
 }

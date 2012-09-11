@@ -424,7 +424,7 @@ NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
 
 -(IBAction)SendTastenAktion:(id)sender
 {
-	NSLog(@"SendTastenAktion tag: %d",[sender tag]);
+	NSLog(@"SendTastenAktion tag: %ld",[sender tag]);
 	NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
 	PaketNummer=[[PaketNummerPop titleOfSelectedItem]intValue];
 	[NotificationDic setObject:[NSNumber numberWithInt:PaketNummer] forKey:@"paketnummer"];

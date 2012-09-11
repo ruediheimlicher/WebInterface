@@ -193,7 +193,7 @@ return [c uppercaseString];
 - (NSNumber*)NumberAusHex: (NSString*)derHexString
 {
 NSScanner *scanner;
-int tempInt;
+uint tempInt;
 scanner = [NSScanner scannerWithString:derHexString];
 [scanner scanHexInt:&tempInt];
 NSNumber* number = [NSNumber numberWithInt:tempInt];

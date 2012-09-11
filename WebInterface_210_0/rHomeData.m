@@ -267,7 +267,7 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 		NSURL *URL = [NSURL URLWithString:[ServerPfad stringByAppendingPathComponent:DataSuffix]];
 		//NSLog(@"DataVon 1");
 		
-		NSString* DataString=[NSString stringWithContentsOfURL:URL];
+		NSString* DataString=[NSString stringWithContentsOfURL:URL encoding:NSMacOSRomanStringEncoding error:NULL];
 		NSLog(@"DataVon... laden von URL: %@",URL);
 		//NSLog(@"DataVon... laden von URL: %@ DataString: %@",URL,DataString);
 		
@@ -390,7 +390,7 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 		//NSLog(@"Cache mem: %d",[[NSURLCache sharedURLCache]memoryCapacity]);
 		
 	
-		[[NSURLCache sharedURLCache] removeCachedResponseForRequest:lastTimeRequest];
+		//[[NSURLCache sharedURLCache] removeCachedResponseForRequest:lastTimeRequest];
 
 		NSError* syncErr=NULL;
 		NSData* lastTimeData=[ NSURLConnection sendSynchronousRequest:lastTimeRequest returningResponse: nil error: &syncErr ];
@@ -686,7 +686,7 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 		NSURL *URL = [NSURL URLWithString:[ServerPfad stringByAppendingPathComponent:SolarDataSuffix]];
 		//NSLog(@"DataVon 1");
 		
-		NSString* DataString=[NSString stringWithContentsOfURL:URL];
+		NSString* DataString=[NSString stringWithContentsOfURL:URL encoding:NSMacOSRomanStringEncoding error:NULL];
 		NSLog(@"DataVon... laden von URL: %@",URL);
 		//NSLog(@"DataVon... laden von URL: %@ DataString: %@",URL,DataString);
 		
@@ -808,7 +808,7 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 		//NSLog(@"Cache mem: %d",[[NSURLCache sharedURLCache]memoryCapacity]);
 		
 		
-		[[NSURLCache sharedURLCache] removeCachedResponseForRequest:lastTimeRequest];
+	//	[[NSURLCache sharedURLCache] removeCachedResponseForRequest:lastTimeRequest];
 		
 		NSError* syncErr=NULL;
 		NSData* lastTimeData=[ NSURLConnection sendSynchronousRequest:lastTimeRequest returningResponse: nil error: &syncErr ];
@@ -1323,9 +1323,9 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
         }
         if (!download) 
 		  {
-			NSString* s1=NSLocalizedString(@"Invalid or unsupported URL",@"Ungültige oder nicht unterstützte URL");
-			NSString* s2=NSLocalizedString(@"The entered URL is either invalid or unsupported.",@"Die URL ist ungültig oder wird nicht unterstützt");
-           			 NSBeginAlertSheet(s1, nil, nil, nil, [self window], nil, nil, nil, nil,s2);
+			NSString* sa=NSLocalizedString(@"Invalid or unsupported URL",@"Ungültige oder nicht unterstützte URL");
+			NSString* sb=NSLocalizedString(@"The entered URL is either invalid or unsupported.",@"Die URL ist ungültig oder wird nicht unterstützt");
+           			 NSBeginAlertSheet(sa, nil, nil, nil, [self window], nil, nil, nil, nil,sb);
 
 				/*
 				 NSBeginAlertSheet(@"Invalid or unsupported URL", nil, nil, nil, [self window], nil, nil, nil, nil,
@@ -1337,9 +1337,11 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 
 - (void)savePanelDidEnd:(NSSavePanel *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
 {    
-    if (returnCode == NSOKButton) {
-        [download setDestination:[sheet filename] allowOverwrite:YES];
-    } else {
+    if (returnCode == NSOKButton)
+    {
+       [download setDestination:[[sheet URL] absoluteString] allowOverwrite:YES];
+    } else
+    {
         [self cancel];
     }
 }
@@ -1432,7 +1434,7 @@ NSLog(@"NSCachedURLResponse");
 	{
 		//NSLog(@"File an Pfad da: %@",DataPfad);
 		
-		DataString=[[NSString stringWithContentsOfFile:DataPfad]retain];
+		DataString=[[NSString stringWithContentsOfFile:DataPfad encoding:NSMacOSRomanStringEncoding error:NULL]retain];
 		
 	}
 	else

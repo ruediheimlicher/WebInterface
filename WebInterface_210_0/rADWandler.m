@@ -411,7 +411,7 @@ NSLog(@"ADWandler reportCancel");
 //	[Warnung addButtonWithTitle:@"Abbrechen"];
 	[Warnung setMessageText:[NSString stringWithFormat:@"%@",@"Kein Kanal"]];
 	
-	NSString* s1=@"Mindestens ein Kanal muss ausgewählt sein.";
+	NSString* s1=@"Mindestens ein Kanal muss ausgewaehlt sein.";
 	NSString* s2=@"";
 	NSString* InformationString=[NSString stringWithFormat:@"%@\n%@",s1,s2];
 	[Warnung setInformativeText:InformationString];
@@ -2077,8 +2077,19 @@ if ([MehrkanalTrackRandTaste state])
 	NSSavePanel* SichernPanel=[NSSavePanel savePanel];
 	[SichernPanel setDelegate:self];
 	[SichernPanel setCanCreateDirectories:YES];
-	[SichernPanel runModalForDirectory:lastDir file:@"Mehrkanaldaten.xls"];
-	NSLog(@"saveMehrkanalDaten: %@ Dir: %@",[SichernPanel filename],[SichernPanel directory]);
+//	[SichernPanel runModalForDirectory:lastDir file:@"Mehrkanaldaten.xls"];
+	
+   
+   
+   int antwort = [SichernPanel runModal];
+	
+	if ([SichernPanel URLs] && [[SichernPanel URLs]count])
+	{
+      return;
+	} // if count
+
+   
+   NSLog(@"saveMehrkanalDaten: %@ Dir: %@",[SichernPanel filename],[SichernPanel directory]);
 	
 	int saveOK=[[MehrkanalDatenFeld string] writeToFile:[SichernPanel filename] atomically:YES];
 }

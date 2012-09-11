@@ -55,13 +55,19 @@ NSLog(@"drawRect");
 	NSSavePanel* SichernPanel=[NSSavePanel savePanel];
 	[SichernPanel setDelegate:self];
 	[SichernPanel setCanCreateDirectories:YES];
-	[SichernPanel beginSheetForDirectory:NSHomeDirectory() 
+	
+   [SichernPanel beginSheetForDirectory:NSHomeDirectory()
 									file:@"MehrkanalDaten" 
 									modalForWindow:[ADWandler  window] 
 						   modalDelegate:self 
 						  didEndSelector:@selector(MehrkanalDatenPanelDidEnd:)
 							 contextInfo:NULL];
-		
+	
+   [SichernPanel beginSheetModalForWindow:[ADWandler window]
+                            modalDelegate:self
+                           didEndSelector:@selector(MehrkanalDatenPanelDidEnd:)
+                              contextInfo:nil];
+
 }
 - (void)MehrkanalDatenPanelDidEnd:(NSSavePanel *)sheet returnCode:(int)returnCode  contextInfo:(void  *)contextInfo;
 {

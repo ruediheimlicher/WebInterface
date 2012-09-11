@@ -696,7 +696,7 @@ void reportHandlerCallback (void *	 		target,
 		for (i = 0; i < [dataRead length]; ++i)
 		{
 			
-			NSString* tempString=[NSString stringWithFormat:@"%02X", (unsigned long)dataBuffer[ i ]];
+			NSString* tempString=[NSString stringWithFormat:@"%02lX", (unsigned long)dataBuffer[ i ]];
 			//[tempReportDic setObject:tempString forKey:[bitnummerArray objectAtIndex:i]];
 			[DatenArray addObject:tempString];
 			
@@ -1154,17 +1154,19 @@ NSLog(@"IOWarr WindowController reportPrint");
 	[OeffnenDialog setCanChooseFiles:YES];
 	[OeffnenDialog setCanChooseDirectories:NO];
 	[OeffnenDialog setAllowsMultipleSelection:NO];
+   [OeffnenDialog setAllowedFileTypes:[NSArray arrayWithObjects:@"txt",@"doc",nil]];
+    
 	NSString* OrderPfad= [NSHomeDirectory() stringByAppendingPathComponent:@"Documents/TempDaten"];
-	int antwort = [OeffnenDialog runModalForDirectory:OrderPfad file:nil types: [NSArray arrayWithObjects:@"txt",@"doc",nil]];
+   [OeffnenDialog  setDirectoryURL:[NSURL fileURLWithPath:OrderPfad isDirectory:YES]];
+
+	//int antwort = [OeffnenDialog runModalForDirectory:OrderPfad file:nil types: [NSArray arrayWithObjects:@"txt",@"doc",nil]];
 	//NSLog(@"antwort: %d filenames: %@",antwort, [[OeffnenDialog filenames] description]);
 	
+	int antwort = [OeffnenDialog runModal];
 	
-	
-	//NSString* StartDatumString=[NSString string];
-	//NSCalendarDate* StartZeit= [NSCalendarDate date];
-	if ([OeffnenDialog filenames] && [[OeffnenDialog filenames]count])
+	if ([OeffnenDialog URLs] && [[OeffnenDialog URLs]count])
 	{
-	NSString* DatenString=[NSString stringWithContentsOfFile:[[OeffnenDialog filenames] objectAtIndex:0]];
+      NSString* DatenString=[NSString stringWithContentsOfURL:[[OeffnenDialog URLs] objectAtIndex:0] encoding:NSMacOSRomanStringEncoding error:NULL];
 	[self openWithString:DatenString];
 	
 	return;
@@ -2174,7 +2176,8 @@ return;
 	}
 	else
 	{
-		BOOL OrdnerOK=[Filemanager createDirectoryAtPath:USBPfad attributes:NULL];
+      BOOL OrdnerOK=[Filemanager createDirectoryAtPath:USBPfad withIntermediateDirectories:NO attributes:NULL error:NULL];
+		//BOOL OrdnerOK=[Filemanager createDirectoryAtPath:USBPfad attributes:NULL];
 		//Datenordner ist noch leer
 		
 	}
@@ -2273,7 +2276,9 @@ return;
 	}
 	else
 	{
-		BOOL OrdnerOK=[Filemanager createDirectoryAtPath:USBPfad attributes:NULL];
+      BOOL OrdnerOK=[Filemanager createDirectoryAtPath:USBPfad withIntermediateDirectories:NO attributes:NULL error:NULL];
+
+		//BOOL OrdnerOK=[Filemanager createDirectoryAtPath:USBPfad attributes:NULL];
 		//Datenordner ist noch leer
 		
 	}
@@ -2336,7 +2341,9 @@ return;
 	//NSLog(@"DruckDatenSchreiben: DocOrdnerPfad: %@ ",DocOrdnerPfad);
 	if (!([Filemanager fileExistsAtPath:DocOrdnerPfad isDirectory:&istOrdner]&&istOrdner))
 	{
-		BOOL OrdnerOK=[Filemanager createDirectoryAtPath:DocOrdnerPfad attributes:NULL];
+      BOOL OrdnerOK=[Filemanager createDirectoryAtPath:DocOrdnerPfad withIntermediateDirectories:NO attributes:NULL error:NULL];
+
+		//BOOL OrdnerOK=[Filemanager createDirectoryAtPath:DocOrdnerPfad attributes:NULL];
 		if (OrdnerOK==0)
 		{
 			NSLog(@"Ordner an DocOrdnerPfad failed: %@",DocOrdnerPfad);
@@ -2356,7 +2363,9 @@ return;
 		if (!([Filemanager fileExistsAtPath:dailyFolderPfad isDirectory:&istOrdner]&&istOrdner))
 		{
 			//NSLog(@"dailyFolder noch nicht da: dailyFolderPfad: %@",dailyFolderPfad);
-			BOOL OrdnerOK=[Filemanager createDirectoryAtPath:dailyFolderPfad attributes:NULL];
+         BOOL OrdnerOK=[Filemanager createDirectoryAtPath:dailyFolderPfad withIntermediateDirectories:NO attributes:NULL error:NULL];
+
+         //BOOL OrdnerOK=[Filemanager createDirectoryAtPath:dailyFolderPfad attributes:NULL];
 			anzSessionFiles=0; // noch keine Files fuer diese Stunde
 			if (OrdnerOK==0)
 			{
@@ -2370,7 +2379,7 @@ return;
 		}			
 
 		
-		NSMutableArray* tempTagesFilesArray=[Filemanager directoryContentsAtPath:dailyFolderPfad];
+		NSMutableArray* tempTagesFilesArray=(NSMutableArray*)[Filemanager contentsOfDirectoryAtPath:dailyFolderPfad error:NULL];
 		//NSLog(@"TagesFiles roh: %@",[tempTagesFilesArray description]);
 		if (tempTagesFilesArray)
 		{

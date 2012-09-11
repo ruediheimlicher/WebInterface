@@ -154,8 +154,10 @@ return returnInt;
 	//NSLog(@"HomedataPfad: %@",HomedataPfad);
 	if (![Filemanager fileExistsAtPath:HomedataPfad])	//noch kein Dataordner
 	{
-		BOOL HomedataOK=[Filemanager createDirectoryAtPath:HomedataPfad attributes:NULL];
-		if (HomedataOK=NO)
+      BOOL HomedataOK =[Filemanager createDirectoryAtPath:HomedataPfad withIntermediateDirectories:NO attributes:NULL error:NULL];
+
+		//BOOL HomedataOK=[Filemanager createDirectoryAtPath:HomedataPfad attributes:NULL];
+		if (HomedataOK==NO)
 			return 0;
 	}
 	HomePListPfad=[[HomedataPfad stringByAppendingPathComponent:@"HomePList"]retain];

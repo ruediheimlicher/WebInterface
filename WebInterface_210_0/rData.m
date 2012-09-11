@@ -497,12 +497,12 @@ extern NSMutableArray* DatenplanTabelle;
 	//NSTextTab* TabellenZeitTab=[[[NSTextTab alloc]initWithType:NSRightTabStopType location:zeittab]autorelease];
 	[MKTabellenStil addTabStop:TabellenkopfZeitTab];
 	
-	[MKTabellenString appendFormat:@"\t%"];// Zusätzlicher Tab fuer erste Zahl
+	[MKTabellenString appendFormat:@"\t"];// Zusätzlicher Tab fuer erste Zahl
 	for (i=0;i<8;i++) 
 	{
 		NSTextTab* TabellenWertTab=[[[NSTextTab alloc]initWithType:NSRightTabStopType location:zeittab+(i+1)*werttab]autorelease];
 		[MKTabellenStil addTabStop:TabellenWertTab];
-		[MKTabellenString appendFormat:@"\t%"];
+		[MKTabellenString appendFormat:@"\t"];
 	}
 	[MKTabelleStil setTabStops:[NSArray array]];
 	
@@ -577,7 +577,9 @@ extern NSMutableArray* DatenplanTabelle;
 		errPfad=[TempDatenPfad stringByAppendingPathComponent:@"Logs"]; // Ordner fuer LogFiles
 		if (![Filemanager fileExistsAtPath:[TempDatenPfad stringByAppendingPathComponent:@"Logs"] isDirectory:&istOrdner]&&istOrdner)
 		{
-			FileOK=[Filemanager createDirectoryAtPath:[TempDatenPfad stringByAppendingPathComponent:@"Logs"] attributes:NULL];
+         FileOK=[Filemanager createDirectoryAtPath:[TempDatenPfad stringByAppendingPathComponent:@"Logs"] withIntermediateDirectories:NO attributes:NULL error:NULL];
+
+			//FileOK=[Filemanager createDirectoryAtPath:[TempDatenPfad stringByAppendingPathComponent:@"Logs"] attributes:NULL];
 			
 		}
 		
@@ -592,7 +594,7 @@ extern NSMutableArray* DatenplanTabelle;
 		//NSLog(@"reportStart errPfad: %@",errPfad);
 		if ([Filemanager fileExistsAtPath:errPfad])
 		{
-			errString = [NSString stringWithContentsOfFile:errPfad];
+			errString = [NSString stringWithContentsOfFile:errPfad encoding:NSMacOSRomanStringEncoding error:NULL];
 			//NSLog(@"reportStart errString da: %@",errString);
 			[errString retain];
 		}
@@ -3691,7 +3693,7 @@ if ([[note userInfo]objectForKey:@"err"])
 		
 		if ((AnzDaten %23 == 0)&& (simDaySaved==0))
 		{
-			[DatenserieStartZeit addTimeInterval:84600];
+			[DatenserieStartZeit dateByAddingTimeInterval:84600];
 			NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
 			[NotificationDic setObject:@"saveganz"forKey:@"data"];
 			//[NotificationDic setObject:@"savepart"forKey:@"data"];
@@ -3851,7 +3853,9 @@ if ([[note userInfo]objectForKey:@"err"])
 		errPfad=[USBPfad stringByAppendingPathComponent:@"Logs"];
 		if (![Filemanager fileExistsAtPath:[USBPfad stringByAppendingPathComponent:@"Logs"] isDirectory:&istOrdner]&&istOrdner)
 		{
-			FileOK=[Filemanager createDirectoryAtPath:[USBPfad stringByAppendingPathComponent:@"Logs"] attributes:NULL];
+        FileOK =[Filemanager createDirectoryAtPath:USBPfad withIntermediateDirectories:NO attributes:NULL error:NULL];
+
+			//FileOK=[Filemanager createDirectoryAtPath:[USBPfad stringByAppendingPathComponent:@"Logs"] attributes:NULL];
 		
 		}
 	}

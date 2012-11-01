@@ -23,7 +23,13 @@
 	if ([sender state])
 	{
 		Webserver_busy=0;
+      
 	}
+   else
+   {
+      
+   }
+   [LocalTaste setEnabled:[sender state]];
 	[WriteWocheFeld setStringValue:@"-"];
 	NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
 	[EEPROMReadTaste setEnabled:![sender state]];
@@ -45,29 +51,6 @@
 	[localStatusDic setObject:[NSNumber numberWithInt:[sender state]]forKey:@"status"];
 	[nc postNotificationName:@"localstatus" object:self userInfo:localStatusDic];
 }
-
-- (IBAction)setLocalState:(id)sender
-{
-	// YES: TWI wird EINgeschaltet
-	// NO:	TWI wird AUSgeschaltet
-	NSLog(@"AVRClient setTWIState: state: %d",[sender state]);
-	//[readTagTaste setEnabled:YES];
-	if ([sender state])
-	{
-		Webserver_busy=0;
-	}
-	[WriteWocheFeld setStringValue:@"-"];
-	NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
-	[EEPROMReadTaste setEnabled:![sender state]];
-	//int twiOK=0;
-	NSMutableDictionary* twiStatusDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
-	[twiStatusDic setObject:[NSNumber numberWithInt:[sender state]]forKey:@"status"];
-	//NSLog(@"AVRClient end");
-	[nc postNotificationName:@"localstatus" object:self userInfo:twiStatusDic];
-   
-   
-}
-
 
 
 

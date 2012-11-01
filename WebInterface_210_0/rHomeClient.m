@@ -48,6 +48,11 @@ unsigned char h2int(char c)
 			 selector:@selector(TWIStatusAktion:)
 				  name:@"twistatus"
 				object:nil];
+
+	[nc addObserver:self
+			 selector:@selector(LocalStatusAktion:)
+				  name:@"localstatus"
+				object:nil];
 	
 		[nc addObserver:self
 			 selector:@selector(HomeClientWriteStandardAktion:)
@@ -61,7 +66,8 @@ unsigned char h2int(char c)
 	
 #pragma mark HomeCentralURL
 	
-	HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
+HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
+	//LocalHomeCentralURL=@"192.168.1.210";
 
 //HomeCentralURL=@"http://192.168.1.210";
 
@@ -293,6 +299,24 @@ unsigned char h2int(char c)
 	}
 }
 
+- (void)LocalStatusAktion:(NSNotification*)note
+{
+   NSLog(@"LocalStatusAktion note: %@",[[note userInfo]description]);
+
+   if ([[note userInfo]objectForKey:@"status"] && [[[note userInfo]objectForKey:@"status"]intValue]==1) // URL umschalten
+   {
+      HomeCentralURL = @"http://192.168.1.210";
+      NSLog(@"LocalStatusAktion local: HomeCentralURL: %@",HomeCentralURL);
+   }
+   else
+   {
+      HomeCentralURL = @"http://ruediheimlicher.dyndns.org";
+   NSLog(@"LocalStatusAktion global: HomeCentralURL: %@",HomeCentralURL);
+   }
+   NSLog(@"LocalStatusAktion HomeCentralURL: %@",HomeCentralURL);
+}
+
+
 - (void)TWIStatusAktion:(NSNotification*)note
 {
 	NSLog(@"TWIStatusAktion note: %@",[[note userInfo]description]);
@@ -302,50 +326,70 @@ unsigned char h2int(char c)
 		NSString* TWIStatusSuffix=[NSString string];
 		if ([[[note userInfo]objectForKey:@"status"]intValue])//neuer Status ist 1
 		{
-			TWIStatusSuffix = [NSString stringWithFormat:@"pw=%@&status=%@",pw,@"1"]; 
+			TWIStatusSuffix = [NSString stringWithFormat:@"pw=%@&status=%@",pw,@"1"];
 			NSString* TWIStatusURLString =[NSString stringWithFormat:@"%@/twi?%@",HomeCentralURL, TWIStatusSuffix];
-			//NSLog(@"TWIStatusAktion TWIStatusURL: %@",TWIStatusURLString);
-		
-			NSURL *URL = [NSURL URLWithString:TWIStatusURLString];
-			NSLog(@"TWIStatusAktion URL: %@",URL);
+			
+          //NSLog(@"TWIStatusAktion TWIStatusURL: %@",TWIStatusURLString);
+			
+         NSURL *URL = [NSURL URLWithString:TWIStatusURLString];
+         NSLog(@"TWIStatusAktion URL: %@",URL);
 			[self loadURL:URL];
-		}
+		
+      }
 		else // neuer Status ist 0
 		{
 			TWIStatusSuffix = [NSString stringWithFormat:@"pw=%@&status=%@",pw,@"0"];
 			
 			
 			NSString* TWIStatusURLString =[NSString stringWithFormat:@"%@/twi?%@",HomeCentralURL, TWIStatusSuffix];
-			//NSLog(@"TWIStatusAktion TWIStatusURL: %@",TWIStatusURLString);
 			
-			NSURL *URL = [NSURL URLWithString:TWIStatusURLString];
+           //NSLog(@"TWIStatusAktion TWIStatusURL: %@",TWIStatusURLString);
+			
+			
+         
+         
+         
+         NSURL *URL = [NSURL URLWithString:TWIStatusURLString];
 			NSLog(@"TWIStatusAktion URL: %@",URL);
 			[self loadURL:URL];
 			
-			//  Blinkanzeige im PWFeld 
+			//  Blinkanzeige im PWFeld
 			NSMutableDictionary* tempDataDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
 			[tempDataDic setObject:@"*" forKey:@"wait"];
 			
 			NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
 			[nc postNotificationName:@"StatusWait" object:self userInfo:tempDataDic];
-
+         
 			// Zaehler fuer Anzahl Versuche einsetzen
 			NSMutableDictionary* confirmTimerDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
 			[confirmTimerDic setObject:[NSNumber numberWithInt:0]forKey:@"anzahl"];
-			int sendResetDelay=1.0;
+         
+         if ([[note userInfo]objectForKey:@"status"] && [[[note userInfo]objectForKey:@"status"]intValue]==1)
+         {
+            [confirmTimerDic setObject:[NSNumber numberWithInt:1]forKey:@"local"];
+         }
+         else
+         {
+            [confirmTimerDic setObject:[NSNumber numberWithInt:0]forKey:@"local"];
+           
+         }
+         int sendResetDelay=1.0;
 			//NSLog(@"EEPROMReadDataAktion  confirmTimerDic: %@",[confirmTimerDic description]);
-
-			confirmStatusTimer=[[NSTimer scheduledTimerWithTimeInterval:sendResetDelay 
-																		  target:self 
-																		selector:@selector(statusTimerFunktion:) 
-																		userInfo:confirmTimerDic 
-																		 repeats:YES]retain];
+         
+			confirmStatusTimer=[[NSTimer scheduledTimerWithTimeInterval:sendResetDelay
+                                                              target:self
+                                                            selector:@selector(statusTimerFunktion:)
+                                                            userInfo:confirmTimerDic
+                                                             repeats:YES]retain];
 			
 		}
 		
 	}// if status
 	
 }//TWIStatusAktion
+
+
+
 
 
 - (void)statusTimerFunktion:(NSTimer*) derTimer
@@ -356,20 +400,26 @@ unsigned char h2int(char c)
 	if ([statusTimerDic objectForKey:@"anzahl"])
 	{		
 		int anz=[[statusTimerDic objectForKey:@"anzahl"] intValue];
+      NSString* TWIStatus0URL;
 		if (anz < maxAnzahl)
 		{
 			anz++;
 			if (anz==9)
 			{
-			NSString* TWIStatus0URLSuffix = [NSString stringWithFormat:@"pw=%@&isstat0ok=1",pw]; 
-			NSString* TWIStatus0URL =[NSString stringWithFormat:@"%@/twi?%@",HomeCentralURL, TWIStatus0URLSuffix];
-			NSURL *URL = [NSURL URLWithString:TWIStatus0URL];
-			NSLog(@"statusTimerFunktion  URL: %@",URL);
-			[self loadURL:URL];
+            NSString* TWIStatus0URLSuffix = [NSString stringWithFormat:@"pw=%@&isstat0ok=1",pw];
+            
+            TWIStatus0URL =[NSString stringWithFormat:@"%@/twi?%@",HomeCentralURL, TWIStatus0URLSuffix];
+            [statusTimerDic setObject:[NSNumber numberWithInt:0] forKey:@"local"];
+            
+            
+            NSURL *URL = [NSURL URLWithString:TWIStatus0URL];
+            NSLog(@"statusTimerFunktion  URL: %@",URL);
+            [self loadURL:URL];
 			}
 			
 			[statusTimerDic setObject:[NSNumber numberWithInt:anz] forKey:@"anzahl"];
-			
+         
+
 			// Blinkanzeige im PW-Feld
 			NSMutableDictionary* tempDataDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
 			if (anz%2==0)// gerade
@@ -394,7 +444,23 @@ unsigned char h2int(char c)
 			// Misserfolg an AVRClient senden
 			NSMutableDictionary* tempDataDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
 			[tempDataDic setObject:[NSNumber numberWithInt:0] forKey:@"isstatusok"];
-			NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
+         if ([statusTimerDic objectForKey:@"local"] && [[statusTimerDic objectForKey:@"local"]intValue]==1 )
+         {
+            [tempDataDic setObject:[NSNumber numberWithInt:1] forKey:@"local"];
+         }
+         else
+         {
+            [tempDataDic setObject:[NSNumber numberWithInt:0] forKey:@"local"];
+            
+         }
+			
+         
+         
+         
+         NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
+         
+         
+         
 			[nc postNotificationName:@"FinishLoad" object:self userInfo:tempDataDic];
 			
 			[derTimer invalidate];

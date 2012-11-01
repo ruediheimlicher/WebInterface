@@ -53,6 +53,7 @@ IBOutlet	id		Adresse;
 IBOutlet	id		Cmd;
 IBOutlet	id		EEPROMReadTaste;
 IBOutlet	id		TWIStatusTaste;
+IBOutlet	id		LocalTaste;
 
 // Web
 IBOutlet	id		readTagTaste;
@@ -156,4 +157,5 @@ NSTimer*  TimeoutTimer;
 - (void)setWEBDATAArray:(NSArray*)derDatenArray;
 - (void)setTWITaste:(int)status;
 - (int)TWIStatus;
+- (IBAction)reportLocalTaste:(id)sender;
 @end

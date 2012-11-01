@@ -15,7 +15,9 @@ static NSString *HTMLDocumentType = @"HTML document";
 @interface rHomeClient : NSObject 
 {
 	NSString* HomeCentralURL;
-	NSString* pw;
+  // NSString* LocalHomeCentralURL;
+	
+   NSString* pw;
 	NSString *url;
 	NSString *_source;
 	WebView *	webView;

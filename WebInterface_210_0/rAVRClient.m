@@ -29,12 +29,47 @@
 	[EEPROMReadTaste setEnabled:![sender state]];
 	//int twiOK=0;
 	NSMutableDictionary* twiStatusDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
-	[twiStatusDic setObject:[NSNumber numberWithInt:[sender state]]forKey:@"status"];
+   [twiStatusDic setObject:[NSNumber numberWithInt:[sender state]]forKey:@"status"];
+   [twiStatusDic setObject:[NSNumber numberWithInt:[LocalTaste state]]forKey:@"local"];
 	//NSLog(@"AVRClient end");
 	[nc postNotificationName:@"twistatus" object:self userInfo:twiStatusDic];
 
 
 }
+
+- (IBAction)reportLocalTaste:(id)sender;
+{
+   NSLog(@"AVRClient reportLocalTaste: state: %d",[sender state]);
+   NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
+	NSMutableDictionary* localStatusDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+	[localStatusDic setObject:[NSNumber numberWithInt:[sender state]]forKey:@"status"];
+	[nc postNotificationName:@"localstatus" object:self userInfo:localStatusDic];
+}
+
+- (IBAction)setLocalState:(id)sender
+{
+	// YES: TWI wird EINgeschaltet
+	// NO:	TWI wird AUSgeschaltet
+	NSLog(@"AVRClient setTWIState: state: %d",[sender state]);
+	//[readTagTaste setEnabled:YES];
+	if ([sender state])
+	{
+		Webserver_busy=0;
+	}
+	[WriteWocheFeld setStringValue:@"-"];
+	NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
+	[EEPROMReadTaste setEnabled:![sender state]];
+	//int twiOK=0;
+	NSMutableDictionary* twiStatusDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+	[twiStatusDic setObject:[NSNumber numberWithInt:[sender state]]forKey:@"status"];
+	//NSLog(@"AVRClient end");
+	[nc postNotificationName:@"localstatus" object:self userInfo:twiStatusDic];
+   
+   
+}
+
+
+
 
 
 - (void)setTWITaste:(int)status
@@ -56,6 +91,9 @@
 {
 	return [TWIStatusTaste state];
 }
+
+
+
 
 - (IBAction)readEthTagplan:(id)sender
 {
@@ -591,13 +629,14 @@ if (Webserver_busy)
 	{
 		if ([[[note userInfo]objectForKey:@"loaddataok"]intValue])
 		{
-		[TWIStatusTaste setEnabled:YES];
+         [TWIStatusTaste setEnabled:YES];
+         [LocalTaste setEnabled:YES];
 		
 		}
 		else
 		{
-		[TWIStatusTaste setEnabled:NO];
-		
+         [TWIStatusTaste setEnabled:NO];
+         [LocalTaste setEnabled:NO];
 		}
 	}
 }

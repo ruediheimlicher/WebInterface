@@ -1339,7 +1339,7 @@ return;
 
 -(void)openWithSolarString:(NSString*)derDatenString
 {
-	NSLog(@"openWithSolarString DatenString length: %d", [derDatenString length]);
+	//NSLog(@"openWithSolarString DatenString length: %d", [derDatenString length]);
 	NSArray* rohDatenArray = [NSArray array];
 	NSString* TagString = [NSString string];
 	int Tag=0;
@@ -1403,7 +1403,7 @@ return;
 			
 			
 			NSArray* tempDatumArray= [DatumString componentsSeparatedByString:@" "];
-			NSLog(@"openWithSolarString tempDatumArray: %@ count: %d",[tempDatumArray description], [tempDatumArray count]);
+			//NSLog(@"openWithSolarString tempDatumArray: %@ count: %d",[tempDatumArray description], [tempDatumArray count]);
 			
 			switch ([tempDatumArray count])
 			{
@@ -1419,7 +1419,7 @@ return;
 					Tag=[StartZeit dayOfMonth];
 					Monat=[StartZeit monthOfYear];
 					Jahr=[StartZeit yearOfCommonEra];
-					NSLog(@"openWithSolarString case 4 StartZeit: %@ tag: %d monat: %d Jahr: %d",[StartZeit description],Tag, Monat, Jahr);
+					//NSLog(@"openWithSolarString case 4 StartZeit: %@ tag: %d monat: %d Jahr: %d",[StartZeit description],Tag, Monat, Jahr);
 					
 				}break;
 					
@@ -1451,7 +1451,7 @@ return;
 			}	//	switch count
 			
 			
-			NSLog(@"tempDatenArray count: %d",[tempDatenArray count]);
+			//NSLog(@"tempDatenArray count: %d",[tempDatenArray count]);
 			//NSLog(@"Tag: %@ Zeit: %@",TagString, ZeitString);
 			//NSLog(@"tempDatenArray: %@",[tempDatenArray description]);
 			

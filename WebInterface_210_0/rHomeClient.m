@@ -301,17 +301,17 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 
 - (void)LocalStatusAktion:(NSNotification*)note
 {
-   NSLog(@"LocalStatusAktion note: %@",[[note userInfo]description]);
+   //NSLog(@"LocalStatusAktion note: %@",[[note userInfo]description]);
 
    if ([[note userInfo]objectForKey:@"status"] && [[[note userInfo]objectForKey:@"status"]intValue]==1) // URL umschalten
    {
       HomeCentralURL = @"http://192.168.1.210";
-      NSLog(@"LocalStatusAktion local: HomeCentralURL: %@",HomeCentralURL);
+      //NSLog(@"LocalStatusAktion local: HomeCentralURL: %@",HomeCentralURL);
    }
    else
    {
       HomeCentralURL = @"http://ruediheimlicher.dyndns.org";
-   NSLog(@"LocalStatusAktion global: HomeCentralURL: %@",HomeCentralURL);
+   //NSLog(@"LocalStatusAktion global: HomeCentralURL: %@",HomeCentralURL);
    }
    NSLog(@"LocalStatusAktion HomeCentralURL: %@",HomeCentralURL);
 }
@@ -319,7 +319,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 
 - (void)TWIStatusAktion:(NSNotification*)note
 {
-	NSLog(@"TWIStatusAktion note: %@",[[note userInfo]description]);
+	//NSLog(@"TWIStatusAktion note: %@",[[note userInfo]description]);
 	
 	if ([[note userInfo]objectForKey:@"status"])
 	{
@@ -332,7 +332,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
           //NSLog(@"TWIStatusAktion TWIStatusURL: %@",TWIStatusURLString);
 			
          NSURL *URL = [NSURL URLWithString:TWIStatusURLString];
-         NSLog(@"TWIStatusAktion URL: %@",URL);
+         //NSLog(@"TWIStatusAktion URL: %@",URL);
 			[self loadURL:URL];
 		
       }

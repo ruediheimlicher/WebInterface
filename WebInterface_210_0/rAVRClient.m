@@ -29,7 +29,9 @@
    {
       
    }
+   
    [LocalTaste setEnabled:[sender state]];
+   
 	[WriteWocheFeld setStringValue:@"-"];
 	NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
 	[EEPROMReadTaste setEnabled:![sender state]];
@@ -39,7 +41,7 @@
    [twiStatusDic setObject:[NSNumber numberWithInt:[LocalTaste state]]forKey:@"local"];
 	//NSLog(@"AVRClient end");
 	[nc postNotificationName:@"twistatus" object:self userInfo:twiStatusDic];
-
+   [LocalTaste setState:![sender state]];
 
 }
 

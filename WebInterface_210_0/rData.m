@@ -2256,7 +2256,7 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
 		//NSLog(@"ExterneSolarDatenAktion tempDatenArray last Data:%@",[[tempDatenArray lastObject]description]);
 		
 		NSArray* tempZeilenArray= (NSArray*)[[tempDatenArray lastObject] componentsSeparatedByString:@"\r"];
-	NSLog(@"tempZeilenArray: %@",[tempZeilenArray description]);
+      //NSLog(@"tempZeilenArray: %@",[tempZeilenArray description]);
 		NSString* tempWertString;
 		tempWertString=[NSString stringWithFormat:@"%2.1f",[[tempZeilenArray objectAtIndex:1]intValue]/2.0];
 		[KollektorVorlaufFeld setStringValue:tempWertString];

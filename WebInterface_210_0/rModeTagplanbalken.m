@@ -509,10 +509,10 @@ NSMutableDictionary* tempDic=(NSMutableDictionary*)[StundenArray objectAtIndex:d
 				break;
 			case 1:// red
 				//[[NSColor greenColor]set];
-				[lightGreen set];
-				[NSBezierPath fillRect:StdFeldT];
+				//[lightGreen set];
+				//[NSBezierPath fillRect:StdFeldT];
 				
-				break;
+				//break;
 				
 				
 			case 2:// voll
@@ -648,7 +648,7 @@ key "modenacht"	Einschaltzeiten Mode Nacht		0: off						1: reduziert				2: voll
 			else
 			{
 				// lastOnArray enthält noch keinen code
-				all=1; 
+				all=2;
 			}
 			
 		}
@@ -707,8 +707,8 @@ key "modenacht"	Einschaltzeiten Mode Nacht		0: off						1: reduziert				2: voll
 			switch (ON)
 			{
 				case 0:// Mode auf red stellen
-					ON=1;//
-					break;
+					//ON=1;//
+					//break;
 					
 				case 1:// Mode auf Voll stellen
 					ON=2;

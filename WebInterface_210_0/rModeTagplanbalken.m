@@ -88,7 +88,7 @@ return self;
 	int i=0;
 	//NSLog(@"ModeTagbalken BalkenAnlegen");
 	NSPoint Ecke=NSMakePoint(8.0,4.0);
-		NSRect WriteFeld=NSMakeRect(6,6,18,8);
+		NSRect WriteFeld=NSMakeRect(6,5.5,24,12);
 	rTaste* WriteTaste=[[[rTaste alloc]initWithFrame:WriteFeld]retain];
 	//	[WriteTaste setButtonType:NSMomentaryLightButton];
 	[WriteTaste setButtonType:NSMomentaryLight];
@@ -96,10 +96,26 @@ return self;
 	[WriteTaste setBordered:YES];
 	[[WriteTaste cell]setBackgroundColor:[NSColor yellowColor]];
 	[[WriteTaste cell]setShowsStateBy:NSPushInCellMask];
-	[WriteTaste setTitle:@""];
+   [WriteTaste setFont:[NSFont fontWithName:@"Helvetica" size:8]];
+	[WriteTaste setTitle:@"E"];
 	[WriteTaste setTag:Objekt];
 	[WriteTaste setAction:@selector(WriteTasteAktion:)];
 	[self addSubview:WriteTaste];
+  
+   // Taste zum temporaerenSchreiben des Plans anlegen
+	NSRect HeuteFeld=NSMakeRect(36,5.5,18,12);
+	rTaste* HeuteTaste=[[[rTaste alloc]initWithFrame:HeuteFeld]retain];
+	[HeuteTaste setButtonType:NSMomentaryLight];
+	[HeuteTaste setTarget:self];
+	[HeuteTaste setBordered:YES];
+	[[HeuteTaste cell]setBackgroundColor:[NSColor lightGrayColor]];
+	[[HeuteTaste cell]setShowsStateBy:NSPushInCellMask];
+   [HeuteTaste setFont:[NSFont fontWithName:@"Helvetica" size:8]];
+	[HeuteTaste setTitle:@"H"];
+	[HeuteTaste setTag:Objekt];
+	[HeuteTaste setAction:@selector(reportHeuteTaste:)]; // Auszufuehrende Funktion
+	[self addSubview:HeuteTaste];
+
 
 	//NSLog(@"Tagbalken init: frame.height: %2.2f",[self frame].size.height);
 	//NSRect Titelrect=NSMakeRect(4,4,50,16);
@@ -436,7 +452,7 @@ NSMutableDictionary* tempDic=(NSMutableDictionary*)[StundenArray objectAtIndex:d
 	NSFont* TitelFont=[NSFont fontWithName:@"Helvetica" size: 9];
 	NSDictionary* TitelAttrs=[NSDictionary dictionaryWithObject:TitelFont forKey:NSFontAttributeName];
 	TagPunkt.x+=5;
-	TagPunkt.y+=Elementhoehe*5/8;
+	TagPunkt.y+=Elementhoehe*0.72;
 	//NSLog(@"ModeTagplanbalken drawRect:  Titel: %@",Titel);
 	[Titel drawAtPoint:TagPunkt withAttributes:TitelAttrs];
 

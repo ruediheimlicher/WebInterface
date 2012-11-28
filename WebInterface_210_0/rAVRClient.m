@@ -321,8 +321,11 @@ if (Webserver_busy)
 		
 		//NSLog(@"WriteStandardAktion note: %@",[[note userInfo]description]);
 		int Raum=[[[note userInfo]objectForKey:@"raum"]intValue];
+      
 		int Wochentag=[[[note userInfo]objectForKey:@"wochentag"]intValue];
 		int Objekt=[[[note userInfo]objectForKey:@"objekt"]intValue];
+      int permanent = [[[note userInfo]objectForKey:@"permanent"]intValue];
+
 		NSArray* DatenArray=[[note userInfo]objectForKey:@"stundenbytearray"];
 		
 		NSMutableDictionary* HomeClientDic=[[[NSMutableDictionary alloc]initWithDictionary:[note userInfo]]autorelease];
@@ -356,7 +359,12 @@ if (Webserver_busy)
 		// Information an HomeClient schicken
 		
 		NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
-		[nc postNotificationName:@"HomeClientWriteStandard" object:self userInfo:HomeClientDic];
+		
+      
+      if (permanent) // schicken an EEPROM
+      {
+         [nc postNotificationName:@"HomeClientWriteStandard" object:self userInfo:HomeClientDic];
+      }
 		
 	}
 }

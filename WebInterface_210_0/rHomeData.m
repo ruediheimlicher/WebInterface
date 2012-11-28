@@ -1250,7 +1250,7 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 				{
 					ErtragSumme += [eineZeile floatValue];
 				}
-				NSLog(@"\ntempDatenArray Data: %@, \nn: %d Ertrag: %2.3F",[tempDatenArray description], n,ErtragSumme);
+				//NSLog(@"\ntempDatenArray Data: %@, \nn: %d Ertrag: %2.3F",[tempDatenArray description], n,ErtragSumme);
 				
 				
 			}

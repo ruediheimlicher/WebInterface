@@ -2278,7 +2278,7 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
 		
 		// Zeit des letzten Datensatzes
 		int lastZeit = [[[[tempDatenArray lastObject] componentsSeparatedByString:@"\t"]objectAtIndex:0]intValue];
-		NSLog(@"ExterneSolarDatenAktion lastZeit: %d",lastZeit);
+		//NSLog(@"ExterneSolarDatenAktion lastZeit: %d",lastZeit);
 		[SolarLaufzeitFeld setStringValue:[self stringAusZeit:lastZeit]]; 
 		
 		// Breite des DocumentViews bestimmen
@@ -2484,7 +2484,7 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
 	
 	if (Kalenderblocker)
 	{
-		NSLog(@"LastSolarDatenAktion	Kalenderblocker");
+		//NSLog(@"LastSolarDatenAktion	Kalenderblocker");
 		return;
 	}
 	
@@ -2497,7 +2497,7 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
 	NSString* StartDatenString=[StartDatenArray objectAtIndex:0];
 //	NSLog(@"LastSolarDatenAktion StartDatenString: %@",StartDatenString);
 	NSString* Kalenderformat=[[NSCalendarDate calendarDate]calendarFormat];
-	NSLog(@"LastSolarDatenaktion note: %@",[[note userInfo]description]);
+	//NSLog(@"LastSolarDatenaktion note: %@",[[note userInfo]description]);
 	if ([[note userInfo]objectForKey:@"startzeit"])
 	{
 		SolarDatenserieStartZeit=[[NSCalendarDate dateWithString:[[note userInfo]objectForKey:@"startzeit"] calendarFormat:Kalenderformat]retain];

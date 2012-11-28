@@ -152,15 +152,13 @@
 		//NSLog(@"Bueroplan awake wochentag:%d : x: %2.2f y: %2.2f height: %2.2f width: %2.2f",tag,BueroplanFeld.origin.x,BueroplanFeld.origin.y,BueroplanFeld.size.height,BueroplanFeld.size.width);
 		//NSMutableDictionary* TagplanPListDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
 		//NSLog(@"Wochentage %@",[Wochentage objectAtIndex:wochentag]);
-      
-      
-      
-      
+       
 		NSRect Balkenfeld=PlanFeld;
 		// Feld fuer die Tagplanbalken
 		rTagplan* Tagplan=[[rTagplan alloc]initWithFrame:Balkenfeld];
 		[Tagplan setWochentag:wochentag];
-		[self addSubview:Tagplan];
+		[Tagplan setRaum:derRaum];
+      [self addSubview:Tagplan];
 		
 		[GeometrieArray insertObject:[NSNumber numberWithFloat:Balkenfeld.origin.y] atIndex:0];
 		//[GeometrieArray addObject:[NSNumber numberWithFloat:Balkenfeld.origin.y]];
@@ -329,6 +327,7 @@
 			}
 			
 		}//for objektbalken
+      
 		[TagplanArray addObject:tempTagbalkenArray];
 		//NSLog(@"setWochenplanForRaum Tag: %d Tagplan %@",wochentag, [Tagplan description]);
 		

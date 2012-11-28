@@ -35,10 +35,24 @@
 	Ecke.x+=RandL;
 	Ecke.y+=RandU;
 
-
-
-
-
+      NSRect heuteTasteFeld;
+      heuteTasteFeld.origin = Tagpunkt;
+      heuteTasteFeld.origin.x += 50;
+      heuteTasteFeld.origin.y -= 2;
+      heuteTasteFeld.size.height = 16;
+      heuteTasteFeld.size.width = 60;
+      //rTaste* WriteTaste=[[[rTaste alloc]initWithFrame:WriteFeld]retain];
+      heuteTaste = [[rTaste alloc]initWithFrame:heuteTasteFeld];
+      [heuteTaste setTitle:@"Heute"];
+      [heuteTaste setAction:@selector(reportHeuteTaste:)];
+      [heuteTaste setTarget:self];
+      [heuteTaste setButtonType: NSToggleButton];
+      [heuteTaste setBordered:YES];
+      [heuteTaste setState:YES];
+      //[heuteTaste setBezelStyle:NSRegularSquareBezelStyle];
+      
+      
+  //    [self addSubview:heuteTaste];
 
 
 
@@ -46,17 +60,26 @@
     return self;
 	
 }
+- (IBAction)reportHeuteTaste:(id)sender
+{
+   NSLog(@"reportHeuteTaste Tag: %d Raum: %d",tag,raum);
+
+}
 
 - (void)setWochentag:(int)derTag
 {
 	NSArray* Wochentage=[NSArray arrayWithObjects:@"MO",@"DI",@"MI",@"DO",@"FR",@"SA",@"SO",nil];
 	Wochentag=[Wochentage objectAtIndex:derTag];
-	
+	tag = derTag;
+}
+
+- (void)setRaum:(int)derRaum
+{
+   raum = derRaum;
 }
 
 
-
-- (void)setTagplan:(NSArray*)derStundenArray forTag:(int)derTag 
+- (void)setTagplan:(NSArray*)derStundenArray forTag:(int)derTag // nicht verwendet
 {
 	NSLog(@"Tagplan setTagplan");
 	NSLog(@"Tagplan setTagplan Tag: %d StundenArray: %@",derTag, [[StundenArray valueForKey:@"code"]description]);
@@ -70,6 +93,7 @@
 	//NSLog(@"awakeFromNib: Nullpunkt: x: %2.2f y: %2.2f",Nullpunkt.x,Nullpunkt.y);
 	int i=0;
 	
+   
    NSRect heuteTastenfeld;
    heuteTastenfeld.origin = Nullpunkt;
    heuteTastenfeld.origin.x = 15;
@@ -78,7 +102,8 @@
 	heuteTastenfeld.size.height=10;
    
    heuteTaste = [[NSButton alloc]initWithFrame:heuteTastenfeld];
- //  [self addSubview:heuteTaste];
+ 
+   //  [self addSubview:heuteTaste];
 
    
    
@@ -110,7 +135,10 @@
 	//***
 	tag=derTag;
 	
-	//NSLog(@"setTagplan Tag: %d StundenArray: %@",derTag, [StundenArray description]);
+	if (tag==0)
+   {
+      NSLog(@"setTagplan Tag: %d StundenArray: %@",derTag, [StundenArray description]);
+   }
 	//NSLog(@"setTagplan Tag: %d derStundenArray: %@",derTag, [derStundenArray description]);
 	for (i=0;i<24;i++)
 	{
@@ -226,9 +254,10 @@ return StundenArray;
 - (void)mouseDown:(NSEvent *)theEvent
 {
 	NSLog(@"Tagplan mouseDown: event: x: %2.2f y: %2.2f",[theEvent locationInWindow].x,[theEvent locationInWindow].y);
+   return;
 	//NSLog(@"mouseDown: Nullpunkt: x: %2.2f y: %2.2f",Nullpunkt.x,Nullpunkt.y);
 	//NSLog(@"Bounds: x: %2.2f y: %2.2f h: %2.2f w: %2.2f ",[self frame].origin.x,[self frame].origin.y,[self frame].size.height,[self frame].size.width);
-	//NSLog(@"mouseDown: modifierFlags: %",[theEvent modifierFlags]);
+	NSLog(@"mouseDown: modifierFlags: %",[theEvent modifierFlags]);
 	unsigned int Mods=[theEvent modifierFlags];
 	int modKey=0;
 	if (Mods & NSCommandKeyMask)
@@ -254,27 +283,37 @@ return StundenArray;
 		modKey+=8;
 		
 	}
-	
-	//NSLog(@"modifiers: modKey: %d",modKey);
+	NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+	NSLog(@"modifiers: modKey: %d",modKey);
+   
+   
+   NSPoint globMaus=[theEvent locationInWindow];
+	NSPoint localMaus;
+	localMaus=[self convertPoint:globMaus fromView:NULL];
+	NSLog(@"mouseDown: local: x: %2.2f y: %2.2f",localMaus.x,localMaus.y);
+
+   
+   	int all=-1;
+   
+   NSLog(@"A");       
+   
 	NSRect AllFeld=[[[StundenArray objectAtIndex:23]objectForKey:@"elementrahmen"]frame];
 	AllFeld.origin.x+=Elementbreite+2;
 	//AllFeld.origin.y+=8;
 	AllFeld.size.height-=8;
 	AllFeld.size.width/=2;
 	
-	NSPoint globMaus=[theEvent locationInWindow];
-	NSPoint localMaus;
-	localMaus=[self convertPoint:globMaus fromView:NULL];
-	//NSLog(@"mouseDown: local: x: %2.2f y: %2.2f",localMaus.x,localMaus.y);
 	
 	//NSLog(@"lastONArray: %@",[lastONArray description]);
 	int i;
-	int all=-1;
-	NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+
+	NSLog(@"B");
 	
 	
 	if ([self mouse:localMaus inRect:AllFeld])
 	{
+      NSLog(@"ALL-Taste");
+
 	if (modKey==2)//alt
 	{
 		//NSLog(@"ALL-Taste mit alt");
@@ -289,11 +328,13 @@ return StundenArray;
 
 		return;
 	}
+      
 		int sum=0;
 		for (i=0;i<24;i++)
 		{
 			sum+=[[[StundenArray valueForKey:@"kessel"] objectAtIndex:i]intValue];
 		}
+      NSLog(@"C");
 		if (sum==0)//alle sind off: IST wiederherstellen
 		{
 			NSLog(@"IST wiederherstellen");
@@ -312,10 +353,10 @@ return StundenArray;
 		}
 		
 	}
-
+   
 	
 	
-	for (i=0;i<24;i++)
+	for (int i=0;i<24;i++)
 	{
 		[NotificationDic setObject:[NSNumber numberWithInt:i] forKey:@"stunde"];
 		

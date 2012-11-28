@@ -46,17 +46,35 @@
 	//NSLog(@"Tagbalken init: frame.height: %2.2f",[self frame].size.height);
 	
 	// Taste zum Schreiben des Plans anlegen
-	NSRect WriteFeld=NSMakeRect(6,4,18,10);
+	NSRect WriteFeld=NSMakeRect(6,5.5,24,12);
 	rTaste* WriteTaste=[[[rTaste alloc]initWithFrame:WriteFeld]retain];
 	[WriteTaste setButtonType:NSMomentaryLight];
 	[WriteTaste setTarget:self];
 	[WriteTaste setBordered:YES];
 	[[WriteTaste cell]setBackgroundColor:[NSColor yellowColor]];
 	[[WriteTaste cell]setShowsStateBy:NSPushInCellMask];
-	[WriteTaste setTitle:@""];
+   [WriteTaste setFont:[NSFont fontWithName:@"Helvetica" size:8]];
+	[WriteTaste setTitle:@"E"];
 	[WriteTaste setTag:Objekt];
 	[WriteTaste setAction:@selector(WriteTasteAktion:)]; // Auszufuehrende Funktion
 	[self addSubview:WriteTaste];
+   
+ 	// Taste zum temporaerenSchreiben des Plans anlegen
+	NSRect HeuteFeld=NSMakeRect(36,5.5,18,12);
+	rTaste* HeuteTaste=[[[rTaste alloc]initWithFrame:HeuteFeld]retain];
+	[HeuteTaste setButtonType:NSMomentaryLight];
+	[HeuteTaste setTarget:self];
+	[HeuteTaste setBordered:YES];
+	[[HeuteTaste cell]setBackgroundColor:[NSColor lightGrayColor]];
+	[[HeuteTaste cell]setShowsStateBy:NSPushInCellMask];
+   [HeuteTaste setFont:[NSFont fontWithName:@"Helvetica" size:8]];
+	[HeuteTaste setTitle:@"H"];
+	[HeuteTaste setTag:Objekt];
+	[HeuteTaste setAction:@selector(reportHeuteTaste:)]; // Auszufuehrende Funktion
+	[self addSubview:HeuteTaste];
+   
+   
+   
 
 	//		Titelfeld=[[NSTextField alloc]initWithFrame:Titelrect];
 	
@@ -135,6 +153,9 @@
 //tag=tagwert;
 mark=tagwert;
 }
+
+
+
 - (void)setTitel:(NSString*)derTitel
 {
 	[Titel retain];
@@ -532,7 +553,7 @@ NSMutableDictionary* tempDic=(NSMutableDictionary*)[StundenArray objectAtIndex:d
 	[NotificationDic setObject:[NSNumber numberWithInt:Wochentag] forKey:@"wochentag"];
 	[NotificationDic setObject:[NSNumber numberWithInt:Objekt] forKey:@"objekt"];// 
 	[NotificationDic setObject:[(rTagplanbalken*)[sender superview]Titel] forKey:@"titel"];//
-	
+	[NotificationDic setObject:[NSNumber numberWithInt:1] forKey:@"permanent"];//
 	
 	int modKey=0;
 	//int all=-1;
@@ -563,12 +584,61 @@ NSMutableDictionary* tempDic=(NSMutableDictionary*)[StundenArray objectAtIndex:d
 		//NSLog(@"WriteTasteAktion  Standard: %@",[NotificationDic description]);
 			
 		// Notific an Wochenplan  und von dort an WriteStandardaktion in AVRClient schicken
-
 		[nc postNotificationName:@"WriteStandard" object:self userInfo:NotificationDic];
 	
 	}//WriteTasteAktion Standard
 	
 }
+
+- (IBAction)reportHeuteTaste:(id)sender
+{
+   NSLog(@"reportHeuteTaste  Raum: %d Wochentag: %d",Raum, Wochentag);
+   
+   NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
+   NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+	[NotificationDic setObject:[NSNumber numberWithInt:Raum] forKey:@"raum"];
+	[NotificationDic setObject:[NSNumber numberWithInt:Wochentag] forKey:@"wochentag"];
+	[NotificationDic setObject:[NSNumber numberWithInt:Objekt] forKey:@"objekt"];//
+	[NotificationDic setObject:[(rTagplanbalken*)[sender superview]Titel] forKey:@"titel"];//
+   
+   [NotificationDic setObject:[NSNumber numberWithInt:0] forKey:@"permanent"];//
+
+   int modKey=0;
+	//int all=-1;
+	if(([[NSApp currentEvent] modifierFlags] & NSAlternateKeyMask)  != 0)
+	{
+		//NSLog(@"WriteTasteAktion Alt-Taste");
+		modKey=2;
+		[NotificationDic setObject:[NSNumber numberWithInt:modKey] forKey:@"mod"];
+		//[NotificationDic setObject:[NSArray array] forKey:@"stundenarray"];
+      
+		//NSLog(@"WriteTasteAktion  WriteModifier: %@",[NotificationDic description]);
+		
+		// Notific an Wochenplan schicken, um Stundenarrays der ganzen Woche fuer das Objekt zu laden
+		// Von dort aus anschliessend an WriteModifieraktion in AVRClient schicken schicken
+		
+		[nc postNotificationName:@"WriteWochenplanModifier" object:self userInfo:NotificationDic];
+		modKey=0;
+		
+		
+	}
+   else
+	{
+		
+		[NotificationDic setObject:[NSNumber numberWithInt:modKey] forKey:@"mod"];
+		[NotificationDic setObject:[StundenArray valueForKey:@"code"] forKey:@"stundenarray"];
+		[NotificationDic setObject:[self StundenByteArray] forKey:@"stundenbytearray"];
+		
+		//NSLog(@"WriteTasteAktion  Standard: %@",[NotificationDic description]);
+      
+		// Notific an Wochenplan  und von dort an WriteStandardaktion in AVRClient schicken
+		[nc postNotificationName:@"WriteStandard" object:self userInfo:NotificationDic];
+      
+	}//WriteTasteAktion Standard
+
+
+}
+
 
 
 - (int)Wochentag
@@ -663,8 +733,8 @@ return mark;
 	NSDictionary* TitelAttrs=[NSDictionary dictionaryWithObject:TitelFont forKey:NSFontAttributeName];
 
 	//
-	TagPunkt.x+=5;
-	TagPunkt.y+=Elementhoehe*5/8;
+	TagPunkt.x+=6;
+	TagPunkt.y+=Elementhoehe*0.72;
 	//NSLog(@"Tagplanbalken drawRect: Titel: %@",Titel);
 	[Titel drawAtPoint:TagPunkt withAttributes:TitelAttrs];
    
@@ -803,7 +873,7 @@ return mark;
 	//NSPoint Ecke=[self bounds].origin;
 	NSPoint localMaus;
 	localMaus=[self convertPoint:globMaus fromView:NULL];
-	//NSLog(@"mouseDown: local: x: %2.2f y: %2.2f",localMaus.x,localMaus.y);
+	NSLog(@"rTagplanbalken mouseDown: local: x: %2.2f y: %2.2f",localMaus.x,localMaus.y);
 	
 	//NSLog(@"lastONArray: %@",[lastONArray description]);
 	int i;

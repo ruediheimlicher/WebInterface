@@ -786,7 +786,7 @@ return returnInt;
 							NSMutableArray* tempTagplanArray=(NSMutableArray*)[tempWochenplanDic objectForKey:@"tagplanarray"];
 							for (l=0;l<8;l++) //8 Objekte
 							{
-                        NSLog(@"Raum: %d Tag: %d",i,k);
+                        //NSLog(@"Raum: %d Tag: %d",i,k);
 								if ([tempTagplanArray objectAtIndex:l]) // TagplanDic fuer Objekt l ist da
 								{
                            //NSLog(@"Object ist da");

@@ -385,7 +385,7 @@ void IOWarriorCallback ()
 	//NSLog(@"awake AktuelleSolarDaten: \n%@",AktuelleSolarDaten);
 	if (AktuelleSolarDaten &&[AktuelleSolarDaten length])
 	{
-		NSLog(@"awake openWithSolarString\n\n");
+		//NSLog(@"awake openWithSolarString\n\n");
 		[self openWithSolarString:AktuelleSolarDaten];
 
 	}
@@ -1460,7 +1460,7 @@ return;
 			
 			rohDatenArray = [[tempDatenArray subarrayWithRange:NSMakeRange(DataOffset,[tempDatenArray count]-DataOffset)]retain];
 			NSMutableArray* DatenArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
-			NSLog(@"openWithSolarString rohDatenArray count: %d",[rohDatenArray count]);
+			//NSLog(@"openWithSolarString rohDatenArray count: %d",[rohDatenArray count]);
 			int i=0;
 			/*
 			for (i=0;i<10;i++)

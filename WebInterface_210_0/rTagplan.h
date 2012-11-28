@@ -26,6 +26,7 @@ NSMutableArray*				lastONArray;
 NSMutableArray*				lastModeTagArray;
 NSMutableArray*				lastModeNachtArray;
 
+   NSButton* heuteTaste;
 
 }
 - (void)setWochentag:(int)derTag;

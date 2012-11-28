@@ -70,6 +70,18 @@
 	//NSLog(@"awakeFromNib: Nullpunkt: x: %2.2f y: %2.2f",Nullpunkt.x,Nullpunkt.y);
 	int i=0;
 	
+   NSRect heuteTastenfeld;
+   heuteTastenfeld.origin = Nullpunkt;
+   heuteTastenfeld.origin.x = 15;
+   heuteTastenfeld.origin.y = [self frame].size.height-20; //erster Plan oben
+   heuteTastenfeld.size.width=20;
+	heuteTastenfeld.size.height=10;
+   
+   heuteTaste = [[NSButton alloc]initWithFrame:heuteTastenfeld];
+ //  [self addSubview:heuteTaste];
+
+   
+   
 	NSPoint Ecke=NSMakePoint(0.0,0.0);
 	
 	Ecke.x+=RandL;
@@ -197,6 +209,7 @@ return StundenArray;
 	//[NSBezierPath strokeRect:dasFeld];
 	[lightGreen set];
 	[NSBezierPath fillRect:dasFeld];
+   
 	NSFont* StundenFont=[NSFont fontWithName:@"Helvetica" size: 9];
 	NSDictionary* StundenAttrs=[NSDictionary dictionaryWithObject:StundenFont forKey:NSFontAttributeName];
 	NSFont* TagFont=[NSFont fontWithName:@"Helvetica" size: 14];

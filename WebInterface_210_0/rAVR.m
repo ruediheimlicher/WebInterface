@@ -204,7 +204,7 @@ return returnInt;
 
 - (void)awakeFromNib
 {
-	//NSLog(@"awake");
+	//NSLog(@"AVR awake");
 	//[self setAktiv:NO forObjekt:4 forRaum:4];
 	//[self setAktiv:YES forObjekt:3 forRaum:4];
 	
@@ -228,12 +228,12 @@ return returnInt;
 	[self setObjektTitel:@"Lampe" forObjekt:0 forRaum:4];
 	[self setObjektTitel:@"Lampe" forObjekt:0 forRaum:5];
 	[self setObjektTitel:@"Lampe" forObjekt:0 forRaum:6];
-
-// Estrich	
+   
+   // Estrich
 	[self setObjektTitel:@"Lampe" forObjekt:0 forRaum:7];
-
-
-
+   
+   
+   
 	
 	[self setTagbalkenTyp:1 forObjekt:1 forRaum:0];
 	
@@ -298,7 +298,7 @@ return returnInt;
 	//	NSLog(@"AVR awake WochenplanTabRect: x: %2.2f y: %2.2f",[WochenplanTab bounds].origin.x,[WochenplanTab bounds].origin.y);
 	//	NSLog(@"AVR awake WochenplanTabRect: h: %2.2f w: %2.2f",[WochenplanTab bounds].size.height,[WochenplanTab bounds].size.width);
 	
-
+   
 	
 	
 	NSRect TagplanFeld=WochenplanTabRect;
@@ -306,47 +306,47 @@ return returnInt;
 	
 	//	Beginn Raum
 	int raum;
-	NSRect RaumViewFeld;
+	NSRect RaumViewFeld = NSMakeRect(0,0,0,0);
 	for (raum=0;raum<8;raum++)
 		
 	{
 		switch (raum)
 		{
 			case 0:
-				RaumViewFeld=[HeizungFeld  frame];
+            RaumViewFeld=[HeizungFeld  frame];
 				
 				break;
-			case 1: // 
+			case 1: //
 			{
 				RaumViewFeld=[WerkstattFeld  frame];
 			}break;
 				
-			case 2: // 
+			case 2: //
 			{
 				RaumViewFeld=[WoZiFeld frame];
 			}break;
 				
-			case 3: // 
+			case 3: //
 			{
 				RaumViewFeld=[BueroFeld frame];
 			}break;
 				
-			case 4: // 
+			case 4: //
 			{
-				RaumViewFeld=[LaborFeld frame];	
+				RaumViewFeld=[LaborFeld frame];
 			}break;
 				
-			case 5: // 
+			case 5: //
 			{
 				RaumViewFeld=[OG1Feld  frame];;
 			}break;
 				
-			case 6: // 
+			case 6: //
 			{
 				RaumViewFeld=[OG2Feld frame];
 			}break;
 				
-			case 7: // 
+			case 7: //
 			{
 				RaumViewFeld=[EstrichFeld frame];
 			}break;
@@ -390,7 +390,7 @@ return returnInt;
 		NSArray*  tempGeometrieArray=[RaumView setWochenplanForRaum:raum mitWochenplanArray:[[HomebusArray objectAtIndex:raum]objectForKey:@"wochenplanarray"]];
 		
 		//NSLog(@"tempGeometrieArray: %@",[tempGeometrieArray description]);
-		// View-Hierarchie 	
+		// View-Hierarchie
 		float y=[RaumView frame].origin.y;
 		float h=[RaumView frame].size.height;
 		//NSLog(@"y: %2.2f h: %2.2f",y,h);
@@ -422,7 +422,7 @@ return returnInt;
 		
 		if (aktuellerWochentag)
 		{
-//		newRaumScrollOrigin.y -=	[[GeometrieArray objectAtIndex:aktuellerWochentag-1]floatValue];
+         //       newRaumScrollOrigin.y -=	[[GeometrieArray objectAtIndex:aktuellerWochentag-1]floatValue];
 		}
 		[[RaumScroller documentView] scrollPoint:newRaumScrollOrigin];
 		
@@ -448,7 +448,7 @@ return returnInt;
 			[ObjektSeg setLabel:tempTitel forSegment:i];
 			int tempAktiv=[[[[[tempWochenplanArray objectAtIndex:0]objectForKey:@"tagplanarray"]objectAtIndex:i]objectForKey:@"aktiv"]intValue];
 			[ObjektSeg setSelected:tempAktiv forSegment:i];
-		
+         
 		}
 		[ObjektSeg setEnabled:YES];
 		
@@ -472,7 +472,7 @@ return returnInt;
 	EEPROMFeld.origin.y +=(EEPROMFeld.size.height - 40);
 	EEPROMFeld.origin.x +=10;
 	EEPROMFeld.size.height = 30;
-	EEPROMFeld.size.width -= 60;
+	EEPROMFeld.size.width -= 70;
 	EEPROMbalken=[[rEEPROMbalken alloc]initWithFrame:EEPROMFeld];
 	[EEPROMbalken BalkenAnlegen];
 	
@@ -504,7 +504,7 @@ return returnInt;
 		[scanner scanHexInt:&tempInt];
 		Hexint = [NSNumber numberWithInt:tempInt];
 		//NSLog(@"hexString: %@ Hexint: %d",hexString,Hexint);
-
+      
 		[tempDic setObject:hexString forKey:[bitnummerArray objectAtIndex:i%6]];
 		[tempByteArray addObject:hexString];
 	}
@@ -582,20 +582,20 @@ return returnInt;
 	NSString* VersionString = [NSString stringWithFormat:@"Version %@",VERSION];
 	[VersionFeld setStringValue:VersionString];
 	/*
-	NSMutableDictionary* StartDicA=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
-	[StartDicA setObject:@"AAA" forKey:@"art"];
-	[StartDicA setObject:[NSNumber numberWithInt:1] forKey:@"wert"];
-	[WEBDATATabelle addObject:StartDicA];
-	NSMutableDictionary* StartDicB=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
-	[StartDicB setObject:@"BBB" forKey:@"art"];
-	[StartDicB setObject:[NSNumber numberWithInt:2] forKey:@"wert"];
-	[WEBDATATabelle addObject:StartDicB];
-
-	//NSLog(@"AVR awake WEBDATATabelle: %@",[WEBDATATabelle description]); 
-	[WEBDATA_DS setValueKeyArray:WEBDATATabelle];
-	[WEBDATATable reloadData];
-	*/
-//	[self setSegmentLabel:@"Ofen" forSegment:1 forRaum:4];
+    NSMutableDictionary* StartDicA=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+    [StartDicA setObject:@"AAA" forKey:@"art"];
+    [StartDicA setObject:[NSNumber numberWithInt:1] forKey:@"wert"];
+    [WEBDATATabelle addObject:StartDicA];
+    NSMutableDictionary* StartDicB=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+    [StartDicB setObject:@"BBB" forKey:@"art"];
+    [StartDicB setObject:[NSNumber numberWithInt:2] forKey:@"wert"];
+    [WEBDATATabelle addObject:StartDicB];
+    
+    //NSLog(@"AVR awake WEBDATATabelle: %@",[WEBDATATabelle description]);
+    [WEBDATA_DS setValueKeyArray:WEBDATATabelle];
+    [WEBDATATable reloadData];
+    */
+   //	[self setSegmentLabel:@"Ofen" forSegment:1 forRaum:4];
 	[self setObjektTitel:@"Ofen" forObjekt:1 forRaum:4];
 }
 
@@ -715,8 +715,6 @@ return returnInt;
 		
 		[[RaumScroller documentView] scrollPoint:newRaumScrollOrigin];
 		
-
-		
 		
 		NSRect SegFeld=RaumViewFeld;
 		SegFeld.origin.y-=40;
@@ -750,7 +748,7 @@ return returnInt;
 
 - (void)checkHomebus
 {
-	//NSLog(@"checkHomebus");
+	NSLog(@"checkHomebus");
 	NSArray* Wochentage=[[NSArray arrayWithObjects:@"MO",@"DI", @"MI", @"DO", @"FR", @"SA", @"SO",nil]retain];
 	NSArray* Raumnamen=[[NSArray arrayWithObjects:@"Heizung", @"Werkstatt", @"WoZi", @"Buero", @"Labor", @"OG1", @"OG2", @"Estrich", nil]retain];
 	int i,k,l,s;
@@ -760,7 +758,8 @@ return returnInt;
 		{
 			NSMutableDictionary* tempRaumDic=[HomebusArray objectAtIndex:i];
 			if (![tempRaumDic objectForKey:@"raumname"])
-			{
+		
+         {
 				[tempRaumDic setObject:[Raumnamen objectAtIndex:i] forKey:@"raumname"];
 			}
 			if (![tempRaumDic objectForKey:@"raum"])
@@ -787,27 +786,29 @@ return returnInt;
 							NSMutableArray* tempTagplanArray=(NSMutableArray*)[tempWochenplanDic objectForKey:@"tagplanarray"];
 							for (l=0;l<8;l++) //8 Objekte
 							{
+                        NSLog(@"Raum: %d Tag: %d",i,k);
 								if ([tempTagplanArray objectAtIndex:l]) // TagplanDic fuer Objekt l ist da
 								{
+                           //NSLog(@"Object ist da");
 									//TagplanDic fuer Woche i, Wochentag k, Objekt l
 									NSMutableDictionary* tempTagplanDic=(NSMutableDictionary*)[tempTagplanArray objectAtIndex:l];
 									if (![tempTagplanDic objectForKey:@"aktiv"])
 									{
-									NSLog(@"noch kein aktiv");
-									[tempTagplanDic setObject:[NSNumber numberWithInt:1] forKey:@"aktiv"];
+                              NSLog(@"noch kein aktiv");
+                              [tempTagplanDic setObject:[NSNumber numberWithInt:1] forKey:@"aktiv"];
 									}
-
+                           
 									if (![tempTagplanDic objectForKey:@"objekt"])
 									{
-									NSLog(@"noch keine objektnummer");
-									[tempTagplanDic setObject:[NSNumber numberWithInt:l] forKey:@"objekt"];
+                              NSLog(@"noch keine objektnummer");
+                              [tempTagplanDic setObject:[NSNumber numberWithInt:l] forKey:@"objekt"];
 									}
 									if (![tempTagplanDic objectForKey:@"tagbalkentyp"])
 									{
-									NSLog(@"noch kein tagbalkentyp");
-									[tempTagplanDic setObject:[NSNumber numberWithInt:0] forKey:@"tagbalkentyp"];
+                              NSLog(@"noch kein tagbalkentyp");
+                              [tempTagplanDic setObject:[NSNumber numberWithInt:0] forKey:@"tagbalkentyp"];
 									}
-								
+                           
 									
 									if ([tempTagplanDic objectForKey:@"stundenplanarray"]) // Stundenplanarray ist da
 									{
@@ -844,7 +845,7 @@ return returnInt;
 									[tempTagplanDic setObject:[NSString stringWithFormat:@"Objekt %d",l] forKey:@"objektname"];
 									[tempTagplanDic setObject:[self neuerStundenplan] forKey:@"stundenplanarray"];
 									[tempTagplanDic setObject:[NSNumber numberWithInt:1] forKey:@"aktiv"];
-
+                           
 									[tempTagplanArray addObject:tempTagplanDic];
 									
 								} // tagplanDic
@@ -939,7 +940,7 @@ return returnInt;
 		
 		[tempWochenplanArray addObject:tempWochenplanDic];
 		NSMutableArray* tempTagplanArray =(NSMutableArray*)[self neuerTagplanForTag:k forRaum:derRaum];
-		[tempWochenplanDic setObject:tempTagplanArray forKey:@"tagplanarray"];
+	//	[tempWochenplanDic setObject:tempTagplanArray forKey:@"tagplanarray"];
 	}
 	return tempWochenplanArray;
 }

@@ -455,7 +455,7 @@ if (Webserver_busy)
 	
 - (void)WriteModifierTimerfunktion:(NSTimer*)derTimer
 {
-	NSArray* Wochentage=[NSArray arrayWithObjects:@"MO",@"DI",@"MI",@"DO",@"FR",@"SA",@"SO",nil];
+	NSArray* Wochentage=[NSArray arrayWithObjects:@"M<",@"DI",@"MI",@"DO",@"FR",@"SA",@"SO",nil];
 	NSLog(@"WriteModifierTimerfunktion WriteWoche_busy: %d",WriteWoche_busy);
 	NSMutableDictionary* WriteTimerDic=(NSMutableDictionary*) [derTimer userInfo];
 	//NSLog(@"WriteModifierTimerfunktion  WriteTimerDic: %@",[WriteTimerDic description]);

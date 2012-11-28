@@ -667,6 +667,8 @@ return mark;
 	TagPunkt.y+=Elementhoehe*5/8;
 	//NSLog(@"Tagplanbalken drawRect: Titel: %@",Titel);
 	[Titel drawAtPoint:TagPunkt withAttributes:TitelAttrs];
+   
+   
 	//NSLog(@"Tag: %d Tagpunkt x: %2.2f  y: %2.2f",tag, TagPunkt.x, TagPunkt.y);
 //	[[Wochentage objectAtIndex:tag] drawAtPoint:TagPunkt withAttributes:TagAttrs];
 	

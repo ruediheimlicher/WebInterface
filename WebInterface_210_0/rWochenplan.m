@@ -49,7 +49,7 @@
 	NSMutableDictionary* GeometrieDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
 	NSMutableArray* GeometrieArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
 
-	NSArray* Wochentage=[[NSArray arrayWithObjects:@"MO",@"DI", @"MI", @"DO", @"FR", @"SA", @"SO",nil]retain];
+	NSArray* Wochentage=[[NSArray arrayWithObjects:@"M<",@"DI", @"MI", @"DO", @"FR", @"SA", @"SO",nil]retain];
 	NSArray* Raumnamen=[[NSArray arrayWithObjects:@"Heizung", @"Werkstatt", @"WoZi", @"Buero", @"Labor", @"OG1", @"OG2", @"Estrich", nil]retain];
 	//NSLog(@"\n\nsetWochenplanForRaum: : %d    start",derRaum);
 	//NSLog(@"setWochenplanForRaum: derWochenplanArray: %@",[derWochenplanArray description]);
@@ -143,7 +143,8 @@
 	PlanFeld.origin.y=[self frame].size.height-Tagplanhoehe-8; //erster Plan oben
 	PlanFeld.size.width=[self frame].size.width-20;
 	PlanFeld.size.height=Tagplanhoehe;
-	
+   
+
 	int PlanfeldLevel=PlanFeld.origin.y - TagplanAbstand; //Ecke links unten des obersten Tagplans
 	int wochentag;
 	for (wochentag=0;wochentag<7;wochentag++)	// 7 Tagplaene erstellen
@@ -151,7 +152,10 @@
 		//NSLog(@"Bueroplan awake wochentag:%d : x: %2.2f y: %2.2f height: %2.2f width: %2.2f",tag,BueroplanFeld.origin.x,BueroplanFeld.origin.y,BueroplanFeld.size.height,BueroplanFeld.size.width);
 		//NSMutableDictionary* TagplanPListDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
 		//NSLog(@"Wochentage %@",[Wochentage objectAtIndex:wochentag]);
-
+      
+      
+      
+      
 		NSRect Balkenfeld=PlanFeld;
 		// Feld fuer die Tagplanbalken
 		rTagplan* Tagplan=[[rTagplan alloc]initWithFrame:Balkenfeld];
@@ -545,7 +549,7 @@
 - (void)drawRect:(NSRect)rect 
 {
     // Drawing code here.
-	
+ 
 	
 	
 }

@@ -13,9 +13,11 @@
 {
 int Raum;
 int anzAktiv;
+NSButton* heuteTaste;
 
 NSMutableArray*		aktivObjektArray;
 NSMutableArray*		TagplanArray;
+   
 }
 - (void)setTagplanVonObjekt:(int)dasObjekt;
 - (NSArray*)setWochenplanForRaum:(int)derRaum mitWochenplanArray:(NSArray*)derWochenplanArray;

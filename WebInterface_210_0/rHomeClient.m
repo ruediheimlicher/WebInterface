@@ -518,25 +518,45 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 - (void)HomeClientWriteStandardAktion:(NSNotification*)note
 {
 	/*
-	Einfuegen in ehemaliger EEPROMWrite-Aktion (iow):
-	- Daten aus StundenByteArray
-	- logString=[logString stringByAppendingString:[NSString stringWithFormat:@"%02X ",[[dieDaten objectAtIndex:xy]intValue]]];
-
-	
-	*/
+    Einfuegen in ehemaliger EEPROMWrite-Aktion (iow):
+    - Daten aus StundenByteArray
+    - logString=[logString stringByAppendingString:[NSString stringWithFormat:@"%02X ",[[dieDaten objectAtIndex:xy]intValue]]];
+    
+    
+    */
 	NSLog(@"HomeClientWriteStandardAktion note stundenbytearray %@",[[[note userInfo]objectForKey:@"stundenbytearray"]description]);
-//	int Raum=[[[note userInfo]objectForKey:@"raum"]intValue];
-//	int Wochentag=[[[note userInfo]objectForKey:@"wochentag"]intValue];
-//	int Objekt=[[[note userInfo]objectForKey:@"objekt"]intValue];
-//	NSArray* DatenArray=[[note userInfo]objectForKey:@"stundenarray"];
+   //	int Raum=[[[note userInfo]objectForKey:@"raum"]intValue];
+   //	int Wochentag=[[[note userInfo]objectForKey:@"wochentag"]intValue];
+   //	int Objekt=[[[note userInfo]objectForKey:@"objekt"]intValue];
+   //	NSArray* DatenArray=[[note userInfo]objectForKey:@"stundenarray"];
 	NSArray* DatenByteArray=[[note userInfo]objectForKey:@"stundenbytearray"];
+   
+	NSString* lbyte=[[[note userInfo]objectForKey:@"lbyte"]stringValue];
+	NSString* hbyte=[[[note userInfo]objectForKey:@"hbyte"]stringValue];
+   
+   
+   
+   if ([lbyte length]==1)
+   {
+      lbyte = [@"0" stringByAppendingString:lbyte];
+   }
 
-	NSString* lbyte=[[note userInfo]objectForKey:@"lbyte"];
-	NSString* hbyte=[[note userInfo]objectForKey:@"hbyte"];
+   if ([hbyte length]==1)
+   {
+      hbyte = [@"0" stringByAppendingString:hbyte];
+   }
+
+   
+   [SendEEPROMDataDic setObject:hbyte forKey:@"hbyte"];
+   [SendEEPROMDataDic setObject:lbyte forKey:@"lbyte"];
+   [SendEEPROMDataDic setObject:[NSNumber numberWithInt:1]forKey:@"adrload"];
+   [SendEEPROMDataDic setObject:[NSNumber numberWithInt:0]forKey:@"dataload"];
+   
+   
 	//NSString* EEPROM_i2cAdresseString=[I2CPop itemTitleAtIndex:I2CIndex];
 	//AnzahlDaten=0x20; //32 Bytes, TAGPLANBREITE;
-//	unsigned int EEPROM_i2cAdresse = [[[note userInfo]objectForKey:@"eepromadresse"]intValue];
-//	NSString*  EEPROM_i2cAdresse_String = [[note userInfo]objectForKey:@"eepromadressestring"];
+   //	unsigned int EEPROM_i2cAdresse = [[[note userInfo]objectForKey:@"eepromadresse"]intValue];
+   //	NSString*  EEPROM_i2cAdresse_String = [[note userInfo]objectForKey:@"eepromadressestring"];
 	NSString*  EEPROM_i2cAdresse_Zusatz = [[note userInfo]objectForKey:@"eepromadressezusatz"];
 	// URL aufbauen
 	NSString* WriteDataSuffix=[NSString string];
@@ -544,7 +564,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 	{
 		// URL aufbauen
 		// pw, Adresszusatz fuer das EEPROM (wadr) anfuegen
-		WriteDataSuffix = [NSString stringWithFormat:@"pw=%@&wadr=%@",pw,EEPROM_i2cAdresse_Zusatz]; 
+		WriteDataSuffix = [NSString stringWithFormat:@"pw=%@&wadr=%@",pw,EEPROM_i2cAdresse_Zusatz];
 		
 		// lbyte, hbyte anfuegen
 		WriteDataSuffix = [NSString stringWithFormat:@"%@&lbyte=%@&hbyte=%@",WriteDataSuffix,lbyte,hbyte];
@@ -564,7 +584,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 			{
 				DataString= [NSString stringWithFormat:@"%@%x",DataString,[[DatenByteArray objectAtIndex:i]intValue]];
 				//TestString= [NSString stringWithFormat:@"%@%x",TestString,[[DatenByteArray objectAtIndex:i]intValue]];
-			
+            
 			}
 			else
 			{
@@ -580,93 +600,93 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 		}
 		//NSLog(@"HomeClientWriteStandardAktion DataString: %@ TestString: %@",DataString, TestString);
 		/*
-		// +++++++++
-		uint8_t data[8];
-		const char* urlbuf= [TestString UTF8String];
-		char* buffer;
-		buffer = malloc (32);
-		strcpy(buffer, urlbuf);
-		printf("C-String urlbuf\n");
-		printf(urlbuf);
-		printf("\n");
-		//NSLog(@"\nurlbuf: %c\n",urlbuf);
-		
-		uint8_t index=0;
-		char* linePtr = malloc(32);
-		linePtr = strtok(buffer,"+");
-		
-		printf("buffer: %s\n", buffer);
-		
-		while (linePtr !=NULL)
-		{
-		printf("index: %d linePtr: %s\n", index,linePtr);
-		
-		data[index++] = strtol(linePtr,NULL,16); //http://www.mkssoftware.com/docs/man3/strtol.3.asp
-		//strcpy(linePtr,&data[index++]);
-		linePtr = strtok(NULL,"+");
-		}
-		
-		NSLog(@"A  data: %d %d %d %d %d %d %d %d",data[0],data[1],data[2],data[3],data[4],data[5],data[6],data[7]);
-		printf("\ndata: %d %d %d %d %d %d %d %d\n",data[0],data[1],data[2],data[3],data[4],data[5],data[6],data[7]);
-		
-		NSLog(@"++");
-		//void eepromdecode(char *urlbuf, char data[])
-		*/
+       // +++++++++
+       uint8_t data[8];
+       const char* urlbuf= [TestString UTF8String];
+       char* buffer;
+       buffer = malloc (32);
+       strcpy(buffer, urlbuf);
+       printf("C-String urlbuf\n");
+       printf(urlbuf);
+       printf("\n");
+       //NSLog(@"\nurlbuf: %c\n",urlbuf);
+       
+       uint8_t index=0;
+       char* linePtr = malloc(32);
+       linePtr = strtok(buffer,"+");
+       
+       printf("buffer: %s\n", buffer);
+       
+       while (linePtr !=NULL)
+       {
+       printf("index: %d linePtr: %s\n", index,linePtr);
+       
+       data[index++] = strtol(linePtr,NULL,16); //http://www.mkssoftware.com/docs/man3/strtol.3.asp
+       //strcpy(linePtr,&data[index++]);
+       linePtr = strtok(NULL,"+");
+       }
+       
+       NSLog(@"A  data: %d %d %d %d %d %d %d %d",data[0],data[1],data[2],data[3],data[4],data[5],data[6],data[7]);
+       printf("\ndata: %d %d %d %d %d %d %d %d\n",data[0],data[1],data[2],data[3],data[4],data[5],data[6],data[7]);
+       
+       NSLog(@"++");
+       //void eepromdecode(char *urlbuf, char data[])
+       */
 		/*
-		{
-		const char* urlbuf= [TestString UTF8String];
-		NSLog(@"\nurlbuf 2: %s\n",urlbuf);
-			uint8_t index=0;
-			char c;
-			char *dst = malloc(32);
-			char* data[8];
-			uint8_t l=strlen(urlbuf);
-			//dst=urlbuf;
-			while (c = *urlbuf)
-			{
-				printf("\n\nc aus urlbuf: %c\n",c);
-				if (c == '+') // Trennung
-				{
-					printf("\nZeichen ist + dst: %s *\n",dst);
-					//+*dst = '\0';
-					int l=strlen(dst);
-					printf("l: %d",l);
-					//dst[l+1] = '\0';
-					printf(" * dst: ");
-					printf(dst);
-					printf("*\n");
-					//int i=atoi(dst);
-					
-					//NSLog(@"index: %d i: %d",index, i);
-					//data[index]=i;
-					//strcpy( data[index],dst);
-					index++;
-					urlbuf++;
-					//+*dst = '\0';
-					//c = *urlbuf;
-					//urlbuf++;
-					//c = (h2int(c) << 4) | h2int(*urlbuf);
-				}
-				else
-				{
-				*dst = c;
-				
-				}
-				printf("dst ende: %s\n",dst);
-				//dst++;
-				urlbuf++;
-				
-			} // while
-			
-			// *dst = '\0';
-			//l=strlen(data);
-			
-			//NSString* ResString= [NSString stringWithUTF8String:data];
-	//	NSLog(@"data: %d %d %d %d",data[0],data[1],data[2],data[3]);
-		NSLog(@"\ndata: %c",data[0]);
-
-		}
-		*/
+       {
+       const char* urlbuf= [TestString UTF8String];
+       NSLog(@"\nurlbuf 2: %s\n",urlbuf);
+       uint8_t index=0;
+       char c;
+       char *dst = malloc(32);
+       char* data[8];
+       uint8_t l=strlen(urlbuf);
+       //dst=urlbuf;
+       while (c = *urlbuf)
+       {
+       printf("\n\nc aus urlbuf: %c\n",c);
+       if (c == '+') // Trennung
+       {
+       printf("\nZeichen ist + dst: %s *\n",dst);
+       //+*dst = '\0';
+       int l=strlen(dst);
+       printf("l: %d",l);
+       //dst[l+1] = '\0';
+       printf(" * dst: ");
+       printf(dst);
+       printf("*\n");
+       //int i=atoi(dst);
+       
+       //NSLog(@"index: %d i: %d",index, i);
+       //data[index]=i;
+       //strcpy( data[index],dst);
+       index++;
+       urlbuf++;
+       //+*dst = '\0';
+       //c = *urlbuf;
+       //urlbuf++;
+       //c = (h2int(c) << 4) | h2int(*urlbuf);
+       }
+       else
+       {
+       *dst = c;
+       
+       }
+       printf("dst ende: %s\n",dst);
+       //dst++;
+       urlbuf++;
+       
+       } // while
+       
+       // *dst = '\0';
+       //l=strlen(data);
+       
+       //NSString* ResString= [NSString stringWithUTF8String:data];
+       //	NSLog(@"data: %d %d %d %d",data[0],data[1],data[2],data[3]);
+       NSLog(@"\ndata: %c",data[0]);
+       
+       }
+       */
 		
 		
 		// +++++++++++++++
@@ -674,22 +694,35 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 		WriteDataSuffix = [NSString stringWithFormat:@"%@%@",WriteDataSuffix,DataString];
 		//NSLog(@"HomeClientWriteStandardAktion WriteDataSuffix ganz: %@",WriteDataSuffix);
 	}
-		NSString* HomeClientURLString =[NSString stringWithFormat:@"%@/twi?%@",HomeCentralURL, WriteDataSuffix];
-		NSLog(@"HomeClientWriteStandardAktion HomeClientURLString: %@",HomeClientURLString);
-		NSURL *URL = [NSURL URLWithString:HomeClientURLString];
-		
-		[self loadURL:URL];
-
+   NSString* HomeClientURLString =[NSString stringWithFormat:@"%@/twi?%@",HomeCentralURL, WriteDataSuffix];
+   NSLog(@"HomeClientWriteStandardAktion HomeClientURLString: %@",HomeClientURLString);
+   NSURL *URL = [NSURL URLWithString:HomeClientURLString];
    
-	
-	//NSScanner* theScanner = [NSScanner scannerWithString:EEPROM_i2cAdresseString];
-	//int ScannerErfolg=[theScanner scanHexInt:&EEPROM_i2cAdresse];
-	
-	//uint16_t i2cStartadresse=Raum*RAUMPLANBREITE + Objekt*TAGPLANBREITE+ Wochentag*0x08;
-	//NSLog(@"WriteStandardAktion Raum: %d wochentag: %d Objekt: %d EEPROM: %02X i2cStartadresse: 0x%04X ",Raum, Wochentag, Objekt,EEPROM_i2cAdresse,i2cStartadresse);
-
-	//[self writeEEPROM:EEPROM_i2cAdresse anAdresse:i2cStartadresse mitDaten:DatenArray];
-	}
+   [self loadURL:URL];
+   
+   NSString* EEPROM_DataString=[DatenByteArray componentsJoinedByString:@"+"];
+   EEPROM_DataString= [EEPROM_DataString stringByAppendingString:@"+ff+ff"];
+   NSLog(@"EEPROM_DataString: %@",EEPROM_DataString);
+   //NSLog(@"EEPROM_DataString: l=%d",[EEPROM_DataString length]);
+   
+ 
+   // Datastring sichern fuer senden an HomeServer
+   if ([EEPROM_DataString length])
+   {
+      [SendEEPROMDataDic setObject:EEPROM_DataString forKey:@"eepromdatastring"];
+      [SendEEPROMDataDic setObject:[NSNumber numberWithInt:1] forKey:@"dataload"];
+      if ([SendEEPROMDataDic objectForKey:@"adrload"])
+      {
+         if ([[SendEEPROMDataDic objectForKey:@"adrload"]intValue]==1 )// EEPROMAdresse ist da
+         {
+            NSLog(@"SendEEPROMDataDic: %@",[SendEEPROMDataDic description]);
+            //[nc postNotificationName:@"EEPROMsend2HomeServer" object:self userInfo:tempDataDic];
+ //           [self sendEEPROMDataMitDic:SendEEPROMDataDic];
+         }
+      }// adrload
+   } // if length
+   
+}
 
 
 - (void)HomeClientWriteModifierAktion:(NSNotification*)note
@@ -830,7 +863,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 }
 
 #pragma mark EEPROM 2 HomeServer
-- (int)sendEEPROMDataMitDic:(NSDictionary*)EEPROMDataDic;
+- (int)sendEEPROMDataMitDic:(NSDictionary*)EEPROMDataDic
 {
    int err=0;
    NSLog(@"sendEEPROMDataMitDic URL: %s EEPROMDataDic: %@",WEBSERVER_VHOST ,[EEPROMDataDic description] );
@@ -853,10 +886,10 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
                                    [EEPROMDataDic objectForKey:@"lbyte"],
                                    [EEPROMDataDic objectForKey:@"eepromdatastring"]
                                    ];
-            //NSLog(@"URLString: %@",URLString );
+            NSLog(@"URLString: %@",URLString );
             
             NSURL *URL = [NSURL URLWithString:URLString];
-            NSLog(@"URL: %@",URL );
+            NSLog(@"sendEEPROM URL: %@",URL );
             NSURLRequest *HCRequest = [ [NSURLRequest alloc] initWithURL: URL cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:2.0];
             //	[[NSURLCache sharedURLCache] removeAllCachedResponses];
             //	NSLog(@"Cache mem: %d",[[NSURLCache sharedURLCache]memoryCapacity]);
@@ -1080,7 +1113,27 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 			[tempDataDic setObject:[NSNumber numberWithInt:1] forKey:@"writeok"];
 			[confirmTimer invalidate];
 			
-		}
+         // Daten an HomeServer schicken
+         if ([SendEEPROMDataDic objectForKey:@"dataload"])
+         {
+            if ([[SendEEPROMDataDic objectForKey:@"dataload"]intValue]==1 )// EEPROM Data ist da
+            {
+               
+               if ([SendEEPROMDataDic objectForKey:@"adrload"])
+               {
+                  if ([[SendEEPROMDataDic objectForKey:@"adrload"]intValue]==1 )// EEPROMAdresse ist da
+                  {
+                     NSLog(@"SendEEPROMDataDic: %@",[SendEEPROMDataDic description]);
+                     //[nc postNotificationName:@"EEPROMsend2HomeServer" object:self userInfo:tempDataDic];
+                     [self sendEEPROMDataMitDic:SendEEPROMDataDic];
+                  }
+               }// adrload
+            }
+         }
+         
+         
+         
+      }
 		else
 		{
 			[tempDataDic setObject:[NSNumber numberWithInt:0] forKey:@"writeok"];
@@ -1163,7 +1216,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
                {
                   NSLog(@"SendEEPROMDataDic: %@",[SendEEPROMDataDic description]);
                   //[nc postNotificationName:@"EEPROMsend2HomeServer" object:self userInfo:tempDataDic];
-                  [self sendEEPROMDataDic:SendEEPROMDataDic];
+                  [self sendEEPROMDataMitDic:SendEEPROMDataDic];
                }
             }// adrload
          } // if length

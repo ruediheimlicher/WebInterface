@@ -1188,6 +1188,30 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
 
 }
 
+/*
+ // Ablauf bei lesen von EEPROM
+ 
+ 2012-12-16 20:21:45.112 WebInterface[20669:303] TWIReadStartURL: http://ruediheimlicher.dyndns.org/twi?pw=ideur00&radr=0&hb=00&lb=00
+ 2012-12-16 20:21:45.113 WebInterface[20669:303] didStartProvisionalLoadForFrame: URL: http://ruediheimlicher.dyndns.org/twi?pw=ideur00&radr=0&hb=00&lb=00
+ 2012-12-16 20:21:45.114 WebInterface[20669:303] AVRClient readEthTagplan EEPROMAddresse: 0 startadresse: 0  hbyte: 0 lbyte: 0
+ 2012-12-16 20:21:45.160 WebInterface[20669:303] didFinishLoadForFrame Antwort:
+ HTML_Inhalt: 				<html><head></head><body><p>okcode=radr</p></body></html>
+ 2012-12-16 20:21:45.161 WebInterface[20669:303] radrok
+ 2012-12-16 20:21:47.162 WebInterface[20669:303] sendTimer fire  Anzahl: 10
+ 2012-12-16 20:21:47.162 WebInterface[20669:303] sendTimer fire URL: http://ruediheimlicher.dyndns.org/twi?pw=ideur00&rdata=10
+ 2012-12-16 20:21:47.164 WebInterface[20669:303] didStartProvisionalLoadForFrame: URL: http://ruediheimlicher.dyndns.org/twi?pw=ideur00&rdata=10
+ 2012-12-16 20:21:47.176 WebInterface[20669:303] didFinishLoadForFrame Antwort:
+ HTML_Inhalt: 				<html><head></head><body><p>data=0+f+f3+33+ff+fd+ff+ff</p></body></html>
+ 2012-12-16 20:21:47.176 WebInterface[20669:303] FinishLoadAktion EEPROM lesen: data ist da
+ 2012-12-16 20:21:47.178 WebInterface[20669:303] TimeoutTimer start
+ 2012-12-16 20:21:49.379 WebInterface[20669:303] AVRClient setTWIState: state: 1
+ 2012-12-16 20:21:49.380 WebInterface[20669:303] didStartProvisionalLoadForFrame: URL: http://ruediheimlicher.dyndns.org/twi?pw=ideur00&status=1
+ 2012-12-16 20:21:49.459 WebInterface[20669:303] didFinishLoadForFrame Antwort:
+ HTML_Inhalt: 				<html><head></head><body><p>okcode=status1</p></body></html>
+
+ */
+
+
 
 - (void)ExterneDatenAktion:(NSNotification*)note
 {
@@ -1226,7 +1250,9 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
 //		NSArray* BrennerKanalArray=		[NSArray arrayWithObjects:@"1",@"1",@"0",@"0" ,@"0",@"0",@"0",@"0",nil];
 		
 		NSArray* tempDatenArray = [[note userInfo]objectForKey:@"datenarray"];
-		//NSLog(@"ExterneDatenAktion tempDatenArray last Data:%@",[[tempDatenArray lastObject]description]);
+		
+      
+      NSLog(@"ExterneDatenAktion tempDatenArray last Data:%@",[[tempDatenArray lastObject]description]);
 		
 		// Zeit des ersten Datensatzes
 		int firstZeit = [[[[tempDatenArray objectAtIndex:0] componentsSeparatedByString:@"\t"]objectAtIndex:0]intValue];

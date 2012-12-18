@@ -27,6 +27,9 @@ static NSString *HTMLDocumentType = @"HTML document";
 	NSTimer* confirmTimer;
 	NSTimer* confirmStatusTimer;
 	int maxAnzahl;
+  
+   // Dic fuer Senden von EEPROMDaten an HomeServer
+   NSMutableDictionary* SendEEPROMDataDic;
 	
 }
 
@@ -40,5 +43,7 @@ static NSString *HTMLDocumentType = @"HTML document";
 - (void)setFrameStatus: (NSString *)s;
 - (NSString *)dataRepresentationOfType:(NSString *)aType;
 
+// Data an Homeserver schicken
+- (int)sendEEPROMDataMitDic:(NSDictionary*)EEPROMDataDic;
 
 @end

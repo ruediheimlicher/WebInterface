@@ -1346,6 +1346,9 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
     }
 }
 
+#pragma mark Write to Homeserver
+
+
 #pragma mark NSURLDownloadDelegate methods
 
 - (NSCachedURLResponse *)connection:(NSURLConnection *)connection willCacheResponse:(NSCachedURLResponse *)cachedResponse 

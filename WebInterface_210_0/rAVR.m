@@ -81,7 +81,7 @@ return returnInt;
 	nc=[NSNotificationCenter defaultCenter];
 	
 		[nc addObserver:self
-		   selector:@selector(TagplancodeAktion:)
+		   selector:@selector(TagplancodeAktion:) // Mausklicks im Tagplanbalken
 			   name:@"Tagplancode"
 			 object:nil];
 
@@ -148,6 +148,8 @@ return returnInt;
 	WochenplanDic=[[[NSMutableDictionary alloc]initWithCapacity:0]retain];
 	Eingangsdaten=[[[NSMutableArray alloc]initWithCapacity:0]retain];
 	EEPROMArray=[[[NSMutableArray alloc]initWithCapacity:0]retain];
+   
+   
 	NSFileManager *Filemanager=[NSFileManager defaultManager];
 
 	HomedataPfad=[NSHomeDirectory() stringByAppendingPathComponent:@"documents/HomeData"];
@@ -427,6 +429,8 @@ return returnInt;
 		[[RaumScroller documentView] scrollPoint:newRaumScrollOrigin];
 		
 		
+      // SegmentedControl configurieren
+      
 		NSRect SegFeld=RaumViewFeld;
 		SegFeld.origin.y-=40;
 		SegFeld.size.height=50;
@@ -715,7 +719,8 @@ return returnInt;
 		
 		[[RaumScroller documentView] scrollPoint:newRaumScrollOrigin];
 		
-		
+		// SegmentedControl configurieren
+   
 		NSRect SegFeld=RaumViewFeld;
 		SegFeld.origin.y-=40;
 		SegFeld.size.height=50;
@@ -1140,6 +1145,8 @@ return returnInt;
 
 
 - (void)TagplancodeAktion:(NSNotification*)note
+
+   // Mausklicks im Tagplanbalken speichern
 {
 	//NSLog(@"AVR TagplancodeAktion: %@",[[note userInfo]description]);
 	//NSLog(@"AVR TagplancodeAktion: %@",[[note userInfo]objectForKey:@"quelle"]);
@@ -1165,7 +1172,7 @@ return returnInt;
 	//NSLog(@"HomebusArray: %@",[HomebusArray description]);
 	NSMutableArray* tempWochenplanArray;
 	
-	if ([HomebusArray objectAtIndex:RaumIndex])	
+	if ([HomebusArray objectAtIndex:RaumIndex])	// Daten aus PList: Element von HomeDic
 	{
 		//NSLog(@"TagplancodeAktion Raumdic");
 		if ([[HomebusArray objectAtIndex:RaumIndex]objectForKey:@"wochenplanarray"])
@@ -1305,11 +1312,12 @@ return returnInt;
 
 - (IBAction)ObjektSegAktion:(id)sender
 {
-    int clickedSegment = [sender selectedSegment];
+   // SegmentedControl wurde angeklickt: Tagplanbalken einfuegen oder loeschen
+   int clickedSegment = [sender selectedSegment];
 	int Status=[sender isSelectedForSegment:clickedSegment];
 	
-    int clickedSegmentTag = [[sender cell] tagForSegment:clickedSegment];
-	 
+   int clickedSegmentTag = [[sender cell] tagForSegment:clickedSegment];
+   
    NSLog(@"clickedSegmentTag: %d Status: %d ",clickedSegmentTag,Status);
 	NSLog(@"aus superview: %@",[[sender superview]viewWithTag:clickedSegmentTag]);
 	//NSLog(@"origin.x %2.2f size.width: %2.2f",[sender frame].origin.x,[sender frame].size.width);
@@ -1318,16 +1326,16 @@ return returnInt;
 	
 	NSLog(@"Raum: %d Segment: %d",Raum, Segment);
 	if(([[NSApp currentEvent] modifierFlags] & NSAlternateKeyMask)  != 0)
-	{	
+	{
 		NSTextField* LabelTextFeld;
 		//NSLog(@"ObjektSegAktion Alt");
 		
 		if ([[sender superview]viewWithTag:clickedSegmentTag]) // Es hat ein Textfeld fuer CickedSegmentTag
 		{
 			LabelTextFeld=[[sender superview]viewWithTag:clickedSegmentTag];
-			//NSLog(@"LabelTextFeld ist da: %@",[LabelTextFeld stringValue]);
+			NSLog(@"LabelTextFeld ist da: %@",[LabelTextFeld stringValue]);
 			[sender setLabel:[LabelTextFeld stringValue] forSegment:clickedSegment];
-			if ([HomebusArray objectAtIndex:Raum])	
+			if ([HomebusArray objectAtIndex:Raum])
 			{
 				//NSLog(@"TagplancodeAktion Raumdic");
 				if ([[HomebusArray objectAtIndex:Raum]objectForKey:@"wochenplanarray"])
@@ -1349,15 +1357,12 @@ return returnInt;
 							//NSLog(@"Objekt: %d",wd);
 							int TagplanMark=100*Raum + 10*wd+ clickedSegment + WOCHENPLANOFFSET;
 							//NSLog(@"Wochentag: %d Objekt: %d TagplanMark %d",wd,clickedSegment,TagplanMark);
-							//if ([tempTabview viewWithTag:TagplanMark])
 							if ([tempTabview viewWithTag:TagplanMark])
-							//if ([[sender superview] viewWithTag:TagplanMark])
 							{
 								//NSLog(@"Mark: %d Tagplanbalken %d ist da. Titel: %@",TagplanMark,wd, [LabelTextFeld stringValue]);
 								[[tempTabview viewWithTag:TagplanMark]setTitel:[LabelTextFeld stringValue]];
 								//[[[sender superview] viewWithTag:TagplanMark]setTitel:[LabelTextFeld stringValue]];
 								[[tempTabview viewWithTag:TagplanMark]setNeedsDisplay:YES];
-								//[[[sender superview] viewWithTag:TagplanMark]setNeedsDisplay:YES];
 							}
 							
 						}
@@ -1376,12 +1381,12 @@ return returnInt;
 		{
 			if ((aktuelleMark<NSNotFound)&&[[sender superview]viewWithTag:aktuelleMark])
 			{
-			NSString* tempLabel=[[[sender superview]viewWithTag:aktuelleMark]stringValue];
-			
-			int lastSegment=(aktuelleMark-RAUMOFFSET)%10;;
-			NSLog(@"neues LabelTextFeld  aktuelleMark: %dlastLabel: %@ ",aktuelleMark,tempLabel);
-			[self saveLabel:tempLabel forRaum:Raum forSegment:lastSegment];
-			[[[sender superview]viewWithTag:aktuelleMark]removeFromSuperview];
+            NSString* tempLabel=[[[sender superview]viewWithTag:aktuelleMark]stringValue];
+            
+            int lastSegment=(aktuelleMark-RAUMOFFSET)%10;;
+            NSLog(@"neues LabelTextFeld  aktuelleMark: %dlastLabel: %@ ",aktuelleMark,tempLabel);
+            [self saveLabel:tempLabel forRaum:Raum forSegment:lastSegment];
+            [[[sender superview]viewWithTag:aktuelleMark]removeFromSuperview];
 			}
 			//NSLog(@"neues LabelTextFeld");
 			[sender setSelected:YES forSegment:clickedSegment];
@@ -1392,7 +1397,7 @@ return returnInt;
 			LabelFeld.size.width =80;
 			LabelTextFeld=[[[NSTextField alloc]initWithFrame:LabelFeld]autorelease];
 			[[sender superview]addSubview:LabelTextFeld];
-
+         
 			int erfolg=[[self window]makeFirstResponder:LabelTextFeld];
 			[LabelTextFeld setStringValue:[sender labelForSegment:clickedSegment]];
 			[LabelTextFeld setAction:@selector(saveLabeltext:)];
@@ -1408,15 +1413,15 @@ return returnInt;
 		NSLog(@"");
 		//NSLog(@"ObjektSegAktion Standard");
 		if ((aktuelleMark<NSNotFound)&&[[sender superview]viewWithTag:aktuelleMark])
-			{
+      {
 			NSString* tempLabel=[[[sender superview]viewWithTag:aktuelleMark]stringValue];
 			
 			int lastSegment=(aktuelleMark-RAUMOFFSET)%10;;
 			NSLog(@"Standard:aktuelleMark: %d lastLabel: %@",aktuelleMark,tempLabel);
 			[self saveLabel:tempLabel forRaum:Raum forSegment:lastSegment];
 			[[[sender superview]viewWithTag:aktuelleMark]removeFromSuperview];
-			}
-
+      }
+      
 		//NSLog(@"TagplancodeAktion Raumdic");
 		if ([[HomebusArray objectAtIndex:Raum]objectForKey:@"wochenplanarray"])
 		{
@@ -1814,11 +1819,12 @@ return returnInt;
 	}
 	
 	[self readEthTagplan:i2cadresse vonAdresse:tagIndex*TAGPLANBREITE anz:0x20];//32 Bytes, TAGPLANBREITE	return;
-	return;
 	
-	[self setI2CStatus:1];
-	[self readTagplan:i2cadresse vonAdresse:tagIndex*TAGPLANBREITE anz:0x20];//32 Bytes, TAGPLANBREITE
-	[self setI2CStatus:0];
+   return;
+	
+//	[self setI2CStatus:1];
+//	[self readTagplan:i2cadresse vonAdresse:tagIndex*TAGPLANBREITE anz:0x20];//32 Bytes, TAGPLANBREITE
+//	[self setI2CStatus:0];
 
 }
 
@@ -1987,7 +1993,7 @@ return returnInt;
 	
 	[Cmd setStringValue:[i2cCmdArray componentsJoinedByString:@" "]];				// Befehl in Feld einsetzen
 	
-	//NSLog(@"readTagplan: readEEPROMDic: %@",[readEEPROMDic description]);
+	NSLog(@"readTagplan: readEEPROMDic: %@",[readEEPROMDic description]);
 	[nc postNotificationName:@"i2ceepromread" object:self userInfo:readEEPROMDic];	// Notification an IOWarriorController abschicken
 	
 

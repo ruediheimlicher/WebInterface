@@ -327,10 +327,11 @@ NSLog(@"setWert Kanal: %d  x: %2.2f y: %2.2f ",derKanal, derWert.x, derWert.y);
 			neuerPunkt.x+=[[derWerteArray objectAtIndex:0]floatValue]*ZeitKompression;	//	Zeit, x-Wert, erster Wert im Array
 			float InputZahl=[[derWerteArray objectAtIndex:i+1]floatValue];	// Input vom IOW, 0-255
 			
-			// Korrektur bei i=2: Aussentemperatur um 20 reduzieren
+			// Korrektur bei i=2: Aussentemperatur um 16 reduzieren
 			if (i==2)
 			{
-				InputZahl -= 40;
+				InputZahl -= 32;
+            
 			}
 			if (i==6)
 			{

@@ -512,9 +512,6 @@ NSMutableDictionary* tempDic=(NSMutableDictionary*)[StundenArray objectAtIndex:d
 			//return;
 		}
 		
-		
-		
-		
 		//NSLog(@"Tagplanbalken mouseDow: Stunde: %d code: %d",i,ON);
 		[[StundenArray objectAtIndex:[sender tag]]setObject:[NSNumber numberWithInt:ON]forKey:@"code"];
 		//NSLog(@"StundenArray: %@",[StundenArray description]);
@@ -629,7 +626,7 @@ NSMutableDictionary* tempDic=(NSMutableDictionary*)[StundenArray objectAtIndex:d
 		[NotificationDic setObject:[StundenArray valueForKey:@"code"] forKey:@"stundenarray"];
 		[NotificationDic setObject:[self StundenByteArray] forKey:@"stundenbytearray"];
 		
-		//NSLog(@"WriteTasteAktion  Standard: %@",[NotificationDic description]);
+		NSLog(@"WriteTasteAktion  Standard: %@",[NotificationDic description]);
       
 		// Notific an Wochenplan  und von dort an WriteStandardaktion in AVRClient schicken
 		[nc postNotificationName:@"WriteStandard" object:self userInfo:NotificationDic];
@@ -1106,8 +1103,8 @@ return mark;
 	
 	if (MausIN)
 	{
-	NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
-	[nc postNotificationName:@"Tagplancode" object:self userInfo:NotificationDic];
+      NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
+      [nc postNotificationName:@"Tagplancode" object:self userInfo:NotificationDic];
 	}
 	//NSLog(@"all: %d code: %@",all, [[StundenArray valueForKey:@"code"]description]);
 	if (all<0)//kein Klick auf ALL-Taste, IST-Zustand speichern

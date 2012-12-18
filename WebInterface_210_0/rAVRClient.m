@@ -84,7 +84,9 @@
 {
 	if (Webserver_busy || WriteWoche_busy)
 	{
+      NSLog(@"readEthTagplan Webserver_busy beep");
 		NSBeep();
+      
 		return;
 	}
 	
@@ -95,9 +97,17 @@
 	int	tempTag=[TagPop indexOfSelectedItem];
 	int	tempRaum=[RaumPop indexOfSelectedItem];
 	int	tempObjekt=[ObjektPop indexOfSelectedItem];
-	//NSLog(@"tempRaum tag: %d %x",[[RaumPop selectedItem]tag],[[RaumPop selectedItem]tag]);
-	uint16_t startadresse=tempRaum*RAUMPLANBREITE + tempObjekt*TAGPLANBREITE + tempTag*0x08;
-	NSString* AdresseKontrollString = [NSString string];
+	//NSLog(@"tempRaum indexdez: %d hex: %x",[[RaumPop selectedItem]tag],[[RaumPop selectedItem]tag]);
+	
+   NSLog(@"tempRaum: %d,tempRaum*RAUMPLANBREITE: %X",tempRaum,tempRaum*RAUMPLANBREITE);
+   NSLog(@"tempObjekt: %d tempObjekt*TAGPLANBREITE: %X",tempObjekt,tempObjekt*TAGPLANBREITE);
+   NSLog(@"tempTag: %d tempTag*0x08: %X",tempTag,tempTag*0x08);
+   uint16_t startadresse=tempRaum*RAUMPLANBREITE + tempObjekt*TAGPLANBREITE + tempTag*0x08;
+	
+   NSLog(@"tempRaum: %X tempObjekt: %X tempTag: %X startadresse hex: %X dez: %d",tempRaum, tempObjekt, tempTag,startadresse,startadresse);
+   
+   
+   NSString* AdresseKontrollString = [NSString string];
 	int hbyte=startadresse/0x100;
 	if (hbyte < 0x0F)
 	{
@@ -123,7 +133,19 @@
 	{
 		AdresseKontrollString= [NSString stringWithFormat:@"%@ lbyte: %X",AdresseKontrollString,lbyte];	
 	}
-	
+   
+	uint16_t kontrollstartadresse = 0x100*hbyte+lbyte;
+   NSLog(@"kontrollstartadresse: %d",kontrollstartadresse);
+   
+   uint16_t kontrolltag = (kontrollstartadresse & 0x38)/0x08; // 0x38: 111 000 Bit 3-6
+   NSLog(@"kontrolltag: %d",kontrolltag);
+   
+   uint16_t kontrollobjekt = (kontrollstartadresse & 0x1C0)/0x40 ; // 0x1C0: 111 000 000 Bit 7-9
+   NSLog(@"kontrollobjekt: %d",kontrollobjekt);
+
+   uint16_t kontrollraum = (kontrollstartadresse & 0xE00)/0x200; // 0xE0: 111 000 000 000 Bit 10-12
+   NSLog(@"kontrollraum: %d",kontrollraum);
+   
 /*	
 	NSString* lbString= [[NSNumber numberWithInt:lbyte]stringValue];
 	if ([lbString length]==1) // nur eine Stelle, fuehrende Null einfuegen
@@ -134,6 +156,11 @@
 	
 	[Adresse setStringValue:AdresseKontrollString];
 	[Cmd setStringValue:@""];
+   
+     
+   
+   
+   
 	NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
 	[NotificationDic setObject:[NSNumber numberWithInt:[I2CPop indexOfSelectedItem]] forKey:@"eepromadressezusatz"];
 	[NotificationDic setObject:[NSNumber numberWithInt:hbyte] forKey:@"hbyte"];
@@ -149,6 +176,7 @@
 	NSLog(@"AVRClient readEthTagplan EEPROMAddresse: %X startadresse: %X  hbyte: %X lbyte: %X", [I2CPop indexOfSelectedItem], startadresse, hbyte, lbyte);
 	
 	//	NSString* ReadURL=[self ReadURLForEEPROM: EEPROMAddresse hByte: hbyte lByte: lbyte];
+
 }
 
 
@@ -281,6 +309,7 @@
 {
 if (Webserver_busy)
 	{
+      NSLog(@"WriteStandardAktion Webserver_busy beep");
 		NSBeep();
 		return;
 	}
@@ -354,7 +383,7 @@ if (Webserver_busy)
 		
 		[HomeClientDic setObject:[NSNumber numberWithInt:hb] forKey:@"hbyte"];
 		[HomeClientDic setObject:DatenArray forKey:@"stundenbytearray"];
-		//NSLog(@"WriteStandardAktion Raum: %d wochentag: %d Objekt: %d EEPROM: %02X lb: 0x%02X hb: 0x%02X ",Raum, Wochentag, Objekt,EEPROM_i2cAdresse,lb, hb);
+		NSLog(@"WriteStandardAktion Raum: %d wochentag: %d Objekt: %d EEPROM: %02X lb: 0x%02X hb: 0x%02X ",Raum, Wochentag, Objekt,EEPROM_i2cAdresse,lb, hb);
 		
 		// Information an HomeClient schicken
 		
@@ -365,6 +394,11 @@ if (Webserver_busy)
       {
          [nc postNotificationName:@"HomeClientWriteStandard" object:self userInfo:HomeClientDic];
       }
+      else
+      {
+         // 
+         
+      }
 		
 	}
 }
@@ -374,7 +408,7 @@ if (Webserver_busy)
 	//NSLog(@"AVRClient WriteModifierAktion userInfo: %@",[[note userInfo] description]);
 	if ([TWIStatusTaste state])
 	{
-		NSLog(@"TWIStatustaste: %d",[TWIStatusTaste state]);
+		NSLog(@"TWIStatustaste: %l",[TWIStatusTaste state]);
 		NSAlert *Warnung = [[[NSAlert alloc] init] autorelease];
 		[Warnung addButtonWithTitle:@"OK"];
 		//	[Warnung addButtonWithTitle:@""];
@@ -472,6 +506,7 @@ if (Webserver_busy)
 	// Webserver busy??
 	if (Webserver_busy)
 	{
+      NSLog(@"WriteModifierTimerFunktion Webserver_busy beep");
 		NSBeep();
 		timeoutcounter--;
 		[WriteTimerDic setObject:[NSNumber numberWithInt:timeoutcounter] forKey:@"timeoutcounter"];
@@ -686,6 +721,7 @@ if (Webserver_busy)
 			}
 			else 
 			{
+            NSLog(@"FinishLoadAktion Kontakt beendet beep");
 				NSBeep();
 				[StatusFeld setStringValue:@"Kontakt mit HomeCentral beendet"]; // TWI wieder aktiviert
 				[readTagTaste setEnabled:0];// TWI-Status ON, EEPROM gesperrt
@@ -710,8 +746,10 @@ if (Webserver_busy)
 			//if (TWI_Status==0)// TWI deaktiviert
 			
 			if ([[[note userInfo]objectForKey:@"status0"]intValue]==1) // Status 0 hat geklappt
-			{	
+			{
+            NSLog(@"FinishLoadAktion Status 0 OK beep");
 				NSBeep();
+            
 				TWI_Status=0;
 				[AdresseFeld setStringValue:@""];
 				[WriteFeld setStringValue:@""];
@@ -803,7 +841,7 @@ if (Webserver_busy)
 			//NSLog(@"FinishLoadAktion  writeok ist da: %d",Write_OK);
 			if ((TWI_Status==0)&&Write_OK)// Passwort OK
 			{
-				
+				NSLog(@"FinishLoadAktion Write und Passwort OK beep");
 				NSBeep();
 				[WriteFeld setStringValue:@"OK"];
 				[StatusFeld setStringValue:@"EEPROM-Daten geschrieben"];
@@ -834,6 +872,7 @@ if (Webserver_busy)
 		{
 			NSLog(@"FinishLoadAktion EEPROM lesen: data ist da");
 			NSBeep();
+         
 			[ReadFeld setStringValue:@"OK"];
 			[StatusFeld setStringValue:@"Daten angekommen"];
 			if ([[note userInfo]objectForKey:@"eepromdatastring"])
@@ -876,14 +915,15 @@ if (Webserver_busy)
 			}
 			NSMutableDictionary* sendTimerDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
 			[sendTimerDic setObject:@"Read Data OK" forKey:@"timertext"];
-			NSLog(@"TimeoutTimer start");
+			//NSLog(@"TimeoutTimer start");
 			TimeoutTimer=[[NSTimer scheduledTimerWithTimeInterval:1 
 																		  target:self 
 																		selector:@selector(TimeoutTimerFunktion:) 
 																		userInfo:sendTimerDic 
 																		 repeats:NO]retain];
 			
-			
+	//		[self sendEEPROMData:(NSString*) dataString anAdresse:(NSString*)adresseString];
+         
 		}
 		else 
 		{

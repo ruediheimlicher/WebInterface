@@ -107,9 +107,9 @@ IBOutlet	NSTableView*	WEBDATATable;
 rWEBDATA_DS*				WEBDATA_DS;
 
 //Simulation DataTransfer
-IBOutlet	 id maxSimAnzahlFeld;
-NSTimer* simTimer;
-NSTimer*  TimeoutTimer;
+IBOutlet	 id            maxSimAnzahlFeld;
+NSTimer*                simTimer;
+NSTimer*                TimeoutTimer;
    
 
 
@@ -129,6 +129,7 @@ NSTimer*  TimeoutTimer;
 - (void)setSegmentLabel:(NSString*)derTitel forSegment:(int)dasSegment forRaum:(int)derRaum;
 - (void)setStundenplanArray:(NSArray*)derStundenplanArray forObjekt:(int)dasObjekt forRaum:(int)derRaum;
 - (int)saveHomeDic;
+- (NSArray*)HomebusArray;
 - (IBAction)setTWIState:(id)sender;
 - (void)setTWIStatus:(int)derStatus;
 - (void)setI2CStatus:(int)derStatus;

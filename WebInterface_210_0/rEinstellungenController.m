@@ -25,6 +25,7 @@ NSLog(@"showEinstellungenFenster");
 
 		//[self Alert:@"showEinstellungenFenster nach init"];
 	}
+   [EinstellungenFenster setEinstellungen:[AVR HomebusArray]];
 	[EinstellungenFenster showWindow:NULL];
 
 }

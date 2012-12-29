@@ -1649,6 +1649,11 @@ return returnInt;
 	return writeOK;
 }
 
+- (NSArray*)HomebusArray
+{
+   return HomebusArray;
+}
+
 - (void)setHomebusStatus: (int)derStatus
 {
 	// TWI des Homebus während der Uebertragung vom IOWarrior aussetzen
@@ -2674,7 +2679,7 @@ n=0;
 	return NO;
 	}
 
-	//return YES;
+	return YES;
 }
 
 @end

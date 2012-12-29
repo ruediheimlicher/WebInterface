@@ -2276,11 +2276,11 @@ return;
 */
 	if ([AVR TWIStatus])
 	{
-	return YES;
+      return YES;
 	}
 	else 
 	{
-	return NO;
+      return NO;
 	}
 
 	//return YES;
@@ -2523,8 +2523,8 @@ return;
 
 - (void) FensterSchliessenAktion:(NSNotification*)note
 {
-	NSLog(@"IOW FensterSchliessenAktion: %@ anz Window: %d",[[note object]description],[[NSApp windows]count]);
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	NSLog(@"IOW FensterSchliessenAktion: %@ titel: %@ anz Window: %d",[[note object]description],[[note object]title],[[NSApp windows]count]);
+	//[[NSNotificationCenter defaultCenter] removeObserver:self];
 /*
 	[nc removeObserver:self
 			 selector:@selector(FensterSchliessenAktion:)
@@ -2538,7 +2538,7 @@ return;
 	}
 	else if ([self Beenden] )
 	{
-		
+		[[NSNotificationCenter defaultCenter] removeObserver:self];
 		[NSApp terminate:self];
 		
 	}
@@ -2549,9 +2549,27 @@ return;
 - (void)BeendenAktion:(NSNotification*)note
 {
 	NSLog(@"BeendenAktion");
+	if ([[note userInfo]objectForKey:@"quelle"])
+   {
+      switch ([[[note userInfo]objectForKey:@"quelle"]intValue])
+      {
+            case 1:
+         {
+            
+         }break;
+         default:
+         {
+            [self terminate:self];
+         }
+      }
+      
+   }
+   else
+   {
+      [self terminate:self];
+   }
 	
-	
-	[self terminate:self];
+
 }
 
 

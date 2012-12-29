@@ -9,11 +9,19 @@
 #import <Cocoa/Cocoa.h>
 
 
-@interface rEinstellungen : NSWindowController {
-
+@interface rEinstellungen : NSWindowController
+{
+   IBOutlet id RaumPop;
+   
+   NSMutableArray* HomebusArray;
 }
-- (void)setEinstellungen:(NSDictionary*)settings;
+- (void)setEinstellungen:(NSArray*)homebusarray;
+- (IBAction)reportRaumPop:(id)sender;
+
+
 - (IBAction)reportSave:(id)sender;
 - (IBAction)reportCancel:(id)sender;
 - (IBAction)reportClose:(id)sender;
+
+- (void)setObjektnamenVonArray:(NSArray*)objektnamen;
 @end

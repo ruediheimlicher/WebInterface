@@ -134,6 +134,10 @@ IBOutlet id				LastDatazeitFeld;
 IBOutlet id				LoadtimeFeld;
 IBOutlet id				ZaehlerFeld;
 int						LastLoadzeit;
+   
+IBOutlet id				IPFeld;
+   
+   
 int						anzLoads;
 IBOutlet WebView *	webView;
 NSURL *					URLToLoad;
@@ -252,6 +256,7 @@ rLegende*							SolarStatistikLegende;
 - (void)clearData;
 - (BOOL)saveErrString;
 - (void)setZeitKompression;
+- (void)setRouter_IP:(NSString*)dieIP;
 - (int)Datenquelle;
 - (void)writeIOWLog:(NSString*)derFehler;
 - (IBAction)reportPrint:(id)sender;

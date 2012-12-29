@@ -354,11 +354,12 @@ if (Webserver_busy)
 		int Wochentag=[[[note userInfo]objectForKey:@"wochentag"]intValue];
 		int Objekt=[[[note userInfo]objectForKey:@"objekt"]intValue];
       int permanent = [[[note userInfo]objectForKey:@"permanent"]intValue];
-
+      //NSString* Titel = [[note userInfo]objectForKey:@"titel"];
 		NSArray* DatenArray=[[note userInfo]objectForKey:@"stundenbytearray"];
 		
 		NSMutableDictionary* HomeClientDic=[[[NSMutableDictionary alloc]initWithDictionary:[note userInfo]]autorelease];
-		
+		[HomeClientDic setObject:[[note userInfo]objectForKey:@"titel"] forKey:@"titel"];
+      
 		int I2CIndex=[I2CPop indexOfSelectedItem];
 		
 		NSString* EEPROM_i2cAdresseString=[I2CPop itemTitleAtIndex:I2CIndex];
@@ -396,6 +397,7 @@ if (Webserver_busy)
       }
       else
       {
+         
          // 
          
       }

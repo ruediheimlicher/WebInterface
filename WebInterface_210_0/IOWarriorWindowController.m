@@ -371,12 +371,36 @@ void IOWarriorCallback ()
 		//NSLog(@"awake openWithString\n\n");
 		[self openWithString:AktuelleDaten];
 		[self setStatistikDaten];
+      
+      NSArray* IP_Array = [HomeData Router_IP];
+      NSLog(@"IP_Array: %@",[IP_Array description]);
+      if ([IP_Array count] >1)
+      {
+         if ([[IP_Array objectAtIndex:0] isEqualToString:[IP_Array objectAtIndex:1]]) // gleiche IP
+         {
+            [Data setRouter_IP:[IP_Array objectAtIndex:0]];
+
+         }
+         else
+         {
+            
+         }
+      
+      }
+      else
+      {
+         [Data setRouter_IP:[IP_Array objectAtIndex:0]];
+         
+      }
+      
 
 	}
 	else
 	{
 		NSLog(@"awake Kein Input");
 	}
+   
+   
 	
 	#pragma mark awake Solar
 	
@@ -975,7 +999,7 @@ NSLog(@"IOWarr WindowController reportPrint");
 
 -(void)openWithString:(NSString*)derDatenString
 {
-	NSLog(@"openWithString DatenString length; %d",[derDatenString length]); 
+	//NSLog(@"openWithString DatenString length; %d",[derDatenString length]);
 	NSArray* rohDatenArray = [NSArray array];
 	NSString* TagString = [NSString string];
 	int Tag=0;

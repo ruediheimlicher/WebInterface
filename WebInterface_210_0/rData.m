@@ -906,11 +906,11 @@ extern NSMutableArray* DatenplanTabelle;
 	[SolarOrdinate setAchsenDic:SolarEinheitenDic];
 	[[[DatenplanTab tabViewItemAtIndex:2]view]addSubview:SolarOrdinate];
 	int maxord=[SolarDiagramm MaxOrdinate];
-	NSLog(@"Solar maxord: %d",maxord);
+	//NSLog(@"Solar maxord: %d",maxord);
 	[SolarOrdinate setMaxOrdinate:maxord];
 
 	int GLOffset=[SolarDiagramm GrundlinienOffset];
-	NSLog(@"Solar GLOffset: %d",GLOffset);
+	//NSLog(@"Solar GLOffset: %d",GLOffset);
 	[SolarOrdinate setGrundlinienOffset:GLOffset];
 	
 	[SolarDiagramm setOrdinate:SolarOrdinate];
@@ -1054,6 +1054,8 @@ extern NSMutableArray* DatenplanTabelle;
 	NSString* VersionString = [NSString stringWithFormat:@"Version %@",VERSION];
 	[VersionFeld setStringValue:VersionString];
 	
+
+
 }
 
 
@@ -1252,7 +1254,7 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
 		NSArray* tempDatenArray = [[note userInfo]objectForKey:@"datenarray"];
 		
       
-      NSLog(@"ExterneDatenAktion tempDatenArray last Data:%@",[[tempDatenArray lastObject]description]);
+      //NSLog(@"ExterneDatenAktion tempDatenArray last Data:%@",[[tempDatenArray lastObject]description]);
 		
 		// Zeit des ersten Datensatzes
 		int firstZeit = [[[[tempDatenArray objectAtIndex:0] componentsSeparatedByString:@"\t"]objectAtIndex:0]intValue];
@@ -2115,6 +2117,15 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
 	}// if dataenarray
 	
 }//
+
+#pragma mark Write to Homeserver
+
+
+- (void)setRouter_IP:(NSString*)dieIP
+{
+   NSString* IP_String = [NSString stringWithFormat:@"IP_Adresse Router: %@",dieIP];
+   [IPFeld setStringValue:IP_String];
+}
 
 #pragma mark solar
 

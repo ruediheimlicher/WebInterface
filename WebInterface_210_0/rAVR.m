@@ -579,7 +579,7 @@ return returnInt;
 	WEBDATATabelle=[[NSMutableArray alloc]initWithCapacity:0];
 	[WEBDATATable setDelegate:WEBDATA_DS];
 	[WEBDATATable setDataSource:WEBDATA_DS];
-	NSLog(@"DATUM: %@",DATUM);
+	//NSLog(@"DATUM: %@",DATUM);
 	NSString* DatumString = [NSString stringWithFormat:@"RH %@",DATUM];
 	
 	[DatumFeld setStringValue:DatumString];
@@ -928,6 +928,11 @@ return returnInt;
 	//NSLog(@"HomebusAnlegen end");
 }
 
+
+
+
+
+
 - (NSArray*)neuerWochenplanForRaum:(int)derRaum
 {
 	NSArray* Wochentage=[[NSArray arrayWithObjects:@"MO",@"DI", @"MI", @"DO", @"FR", @"SA", @"SO",nil]retain];
@@ -1148,7 +1153,7 @@ return returnInt;
 
    // Mausklicks im Tagplanbalken speichern
 {
-	//NSLog(@"AVR TagplancodeAktion: %@",[[note userInfo]description]);
+	NSLog(@"AVR TagplancodeAktion: %@",[[note userInfo]description]);
 	//NSLog(@"AVR TagplancodeAktion: %@",[[note userInfo]objectForKey:@"quelle"]);
 	NSArray* Raumnamen=[[NSArray arrayWithObjects:@"Heizung", @"Werkstatt", @"WoZi", @"Buero", @"Labor", @"OG1", @"OG2", @"Estrich", nil]retain];
 	NSArray* Wochentage=[NSArray arrayWithObjects:@"MO",@"DI",@"MI",@"DO",@"FR",@"SA",@"SO",nil];

@@ -1105,7 +1105,8 @@ return mark;
 	{
       NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
       [nc postNotificationName:@"Tagplancode" object:self userInfo:NotificationDic];
-	}
+	
+   }
 	//NSLog(@"all: %d code: %@",all, [[StundenArray valueForKey:@"code"]description]);
 	if (all<0)//kein Klick auf ALL-Taste, IST-Zustand speichern
 	{

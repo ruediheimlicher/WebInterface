@@ -12,6 +12,7 @@
 @interface rEinstellungen : NSWindowController {
 
 }
+- (void)setEinstellungen:(NSDictionary*)settings;
 - (IBAction)reportSave:(id)sender;
 - (IBAction)reportCancel:(id)sender;
 - (IBAction)reportClose:(id)sender;

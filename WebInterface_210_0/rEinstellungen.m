@@ -28,6 +28,13 @@
 	NSLog(@"TheWindowPanel did load");
 } // end windowDidLoad
 
+- (void)setEinstellungen:(NSDictionary*)settings
+{
+   
+}
+
+
+
 - (BOOL)windowShouldClose:(id)sender
 {
 	NSLog(@"rEinstellungen windowShouldClose");

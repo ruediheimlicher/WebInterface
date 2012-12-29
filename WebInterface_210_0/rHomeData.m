@@ -161,7 +161,7 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 		{
 			//NSLog(@"WebFehler: :%@",[[WebFehler userInfo]description]);
 			
-			NSLog(@"WebFehler: :%@",[[WebFehler userInfo]objectForKey:@"NSUnderlyingError"]);
+			NSLog(@"WebFehler in DataForHeute: :%@",[[WebFehler userInfo]objectForKey:@"NSUnderlyingError"]);
 			//ERROR: 503
 			NSArray* ErrorArray=[[[[WebFehler userInfo]objectForKey:@"NSUnderlyingError"]description]componentsSeparatedByString:@" "];
 			NSLog(@"ErrorArray: %@",[ErrorArray description]);
@@ -174,9 +174,10 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 			[Warnung setMessageText:[NSString stringWithFormat:@"%@",MessageText]];
 			
 			NSString* s1=[NSString stringWithFormat:@"URL: \n%@",URL];
+         
 			NSString* s2=[ErrorArray objectAtIndex:2];
 			int AnfIndex=[[[[WebFehler userInfo]objectForKey:@"NSUnderlyingError"]description]rangeOfString:@"\""].location;
-			NSString* s3=[[[[WebFehler userInfo]objectForKey:@"NSUnderlyingError"]description]substringFromIndex:AnfIndex];
+			NSString* s3=@"";//[[[[WebFehler userInfo]objectForKey:@"NSUnderlyingError"]description]substringFromIndex:AnfIndex];
 			NSString* InformationString=[NSString stringWithFormat:@"%@\n%@\nFehler: %@",s1,s2,s3];
 			[Warnung setInformativeText:InformationString];
 			[Warnung setAlertStyle:NSWarningAlertStyle];
@@ -540,6 +541,32 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 	return returnString;
 }
 
+- (NSArray*)Router_IP
+{
+	NSMutableArray* ErtragdatenArray=[[NSMutableArray alloc]initWithCapacity:0];
+	//NSLog(@"Router_IP");
+	NSString*IP_DataSuffix=@"ip.txt";
+	NSString* URLPfad=[NSURL URLWithString:[ServerPfad stringByAppendingPathComponent:IP_DataSuffix]];
+	NSLog(@"Router_IP URLPfad: %@",URLPfad);
+	//NSLog(@"SolarErtragVonJahr  DownloadPfad: %@ IP_DataSuffix: %@",DownloadPfad,IP_DataSuffix);
+	NSURL *URL = [NSURL URLWithString:[ServerPfad stringByAppendingPathComponent:IP_DataSuffix]];
+	
+	NSStringEncoding *  enc=0;
+	NSCharacterSet* CharOK=[NSCharacterSet alphanumericCharacterSet];
+	NSString* DataString=[NSString stringWithContentsOfURL:URL usedEncoding: enc error:NULL];
+	NSLog(@"IP von Server: %@",DataString);
+   NSArray* IP_Array = [DataString componentsSeparatedByString:@"\r\n"];
+   NSLog(@"IP von Server IP_Array: %@",IP_Array);
+   
+   NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+   [NotificationDic setObject:DataString forKey:@"routerip"];
+   NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
+   [nc postNotificationName:@"Router_IP" object:self userInfo:NotificationDic];
+   
+   return IP_Array;
+}
+
+
 #pragma mark solar
 
 
@@ -806,7 +833,6 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 		//NSURLRequest* lastTimeRequest=[ [NSURLRequest alloc] initWithURL: lastTimeURL cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:30.0];
 		NSURLRequest* lastTimeRequest=[ [NSURLRequest alloc] initWithURL: lastTimeURL cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData timeoutInterval:10.0];
 		//NSLog(@"Cache mem: %d",[[NSURLCache sharedURLCache]memoryCapacity]);
-		
 		
 	//	[[NSURLCache sharedURLCache] removeCachedResponseForRequest:lastTimeRequest];
 		
@@ -1193,10 +1219,10 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 - (NSArray*)SolarErtragVonHeute
 {
 	NSMutableArray* ErtragdatenArray=[[NSMutableArray alloc]initWithCapacity:0];
-	NSLog(@"SolarErtragVonHeute");
+	//NSLog(@"SolarErtragVonHeute");
 	DataSuffix=@"SolarTagErtrag.txt";
 	NSString* URLPfad=[NSURL URLWithString:[ServerPfad stringByAppendingPathComponent:DataSuffix]];
-	NSLog(@"SolarErtragVonHeute URLPfad: %@",URLPfad);
+	//NSLog(@"SolarErtragVonHeute URLPfad: %@",URLPfad);
 	//NSLog(@"SolarErtragVonJahr  DownloadPfad: %@ DataSuffix: %@",DownloadPfad,DataSuffix);
 	NSURL *URL = [NSURL URLWithString:[ServerPfad stringByAppendingPathComponent:DataSuffix]];
 	
@@ -1346,7 +1372,6 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
     }
 }
 
-#pragma mark Write to Homeserver
 
 
 #pragma mark NSURLDownloadDelegate methods

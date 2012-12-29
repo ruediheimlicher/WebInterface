@@ -139,6 +139,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
    [SendEEPROMDataDic setObject:lByte forKey:@"lbyte"];
    [SendEEPROMDataDic setObject:[NSNumber numberWithInt:1] forKey:@"adrload"];
    [SendEEPROMDataDic setObject:[NSNumber numberWithInt:0] forKey:@"dataload"];
+   [SendEEPROMDataDic setObject:[NSNumber numberWithInt:1] forKey:@"permanent"];
 
 	
 //	NSString* TWIReadStartURLSuffix = [NSString stringWithFormat:@"pw=%@&radr=%@&hb=%@&lb=%@",pw,EEPROMAdresse,hByte, lByte]; 
@@ -524,12 +525,15 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
     
     
     */
-	NSLog(@"HomeClientWriteStandardAktion note stundenbytearray %@",[[[note userInfo]objectForKey:@"stundenbytearray"]description]);
+	//NSLog(@"HomeClientWriteStandardAktion note stundenbytearray %@",[[[note userInfo]objectForKey:@"stundenbytearray"]description]);
    //	int Raum=[[[note userInfo]objectForKey:@"raum"]intValue];
    //	int Wochentag=[[[note userInfo]objectForKey:@"wochentag"]intValue];
    //	int Objekt=[[[note userInfo]objectForKey:@"objekt"]intValue];
    //	NSArray* DatenArray=[[note userInfo]objectForKey:@"stundenarray"];
-	NSArray* DatenByteArray=[[note userInfo]objectForKey:@"stundenbytearray"];
+   
+   [SendEEPROMDataDic setObject:[[note userInfo]objectForKey:@"titel"] forKey:@"titel"];
+	
+   NSArray* DatenByteArray=[[note userInfo]objectForKey:@"stundenbytearray"];
    
 	NSString* lbyte=[[[note userInfo]objectForKey:@"lbyte"]stringValue];
 	NSString* hbyte=[[[note userInfo]objectForKey:@"hbyte"]stringValue];
@@ -551,6 +555,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
    [SendEEPROMDataDic setObject:lbyte forKey:@"lbyte"];
    [SendEEPROMDataDic setObject:[NSNumber numberWithInt:1]forKey:@"adrload"];
    [SendEEPROMDataDic setObject:[NSNumber numberWithInt:0]forKey:@"dataload"];
+   [SendEEPROMDataDic setObject:[NSNumber numberWithInt:1]forKey:@"permanent"];
    
    
 	//NSString* EEPROM_i2cAdresseString=[I2CPop itemTitleAtIndex:I2CIndex];
@@ -878,19 +883,22 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
       {
          if ([[SendEEPROMDataDic objectForKey:@"eepromdatastring" ] length])
          {
-            NSString* URLString = [NSString stringWithFormat:@"http://%s/%s?pw=%s&hbyte=%@&lbyte=%@&data=%@",
+            NSString* URLString = [NSString stringWithFormat:@"http://%s/%s?pw=%s&perm=%@&hbyte=%@&lbyte=%@&data=%@&titel=%@",
                                    WEBSERVER_VHOST,
                                    CGI,
                                    PW,
+                                   [EEPROMDataDic objectForKey:@"permanent"],
                                    [EEPROMDataDic objectForKey:@"hbyte"],
                                    [EEPROMDataDic objectForKey:@"lbyte"],
-                                   [EEPROMDataDic objectForKey:@"eepromdatastring"]
+                                   [EEPROMDataDic objectForKey:@"eepromdatastring"],
+                                   [EEPROMDataDic objectForKey:@"titel"]
+                                   
                                    ];
             NSLog(@"URLString: %@",URLString );
             
             NSURL *URL = [NSURL URLWithString:URLString];
             NSLog(@"sendEEPROM URL: %@",URL );
-            NSURLRequest *HCRequest = [ [NSURLRequest alloc] initWithURL: URL cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:2.0];
+            NSURLRequest *HCRequest = [ [NSURLRequest alloc] initWithURL: URL cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:4.0];
             //	[[NSURLCache sharedURLCache] removeAllCachedResponses];
             //	NSLog(@"Cache mem: %d",[[NSURLCache sharedURLCache]memoryCapacity]);
             //	[[NSURLCache sharedURLCache] removeCachedResponseForRequest:HCRequest];
@@ -902,7 +910,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
             }
             [SendEEPROMDataDic setObject:@"" forKey:@"eepromdatastring"];
          }
-         [SendEEPROMDataDic setObject:[NSNumber numberWithInt:0] forKey:@"dataload"];
+         [SendEEPROMDataDic setObject:[NSNumber numberWithInt:0] forKey:@"dataload"]; // SendEEPROMDataDic deaktivieren
       }
       [SendEEPROMDataDic setObject:[NSNumber numberWithInt:0] forKey:@"adrload"];
    }

@@ -901,7 +901,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
       {
          if ([[SendEEPROMDataDic objectForKey:@"eepromdatastring" ] length])
          {
-            NSString* URLString = [NSString stringWithFormat:@"http://%s/%s?pw=%s&perm=%@&hbyte=%@&lbyte=%@&data=%@&titel=%@",
+            NSString* URLString = [NSString stringWithFormat:@"http://%s/%s?pw=%s&perm=%@&hbyte=%@&lbyte=%@&data=%@&titel=%@&typ=%@",
                                    WEBSERVER_VHOST,
                                    CGI,
                                    PW,
@@ -909,7 +909,8 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
                                    [EEPROMDataDic objectForKey:@"hbyte"],
                                    [EEPROMDataDic objectForKey:@"lbyte"],
                                    [EEPROMDataDic objectForKey:@"eepromdatastring"],
-                                   [EEPROMDataDic objectForKey:@"titel"]
+                                   [EEPROMDataDic objectForKey:@"titel"],
+                                   [EEPROMDataDic objectForKey:@"typ"]
                                    
                                    ];
             NSLog(@"URLString: %@",URLString );

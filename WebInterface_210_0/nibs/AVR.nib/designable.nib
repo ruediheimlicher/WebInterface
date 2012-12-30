@@ -2010,7 +2010,7 @@
 					<reference key="NSSuperview"/>
 					<reference key="NSNextKeyView" ref="636208623"/>
 				</object>
-				<string key="NSScreenRect">{{0, 0}, {1280, 778}}</string>
+				<string key="NSScreenRect">{{0, 0}, {1680, 1028}}</string>
 				<string key="NSMinSize">{623, 762}</string>
 				<string key="NSMaxSize">{623, 762}</string>
 				<bool key="NSWindowIsRestorable">YES</bool>
@@ -2305,6 +2305,22 @@
 						<reference key="destination" ref="556438931"/>
 					</object>
 					<int key="connectionID">1667</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">reportObjektPop:</string>
+						<reference key="source" ref="721671640"/>
+						<reference key="destination" ref="941901951"/>
+					</object>
+					<int key="connectionID">1668</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">reportRaumPop:</string>
+						<reference key="source" ref="721671640"/>
+						<reference key="destination" ref="926437119"/>
+					</object>
+					<int key="connectionID">1669</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
@@ -3715,7 +3731,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">1667</int>
+			<int key="maxID">1669</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes"/>
 		<int key="IBDocument.localizationMode">0</int>

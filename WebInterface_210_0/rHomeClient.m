@@ -30,7 +30,22 @@ unsigned char h2int(char c)
         return(0);
 }
 
+
 @implementation rHomeClient
+
+- (int)HexStringZuInt:(NSString*) derHexString
+{
+	int returnInt=-1;
+	NSScanner* theScanner = [NSScanner scannerWithString:derHexString];
+	
+	if ([theScanner scanHexInt:&returnInt])
+	{
+		NSLog(@"HexStringZuInt string: %@ int: %x	",derHexString,returnInt);
+		return returnInt;
+	}
+   
+   return returnInt;
+}
 
 - (id)init
 {
@@ -100,13 +115,15 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 	return self;
 }
 
+
 - (void)EEPROMReadStartAktion:(NSNotification*)note
 {
-	//NSLog(@"EEPROMReadStartAktion note: %@",[[note userInfo]description]);
+	NSLog(@"EEPROMReadStartAktion note: %@",[[note userInfo]description]);
 	NSString* hByte = [NSString string];
 	NSString* lByte = [NSString string];
 	NSString* EEPROMAdresseZusatz= [NSString string];
-	
+	NSString* titel = [NSString string];
+
    
    if ([[note userInfo]objectForKey:@"eepromadressezusatz"])
 	{
@@ -133,14 +150,21 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 		}
 		
 	}
-   
+
+   if ([[note userInfo]objectForKey:@"titel"])
+	{
+		titel= [[note userInfo]objectForKey:@"titel"];
+		
+	}
+
    // Dic fuer senden an Homeserver mit Adresse laden:
    [SendEEPROMDataDic setObject:hByte forKey:@"hbyte"];
    [SendEEPROMDataDic setObject:lByte forKey:@"lbyte"];
    [SendEEPROMDataDic setObject:[NSNumber numberWithInt:1] forKey:@"adrload"];
    [SendEEPROMDataDic setObject:[NSNumber numberWithInt:0] forKey:@"dataload"];
    [SendEEPROMDataDic setObject:[NSNumber numberWithInt:1] forKey:@"permanent"];
-
+   [SendEEPROMDataDic setObject:titel forKey:@"titel"];
+   
 	
 //	NSString* TWIReadStartURLSuffix = [NSString stringWithFormat:@"pw=%@&radr=%@&hb=%@&lb=%@",pw,EEPROMAdresse,hByte, lByte]; 
 	NSString* EEPROMReadStartURLSuffix = [NSString stringWithFormat:@"pw=%@&radr=%@&hb=%@&lb=%@",pw,EEPROMAdresseZusatz,hByte, lByte]; 
@@ -190,10 +214,10 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 {
 	NSMutableDictionary* sendTimerDic=(NSMutableDictionary*) [derTimer userInfo];
 	//NSLog(@"sendTimerFunktion  sendTimerDic: %@",[sendTimerDic description]);
-
-	if ([sendTimerDic objectForKey:@"anzahl"])
+   
+ 	if ([sendTimerDic objectForKey:@"anzahl"])
 	{
-		
+      
 		int anz=[[sendTimerDic objectForKey:@"anzahl"] intValue];
 		if (anz )
 		{
@@ -210,20 +234,20 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 				anz--;
 				[sendTimerDic setObject:[NSNumber numberWithInt:anz] forKey:@"anzahl"];
 			}
+
 		}
 		else
 		{
+
 			NSLog(@"sendTimerFunktion sendTimer invalidate");
 			
 			//
 			NSAlert *Warnung = [[[NSAlert alloc] init] autorelease];
 			[Warnung addButtonWithTitle:@"OK"];
-			[Warnung addButtonWithTitle:@""];
-			[Warnung addButtonWithTitle:@""];
-			[Warnung addButtonWithTitle:@"Abbrechen"];
+			//[Warnung addButtonWithTitle:@"Abbrechen"];
 			[Warnung setMessageText:[NSString stringWithFormat:@"%@",@"EEPROM lesen misslungen"]];
 			
-			NSString* s1=@"";
+			NSString* s1=@"Timeout bei Verbindung zu HomeCentral";
 			NSString* s2=@"";
 			NSString* InformationString=[NSString stringWithFormat:@"%@\n%@",s1,s2];
 			[Warnung setInformativeText:InformationString];
@@ -235,7 +259,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 				case NSAlertFirstButtonReturn://
 				{ 
 					NSLog(@"NSAlertFirstButtonReturn");
-					
+					[NSApp stopModalWithCode:0];
 				}break;
 					
 				case NSAlertSecondButtonReturn://
@@ -248,18 +272,11 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 					NSLog(@"NSAlertThirdButtonReturn");
 					
 				}break;
-				case NSAlertThirdButtonReturn+1://cancel		
-				{
-					NSLog(@"NSAlertThirdButtonReturn+1");
-					[NSApp stopModalWithCode:0];
-					[[self window] orderOut:NULL];
-					
-				}break;
 					
 			}//switch
-			
-			
 			//
+         
+         
 			[derTimer invalidate];
 			[derTimer release];
 		}
@@ -532,6 +549,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
    //	NSArray* DatenArray=[[note userInfo]objectForKey:@"stundenarray"];
    
    [SendEEPROMDataDic setObject:[[note userInfo]objectForKey:@"titel"] forKey:@"titel"];
+   [SendEEPROMDataDic setObject:[[note userInfo]objectForKey:@"typ"] forKey:@"typ"];
 	
    NSArray* DatenByteArray=[[note userInfo]objectForKey:@"stundenbytearray"];
    
@@ -706,8 +724,8 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
    [self loadURL:URL];
    
    NSString* EEPROM_DataString=[DatenByteArray componentsJoinedByString:@"+"];
-   EEPROM_DataString= [EEPROM_DataString stringByAppendingString:@"+ff+ff"];
-   NSLog(@"EEPROM_DataString: %@",EEPROM_DataString);
+   EEPROM_DataString= [EEPROM_DataString stringByAppendingString:@"+255+255"];
+   NSLog(@"HomeClientWriteStandardAktion EEPROM_DataString: %@",EEPROM_DataString);
    //NSLog(@"EEPROM_DataString: l=%d",[EEPROM_DataString length]);
    
  
@@ -720,7 +738,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
       {
          if ([[SendEEPROMDataDic objectForKey:@"adrload"]intValue]==1 )// EEPROMAdresse ist da
          {
-            NSLog(@"SendEEPROMDataDic: %@",[SendEEPROMDataDic description]);
+            NSLog(@"HomeClientWriteStandardAktion SendEEPROMDataDic: %@",[SendEEPROMDataDic description]);
             //[nc postNotificationName:@"EEPROMsend2HomeServer" object:self userInfo:tempDataDic];
  //           [self sendEEPROMDataMitDic:SendEEPROMDataDic];
          }
@@ -1131,7 +1149,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
                {
                   if ([[SendEEPROMDataDic objectForKey:@"adrload"]intValue]==1 )// EEPROMAdresse ist da
                   {
-                     NSLog(@"SendEEPROMDataDic: %@",[SendEEPROMDataDic description]);
+                     NSLog(@"didFinishLoad SendEEPROMDataDic: %@",[SendEEPROMDataDic description]);
                      //[nc postNotificationName:@"EEPROMsend2HomeServer" object:self userInfo:tempDataDic];
                      [self sendEEPROMDataMitDic:SendEEPROMDataDic];
                   }
@@ -1209,13 +1227,25 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
          // EEPROM-String extrahieren
          
 			NSString* EEPROM_DataString=[HTML_Inhalt substringWithRange:NSMakeRange(datastart,dataend-datastart)];
-			NSLog(@"EEPROM_DataString: %@",EEPROM_DataString);
+			NSLog(@"didFinishLoad EEPROM_DataString: %@",EEPROM_DataString);
 			//NSLog(@"EEPROM_DataString: l=%d",[EEPROM_DataString length]);
 			[tempDataDic setObject:EEPROM_DataString forKey:@"eepromdatastring"];
 			
          // Datastring sichern fuer senden an HomeServer
          if ([EEPROM_DataString length])
          {
+            // Hex in dez umwandeln fuer senden an HomeServer
+            NSArray* tempDataArray = [EEPROM_DataString componentsSeparatedByString:@"+"];
+            NSLog(@"tempDataArray: %@",[tempDataArray description]);
+            NSMutableArray* tempDezDataArray = [[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+            for (int i=0;i<[tempDataArray count];i++)
+            {
+               int data = [self HexStringZuInt:[tempDataArray objectAtIndex:i] ];
+               
+               [tempDezDataArray addObject:[NSString stringWithFormat:@"%d",data]];
+               NSLog(@"data: %d string: %@",data, [NSString stringWithFormat:@"%d",data]);
+            }
+            EEPROM_DataString = [tempDezDataArray componentsJoinedByString:@"+"];
             [SendEEPROMDataDic setObject:EEPROM_DataString forKey:@"eepromdatastring"];
             [SendEEPROMDataDic setObject:[NSNumber numberWithInt:1] forKey:@"dataload"];
             if ([SendEEPROMDataDic objectForKey:@"adrload"])

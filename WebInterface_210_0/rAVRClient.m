@@ -97,6 +97,10 @@
 	int	tempTag=[TagPop indexOfSelectedItem];
 	int	tempRaum=[RaumPop indexOfSelectedItem];
 	int	tempObjekt=[ObjektPop indexOfSelectedItem];
+   
+   NSLog(@"tempRaum index: %d titel: %@",tempRaum, [[RaumPop selectedItem]title]);
+   NSLog(@"tempObjekt index: %d titel: %@",tempObjekt, [[ObjektPop selectedItem]title]);
+   
 	//NSLog(@"tempRaum indexdez: %d hex: %x",[[RaumPop selectedItem]tag],[[RaumPop selectedItem]tag]);
 	
    NSLog(@"tempRaum: %d,tempRaum*RAUMPLANBREITE: %X",tempRaum,tempRaum*RAUMPLANBREITE);
@@ -165,6 +169,10 @@
 	[NotificationDic setObject:[NSNumber numberWithInt:[I2CPop indexOfSelectedItem]] forKey:@"eepromadressezusatz"];
 	[NotificationDic setObject:[NSNumber numberWithInt:hbyte] forKey:@"hbyte"];
 	[NotificationDic setObject:[NSNumber numberWithInt:lbyte] forKey:@"lbyte"];
+   
+   [NotificationDic setObject:[[ObjektPop selectedItem]title] forKey:@"titel"];
+
+   
 	
 	NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
 	[nc postNotificationName:@"EEPROMReadStart" object:self userInfo:NotificationDic];

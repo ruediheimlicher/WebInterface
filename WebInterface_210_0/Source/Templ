@@ -23,8 +23,6 @@ NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
 
 	NSAlert *Warnung = [[[NSAlert alloc] init] autorelease];
 	[Warnung addButtonWithTitle:@"OK"];
-	[Warnung addButtonWithTitle:@""];
-	[Warnung addButtonWithTitle:@""];
 	[Warnung addButtonWithTitle:@"Abbrechen"];
 	[Warnung setMessageText:[NSString stringWithFormat:@"%@",@""]];
 	

@@ -126,6 +126,7 @@ NSTimer*                TimeoutTimer;
 - (void)setAktiv:(int)derStatus forObjekt:(int)dasObjekt forRaum:(int)derRaum;
 - (void)setTagbalkenTyp:(int)derTyp forObjekt:(int)dasObjekt forRaum:(int)derRaum;
 - (void)setObjektTitel:(NSString*)derTitel forObjekt:(int)dasObjekt forRaum:(int)derRaum;
+- (void)setObjektTitelVonRaum:(int)raumnummer;
 - (void)setSegmentLabel:(NSString*)derTitel forSegment:(int)dasSegment forRaum:(int)derRaum;
 - (void)setStundenplanArray:(NSArray*)derStundenplanArray forObjekt:(int)dasObjekt forRaum:(int)derRaum;
 - (int)saveHomeDic;
@@ -151,6 +152,11 @@ NSTimer*                TimeoutTimer;
 - (void)readAVRSlave:(int)i2cAdresse vonAdresse:(int)startAdresse anz:(int)anzDaten;
 - (IBAction)readAVRSlave:(id)sender;
 - (int)WriteWoche_busy;
+
+- (IBAction)reportRaumPop:(id)sender;
+- (IBAction)reportObjektPop:(id)sender;
+
+
 - (BOOL)windowShouldClose:(id)sender;
 @end
 

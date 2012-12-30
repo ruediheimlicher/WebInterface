@@ -298,20 +298,19 @@ NSMutableDictionary* tempDic=(NSMutableDictionary*)[StundenArray objectAtIndex:d
 		
 		//NSString* tempString=[[derStundenByteArray objectAtIndex:0]objectForKey:[bitnummerArray objectAtIndex:i]];
 		NSString* tempString=[derStundenByteArray objectAtIndex:i];
-		unsigned int tempByte=0;//[[[derStundenByteArray objectAtIndex:0]objectForKey:[bitnummerArray objectAtIndex:i]]intValue];
+		unsigned int tempByte=0;
 		NSScanner *scanner;
-	
 		scanner = [NSScanner scannerWithString:tempString];
 		[scanner scanHexInt:&tempByte];
-
+      NSString* dezString = [NSString stringWithFormat:@"%d",tempByte];
 		
 		
-		//NSLog(@"i: %d tempString: %@ tempByte: %2.2X",i,tempString,tempByte);
+		//NSLog(@"i: %d tempString: %@ tempByte hex: %2.2X dez: %d dezString: %@",i,tempString,tempByte,tempByte,dezString);
 		NSMutableArray* tempStundenCodeArray=[[[NSMutableArray alloc]initWithCapacity:4]autorelease];
 		for (k=0;k<4;k++)
 		{
 			uint8_t tempStundencode = tempByte & 0x03;
-			//NSLog(@"k: %d tempStundencode: %2.2X",k,tempStundencode);
+			//NSLog(@"k: %d tempStundencode hex: %2.2X dez: %d",k,tempStundencode,tempStundencode);
 			[tempStundenCodeArray insertObject:[NSNumber numberWithInt:tempStundencode]atIndex:0];
 			//[tempStundenArray addObject:[NSNumber numberWithInt:tempStundencode]];
 			tempByte>>=2;
@@ -551,6 +550,7 @@ NSMutableDictionary* tempDic=(NSMutableDictionary*)[StundenArray objectAtIndex:d
 	[NotificationDic setObject:[NSNumber numberWithInt:Objekt] forKey:@"objekt"];// 
 	[NotificationDic setObject:[(rTagplanbalken*)[sender superview]Titel] forKey:@"titel"];//
 	[NotificationDic setObject:[NSNumber numberWithInt:1] forKey:@"permanent"];//
+   [NotificationDic setObject:[NSNumber numberWithInt:Typ] forKey:@"typ"];//
 	
 	int modKey=0;
 	//int all=-1;

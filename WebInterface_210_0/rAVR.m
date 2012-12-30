@@ -216,7 +216,14 @@ return returnInt;
 	
 	//[self setAktiv:NO forObjekt:7 forRaum:4];
 	
-	
+   [self setObjektPopVonRaum:0];
+   
+   for (int raumnummer=2;raumnummer < 8;raumnummer++)
+   {
+      //[self setObjektTitelVonRaum:raumnummer];
+   }
+   
+	/*
 	[self setObjektTitel:@"Brenner" forObjekt:0 forRaum:0];
 	[self setObjektTitel:@"Mode" forObjekt:1 forRaum:0];
 	[self setObjektTitel:@"Rinne" forObjekt:2 forRaum:0];
@@ -233,7 +240,7 @@ return returnInt;
    
    // Estrich
 	[self setObjektTitel:@"Lampe" forObjekt:0 forRaum:7];
-   
+   */
    
    
 	
@@ -600,7 +607,7 @@ return returnInt;
     [WEBDATATable reloadData];
     */
    //	[self setSegmentLabel:@"Ofen" forSegment:1 forRaum:4];
-	[self setObjektTitel:@"Ofen" forObjekt:1 forRaum:4];
+	//[self setObjektTitel:@"Ofen" forObjekt:1 forRaum:4];
 }
 
 - (void)setRaum:(int)derRaum
@@ -1092,7 +1099,23 @@ return returnInt;
 
 }//setTagplanTyp
 
+- (void)setObjektTitelVonRaum:(int)raumnummer
+{
+   NSLog(@"AVR setObjektTitelVonRaum: %d",raumnummer);
+   //  von Einstellungen  [self setObjektnamenVonArray:[[[[[HomebusArray objectAtIndex:raumnummer]objectForKey:@"wochenplanarray"]objectAtIndex:0]objectForKey:@"tagplanarray"]valueForKey:@"objektname"]];
+   
+   NSArray* tempObjektnamenArray = [[[[[HomebusArray objectAtIndex:raumnummer]objectForKey:@"wochenplanarray"]objectAtIndex:0]objectForKey:@"tagplanarray"]valueForKey:@"objektname"];
+   NSLog(@"tempObjektnamenArray: %@",[tempObjektnamenArray description] );
+ 	
+   int tag=(100*raumnummer);
+   for (int objektnummer=0;objektnummer < ([tempObjektnamenArray count]);objektnummer++)
+   {
+      [[[[WochenplanTab tabViewItemAtIndex:raumnummer]view]viewWithTag:tag]setLabel:[tempObjektnamenArray objectAtIndex:objektnummer] forSegment:objektnummer];
+    }
 
+
+
+}
 
 - (void)setObjektTitel:(NSString*)derTitel forObjekt:(int)dasObjekt forRaum:(int)derRaum
 {
@@ -1139,8 +1162,6 @@ return returnInt;
 	}//for wochentag
 
 }
-
-
 
 - (void)writeTagplan:(id)sender
 {
@@ -1503,6 +1524,30 @@ return returnInt;
 	}
 	
 }
+
+- (IBAction)reportRaumPop:(id)sender
+{
+   NSLog(@"reportRaumPop");
+   [self setObjektPopVonRaum:[sender indexOfSelectedItem]];
+}
+- (IBAction)reportObjektPop:(id)sender
+{
+   NSLog(@"reportObjektPop");
+}
+
+
+- (void)setObjektPopVonRaum:(int)raumnummer
+{
+   NSLog(@"AVR setObjektPopVonRaum: %d",raumnummer);
+   //  von Einstellungen  [self setObjektnamenVonArray:[[[[[HomebusArray objectAtIndex:raumnummer]objectForKey:@"wochenplanarray"]objectAtIndex:0]objectForKey:@"tagplanarray"]valueForKey:@"objektname"]];
+   [ObjektPop removeAllItems];
+   NSArray* tempObjektnamenArray = [[[[[HomebusArray objectAtIndex:raumnummer]objectForKey:@"wochenplanarray"]objectAtIndex:0]objectForKey:@"tagplanarray"]valueForKey:@"objektname"];
+   NSLog(@"tempObjektnamenArray: %@",[tempObjektnamenArray description] );
+   [ObjektPop addItemsWithTitles:tempObjektnamenArray];
+}
+
+
+
 
 - (void)ReportHandlerCallbackAktion:(NSNotification*)note
 {

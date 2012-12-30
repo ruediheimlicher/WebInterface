@@ -98,6 +98,19 @@
 	int	tempRaum=[RaumPop indexOfSelectedItem];
 	int	tempObjekt=[ObjektPop indexOfSelectedItem];
    
+   
+   int tagbalkentyp = [[[[[[[HomebusArray objectAtIndex:tempRaum]
+                            objectForKey:@"wochenplanarray"]
+                           objectAtIndex:0]
+                          objectForKey:@"tagplanarray"]
+                         objectAtIndex:tempObjekt]
+                        objectForKey:@"tagbalkentyp"]intValue];
+   
+   NSLog(@"PList tagbalkentyp: %d",tagbalkentyp);
+   //[readTagTaste setEnabled:YES];
+   //return;
+   
+   
    NSLog(@"tempRaum index: %d titel: %@",tempRaum, [[RaumPop selectedItem]title]);
    NSLog(@"tempObjekt index: %d titel: %@",tempObjekt, [[ObjektPop selectedItem]title]);
    
@@ -171,6 +184,7 @@
 	[NotificationDic setObject:[NSNumber numberWithInt:lbyte] forKey:@"lbyte"];
    
    [NotificationDic setObject:[[ObjektPop selectedItem]title] forKey:@"titel"];
+   [NotificationDic setObject:[NSNumber numberWithInt:tagbalkentyp] forKey:@"typ"];
 
    
 	

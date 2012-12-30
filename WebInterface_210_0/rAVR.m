@@ -1873,6 +1873,7 @@ return returnInt;
 		
 	}
 	
+   NSLog(@"PList Homebusarray: %@",[[HomebusArray objectAtIndex:0]description]);
 	[self readEthTagplan:i2cadresse vonAdresse:tagIndex*TAGPLANBREITE anz:0x20];//32 Bytes, TAGPLANBREITE	return;
 	
    return;

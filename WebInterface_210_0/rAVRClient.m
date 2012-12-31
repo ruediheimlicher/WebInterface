@@ -760,7 +760,7 @@ if (Webserver_busy)
 		
 		// isstatus0ok
 		
-			if ([[note userInfo]objectForKey:@"status0"]) 
+      if ([[note userInfo]objectForKey:@"status0"])
 		{
 			//TWI_Status=([[[note userInfo]objectForKey:@"status0"]intValue]==0);
 			// Anzeigen, dass status0 angekommen ist: Status 0 ist gesetzt

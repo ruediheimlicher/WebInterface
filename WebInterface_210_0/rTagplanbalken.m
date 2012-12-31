@@ -700,7 +700,7 @@ return StundenArray;
 		}
 		
 	}// for i
-	//NSLog(@"StundenbyteString: %@",StundenbyteString);
+	NSLog(@"raum: %d Tag: %d objekt: %d StundenbyteString: %@ tempByteArray: %@",Raum,Wochentag, Objekt,StundenbyteString,[tempByteArray description]);
 	return tempByteArray;
 }
 

@@ -371,7 +371,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 	if ([[note userInfo]objectForKey:@"status"])
 	{
 		NSString* TWIStatusSuffix=[NSString string];
-		if ([[[note userInfo]objectForKey:@"status"]intValue])//neuer Status ist 1
+		if ([[[note userInfo]objectForKey:@"status"]intValue])         //neuer Status ist 1
 		{
 			TWIStatusSuffix = [NSString stringWithFormat:@"pw=%@&status=%@",pw,@"1"];
 			NSString* TWIStatusURLString =[NSString stringWithFormat:@"%@/twi?%@",HomeCentralURL, TWIStatusSuffix];
@@ -383,7 +383,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 			[self loadURL:URL];
 		
       }
-		else // neuer Status ist 0
+		else        // neuer Status ist 0
 		{
 			TWIStatusSuffix = [NSString stringWithFormat:@"pw=%@&status=%@",pw,@"0"];
 			
@@ -391,10 +391,6 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 			NSString* TWIStatusURLString =[NSString stringWithFormat:@"%@/twi?%@",HomeCentralURL, TWIStatusSuffix];
 			
            //NSLog(@"TWIStatusAktion TWIStatusURL: %@",TWIStatusURLString);
-			
-			
-         
-         
          
          NSURL *URL = [NSURL URLWithString:TWIStatusURLString];
 			NSLog(@"TWIStatusAktion URL: %@",URL);
@@ -451,7 +447,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 		if (anz < maxAnzahl)
 		{
 			anz++;
-			if (anz==9)
+			if (anz>1)
 			{
             NSString* TWIStatus0URLSuffix = [NSString stringWithFormat:@"pw=%@&isstat0ok=1",pw];
             
@@ -1010,7 +1006,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 	//NSLog(@"sender: %@",[sender description]);
 	// Only report feedback for the main frame.
 	NSString* HTML_Inhalt=[self dataRepresentationOfType:HTMLDocumentType];
-	//NSLog(@"didFinishLoadForFrame Antwort: \nHTML_Inhalt: \t\t\t\t%@",HTML_Inhalt);
+	NSLog(@"didFinishLoadForFrame Antwort: \nHTML_Inhalt: \t\t\t\t%@",HTML_Inhalt);
 	
 	NSRange CheckRange;
 	NSString* Code_String= @"okcode=";
@@ -1018,7 +1014,9 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 	NSString* Status1_String= @"status1";
 	NSString* PW_String= @"ideur00";
 	
-	
+	NSString* status0_String= @"status0+"; // Status 0 ist bestaetigt
+   
+   
 	//NSString* Status0_String= @"status=0";
 	//NSString* Status1_String= @"status=1";
 
@@ -1027,7 +1025,6 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 	// 
 	// Test, ob Webseite eine okcode-Antwort ist
 	CheckRange = [HTML_Inhalt rangeOfString:Code_String];
-		
 	if (CheckRange.location < NSNotFound)
 	{
 		//NSLog(@"didFinishLoadForFrame: okcode ist da");
@@ -1051,7 +1048,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 
       // isstatus0ok vorhanden??
 		
-		NSString* status0_String= @"status0+"; 
+		//NSString* status0_String= @"status0+";
 		CheckRange = [HTML_Inhalt rangeOfString:status0_String];
 		if (CheckRange.location < NSNotFound)
 		{

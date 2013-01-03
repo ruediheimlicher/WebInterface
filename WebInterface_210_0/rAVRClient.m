@@ -696,9 +696,15 @@ if (Webserver_busy)
 - (void)setReadOK
 {
    NSBeep();
-   [StatusFeld setStringValue:@"Kontakt mit HomeCentral beendet"]; // TWI wieder aktiviert
-   [readTagTaste setEnabled:0];// TWI-Status ON, EEPROM gesperrt
-   [PWFeld setStringValue:@""];
+   [AdresseFeld setStringValue:@""];
+   [WriteFeld setStringValue:@""];
+   [ReadFeld setStringValue:@""];
+   [WriteWocheFeld setStringValue:@""];
+   //NSLog(@"FinishLoadAktion  status0+ ist da: TWI_Status: %d",TWI_Status);
+   [StatusFeld setStringValue:@"Kontakt mit HomeCentral hergestellt"];// TWI erfolgreich deaktiviert
+   [PWFeld setStringValue:@"OK"];
+   [readTagTaste setEnabled:1];// TWI-Status muss OFF sein, um EEPROM lesen zu koennen
+   Webserver_busy =0;
 
 }
 
@@ -783,9 +789,10 @@ if (Webserver_busy)
 			{
             NSLog(@"FinishLoadAktion Status 0 OK beep");
 				NSBeep();
-            
+            [self performSelector:@selector(setReadOK) withObject:nil afterDelay:2];
 				TWI_Status=0;
-				[AdresseFeld setStringValue:@""];
+				/*
+            [AdresseFeld setStringValue:@""];
 				[WriteFeld setStringValue:@""];
 				[ReadFeld setStringValue:@""];
 				[WriteWocheFeld setStringValue:@""];
@@ -794,6 +801,7 @@ if (Webserver_busy)
 				[PWFeld setStringValue:@"OK"];
 				[readTagTaste setEnabled:1];// TWI-Status muss OFF sein, um EEPROM lesen zu koennen
 				Webserver_busy =0;
+             */
 			}
 			else 
 			{

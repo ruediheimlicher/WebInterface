@@ -16,6 +16,7 @@
 //#import "rWerkstattplan.h"
 #import "rTagplan.h"
 #import "rTagplanbalken.h"
+#import "rServoTagplanbalken.h"
 #import "rEEPROMbalken.h"
 #import "rWochenplan.h"
 #import "datum.c"

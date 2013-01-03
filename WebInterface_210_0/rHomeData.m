@@ -588,7 +588,7 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 		//NSLog(@"DataVonHeute URLPfad: %@",URLPfad);
 		//NSLog(@"SolarDataVonHeute  DownloadPfad: %@ DataSuffix: %@",ServerPfad,SolarDataSuffix);
 		NSURL *URL = [NSURL URLWithString:[ServerPfad stringByAppendingPathComponent:SolarDataSuffix]];
-		NSLog(@"SolarDataVonHeute URL: %@",URL);
+		//NSLog(@"SolarDataVonHeute URL: %@",URL);
 		//NSURL *URL = [NSURL URLWithString:@"http://www.schuleduernten.ch/blatt/cgi-bin/HomeDaten.txt"];
 		//www.schuleduernten.ch/blatt/cgi-bin/HomeDaten/HomeDaten090730.txt
 		NSStringEncoding *  enc=0;
@@ -638,7 +638,7 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 			}
 			//NSLog(@"SolarDataVonHeute DataString: \n%@",DataString);
 			lastDataZeit=[self lastDataZeitVon:DataString];
-			NSLog(@"SolarDataVonHeute lastDataZeit: %d",lastDataZeit);
+			//NSLog(@"SolarDataVonHeute lastDataZeit: %d",lastDataZeit);
 			
 			// Auf WindowController Timer auslösen
 			downloadFlag=heute;

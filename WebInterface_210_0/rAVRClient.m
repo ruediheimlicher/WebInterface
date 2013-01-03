@@ -111,17 +111,17 @@
    //return;
    
    
-   NSLog(@"tempRaum index: %d titel: %@",tempRaum, [[RaumPop selectedItem]title]);
-   NSLog(@"tempObjekt index: %d titel: %@",tempObjekt, [[ObjektPop selectedItem]title]);
+   //NSLog(@"tempRaum index: %d titel: %@",tempRaum, [[RaumPop selectedItem]title]);
+   //NSLog(@"tempObjekt index: %d titel: %@",tempObjekt, [[ObjektPop selectedItem]title]);
    
 	//NSLog(@"tempRaum indexdez: %d hex: %x",[[RaumPop selectedItem]tag],[[RaumPop selectedItem]tag]);
 	
-   NSLog(@"tempRaum: %d,tempRaum*RAUMPLANBREITE: %X",tempRaum,tempRaum*RAUMPLANBREITE);
-   NSLog(@"tempObjekt: %d tempObjekt*TAGPLANBREITE: %X",tempObjekt,tempObjekt*TAGPLANBREITE);
-   NSLog(@"tempTag: %d tempTag*0x08: %X",tempTag,tempTag*0x08);
+   //NSLog(@"tempRaum: %d,tempRaum*RAUMPLANBREITE: %X",tempRaum,tempRaum*RAUMPLANBREITE);
+   //NSLog(@"tempObjekt: %d tempObjekt*TAGPLANBREITE: %X",tempObjekt,tempObjekt*TAGPLANBREITE);
+   //NSLog(@"tempTag: %d tempTag*0x08: %X",tempTag,tempTag*0x08);
    uint16_t startadresse=tempRaum*RAUMPLANBREITE + tempObjekt*TAGPLANBREITE + tempTag*0x08;
 	
-   NSLog(@"tempRaum: %X tempObjekt: %X tempTag: %X startadresse hex: %X dez: %d",tempRaum, tempObjekt, tempTag,startadresse,startadresse);
+   //NSLog(@"tempRaum: %X tempObjekt: %X tempTag: %X startadresse hex: %X dez: %d",tempRaum, tempObjekt, tempTag,startadresse,startadresse);
    
    
    NSString* AdresseKontrollString = [NSString string];
@@ -152,16 +152,16 @@
 	}
    
 	uint16_t kontrollstartadresse = 0x100*hbyte+lbyte;
-   NSLog(@"kontrollstartadresse: %d",kontrollstartadresse);
+   //NSLog(@"kontrollstartadresse: %d",kontrollstartadresse);
    
    uint16_t kontrolltag = (kontrollstartadresse & 0x38)/0x08; // 0x38: 111 000 Bit 3-6
-   NSLog(@"kontrolltag: %d",kontrolltag);
+   //NSLog(@"kontrolltag: %d",kontrolltag);
    
    uint16_t kontrollobjekt = (kontrollstartadresse & 0x1C0)/0x40 ; // 0x1C0: 111 000 000 Bit 7-9
-   NSLog(@"kontrollobjekt: %d",kontrollobjekt);
+   //NSLog(@"kontrollobjekt: %d",kontrollobjekt);
 
    uint16_t kontrollraum = (kontrollstartadresse & 0xE00)/0x200; // 0xE0: 111 000 000 000 Bit 10-12
-   NSLog(@"kontrollraum: %d",kontrollraum);
+   //NSLog(@"kontrollraum: %d",kontrollraum);
    
 /*	
 	NSString* lbString= [[NSNumber numberWithInt:lbyte]stringValue];
@@ -397,7 +397,7 @@ if (Webserver_busy)
 		
 		
 		uint16_t i2cStartadresse=Raum*RAUMPLANBREITE + Objekt*TAGPLANBREITE+ Wochentag*0x08;
-		//NSLog(@"i2cStartadresse: %04X",i2cStartadresse);
+		NSLog(@"i2cStartadresse: %04X",i2cStartadresse);
 		uint8_t lb = i2cStartadresse & 0x00FF;
 		[HomeClientDic setObject:[NSNumber numberWithInt:lb] forKey:@"lbyte"];
 		uint8_t hb = i2cStartadresse >> 8;
@@ -693,6 +693,14 @@ if (Webserver_busy)
 	}
 }
 
+- (void)setReadOK
+{
+   NSBeep();
+   [StatusFeld setStringValue:@"Kontakt mit HomeCentral beendet"]; // TWI wieder aktiviert
+   [readTagTaste setEnabled:0];// TWI-Status ON, EEPROM gesperrt
+   [PWFeld setStringValue:@""];
+
+}
 
 - (void)FinishLoadAktion:(NSNotification*)note
 {
@@ -746,10 +754,12 @@ if (Webserver_busy)
 			else 
 			{
             NSLog(@"FinishLoadAktion Kontakt beendet beep");
-				NSBeep();
+				
+            NSBeep();
 				[StatusFeld setStringValue:@"Kontakt mit HomeCentral beendet"]; // TWI wieder aktiviert
 				[readTagTaste setEnabled:0];// TWI-Status ON, EEPROM gesperrt
 				[PWFeld setStringValue:@""];
+             
 				//[AdresseFeld setStringValue:@""];
 				//[WriteFeld setStringValue:@""];
 				//[ReadFeld setStringValue:@""];
@@ -802,7 +812,7 @@ if (Webserver_busy)
 	
 		// end isstatus0ok
 		
-		if ([[note userInfo]objectForKey:@"radrok"]) 
+		if ([[note userInfo]objectForKey:@"radrok"]) // Adresse fuer Lesen angekommen
 		{
 			Adresse_OK=[[[note userInfo]objectForKey:@"radrok"]intValue];
 			// Anzeigen, dass die EEPROM-Adresse erfolgreich uebertragen wurde: 
@@ -881,10 +891,6 @@ if (Webserver_busy)
 			
 		} // writeok
 		
-		
-		
-		
-		
 	} // if okcode
 	
 	NSArray* EEPROMDataArray;
@@ -901,7 +907,7 @@ if (Webserver_busy)
 			[StatusFeld setStringValue:@"Daten angekommen"];
 			if ([[note userInfo]objectForKey:@"eepromdatastring"])
 			{
-				//			[StatusFeld setStringValue:[[note userInfo]objectForKey:@"eepromdatastring"]];
+				//	[StatusFeld setStringValue:[[note userInfo]objectForKey:@"eepromdatastring"]];
 				EEPROMDataArray = [[[note userInfo]objectForKey:@"eepromdatastring"] componentsSeparatedByString:@"+"];
 				//NSLog(@"FinishLoadAktion EEPROMDataArray: %@",[EEPROMDataArray description]);
 				NSString* DataString=[NSString string];;

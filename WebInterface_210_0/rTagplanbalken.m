@@ -443,7 +443,7 @@ NSMutableDictionary* tempDic=(NSMutableDictionary*)[StundenArray objectAtIndex:d
 }
 
 
-- (void)StundenTasteAktion:(id)sender
+- (void)StundenTasteAktion:(NSButton*)sender
 {
 	//NSLog(@"StundenTasteAktion tag: %d",[sender tag]);
 	//NSLog(@"StundenTasteAktion: %d", [(rTagplanbalken*)[sender superview]Wochentag]);
@@ -616,8 +616,7 @@ NSMutableDictionary* tempDic=(NSMutableDictionary*)[StundenArray objectAtIndex:d
 		
 		[nc postNotificationName:@"WriteWochenplanModifier" object:self userInfo:NotificationDic];
 		modKey=0;
-		
-		
+				
 	}
    else
 	{
@@ -626,7 +625,7 @@ NSMutableDictionary* tempDic=(NSMutableDictionary*)[StundenArray objectAtIndex:d
 		[NotificationDic setObject:[StundenArray valueForKey:@"code"] forKey:@"stundenarray"];
 		[NotificationDic setObject:[self StundenByteArray] forKey:@"stundenbytearray"];
 		
-		NSLog(@"WriteTasteAktion  Standard: %@",[NotificationDic description]);
+		//NSLog(@"WriteTasteAktion  Standard: %@",[NotificationDic description]);
       
 		// Notific an Wochenplan  und von dort an WriteStandardaktion in AVRClient schicken
 		[nc postNotificationName:@"WriteStandard" object:self userInfo:NotificationDic];
@@ -672,6 +671,7 @@ return StundenArray;
 
 - (NSArray*)StundenByteArray
 {
+   //NSLog(@"StundenArray: %@",[StundenArray description]);
 	NSMutableArray* tempByteArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
 	int i, k=3;
 	uint8_t Stundenbyte=0;
@@ -679,7 +679,7 @@ return StundenArray;
 	for (i=0;i<[StundenArray count];i++)
 	{	
 		uint8_t Stundencode=[[[StundenArray objectAtIndex:i] objectForKey:@"code"]intValue];
-		//NSLog(@"StundenByteArray Tag: %d Objekt: %d Stundencode: %02X",Wochentag, Objekt, Stundencode);
+		//NSLog(@"StundenByteArray i: %d Tag: %d Objekt: %d Stundencode: %02X",i,Wochentag, Objekt, Stundencode);
 		Stundencode=(Stundencode << 2*k);
 		//NSLog(@"Stundencode <<: %02X",Stundencode);
 		Stundenbyte |=Stundencode;
@@ -700,7 +700,7 @@ return StundenArray;
 		}
 		
 	}// for i
-	NSLog(@"raum: %d Tag: %d objekt: %d StundenbyteString: %@ tempByteArray: %@",Raum,Wochentag, Objekt,StundenbyteString,[tempByteArray description]);
+	//NSLog(@"raum: %d Tag: %d objekt: %d StundenbyteString: %@ tempByteArray: %@",Raum,Wochentag, Objekt,StundenbyteString,[tempByteArray description]);
 	return tempByteArray;
 }
 
@@ -870,7 +870,7 @@ return mark;
 	//NSPoint Ecke=[self bounds].origin;
 	NSPoint localMaus;
 	localMaus=[self convertPoint:globMaus fromView:NULL];
-	NSLog(@"rTagplanbalken mouseDown: local: x: %2.2f y: %2.2f",localMaus.x,localMaus.y);
+	//NSLog(@"rTagplanbalken mouseDown: local: x: %2.2f y: %2.2f",localMaus.x,localMaus.y);
 	
 	//NSLog(@"lastONArray: %@",[lastONArray description]);
 	int i;

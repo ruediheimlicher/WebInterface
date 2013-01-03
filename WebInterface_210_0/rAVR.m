@@ -58,7 +58,7 @@ return BinString;
 	
 	if ([theScanner scanHexInt:&returnInt])
 	{
-		NSLog(@"HexStringZuInt string: %@ int: %x	",derHexString,returnInt);
+		//NSLog(@"HexStringZuInt string: %@ int: %x	",derHexString,returnInt);
 		return returnInt;
 	}
 
@@ -1105,7 +1105,7 @@ return returnInt;
    //  von Einstellungen  [self setObjektnamenVonArray:[[[[[HomebusArray objectAtIndex:raumnummer]objectForKey:@"wochenplanarray"]objectAtIndex:0]objectForKey:@"tagplanarray"]valueForKey:@"objektname"]];
    
    NSArray* tempObjektnamenArray = [[[[[HomebusArray objectAtIndex:raumnummer]objectForKey:@"wochenplanarray"]objectAtIndex:0]objectForKey:@"tagplanarray"]valueForKey:@"objektname"];
-   NSLog(@"tempObjektnamenArray: %@",[tempObjektnamenArray description] );
+   //NSLog(@"tempObjektnamenArray: %@",[tempObjektnamenArray description] );
  	
    int tag=(100*raumnummer);
    for (int objektnummer=0;objektnummer < ([tempObjektnamenArray count]);objektnummer++)
@@ -1174,7 +1174,7 @@ return returnInt;
 
    // Mausklicks im Tagplanbalken speichern
 {
-	NSLog(@"AVR TagplancodeAktion: %@",[[note userInfo]description]);
+	//NSLog(@"AVR TagplancodeAktion: %@",[[note userInfo]description]);
 	//NSLog(@"AVR TagplancodeAktion: %@",[[note userInfo]objectForKey:@"quelle"]);
 	NSArray* Raumnamen=[[NSArray arrayWithObjects:@"Heizung", @"Werkstatt", @"WoZi", @"Buero", @"Labor", @"OG1", @"OG2", @"Estrich", nil]retain];
 	NSArray* Wochentage=[NSArray arrayWithObjects:@"MO",@"DI",@"MI",@"DO",@"FR",@"SA",@"SO",nil];
@@ -1542,7 +1542,7 @@ return returnInt;
    //  von Einstellungen  [self setObjektnamenVonArray:[[[[[HomebusArray objectAtIndex:raumnummer]objectForKey:@"wochenplanarray"]objectAtIndex:0]objectForKey:@"tagplanarray"]valueForKey:@"objektname"]];
    [ObjektPop removeAllItems];
    NSArray* tempObjektnamenArray = [[[[[HomebusArray objectAtIndex:raumnummer]objectForKey:@"wochenplanarray"]objectAtIndex:0]objectForKey:@"tagplanarray"]valueForKey:@"objektname"];
-   NSLog(@"tempObjektnamenArray: %@",[tempObjektnamenArray description] );
+   //NSLog(@"tempObjektnamenArray: %@",[tempObjektnamenArray description] );
    [ObjektPop addItemsWithTitles:tempObjektnamenArray];
 }
 

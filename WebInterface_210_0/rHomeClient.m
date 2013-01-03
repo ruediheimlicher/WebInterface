@@ -40,7 +40,7 @@ unsigned char h2int(char c)
 	
 	if ([theScanner scanHexInt:&returnInt])
 	{
-		NSLog(@"HexStringZuInt string: %@ int: %x	",derHexString,returnInt);
+		//NSLog(@"HexStringZuInt string: %@ int: %x	",derHexString,returnInt);
 		return returnInt;
 	}
    
@@ -118,7 +118,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 
 - (void)EEPROMReadStartAktion:(NSNotification*)note
 {
-	NSLog(@"EEPROMReadStartAktion note: %@",[[note userInfo]description]);
+	//NSLog(@"EEPROMReadStartAktion note: %@",[[note userInfo]description]);
 	NSString* hByte = [NSString string];
 	NSString* lByte = [NSString string];
 	NSString* EEPROMAdresseZusatz= [NSString string];
@@ -188,7 +188,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 
 - (void)EEPROMReadDataAktion:(NSNotification*)note
 {
-	//NSLog(@"EEPROMReadDataAktion note: %@",[[note userInfo]description]);
+	NSLog(@"EEPROMReadDataAktion note: %@",[[note userInfo]description]);
 	//NSString* DataString = [NSString string];
 	if ([[note userInfo]objectForKey:@"rdata"])
 	{
@@ -236,7 +236,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 				NSString* TWIReadDataURLSuffix = [NSString stringWithFormat:@"pw=%@&rdata=%d",pw,d]; 
 				NSString* TWIReadDataURL =[NSString stringWithFormat:@"%@/twi?%@",HomeCentralURL, TWIReadDataURLSuffix];
 				NSURL *URL = [NSURL URLWithString:TWIReadDataURL];
-				//NSLog(@"sendTimer fire URL: %@",URL);
+				NSLog(@"sendTimer fire anzahl: %d URL: %@",anz,URL);
 				[self loadURL:URL];
 				anz--;
 				[sendTimerDic setObject:[NSNumber numberWithInt:anz] forKey:@"anzahl"];
@@ -327,7 +327,8 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 				[self loadURL:URL];
 				anz++;
 				[confirmTimerDic setObject:[NSNumber numberWithInt:anz] forKey:@"anzahl"];
-		}
+		
+      }
 		else
 		{
 			NSLog(@"confirmTimerFunktion confirmTimer invalidate");
@@ -456,7 +457,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
             
             
             NSURL *URL = [NSURL URLWithString:TWIStatus0URL];
-            NSLog(@"statusTimerFunktion  URL: %@",URL);
+            //NSLog(@"statusTimerFunktion  URL: %@",URL);
             [self loadURL:URL];
 			}
 			
@@ -480,6 +481,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 			[nc postNotificationName:@"StatusWait" object:self userInfo:tempDataDic];
 			
 		}
+ 
 		else
 		{
 			
@@ -558,9 +560,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
    
 	NSString* lbyte=[[[note userInfo]objectForKey:@"lbyte"]stringValue];
 	NSString* hbyte=[[[note userInfo]objectForKey:@"hbyte"]stringValue];
-   
-   
-   
+
    if ([lbyte length]==1)
    {
       lbyte = [@"0" stringByAppendingString:lbyte];
@@ -571,7 +571,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
       hbyte = [@"0" stringByAppendingString:hbyte];
    }
 
-   
+   NSLog(@"HomeClientWriteStandardAktion lbyte als String: %@ hbyte als String: %@",lbyte,hbyte);
    [SendEEPROMDataDic setObject:hbyte forKey:@"hbyte"];
    [SendEEPROMDataDic setObject:lbyte forKey:@"lbyte"];
    [SendEEPROMDataDic setObject:[NSNumber numberWithInt:1]forKey:@"adrload"];
@@ -741,7 +741,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
       {
          if ([[SendEEPROMDataDic objectForKey:@"adrload"]intValue]==1 )// EEPROMAdresse ist da
          {
-            NSLog(@"HomeClientWriteStandardAktion SendEEPROMDataDic: %@",[SendEEPROMDataDic description]);
+//            NSLog(@"HomeClientWriteStandardAktion SendEEPROMDataDic: %@",[SendEEPROMDataDic description]);
             //[nc postNotificationName:@"EEPROMsend2HomeServer" object:self userInfo:tempDataDic];
  //           [self sendEEPROMDataMitDic:SendEEPROMDataDic];
          }
@@ -892,7 +892,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 - (int)sendEEPROMDataMitDic:(NSDictionary*)EEPROMDataDic
 {
    int err=0;
-   NSLog(@"sendEEPROMDataMitDic URL: %s EEPROMDataDic: %@",WEBSERVER_VHOST ,[EEPROMDataDic description] );
+   //NSLog(@"sendEEPROMDataMitDic URL: %s EEPROMDataDic: %@",WEBSERVER_VHOST ,[EEPROMDataDic description] );
    /*
     WEBSERVER_VHOST
    
@@ -916,7 +916,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
                                    [EEPROMDataDic objectForKey:@"typ"]
                                    
                                    ];
-            NSLog(@"URLString: %@",URLString );
+            //NSLog(@"URLString: %@",URLString );
             
             NSURL *URL = [NSURL URLWithString:URLString];
             NSLog(@"sendEEPROM URL: %@",URL );
@@ -1006,7 +1006,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 	//NSLog(@"sender: %@",[sender description]);
 	// Only report feedback for the main frame.
 	NSString* HTML_Inhalt=[self dataRepresentationOfType:HTMLDocumentType];
-	NSLog(@"didFinishLoadForFrame Antwort: \nHTML_Inhalt: \t\t\t\t%@",HTML_Inhalt);
+	//NSLog(@"didFinishLoadForFrame Antwort: \nHTML_Inhalt: \t\t\t\t%@",HTML_Inhalt);
 	
 	NSRange CheckRange;
 	NSString* Code_String= @"okcode=";
@@ -1154,7 +1154,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
                {
                   if ([[SendEEPROMDataDic objectForKey:@"adrload"]intValue]==1 )// EEPROMAdresse ist da
                   {
-                     NSLog(@"didFinishLoad SendEEPROMDataDic: %@",[SendEEPROMDataDic description]);
+                     //NSLog(@"didFinishLoad SendEEPROMDataDic: %@",[SendEEPROMDataDic description]);
                      //[nc postNotificationName:@"EEPROMsend2HomeServer" object:self userInfo:tempDataDic];
                      [self sendEEPROMDataMitDic:SendEEPROMDataDic];
                   }
@@ -1257,7 +1257,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
             {
                if ([[SendEEPROMDataDic objectForKey:@"adrload"]intValue]==1 )// EEPROMAdresse ist da
                {
-                  NSLog(@"didFinishLoad SendEEPROMDataDic: %@",[SendEEPROMDataDic description]);
+                  //NSLog(@"didFinishLoad SendEEPROMDataDic: %@",[SendEEPROMDataDic description]);
                   //[nc postNotificationName:@"EEPROMsend2HomeServer" object:self userInfo:tempDataDic];
                   [self sendEEPROMDataMitDic:SendEEPROMDataDic];
                }

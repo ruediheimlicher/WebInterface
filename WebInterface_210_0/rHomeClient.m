@@ -179,7 +179,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 	
 	//NSLog(@"EEPROMReadStartAktion EEPROMReadStartURLSuffix: %@",EEPROMReadStartURLSuffix);
 
-	//NSLog(@"EEPROMReadStartURL: %@",EEPROMReadStartURL);
+	NSLog(@"EEPROMReadStartURL: %@",EEPROMReadStartURL);
 	//NSURL *URL = [NSURL URLWithString:HomeCentralURL];
 	NSURL *URL = [NSURL URLWithString:EEPROMReadStartURL];
 	[self loadURL:URL];
@@ -323,7 +323,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 				NSString* TWIReadDataURLSuffix = [NSString stringWithFormat:@"pw=%@&iswriteok=1",pw]; 
 				NSString* TWIReadDataURL =[NSString stringWithFormat:@"%@/twi?%@",HomeCentralURL, TWIReadDataURLSuffix];
 				NSURL *URL = [NSURL URLWithString:TWIReadDataURL];
-				NSLog(@"confirmTimerFunktion  URL: %@",URL);
+				//NSLog(@"confirmTimerFunktion  URL: %@",URL);
 				[self loadURL:URL];
 				anz++;
 				[confirmTimerDic setObject:[NSNumber numberWithInt:anz] forKey:@"anzahl"];
@@ -1006,7 +1006,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 	//NSLog(@"sender: %@",[sender description]);
 	// Only report feedback for the main frame.
 	NSString* HTML_Inhalt=[self dataRepresentationOfType:HTMLDocumentType];
-	//NSLog(@"didFinishLoadForFrame Antwort: \nHTML_Inhalt: \t\t\t\t%@",HTML_Inhalt);
+	NSLog(@"didFinishLoadForFrame Antwort: \nHTML_Inhalt: \t\t\t\t%@",HTML_Inhalt);
 	
 	NSRange CheckRange;
 	NSString* Code_String= @"okcode=";
@@ -1192,6 +1192,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 		CheckRange = [HTML_Inhalt rangeOfString:Data_String];
 		if (CheckRange.location < NSNotFound)
 		{
+         NSLog(@"didFinishLoadForFrame read EEPROM Antwort: \nHTML_Inhalt: \t\t\t\t%@",HTML_Inhalt);
 			//NSLog(@"didFinishLoadForFrame: data ist da  loc: %d",CheckRange.location);
 			[tempDataDic setObject:[NSNumber numberWithInt:1] forKey:@"data"];
 			int datastart=0, dataend=0;

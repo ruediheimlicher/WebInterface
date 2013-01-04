@@ -2909,7 +2909,7 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
 	NSLog(@"reportKalender	sender: %@",[sender dateValue]);
 	NSString* HeuteDatumString = [[[[NSDate date]description]componentsSeparatedByString:@" "]objectAtIndex:0];
 	NSString* KalenderDatumString = [[[[sender dateValue]description]componentsSeparatedByString:@" "]objectAtIndex:0];
-	NSLog(@"sender: heute: %@ Kalender: %@",HeuteDatumString, KalenderDatumString);
+	//NSLog(@"sender: heute: %@ Kalender: %@",HeuteDatumString, KalenderDatumString);
 
 	if ([HeuteDatumString isEqualToString:KalenderDatumString])
 	{
@@ -2957,7 +2957,7 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
 {	
 	if (SolarKalenderblocker)
 	{
-		NSLog(@"reportSolarKalender	Kalenderblocker");
+		//NSLog(@"reportSolarKalender	Kalenderblocker");
 		return;
 	}
 	SolarKalenderblocker=1;
@@ -2965,7 +2965,7 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
 	NSLog(@"reportSolarKalender	sender: %@",[sender dateValue]);
 	NSString* HeuteDatumString = [[[[NSDate date]description]componentsSeparatedByString:@" "]objectAtIndex:0];
 	NSString* KalenderDatumString = [[[[sender dateValue]description]componentsSeparatedByString:@" "]objectAtIndex:0];
-	NSLog(@"sender: %@ heute: %@",HeuteDatumString, KalenderDatumString);
+	//NSLog(@"sender: %@ heute: %@",HeuteDatumString, KalenderDatumString);
 
 	if ([HeuteDatumString isEqualToString:KalenderDatumString])
 	{
@@ -3050,7 +3050,7 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
 	NSLog(@"reportSolarStatistikKalender	sender: %@",[sender dateValue]);
 	NSString* HeuteDatumString = [[[[NSDate date]description]componentsSeparatedByString:@" "]objectAtIndex:0];
 	NSString* KalenderDatumString = [[[[sender dateValue]description]componentsSeparatedByString:@" "]objectAtIndex:0];
-	NSLog(@"sender: %@ heute: %@",HeuteDatumString, KalenderDatumString);
+	//NSLog(@"sender: %@ heute: %@",HeuteDatumString, KalenderDatumString);
 
 	if ([HeuteDatumString isEqualToString:KalenderDatumString])
 	{
@@ -3806,7 +3806,7 @@ if ([[note userInfo]objectForKey:@"err"])
 	NSCalendarDate *StartZeit = [NSCalendarDate calendarDate];
 	//dateWithString:@"Friday, 1 July 2001, 11:45"
 	//calendarFormat:@"%A, %d %B %Y, %I:%M"];
-	NSLog(@"reportSimStart: heute: %@",[StartZeit description]);
+	//NSLog(@"reportSimStart: heute: %@",[StartZeit description]);
 	Stunde =[StartZeit hourOfDay];
 	Minute =[StartZeit minuteOfHour];
 	//NSLog(@"h: %d min: %d",Stunde, Minute);

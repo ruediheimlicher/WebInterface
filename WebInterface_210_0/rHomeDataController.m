@@ -73,7 +73,7 @@
 
 -(void)HomeDataSolarKalenderAktion:(NSNotification*)note
 {
-	NSLog(@"HomeDataSolarKalenderAktion: %@",[[note userInfo]description]);
+	//NSLog(@"HomeDataSolarKalenderAktion: %@",[[note userInfo]description]);
 	if([[note userInfo]objectForKey:@"datum"])
 	{
 		NSDate* Datum=[[note userInfo]objectForKey:@"datum"];

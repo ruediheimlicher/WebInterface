@@ -81,8 +81,8 @@
 
 - (void)setTagplan:(NSArray*)derStundenArray forTag:(int)derTag // nicht verwendet
 {
-	NSLog(@"Tagplan setTagplan");
-	NSLog(@"Tagplan setTagplan Tag: %d StundenArray: %@",derTag, [[StundenArray valueForKey:@"code"]description]);
+	//NSLog(@"Tagplan setTagplan");
+	//NSLog(@"Tagplan setTagplan Tag: %d StundenArray: %@",derTag, [[StundenArray valueForKey:@"code"]description]);
 	if (StundenArray==NULL)
 	{
 	StundenArray=[[NSMutableArray alloc]initWithCapacity:0];
@@ -137,7 +137,7 @@
 	
 	if (tag==0)
    {
-      NSLog(@"setTagplan Tag: %d StundenArray: %@",derTag, [StundenArray description]);
+      //NSLog(@"setTagplan Tag: %d StundenArray: %@",derTag, [StundenArray description]);
    }
 	//NSLog(@"setTagplan Tag: %d derStundenArray: %@",derTag, [derStundenArray description]);
 	for (i=0;i<24;i++)
@@ -190,7 +190,7 @@ return StundenArray;
 
 - (void)setStundenArray:(NSArray*)derStundenArray forKey:(NSString*)derKey
 {
-	NSLog(@"setTagplan StundenArray: %@", [derStundenArray description]);
+	//NSLog(@"setTagplan StundenArray: %@", [derStundenArray description]);
 	
 	int i;
 	for (i=0;i<24;i++)

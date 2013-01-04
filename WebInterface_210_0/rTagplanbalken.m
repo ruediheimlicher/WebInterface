@@ -671,7 +671,7 @@ return StundenArray;
 
 - (NSArray*)StundenByteArray
 {
-   //NSLog(@"StundenArray: %@",[StundenArray description]);
+   //NSLog(@"TagplanBalken typ: %d StundenArray: %@",TagbalkenTyp,[StundenArray description]);
 	NSMutableArray* tempByteArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
 	int i, k=3;
 	uint8_t Stundenbyte=0;
@@ -682,9 +682,9 @@ return StundenArray;
 		//NSLog(@"StundenByteArray i: %d Tag: %d Objekt: %d Stundencode: %02X",i,Wochentag, Objekt, Stundencode);
 		Stundencode=(Stundencode << 2*k);
 		//NSLog(@"Stundencode <<: %02X",Stundencode);
-		Stundenbyte |=Stundencode;
+		Stundenbyte |= Stundencode;
 		//NSLog(@"i: %d      Stundenbyte: %02X",i,Stundenbyte);
-		if (k==0)
+		if (k==0) // vier Tasten abgearbeitet, Zahl erzeugen
 		{
 			
 			NSString* ByteString=[NSString stringWithFormat:@"%02X ",Stundenbyte];

@@ -148,6 +148,7 @@ return returnInt;
 	WochenplanDic=[[[NSMutableDictionary alloc]initWithCapacity:0]retain];
 	Eingangsdaten=[[[NSMutableArray alloc]initWithCapacity:0]retain];
 	EEPROMArray=[[[NSMutableArray alloc]initWithCapacity:0]retain];
+   EEPROMReadDataArray=[[[NSMutableArray alloc]initWithCapacity:0]retain];
    
    
 	NSFileManager *Filemanager=[NSFileManager defaultManager];
@@ -1853,9 +1854,10 @@ return returnInt;
 }
 */
 
+/*
 - (IBAction)readTagplan:(id)sender
 {
-	//NSLog(@"readTagplan");
+	NSLog(@"AVR readTagplan");
 	
 	
 
@@ -1883,7 +1885,7 @@ return returnInt;
 //	[self setI2CStatus:0];
 
 }
-
+*/
 - (IBAction)readWochenplan:(id)sender
 {
 	
@@ -2010,6 +2012,7 @@ return returnInt;
 - (void)setI2CStatus:(int)derStatus 
 {
 	[readTagTaste setEnabled:NO];
+   [readWocheTaste setEnabled:NO];
 	NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
 	NSMutableDictionary* i2cStatusDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
 	[i2cStatusDic setObject:[NSNumber numberWithInt:derStatus]forKey:@"status"];

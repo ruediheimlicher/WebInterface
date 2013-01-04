@@ -65,6 +65,8 @@ IBOutlet	id		AdresseFeld;
 IBOutlet	id		ReadFeld;
 IBOutlet	id		WriteFeld;
 IBOutlet	id		WriteWocheFeld;
+   
+IBOutlet	id		Waitrad;
 
 IBOutlet	id					VersionFeld;
 IBOutlet	id					DatumFeld;
@@ -102,9 +104,13 @@ IBOutlet	NSPopUpButton* RaumPop;
 int							WebTask;          // Auszuführende Aktion aufgrund von Web-Requests
 int							Webserver_busy;
 int							WriteWoche_busy;
+   
+   int                  wochentagindex;   // wochentag, fuer den Daten bearbeitet werden
+NSMutableArray*			EEPROMReadDataArray;
 
 NSMutableArray*			WEBDATATabelle;
 
+   
 IBOutlet	NSTableView*	WEBDATATable;
 rWEBDATA_DS*				WEBDATA_DS;
 
@@ -144,8 +150,10 @@ NSTimer*                TimeoutTimer;
 - (IBAction)readTagplan:(id)sender;
 - (void)readTagplan:(int)i2cAdresse vonAdresse:(int)startAdresse anz:(int)anzDaten;
 - (void)readEthTagplan:(int)i2cAdresse vonAdresse:(int)startAdresse anz:(int)anzDaten;
+
+
 - (IBAction)writeWochenplan:(id)sender;
-- (IBAction)readWochenplan:(id)sender;
+
 - (IBAction)readEEPROM:(id)sender;
 - (void)readEEPROM:(int)i2cAdresse vonAdresse:(int)startAdresse anz:(int)anzDaten;
 - (int)writeEEPROM:(int)i2cAdresse anAdresse:(int)startAdresse mitDaten:(NSArray*)dieDaten;
@@ -164,6 +172,9 @@ NSTimer*                TimeoutTimer;
 
 @interface rAVR(rAVRClient)
 - (IBAction)readEthTagplan:(id)sender;
+- (void)readEthTagplanVonTag:(int)wochentag;
+- (void)readEthTagplanVonRaum:(int)raum vonObjekt: (int)objekt vonTag:(int)wochentag;
+- (IBAction)readWochenplan:(id)sender;
 - (void)setWEBDATAArray:(NSArray*)derDatenArray;
 - (void)setTWITaste:(int)status;
 - (int)TWIStatus;

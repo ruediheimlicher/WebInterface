@@ -37,6 +37,10 @@
 	NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
 	[EEPROMReadTaste setEnabled:![sender state]];
 	//int twiOK=0;
+   if (![sender state])
+   {
+      [Waitrad  startAnimation:NULL];
+   }
 	NSMutableDictionary* twiStatusDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
    [twiStatusDic setObject:[NSNumber numberWithInt:[sender state]]forKey:@"status"];
    [twiStatusDic setObject:[NSNumber numberWithInt:[LocalTaste state]]forKey:@"local"];
@@ -93,11 +97,23 @@
 		return;
 	}
 	WebTask=eepromread; // eepromlesen
+   
 	[readTagTaste setEnabled:NO];
+   [readWocheTaste setEnabled:NO];
 	[ReadFeld setStringValue:@""];
 	[WriteFeld setStringValue:@""];
 	[AdresseFeld setStringValue:@""];
+   
 	int	tempTag=[TagPop indexOfSelectedItem];
+   
+   
+   [self readEthTagplanVonRaum:[RaumPop indexOfSelectedItem] vonObjekt:[ObjektPop indexOfSelectedItem] vonTag:[TagPop indexOfSelectedItem]];
+
+   //[self readEthTagplanVonTag:tempTag];
+   
+   
+   return;
+
 	int	tempRaum=[RaumPop indexOfSelectedItem];
 	int	tempObjekt=[ObjektPop indexOfSelectedItem];
    
@@ -188,7 +204,7 @@
    
    [NotificationDic setObject:[[ObjektPop selectedItem]title] forKey:@"titel"];
    [NotificationDic setObject:[NSNumber numberWithInt:tagbalkentyp] forKey:@"typ"];
-   
+   [NotificationDic setObject:[NSNumber numberWithInt:WebTask] forKey:@"webtask"];
    
 	
 	NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
@@ -198,7 +214,7 @@
 	//	[i2cAdressArray addObject:[NSNumber numberWithInt:hbyte]];						// Hi-Bit der Adresse
 	//	[i2cAdressArray addObject:[NSNumber numberWithInt:lbyte]];						// Lo-Bit der Adresse
 	
-	NSLog(@"AVRClient readEthTagplan EEPROMAddresse: %X startadresse: %X  hbyte: %X lbyte: %X", [I2CPop indexOfSelectedItem], startadresse, hbyte, lbyte);
+	//NSLog(@"AVRClient readEthTagplan EEPROMAddresse: %X startadresse: %X  hbyte: %X lbyte: %X", [I2CPop indexOfSelectedItem], startadresse, hbyte, lbyte);
 	
 	//	NSString* ReadURL=[self ReadURLForEEPROM: EEPROMAddresse hByte: hbyte lByte: lbyte];
    
@@ -206,6 +222,9 @@
 
 - (IBAction)readEthWochenplan:(id)sender
 {
+   enum webtaskflag{idle, eepromread, eepromwrite,eepromreadwoche,eepromwritewoche}webtaskflag;
+   [EEPROMReadDataArray removeAllObjects];
+   
 	if (Webserver_busy || WriteWoche_busy)
 	{
       NSLog(@"readEthWochenplan Webserver_busy beep");
@@ -213,15 +232,24 @@
       
 		return;
 	}
-	
+	WebTask = eepromreadwoche;
 	[readTagTaste setEnabled:NO];
+   [readWocheTaste setEnabled:NO];
 	[ReadFeld setStringValue:@""];
 	[WriteFeld setStringValue:@""];
 	[AdresseFeld setStringValue:@""];
-	//int	tempTag=[TagPop indexOfSelectedItem];
+	int	tempTag=[TagPop indexOfSelectedItem];
    // Start ist MO
-   int	tempTag=0;
+   //int	tempTag=0;
    
+   wochentagindex = 0; // Beginn
+   
+   //[self readEthTagplanVonTag:tempTag];
+   [self readEthTagplanVonRaum:[RaumPop indexOfSelectedItem] vonObjekt:[ObjektPop indexOfSelectedItem] vonTag:wochentagindex];
+
+   
+   return;
+
 	int	tempRaum=[RaumPop indexOfSelectedItem];
 	int	tempObjekt=[ObjektPop indexOfSelectedItem];
    
@@ -312,11 +340,12 @@
    
    [NotificationDic setObject:[[ObjektPop selectedItem]title] forKey:@"titel"];
    [NotificationDic setObject:[NSNumber numberWithInt:tagbalkentyp] forKey:@"typ"];
-   [NotificationDic setObject:[NSNumber numberWithInt:tagbalkentyp] forKey:@"typ"];
-   
+   [NotificationDic setObject:[NSNumber numberWithInt:WebTask] forKey:@"webtask"];
+   [NotificationDic setObject:[NSNumber numberWithInt:wochentagindex] forKey:@"wochentagindex"];
+
 	
 	NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
-	[nc postNotificationName:@"EEPROMReadStart" object:self userInfo:NotificationDic];
+	[nc postNotificationName:@"EEPROMReadWocheStart" object:self userInfo:NotificationDic];
 	Webserver_busy=1;
 	
 	//	[i2cAdressArray addObject:[NSNumber numberWithInt:hbyte]];						// Hi-Bit der Adresse
@@ -328,8 +357,261 @@
 
 }
 
+- (void)readEthTagplanVonTag:(int)wochentag
+{
+   
+   //   enum webtaskflag{idle, eepromread, eepromwrite,eepromreadwoche,eepromwritewoche}webtaskflag;
+   
+   
+   //WebTask = eepromread;
+   [readTagTaste setEnabled:NO];
+   [readWocheTaste setEnabled:NO];
+   [ReadFeld setStringValue:@""];
+   [WriteFeld setStringValue:@""];
+   [AdresseFeld setStringValue:@""];
+   //int	tempTag=[TagPop indexOfSelectedItem];
+   // Start ist MO
+   int	tempTag=wochentag;
+   wochentagindex = wochentag; // aktueller Tag
+   
+   int	tempRaum=[RaumPop indexOfSelectedItem];
+   int	tempObjekt=[ObjektPop indexOfSelectedItem];
+   
+   
+   int tagbalkentyp = [[[[[[[HomebusArray objectAtIndex:tempRaum]
+                            objectForKey:@"wochenplanarray"]
+                           objectAtIndex:0]
+                          objectForKey:@"tagplanarray"]
+                         objectAtIndex:tempObjekt]
+                        objectForKey:@"tagbalkentyp"]intValue];
+   
+   NSLog(@"readEthTagplanForTag: %d  ",wochentag);
+   //return;
+   
+   
+   //NSLog(@"tempRaum index: %d titel: %@",tempRaum, [[RaumPop selectedItem]title]);
+   //NSLog(@"tempObjekt index: %d titel: %@",tempObjekt, [[ObjektPop selectedItem]title]);
+   
+   //NSLog(@"tempRaum indexdez: %d hex: %x",[[RaumPop selectedItem]tag],[[RaumPop selectedItem]tag]);
+   
+   //NSLog(@"tempRaum: %d,tempRaum*RAUMPLANBREITE: %X",tempRaum,tempRaum*RAUMPLANBREITE);
+   //NSLog(@"tempObjekt: %d tempObjekt*TAGPLANBREITE: %X",tempObjekt,tempObjekt*TAGPLANBREITE);
+   //NSLog(@"tempTag: %d tempTag*0x08: %X",tempTag,tempTag*0x08);
+   uint16_t startadresse=tempRaum*RAUMPLANBREITE + tempObjekt*TAGPLANBREITE + tempTag*0x08;
+   
+   //NSLog(@"tempRaum: %X tempObjekt: %X tempTag: %X startadresse hex: %X dez: %d",tempRaum, tempObjekt, tempTag,startadresse,startadresse);
+   
+   
+   
+   NSString* AdresseKontrollString = [NSString string];
+   int hbyte=startadresse/0x100;
+   if (hbyte < 0x0F)
+   {
+      AdresseKontrollString= [NSString stringWithFormat:@"hbyte: 0%X",hbyte];
+   }
+   else
+   {
+      AdresseKontrollString= [NSString stringWithFormat:@"hbyte: %X",hbyte];
+   }
+   /*
+    NSString* hbString= [[NSNumber numberWithInt:hbyte]stringValue];
+    if ([hbString length]==1) // nur eine Stelle, fuehrende Null einfuegen
+    {
+    hbString=[NSString stringWithFormat:@"0%@",hbString];
+    }
+    */
+   int lbyte=startadresse%0x100;
+   if (lbyte < 0x0F)
+   {
+      AdresseKontrollString= [NSString stringWithFormat:@"%@ lbyte: 0%X",AdresseKontrollString,lbyte];
+   }
+   else
+   {
+      AdresseKontrollString= [NSString stringWithFormat:@"%@ lbyte: %X",AdresseKontrollString,lbyte];
+   }
+   
+   uint16_t kontrollstartadresse = 0x100*hbyte+lbyte;
+   //NSLog(@"kontrollstartadresse: %d",kontrollstartadresse);
+   
+   uint16_t kontrolltag = (kontrollstartadresse & 0x38)/0x08; // 0x38: 111 000 Bit 3-6
+   //NSLog(@"kontrolltag: %d",kontrolltag);
+   
+   uint16_t kontrollobjekt = (kontrollstartadresse & 0x1C0)/0x40 ; // 0x1C0: 111 000 000 Bit 7-9
+   //NSLog(@"kontrollobjekt: %d",kontrollobjekt);
+   
+   uint16_t kontrollraum = (kontrollstartadresse & 0xE00)/0x200; // 0xE0: 111 000 000 000 Bit 10-12
+   //NSLog(@"kontrollraum: %d",kontrollraum);
+   
+   
+   /*
+    NSString* lbString= [[NSNumber numberWithInt:lbyte]stringValue];
+    if ([lbString length]==1) // nur eine Stelle, fuehrende Null einfuegen
+    {
+    lbString=[NSString stringWithFormat:@"0%@",lbString];
+    }
+    */
+   
+   [Adresse setStringValue:AdresseKontrollString];
+   [Cmd setStringValue:@""];
+   
+   
+   
+   
+   
+   NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+   [NotificationDic setObject:[NSNumber numberWithInt:[I2CPop indexOfSelectedItem]] forKey:@"eepromadressezusatz"];
+   [NotificationDic setObject:[NSNumber numberWithInt:hbyte] forKey:@"hbyte"];
+   [NotificationDic setObject:[NSNumber numberWithInt:lbyte] forKey:@"lbyte"];
+   
+   [NotificationDic setObject:[[ObjektPop selectedItem]title] forKey:@"titel"];
+   [NotificationDic setObject:[NSNumber numberWithInt:tagbalkentyp] forKey:@"typ"];
+   [NotificationDic setObject:[NSNumber numberWithInt:WebTask] forKey:@"webtask"];
+   [NotificationDic setObject:[NSNumber numberWithInt:wochentagindex] forKey:@"wochentagindex"];
+   
+   
+   
+   NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
+   //[nc postNotificationName:@"EEPROMReadWocheFortsetung" object:self userInfo:NotificationDic];
+   [nc postNotificationName:@"EEPROMReadStart" object:self userInfo:NotificationDic];
+   Webserver_busy=1;
+   
+   //	[i2cAdressArray addObject:[NSNumber numberWithInt:hbyte]];						// Hi-Bit der Adresse
+   //	[i2cAdressArray addObject:[NSNumber numberWithInt:lbyte]];						// Lo-Bit der Adresse
+   
+   //NSLog(@"AVRClient readEthTagplan EEPROMAddresse: %X startadresse: %X  hbyte: %X lbyte: %X", [I2CPop indexOfSelectedItem], startadresse, hbyte, lbyte);
+   
+   //	NSString* ReadURL=[self ReadURLForEEPROM: EEPROMAddresse hByte: hbyte lByte: lbyte];
+   
+   
+}
 
-
+- (void)readEthTagplanVonRaum:(int)raum vonObjekt: (int)objekt vonTag:(int)wochentag
+{
+   
+   //   enum webtaskflag{idle, eepromread, eepromwrite,eepromreadwoche,eepromwritewoche}webtaskflag;
+   
+   
+      //WebTask = eepromread;
+      [readTagTaste setEnabled:NO];
+      [readWocheTaste setEnabled:NO];
+      [ReadFeld setStringValue:@""];
+      [WriteFeld setStringValue:@""];
+      [AdresseFeld setStringValue:@""];
+      //int	tempTag=[TagPop indexOfSelectedItem];
+      // Start ist MO
+      int	tempTag=wochentag;
+      wochentagindex = wochentag; // aktueller Tag
+      
+      //int	tempRaum=[RaumPop indexOfSelectedItem];
+      //int	tempObjekt=[ObjektPop indexOfSelectedItem];
+      
+      
+      int tagbalkentyp = [[[[[[[HomebusArray objectAtIndex:raum]
+                               objectForKey:@"wochenplanarray"]
+                              objectAtIndex:0]
+                             objectForKey:@"tagplanarray"]
+                            objectAtIndex:objekt]
+                           objectForKey:@"tagbalkentyp"]intValue];
+      
+      NSLog(@"readEthTagplanForTag: %d  ",wochentag);
+      //return;
+      
+      
+      //NSLog(@"tempRaum index: %d titel: %@",tempRaum, [[RaumPop selectedItem]title]);
+      //NSLog(@"tempObjekt index: %d titel: %@",tempObjekt, [[ObjektPop selectedItem]title]);
+      
+      //NSLog(@"tempRaum indexdez: %d hex: %x",[[RaumPop selectedItem]tag],[[RaumPop selectedItem]tag]);
+      
+      //NSLog(@"tempRaum: %d,tempRaum*RAUMPLANBREITE: %X",tempRaum,tempRaum*RAUMPLANBREITE);
+      //NSLog(@"tempObjekt: %d tempObjekt*TAGPLANBREITE: %X",tempObjekt,tempObjekt*TAGPLANBREITE);
+      //NSLog(@"tempTag: %d tempTag*0x08: %X",tempTag,tempTag*0x08);
+      uint16_t startadresse=raum*RAUMPLANBREITE + objekt*TAGPLANBREITE + tempTag*0x08;
+      
+      //NSLog(@"tempRaum: %X tempObjekt: %X tempTag: %X startadresse hex: %X dez: %d",tempRaum, tempObjekt, tempTag,startadresse,startadresse);
+      
+      
+      
+      NSString* AdresseKontrollString = [NSString string];
+      int hbyte=startadresse/0x100;
+      if (hbyte < 0x0F)
+      {
+         AdresseKontrollString= [NSString stringWithFormat:@"hbyte: 0%X",hbyte];
+      }
+      else
+      {
+         AdresseKontrollString= [NSString stringWithFormat:@"hbyte: %X",hbyte];
+      }
+      /*
+       NSString* hbString= [[NSNumber numberWithInt:hbyte]stringValue];
+       if ([hbString length]==1) // nur eine Stelle, fuehrende Null einfuegen
+       {
+       hbString=[NSString stringWithFormat:@"0%@",hbString];
+       }
+       */
+      int lbyte=startadresse%0x100;
+      if (lbyte < 0x0F)
+      {
+         AdresseKontrollString= [NSString stringWithFormat:@"%@ lbyte: 0%X",AdresseKontrollString,lbyte];
+      }
+      else
+      {
+         AdresseKontrollString= [NSString stringWithFormat:@"%@ lbyte: %X",AdresseKontrollString,lbyte];
+      }
+      
+      uint16_t kontrollstartadresse = 0x100*hbyte+lbyte;
+      //NSLog(@"kontrollstartadresse: %d",kontrollstartadresse);
+      
+      uint16_t kontrolltag = (kontrollstartadresse & 0x38)/0x08; // 0x38: 111 000 Bit 3-6
+      //NSLog(@"kontrolltag: %d",kontrolltag);
+      
+      uint16_t kontrollobjekt = (kontrollstartadresse & 0x1C0)/0x40 ; // 0x1C0: 111 000 000 Bit 7-9
+      //NSLog(@"kontrollobjekt: %d",kontrollobjekt);
+      
+      uint16_t kontrollraum = (kontrollstartadresse & 0xE00)/0x200; // 0xE0: 111 000 000 000 Bit 10-12
+      //NSLog(@"kontrollraum: %d",kontrollraum);
+      
+      
+      /*
+       NSString* lbString= [[NSNumber numberWithInt:lbyte]stringValue];
+       if ([lbString length]==1) // nur eine Stelle, fuehrende Null einfuegen
+       {
+       lbString=[NSString stringWithFormat:@"0%@",lbString];
+       }
+       */
+      
+      [Adresse setStringValue:AdresseKontrollString];
+      [Cmd setStringValue:@""];
+      
+      
+      
+      
+      
+      NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+      [NotificationDic setObject:[NSNumber numberWithInt:[I2CPop indexOfSelectedItem]] forKey:@"eepromadressezusatz"];
+      [NotificationDic setObject:[NSNumber numberWithInt:hbyte] forKey:@"hbyte"];
+      [NotificationDic setObject:[NSNumber numberWithInt:lbyte] forKey:@"lbyte"];
+      
+      [NotificationDic setObject:[[ObjektPop selectedItem]title] forKey:@"titel"];
+      [NotificationDic setObject:[NSNumber numberWithInt:tagbalkentyp] forKey:@"typ"];
+      [NotificationDic setObject:[NSNumber numberWithInt:WebTask] forKey:@"webtask"];
+      [NotificationDic setObject:[NSNumber numberWithInt:wochentagindex] forKey:@"wochentagindex"];
+      
+   
+      
+      NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
+   //[nc postNotificationName:@"EEPROMReadWocheFortsetung" object:self userInfo:NotificationDic];
+      [nc postNotificationName:@"EEPROMReadStart" object:self userInfo:NotificationDic];
+      Webserver_busy=1;
+      
+      //	[i2cAdressArray addObject:[NSNumber numberWithInt:hbyte]];						// Hi-Bit der Adresse
+      //	[i2cAdressArray addObject:[NSNumber numberWithInt:lbyte]];						// Lo-Bit der Adresse
+      
+      //NSLog(@"AVRClient readEthTagplan EEPROMAddresse: %X startadresse: %X  hbyte: %X lbyte: %X", [I2CPop indexOfSelectedItem], startadresse, hbyte, lbyte);
+      
+      //	NSString* ReadURL=[self ReadURLForEEPROM: EEPROMAddresse hByte: hbyte lByte: lbyte];
+      
+   
+}
 
 
 - (void)readEthSim:(id)sender
@@ -827,6 +1109,7 @@ if (Webserver_busy)
 - (void)setReadOK
 {
    NSBeep();
+   [Waitrad stopAnimation:NULL];
    [AdresseFeld setStringValue:@""];
    [WriteFeld setStringValue:@""];
    [ReadFeld setStringValue:@""];
@@ -835,13 +1118,14 @@ if (Webserver_busy)
    [StatusFeld setStringValue:@"Kontakt mit HomeCentral hergestellt"];// TWI erfolgreich deaktiviert
    [PWFeld setStringValue:@"OK"];
    [readTagTaste setEnabled:1];// TWI-Status muss OFF sein, um EEPROM lesen zu koennen
+   [readWocheTaste setEnabled:YES];
    Webserver_busy =0;
 
 }
 
 - (void)FinishLoadAktion:(NSNotification*)note
 {
-	NSLog(@"FinishLoadAktion: %@",[[note userInfo]description]);
+	//NSLog(@"FinishLoadAktion: %@",[[note userInfo]description]);
 	//NSString* Status_String= @"status";
 	
 	//NSString* Status0_String= @"status0";
@@ -895,9 +1179,14 @@ if (Webserver_busy)
             WebTask=idle; // nichts tun
 				[StatusFeld setStringValue:@"Kontakt mit HomeCentral beendet"]; // TWI wieder aktiviert
 				[readTagTaste setEnabled:0];// TWI-Status ON, EEPROM gesperrt
+            [readWocheTaste setEnabled:NO];
 				[PWFeld setStringValue:@""];
             
-            
+            if ([EEPROMReadDataArray count])
+            {
+               //NSLog(@"EEPROMReadDataArray: %@",[EEPROMReadDataArray description]);
+            }
+            WebTask = idle;
 				//[AdresseFeld setStringValue:@""];
 				//[WriteFeld setStringValue:@""];
 				//[ReadFeld setStringValue:@""];
@@ -920,8 +1209,9 @@ if (Webserver_busy)
 			if ([[[note userInfo]objectForKey:@"status0"]intValue]==1) // Status 0 hat geklappt
 			{
             NSLog(@"FinishLoadAktion Status 0 OK beep");
-				NSBeep();
-            [self performSelector:@selector(setReadOK) withObject:nil afterDelay:2];
+				//NSBeep();
+            [self performSelector:@selector(setReadOK) withObject:nil afterDelay:4];
+            
 				TWI_Status=0;
 				/*
             [AdresseFeld setStringValue:@""];
@@ -963,7 +1253,7 @@ if (Webserver_busy)
 			//NSLog(@"FinishLoadAktion read EEPROM: radrok ist da: %d TWI_Status: %d",Adresse_OK,TWI_Status);
 			if ((TWI_Status==0)&&Adresse_OK)// Passwort OK
 			{
-				NSLog(@"radrok");
+				//NSLog(@"radrok ist da");
 				[AdresseFeld setStringValue:@"OK"];
 				[StatusFeld setStringValue:@"EEPROM-Adresse angekommen"];
 				
@@ -1047,7 +1337,7 @@ if (Webserver_busy)
 		// Anzeigen, dass die daten erfolgreich uebertragen wurde: 
 		if ((TWI_Status==0)&&Data_OK)// Data OK
 		{
-			NSLog(@"FinishLoadAktion EEPROM lesen: data ist da");
+			//NSLog(@"FinishLoadAktion EEPROM lesen: data ist da");
 			NSBeep();
          
 			[ReadFeld setStringValue:@"OK"];
@@ -1081,24 +1371,50 @@ if (Webserver_busy)
 							
 						}
 					}
+               //NSLog(@"FinishLoadAktion WebTask: %d wochentagindex: %d  DataString: %@",WebTask, wochentagindex, DataString);
 					[Cmd setStringValue:DataString];
 					[EEPROMbalken setStundenArrayAusByteArray:EEPROMDataArray];
 					[EEPROMbalken setWochentagString:[TagPop titleOfSelectedItem]];
 					[EEPROMbalken setRaumString:[RaumPop titleOfSelectedItem]];
 					[EEPROMbalken setObjektString:[ObjektPop titleOfSelectedItem]];
+               
+               if (WebTask == eepromreadwoche)
+               {
+                  [EEPROMReadDataArray addObject:[DataString lowercaseString]];
+               }
+               else
+               {
+                  NSLog(@"FinishLoadAktion DataString: %@",DataString);
+               }
+               
 					Webserver_busy=0;
 					[readTagTaste setEnabled:YES];
+               [readWocheTaste setEnabled:YES];
 				}
-			}
-			NSMutableDictionary* sendTimerDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
-			[sendTimerDic setObject:@"Read Data OK" forKey:@"timertext"];
+			
+         
+         
+         }
+			NSMutableDictionary* finishLoadTimerDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+			[finishLoadTimerDic setObject:@"Read Data OK" forKey:@"timertext"];
+         [finishLoadTimerDic setObject:[NSNumber numberWithInt:WebTask] forKey:@"webtask"];
+         [finishLoadTimerDic setObject:[NSNumber numberWithInt:wochentagindex] forKey:@"wochentagindex"];
 			//NSLog(@"TimeoutTimer start");
-			TimeoutTimer=[[NSTimer scheduledTimerWithTimeInterval:1 
+         
+         if ([TimeoutTimer isValid])
+         {
+            [TimeoutTimer invalidate];
+         }
+         
+         if (WebTask == eepromreadwoche) // Fortsetzung einleiten
+         {
+			TimeoutTimer=[[NSTimer scheduledTimerWithTimeInterval:4
 																		  target:self 
 																		selector:@selector(TimeoutTimerFunktion:) 
-																		userInfo:sendTimerDic 
+																		userInfo:finishLoadTimerDic 
 																		 repeats:NO]retain];
-			
+			}
+         
 	//		[self sendEEPROMData:(NSString*) dataString anAdresse:(NSString*)adresseString];
          
 		}
@@ -1358,7 +1674,31 @@ if (Webserver_busy)
 
 - (void)TimeoutTimerFunktion:(NSTimer*)timer
 {
-	//NSLog(@"TimeoutTimerFunktion");
+	//NSLog(@"TimeoutTimerFunktion : %@",[[timer userInfo]description]);
+   
+   
+   if (WebTask == eepromreadwoche)
+   {
+         //if ([[timer userInfo]objectForKey:@"wochentagindex"])
+         {
+            //wochentagindex = [[[timer userInfo]objectForKey:@"wochentagindex"]intValue];
+            wochentagindex++;
+            if (wochentagindex < 7)
+            {
+               
+               [self readEthTagplanVonTag:wochentagindex];
+            }
+            else
+            {
+               NSLog(@"Woche fertig: %@",[EEPROMReadDataArray description]);
+            }
+         }
+            
+   }
+      
+      
+   
+  
 	if ([[timer userInfo]objectForKey:@"timertext"])
 	{
 		NSAlert *Warnung = [[[NSAlert alloc] init] autorelease];

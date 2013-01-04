@@ -130,7 +130,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 
 - (void)EEPROMReadStartAktion:(NSNotification*)note
 {
-	//NSLog(@"EEPROMReadStartAktion note: %@",[[note userInfo]description]);
+	//NSLog(@"HomeClient EEPROMReadStartAktion note: %@",[[note userInfo]description]);
 	NSString* hByte = [NSString string];
 	NSString* lByte = [NSString string];
 	NSString* EEPROMAdresseZusatz= [NSString string];
@@ -138,12 +138,24 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
    int typ=0; // tagbalkentyp
    
    WebTask = eepromread;
+   if ([[note userInfo]objectForKey:@"webtask"])
+   {
+      WebTask = [[[note userInfo]objectForKey:@"webtask"]intValue];
+   }
    
+   int wochentagindex =0;
+   if ([[note userInfo]objectForKey:@"wochentagindex"])
+   {
+      wochentagindex = [[[note userInfo]objectForKey:@"wochentagindex"]intValue];
+   }
+   
+   
+   
+   //[NotificationDic setObject:[NSNumber numberWithInt:wochentagindex] forKey:@"wochentagindex"];
    if ([[note userInfo]objectForKey:@"eepromadressezusatz"])
 	{
 		EEPROMAdresseZusatz= [[[note userInfo]objectForKey:@"eepromadressezusatz"]stringValue];
 	}
-	
    
 	//NSLog(@"EEPROMAdresseZusatz: %@",[EEPROMAdresseZusatz description]);
 	if ([[note userInfo]objectForKey:@"hbyte"])
@@ -193,7 +205,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 	
 	//NSLog(@"EEPROMReadStartAktion EEPROMReadStartURLSuffix: %@",EEPROMReadStartURLSuffix);
    
-	NSLog(@"EEPROMReadStartURL: %@",EEPROMReadStartURL);
+	//NSLog(@"EEPROMReadStartURL: %@",EEPROMReadStartURL);
 	//NSURL *URL = [NSURL URLWithString:HomeCentralURL];
 	NSURL *URL = [NSURL URLWithString:EEPROMReadStartURL];
 	[self loadURL:URL];
@@ -269,7 +281,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 	NSLog(@"EEPROMReadWocheStartURL: %@",EEPROMReadStartURL);
 	//NSURL *URL = [NSURL URLWithString:HomeCentralURL];
 	NSURL *URL = [NSURL URLWithString:EEPROMReadStartURL];
-//	[self loadURL:URL];
+	[self loadURL:URL];
 }
 
 - (void)readWocheTimerFunktion:(NSTimer*) derTimer
@@ -290,7 +302,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 
 - (void)EEPROMReadDataAktion:(NSNotification*)note
 {
-	NSLog(@"EEPROMReadDataAktion note: %@",[[note userInfo]description]);
+	//NSLog(@"EEPROMReadDataAktion note: %@",[[note userInfo]description]);
 	//NSString* DataString = [NSString string];
 	if ([[note userInfo]objectForKey:@"rdata"])
 	{
@@ -338,7 +350,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 				NSString* TWIReadDataURLSuffix = [NSString stringWithFormat:@"pw=%@&rdata=%d",pw,d]; 
 				NSString* TWIReadDataURL =[NSString stringWithFormat:@"%@/twi?%@",HomeCentralURL, TWIReadDataURLSuffix];
 				NSURL *URL = [NSURL URLWithString:TWIReadDataURL];
-				NSLog(@"sendTimer fire anzahl: %d URL: %@",anz,URL);
+				//NSLog(@"sendTimer fire anzahl: %d URL: %@",anz,URL);
 				[self loadURL:URL];
 				anz--;
 				[sendTimerDic setObject:[NSNumber numberWithInt:anz] forKey:@"anzahl"];
@@ -369,6 +381,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 				{ 
 					NSLog(@"NSAlertFirstButtonReturn");
 					[NSApp stopModalWithCode:0];
+               
 				}break;
 					
 				case NSAlertSecondButtonReturn://
@@ -484,6 +497,10 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
          NSURL *URL = [NSURL URLWithString:TWIStatusURLString];
          //NSLog(@"TWIStatusAktion URL: %@",URL);
 			[self loadURL:URL];
+         
+         [sendTimer invalidate];
+         sendTimer = nil;
+         
 		
       }
 		else        // neuer Status ist 0
@@ -1026,7 +1043,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
             //NSLog(@"URLString: %@",URLString );
             
             NSURL *URL = [NSURL URLWithString:URLString];
-            NSLog(@"sendEEPROM URL: %@",URL );
+            //NSLog(@"sendEEPROM URL: %@",URL );
             NSURLRequest *HCRequest = [ [NSURLRequest alloc] initWithURL: URL cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:4.0];
             //	[[NSURLCache sharedURLCache] removeAllCachedResponses];
             //	NSLog(@"Cache mem: %d",[[NSURLCache sharedURLCache]memoryCapacity]);
@@ -1114,7 +1131,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 	//NSLog(@"sender: %@",[sender description]);
 	// Only report feedback for the main frame.
 	NSString* HTML_Inhalt=[self dataRepresentationOfType:HTMLDocumentType];
-	NSLog(@"didFinishLoadForFrame Antwort: \nHTML_Inhalt: \t\t\t\t%@",HTML_Inhalt);
+	//NSLog(@"didFinishLoadForFrame Antwort: \nHTML_Inhalt: \t\t\t\t%@",HTML_Inhalt);
 	
 	NSRange CheckRange;
 	NSString* Code_String= @"okcode=";
@@ -1149,13 +1166,8 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 		CheckRange = [HTML_Inhalt rangeOfString:Status1_String];
 		if (CheckRange.location < NSNotFound)
 		{
-			//			NSLog(@"didFinishLoadForFrame: Status = 1");
+         NSLog(@"didFinishLoadForFrame: Status = 1");
 			//[tempDataDic setObject:@"status" forKey:@"antwort"];
-         if (sendTimer && [sendTimer isValid])
-         {
-            NSLog(@"didFinishLoad sendTimer inval");
-            [sendTimer invalidate];
-         }
 			[tempDataDic setObject:[NSNumber numberWithInt:1] forKey:@"twistatus"];
 		}
 
@@ -1211,7 +1223,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 		CheckRange = [HTML_Inhalt rangeOfString:EEPROM1_String];
 		if (CheckRange.location < NSNotFound)
 		{
-			//NSLog(@"didFinishLoadForFrame: eeprom+ ist da loc: %d ",CheckRange.location);
+			NSLog(@"didFinishLoadForFrame: eeprom+ ist da loc: %d ",CheckRange.location);
 			[tempDataDic setObject:[NSNumber numberWithInt:1] forKey:@"eeprom+"];
 		}
 		else
@@ -1308,7 +1320,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 		{
          // data ist angekommen, sendTimer ausschalten
          
-         NSLog(@"didFinishLoadForFrame read EEPROM Antwort: \nHTML_Inhalt: \t\t\t\t%@",HTML_Inhalt);
+         //NSLog(@"didFinishLoadForFrame read EEPROM Antwort: \nHTML_Inhalt: \t\t\t\t%@",HTML_Inhalt);
 			//NSLog(@"didFinishLoadForFrame: data ist da  loc: %d",CheckRange.location);
 			[tempDataDic setObject:[NSNumber numberWithInt:1] forKey:@"data"];
 			int datastart=0, dataend=0;
@@ -1349,7 +1361,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
          // EEPROM-String extrahieren
          
 			NSString* EEPROM_DataString=[HTML_Inhalt substringWithRange:NSMakeRange(datastart,dataend-datastart)];
-			NSLog(@"didFinishLoad EEPROM_DataString: %@",EEPROM_DataString);
+			//NSLog(@"didFinishLoad EEPROM_DataString: %@ WebTask: %d",EEPROM_DataString,WebTask);
 			//NSLog(@"EEPROM_DataString: l=%d",[EEPROM_DataString length]);
 			[tempDataDic setObject:EEPROM_DataString forKey:@"eepromdatastring"];
 			
@@ -1368,17 +1380,25 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
                //NSLog(@"data: %d string: %@",data, [NSString stringWithFormat:@"%d",data]);
             }
             EEPROM_DataString = [tempDezDataArray componentsJoinedByString:@"+"];
-            [SendEEPROMDataDic setObject:EEPROM_DataString forKey:@"eepromdatastring"];
-            [SendEEPROMDataDic setObject:[NSNumber numberWithInt:1] forKey:@"dataload"];
-            if ([SendEEPROMDataDic objectForKey:@"adrload"])
+            
+            //if (WebTask == eepromreadwoche)
             {
-               if ([[SendEEPROMDataDic objectForKey:@"adrload"]intValue]==1 )// EEPROMAdresse ist da
+               
+            }
+            //else
+            {
+               [SendEEPROMDataDic setObject:EEPROM_DataString forKey:@"eepromdatastring"];
+               [SendEEPROMDataDic setObject:[NSNumber numberWithInt:1] forKey:@"dataload"];
+               if ([SendEEPROMDataDic objectForKey:@"adrload"])
                {
-                  //NSLog(@"didFinishLoad SendEEPROMDataDic: %@",[SendEEPROMDataDic description]);
-                  //[nc postNotificationName:@"EEPROMsend2HomeServer" object:self userInfo:tempDataDic];
-                  [self sendEEPROMDataMitDic:SendEEPROMDataDic];
-               }
-            }// adrload
+                  if ([[SendEEPROMDataDic objectForKey:@"adrload"]intValue]==1 )// EEPROMAdresse ist da
+                  {
+                     //NSLog(@"didFinishLoad SendEEPROMDataDic: %@",[SendEEPROMDataDic description]);
+                     //[nc postNotificationName:@"EEPROMsend2HomeServer" object:self userInfo:tempDataDic];
+                     [self sendEEPROMDataMitDic:SendEEPROMDataDic];
+                  }
+               }// adrload
+            }
          } // if length
 		}
 		else

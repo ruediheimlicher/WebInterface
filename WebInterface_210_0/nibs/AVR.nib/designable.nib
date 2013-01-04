@@ -19,6 +19,7 @@
 			<string>NSMenuItem</string>
 			<string>NSPopUpButton</string>
 			<string>NSPopUpButtonCell</string>
+			<string>NSProgressIndicator</string>
 			<string>NSScrollView</string>
 			<string>NSScroller</string>
 			<string>NSTabView</string>
@@ -87,7 +88,6 @@
 												<string key="NSFrame">{{12, 36}, {543, 382}}</string>
 												<reference key="NSSuperview" ref="105208514"/>
 												<reference key="NSWindow"/>
-												<reference key="NSNextKeyView" ref="941901951"/>
 												<string key="NSClassName">NSView</string>
 											</object>
 										</array>
@@ -1616,7 +1616,6 @@
 							<string key="NSFrame">{{384, 36}, {219, 14}}</string>
 							<reference key="NSSuperview" ref="638929212"/>
 							<reference key="NSWindow"/>
-							<reference key="NSNextKeyView"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSTextFieldCell" key="NSCell" id="753071143">
 								<int key="NSCellFlags">67108928</int>
@@ -2011,7 +2010,7 @@
 						<object class="NSButton" id="556438931">
 							<reference key="NSNextResponder" ref="638929212"/>
 							<int key="NSvFlags">268</int>
-							<string key="NSFrame">{{258, 547}, {74, 25}}</string>
+							<string key="NSFrame">{{358, 548}, {50, 25}}</string>
 							<reference key="NSSuperview" ref="638929212"/>
 							<reference key="NSWindow"/>
 							<reference key="NSNextKeyView" ref="298800095"/>
@@ -2038,13 +2037,13 @@
 						<object class="NSButton" id="730118566">
 							<reference key="NSNextResponder" ref="638929212"/>
 							<int key="NSvFlags">268</int>
-							<string key="NSFrame">{{239, 587}, {113, 32}}</string>
+							<string key="NSFrame">{{243, 542}, {113, 32}}</string>
 							<reference key="NSSuperview" ref="638929212"/>
 							<reference key="NSWindow"/>
 							<reference key="NSNextKeyView" ref="22660794"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSButtonCell" key="NSCell" id="463958971">
-								<int key="NSCellFlags">67108864</int>
+								<int key="NSCellFlags">603979776</int>
 								<int key="NSCellFlags2">134217728</int>
 								<string key="NSContents">read Woche</string>
 								<reference key="NSSupport" ref="98668283"/>
@@ -2057,6 +2056,15 @@
 								<int key="NSPeriodicInterval">25</int>
 							</object>
 							<bool key="NSAllowsLogicalLayoutDirection">NO</bool>
+						</object>
+						<object class="NSProgressIndicator" id="155274310">
+							<reference key="NSNextResponder" ref="638929212"/>
+							<int key="NSvFlags">268</int>
+							<string key="NSFrame">{{247, 626}, {16, 16}}</string>
+							<reference key="NSSuperview" ref="638929212"/>
+							<reference key="NSWindow"/>
+							<int key="NSpiFlags">28938</int>
+							<double key="NSMaxValue">100</double>
 						</object>
 					</array>
 					<string key="NSFrameSize">{623, 740}</string>
@@ -2394,6 +2402,14 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
+						<string key="label">Waitrad</string>
+						<reference key="source" ref="721671640"/>
+						<reference key="destination" ref="155274310"/>
+					</object>
+					<int key="connectionID">1675</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
 						<string key="label">delegate</string>
 						<reference key="source" ref="317814298"/>
 						<reference key="destination" ref="721671640"/>
@@ -2465,6 +2481,7 @@
 							<reference ref="636208623"/>
 							<reference ref="190980821"/>
 							<reference ref="298800095"/>
+							<reference ref="155274310"/>
 							<reference ref="556438931"/>
 							<reference ref="730118566"/>
 						</array>
@@ -3605,6 +3622,11 @@
 						<reference key="object" ref="463958971"/>
 						<reference key="parent" ref="730118566"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">1674</int>
+						<reference key="object" ref="155274310"/>
+						<reference key="parent" ref="638929212"/>
+					</object>
 				</array>
 			</object>
 			<dictionary class="NSMutableDictionary" key="flattenedProperties">
@@ -3744,6 +3766,7 @@
 				<string key="1662.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="1670.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="1671.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<string key="1674.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="303.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="309.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="328.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -3817,7 +3840,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">1673</int>
+			<int key="maxID">1675</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -3825,10 +3848,12 @@
 					<string key="className">rAVR</string>
 					<string key="superclassName">NSWindowController</string>
 					<dictionary class="NSMutableDictionary" key="actions">
+						<string key="ObjektSegAktion:">id</string>
 						<string key="clearEEPROMTabelle:">id</string>
 						<string key="readAVRSlave:">id</string>
 						<string key="readEEPROM:">id</string>
 						<string key="readEthTagplan:">id</string>
+						<string key="readEthWochenplan:">id</string>
 						<string key="readTagplan:">id</string>
 						<string key="readWochenplan:">id</string>
 						<string key="reportLocalTaste:">id</string>
@@ -3839,6 +3864,10 @@
 						<string key="writeWochenplan:">id</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="actionInfosByName">
+						<object class="IBActionInfo" key="ObjektSegAktion:">
+							<string key="name">ObjektSegAktion:</string>
+							<string key="candidateClassName">id</string>
+						</object>
 						<object class="IBActionInfo" key="clearEEPROMTabelle:">
 							<string key="name">clearEEPROMTabelle:</string>
 							<string key="candidateClassName">id</string>
@@ -3853,6 +3882,10 @@
 						</object>
 						<object class="IBActionInfo" key="readEthTagplan:">
 							<string key="name">readEthTagplan:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="readEthWochenplan:">
+							<string key="name">readEthWochenplan:</string>
 							<string key="candidateClassName">id</string>
 						</object>
 						<object class="IBActionInfo" key="readTagplan:">
@@ -3912,6 +3945,7 @@
 						<string key="TagPop">id</string>
 						<string key="VersionFeld">id</string>
 						<string key="WEBDATATable">NSTableView</string>
+						<string key="Waitrad">id</string>
 						<string key="WerkstattFeld">id</string>
 						<string key="WoZiFeld">id</string>
 						<string key="WochenplanTab">id</string>
@@ -4014,6 +4048,10 @@
 						<object class="IBToOneOutletInfo" key="WEBDATATable">
 							<string key="name">WEBDATATable</string>
 							<string key="candidateClassName">NSTableView</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="Waitrad">
+							<string key="name">Waitrad</string>
+							<string key="candidateClassName">id</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="WerkstattFeld">
 							<string key="name">WerkstattFeld</string>

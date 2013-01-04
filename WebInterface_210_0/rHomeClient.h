@@ -13,25 +13,33 @@
 @class WebDownload;
 static NSString *HTMLDocumentType = @"HTML document";
 
+enum webtaskflag{idle, eepromread, eepromwrite,eepromreadwoche,eepromwritewoche}webtaskflag;
+
+
 @interface rHomeClient : NSObject 
 {
 	NSString* HomeCentralURL;
   // NSString* LocalHomeCentralURL;
 	
-   NSString* pw;
-	NSString *url;
-	NSString *_source;
-	WebView *	webView;
-	NSURL *					URLToLoad;
-	NSString *frameStatus;
-	NSTimer* sendTimer;
-	NSTimer* confirmTimer;
-	NSTimer* confirmStatusTimer;
-	int maxAnzahl;
+   NSString*               pw;
+	NSString *              url;
+	NSString *              _source;
+	WebView *               webView;
+	NSURL *                 URLToLoad;
+	NSString *              frameStatus;
+	NSTimer*                sendTimer;
+	NSTimer*                confirmTimer;
+	NSTimer*                confirmStatusTimer;
+	int                     maxAnzahl;
   
    // Dic fuer Senden von EEPROMDaten an HomeServer
-   NSMutableDictionary* SendEEPROMDataDic;
-	
+   NSMutableDictionary*    SendEEPROMDataDic;
+   
+	int							WebTask;          // Auszuführende Aktion aufgrund von Web-Requests
+   int							Webserver_busy;
+   int							WriteWoche_busy;
+
+
 }
 
 - (void)setHomeCentralI2C:(int)derStatus;

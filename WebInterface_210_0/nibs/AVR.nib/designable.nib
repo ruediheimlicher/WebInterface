@@ -73,6 +73,7 @@
 							<string key="NSFrame">{{18, 69}, {592, 478}}</string>
 							<reference key="NSSuperview" ref="638929212"/>
 							<reference key="NSWindow"/>
+							<reference key="NSNextKeyView" ref="105208514"/>
 							<array class="NSMutableArray" key="NSTabViewItems">
 								<object class="NSTabViewItem" id="366701083">
 									<string key="NSIdentifier">1</string>
@@ -1258,7 +1259,7 @@
 							<string key="NSFrame">{{516, 607}, {90, 26}}</string>
 							<reference key="NSSuperview" ref="638929212"/>
 							<reference key="NSWindow"/>
-							<reference key="NSNextKeyView" ref="312959376"/>
+							<reference key="NSNextKeyView" ref="926437119"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSPopUpButtonCell" key="NSCell" id="723576382">
 								<int key="NSCellFlags">-2076180416</int>
@@ -1520,7 +1521,7 @@
 							<string key="NSFrame">{{207, 610}, {21, 16}}</string>
 							<reference key="NSSuperview" ref="638929212"/>
 							<reference key="NSWindow"/>
-							<reference key="NSNextKeyView" ref="22660794"/>
+							<reference key="NSNextKeyView" ref="52119523"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSTextFieldCell" key="NSCell" id="184769546">
 								<int key="NSCellFlags">-2079326144</int>
@@ -1539,7 +1540,7 @@
 							<string key="NSFrame">{{207, 593}, {21, 16}}</string>
 							<reference key="NSSuperview" ref="638929212"/>
 							<reference key="NSWindow"/>
-							<reference key="NSNextKeyView" ref="199105240"/>
+							<reference key="NSNextKeyView" ref="730118566"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSTextFieldCell" key="NSCell" id="456106220">
 								<int key="NSCellFlags">-2079326144</int>
@@ -1558,7 +1559,7 @@
 							<string key="NSFrame">{{129, 594}, {77, 14}}</string>
 							<reference key="NSSuperview" ref="638929212"/>
 							<reference key="NSWindow"/>
-							<reference key="NSNextKeyView" ref="52119523"/>
+							<reference key="NSNextKeyView" ref="312959376"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSTextFieldCell" key="NSCell" id="705286985">
 								<int key="NSCellFlags">67108928</int>
@@ -1615,6 +1616,7 @@
 							<string key="NSFrame">{{384, 36}, {219, 14}}</string>
 							<reference key="NSSuperview" ref="638929212"/>
 							<reference key="NSWindow"/>
+							<reference key="NSNextKeyView"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSTextFieldCell" key="NSCell" id="753071143">
 								<int key="NSCellFlags">67108928</int>
@@ -1788,7 +1790,7 @@
 							<string key="NSFrame">{{396, 613}, {110, 17}}</string>
 							<reference key="NSSuperview" ref="638929212"/>
 							<reference key="NSWindow"/>
-							<reference key="NSNextKeyView" ref="926437119"/>
+							<reference key="NSNextKeyView" ref="199105240"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSTextFieldCell" key="NSCell" id="650244765">
 								<int key="NSCellFlags">67108928</int>
@@ -2026,6 +2028,29 @@
 								<reference key="NSControlView" ref="556438931"/>
 								<int key="NSButtonFlags">918306816</int>
 								<int key="NSButtonFlags2">32</int>
+								<string key="NSAlternateContents"/>
+								<string key="NSKeyEquivalent"/>
+								<int key="NSPeriodicDelay">200</int>
+								<int key="NSPeriodicInterval">25</int>
+							</object>
+							<bool key="NSAllowsLogicalLayoutDirection">NO</bool>
+						</object>
+						<object class="NSButton" id="730118566">
+							<reference key="NSNextResponder" ref="638929212"/>
+							<int key="NSvFlags">268</int>
+							<string key="NSFrame">{{239, 587}, {113, 32}}</string>
+							<reference key="NSSuperview" ref="638929212"/>
+							<reference key="NSWindow"/>
+							<reference key="NSNextKeyView" ref="22660794"/>
+							<bool key="NSEnabled">YES</bool>
+							<object class="NSButtonCell" key="NSCell" id="463958971">
+								<int key="NSCellFlags">67108864</int>
+								<int key="NSCellFlags2">134217728</int>
+								<string key="NSContents">read Woche</string>
+								<reference key="NSSupport" ref="98668283"/>
+								<reference key="NSControlView" ref="730118566"/>
+								<int key="NSButtonFlags">-2038284288</int>
+								<int key="NSButtonFlags2">129</int>
 								<string key="NSAlternateContents"/>
 								<string key="NSKeyEquivalent"/>
 								<int key="NSPeriodicDelay">200</int>
@@ -2352,6 +2377,22 @@
 					<int key="connectionID">1669</int>
 				</object>
 				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">readEthWochenplan:</string>
+						<reference key="source" ref="721671640"/>
+						<reference key="destination" ref="730118566"/>
+					</object>
+					<int key="connectionID">1672</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">readWocheTaste</string>
+						<reference key="source" ref="721671640"/>
+						<reference key="destination" ref="730118566"/>
+					</object>
+					<int key="connectionID">1673</int>
+				</object>
+				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
 						<string key="label">delegate</string>
 						<reference key="source" ref="317814298"/>
@@ -2425,6 +2466,7 @@
 							<reference ref="190980821"/>
 							<reference ref="298800095"/>
 							<reference ref="556438931"/>
+							<reference ref="730118566"/>
 						</array>
 						<reference key="parent" ref="317814298"/>
 					</object>
@@ -3550,6 +3592,19 @@
 						<reference key="object" ref="871828189"/>
 						<reference key="parent" ref="556438931"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">1670</int>
+						<reference key="object" ref="730118566"/>
+						<array class="NSMutableArray" key="children">
+							<reference ref="463958971"/>
+						</array>
+						<reference key="parent" ref="638929212"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">1671</int>
+						<reference key="object" ref="463958971"/>
+						<reference key="parent" ref="730118566"/>
+					</object>
 				</array>
 			</object>
 			<dictionary class="NSMutableDictionary" key="flattenedProperties">
@@ -3687,6 +3742,8 @@
 				<string key="1659.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="1661.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="1662.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<string key="1670.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<string key="1671.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="303.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="309.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="328.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -3760,7 +3817,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">1669</int>
+			<int key="maxID">1673</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -3863,6 +3920,7 @@
 						<string key="WriteWocheFeld">id</string>
 						<string key="maxSimAnzahlFeld">id</string>
 						<string key="readTagTaste">id</string>
+						<string key="readWocheTaste">id</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
 						<object class="IBToOneOutletInfo" key="Adresse">
@@ -3987,6 +4045,10 @@
 						</object>
 						<object class="IBToOneOutletInfo" key="readTagTaste">
 							<string key="name">readTagTaste</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="readWocheTaste">
+							<string key="name">readWocheTaste</string>
 							<string key="candidateClassName">id</string>
 						</object>
 					</dictionary>

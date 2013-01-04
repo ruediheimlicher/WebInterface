@@ -199,7 +199,7 @@ return returnInt;
 	IOW_busy=0;
 	aktuelleMark=NSNotFound;
 	//NSLog(@"HomebusAnlegen 2");
-	WebTask=idle; // nichts tun
+	//WebTask=idle; // nichts tun
 	Webserver_busy=0;
 	return self;
 }	//init

@@ -33,7 +33,7 @@
 #define ESTRICH_ADRESSE 0x58
 #define LABOR_ADRESSE 0x60
 
-enum webtaskflag{idle, eepromread, eepromwrite}webtaskflag;
+//enum webtaskflag{idle, eepromread, eepromwrite,eepromreadwoche,eepromwritewoche}webtaskflag;
 
 
 @interface rAVR : NSWindowController 
@@ -58,6 +58,7 @@ IBOutlet	id		LocalTaste;
 
 // Web
 IBOutlet	id		readTagTaste;
+IBOutlet	id		readWocheTaste;
 IBOutlet	id		StatusFeld;
 IBOutlet	id		PWFeld;
 IBOutlet	id		AdresseFeld;
@@ -98,7 +99,7 @@ int							aktuelleMark;
 
 IBOutlet NSPopUpButton* ObjektPop;
 IBOutlet	NSPopUpButton* RaumPop;
-int							WebTask; // Auszuführende Aktion aufgrund von Web-Requests
+int							WebTask;          // Auszuführende Aktion aufgrund von Web-Requests
 int							Webserver_busy;
 int							WriteWoche_busy;
 

@@ -15,6 +15,8 @@
 #define PW "ideur00"
 #define CGI "cgi-bin/eeprom.pl"
 
+
+
 // convert a single hex digit character to its integer value
 unsigned char h2int(char c)
 {
@@ -50,6 +52,8 @@ unsigned char h2int(char c)
 - (id)init
 {
 	self = [super init];
+   
+   
 	NSNotificationCenter * nc;
 	nc=[NSNotificationCenter defaultCenter];
 	
@@ -57,8 +61,16 @@ unsigned char h2int(char c)
 			 selector:@selector(EEPROMReadStartAktion:)
 				  name:@"EEPROMReadStart"
 				object:nil];
-	
+
 	[nc addObserver:self
+			 selector:@selector(EEPROMReadWocheStartAktion:)
+				  name:@"EEPROMReadWocheStart"
+				object:nil];
+	
+	
+
+	
+   [nc addObserver:self
 			 selector:@selector(EEPROMReadDataAktion:)
 				  name:@"EEPROMReadData"
 				object:nil];
@@ -125,6 +137,80 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 	NSString* titel = [NSString string];
    int typ=0; // tagbalkentyp
    
+   WebTask = eepromread;
+   
+   if ([[note userInfo]objectForKey:@"eepromadressezusatz"])
+	{
+		EEPROMAdresseZusatz= [[[note userInfo]objectForKey:@"eepromadressezusatz"]stringValue];
+	}
+	
+   
+	//NSLog(@"EEPROMAdresseZusatz: %@",[EEPROMAdresseZusatz description]);
+	if ([[note userInfo]objectForKey:@"hbyte"])
+	{
+		hByte= [[[note userInfo]objectForKey:@"hbyte"]stringValue];
+		//NSLog(@"hByte: %@ length: %d",hByte,[hByte length]);
+		if ([hByte length]==1)
+		{
+			hByte = [NSString stringWithFormat:@"0%@",hByte];
+		}
+	}
+	if ([[note userInfo]objectForKey:@"lbyte"])
+	{
+		lByte= [[[note userInfo]objectForKey:@"lbyte"]stringValue];
+		if ([lByte length]==1)
+		{
+			lByte = [NSString stringWithFormat:@"0%@",lByte];
+		}
+		
+	}
+   
+   if ([[note userInfo]objectForKey:@"titel"])
+	{
+		titel= [[note userInfo]objectForKey:@"titel"];
+		
+	}
+   
+   if ([[note userInfo]objectForKey:@"typ"])
+	{
+		typ= [[[note userInfo]objectForKey:@"typ"]intValue];
+		
+	}
+   
+   // Dic fuer senden an Homeserver mit Adresse laden:
+   [SendEEPROMDataDic setObject:hByte forKey:@"hbyte"];
+   [SendEEPROMDataDic setObject:lByte forKey:@"lbyte"];
+   [SendEEPROMDataDic setObject:[NSNumber numberWithInt:1] forKey:@"adrload"];
+   [SendEEPROMDataDic setObject:[NSNumber numberWithInt:0] forKey:@"dataload"];
+   [SendEEPROMDataDic setObject:[NSNumber numberWithInt:1] forKey:@"permanent"];
+   [SendEEPROMDataDic setObject:titel forKey:@"titel"];
+   [SendEEPROMDataDic setObject:[NSNumber numberWithInt:typ] forKey:@"typ"];
+   
+	
+   //	NSString* TWIReadStartURLSuffix = [NSString stringWithFormat:@"pw=%@&radr=%@&hb=%@&lb=%@",pw,EEPROMAdresse,hByte, lByte];
+	NSString* EEPROMReadStartURLSuffix = [NSString stringWithFormat:@"pw=%@&radr=%@&hb=%@&lb=%@",pw,EEPROMAdresseZusatz,hByte, lByte];
+	NSString* EEPROMReadStartURL =[NSString stringWithFormat:@"%@/twi?%@",HomeCentralURL, EEPROMReadStartURLSuffix];
+	
+	//NSLog(@"EEPROMReadStartAktion EEPROMReadStartURLSuffix: %@",EEPROMReadStartURLSuffix);
+   
+	NSLog(@"EEPROMReadStartURL: %@",EEPROMReadStartURL);
+	//NSURL *URL = [NSURL URLWithString:HomeCentralURL];
+	NSURL *URL = [NSURL URLWithString:EEPROMReadStartURL];
+	[self loadURL:URL];
+}
+
+
+- (void)EEPROMReadWocheStartAktion:(NSNotification*)note
+{
+	NSLog(@"EEPROMReadWocheStartAktion note: %@",[[note userInfo]description]);
+	NSString* hByte = [NSString string];
+	NSString* lByte = [NSString string];
+	NSString* EEPROMAdresseZusatz= [NSString string];
+	NSString* titel = [NSString string];
+   int typ=0; // tagbalkentyp
+   
+   WebTask = eepromreadwoche;
+   
    if ([[note userInfo]objectForKey:@"eepromadressezusatz"])
 	{
 		EEPROMAdresseZusatz= [[[note userInfo]objectForKey:@"eepromadressezusatz"]stringValue];
@@ -163,6 +249,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 		
 	}
 
+   /*
    // Dic fuer senden an Homeserver mit Adresse laden:
    [SendEEPROMDataDic setObject:hByte forKey:@"hbyte"];
    [SendEEPROMDataDic setObject:lByte forKey:@"lbyte"];
@@ -171,19 +258,34 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
    [SendEEPROMDataDic setObject:[NSNumber numberWithInt:1] forKey:@"permanent"];
    [SendEEPROMDataDic setObject:titel forKey:@"titel"];
    [SendEEPROMDataDic setObject:[NSNumber numberWithInt:typ] forKey:@"typ"];
-
+    */
 	
 //	NSString* TWIReadStartURLSuffix = [NSString stringWithFormat:@"pw=%@&radr=%@&hb=%@&lb=%@",pw,EEPROMAdresse,hByte, lByte]; 
 	NSString* EEPROMReadStartURLSuffix = [NSString stringWithFormat:@"pw=%@&radr=%@&hb=%@&lb=%@",pw,EEPROMAdresseZusatz,hByte, lByte]; 
 	NSString* EEPROMReadStartURL =[NSString stringWithFormat:@"%@/twi?%@",HomeCentralURL, EEPROMReadStartURLSuffix];
 	
-	//NSLog(@"EEPROMReadStartAktion EEPROMReadStartURLSuffix: %@",EEPROMReadStartURLSuffix);
+	NSLog(@"EEPROMReadWocheStartAktion EEPROMReadStartURLSuffix: %@",EEPROMReadStartURLSuffix);
 
-	NSLog(@"EEPROMReadStartURL: %@",EEPROMReadStartURL);
+	NSLog(@"EEPROMReadWocheStartURL: %@",EEPROMReadStartURL);
 	//NSURL *URL = [NSURL URLWithString:HomeCentralURL];
 	NSURL *URL = [NSURL URLWithString:EEPROMReadStartURL];
-	[self loadURL:URL];
+//	[self loadURL:URL];
 }
+
+- (void)readWocheTimerFunktion:(NSTimer*) derTimer
+{
+	NSMutableDictionary* readWocheTimerDic=(NSMutableDictionary*) [derTimer userInfo];
+	//NSLog(@"readWocheTimerFunktion  statusTimerDic: %@",[statusTimerDic description]);
+   
+	if ([readWocheTimerDic objectForKey:@"anzahl"])
+	{
+      
+   }
+   
+   
+}
+
+
 
 
 - (void)EEPROMReadDataAktion:(NSNotification*)note
@@ -204,7 +306,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 															selector:@selector(sendTimerFunktion:) 
 															userInfo:sendTimerDic 
 															 repeats:YES]retain];
-															 															 
+						
 /* In sendTimerFunktion verschoben
 
 		int d=[[[note userInfo]objectForKey:@"rdata"]intValue];
@@ -553,6 +655,8 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
    //	int Objekt=[[[note userInfo]objectForKey:@"objekt"]intValue];
    //	NSArray* DatenArray=[[note userInfo]objectForKey:@"stundenarray"];
    
+   WebTask = idle;
+   
    [SendEEPROMDataDic setObject:[[note userInfo]objectForKey:@"titel"] forKey:@"titel"];
    [SendEEPROMDataDic setObject:[[note userInfo]objectForKey:@"typ"] forKey:@"typ"];
 	
@@ -760,6 +864,9 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 //	int Wochentag=[[[note userInfo]objectForKey:@"wochentag"]intValue];
 //	int Objekt=[[[note userInfo]objectForKey:@"objekt"]intValue];
 //	NSArray* DatenArray=[[note userInfo]objectForKey:@"stundenarray"];
+   
+   WebTask = idle;
+   
 	NSArray* DatenByteArray=[[note userInfo]objectForKey:@"modifierstundenbytearray"];
 
 	NSString* lbyte=[[note userInfo]objectForKey:@"lbyte"];
@@ -1002,6 +1109,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
    NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
 	NSMutableDictionary* tempDataDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
 	
+   [tempDataDic setObject:[NSNumber numberWithInt:WebTask] forKey:@"webtask"];
 	//NSLog(@"***       HomeClient Webview didFinishLoadForFrame  ***");
 	//NSLog(@"sender: %@",[sender description]);
 	// Only report feedback for the main frame.
@@ -1043,6 +1151,11 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 		{
 			//			NSLog(@"didFinishLoadForFrame: Status = 1");
 			//[tempDataDic setObject:@"status" forKey:@"antwort"];
+         if (sendTimer && [sendTimer isValid])
+         {
+            NSLog(@"didFinishLoad sendTimer inval");
+            [sendTimer invalidate];
+         }
 			[tempDataDic setObject:[NSNumber numberWithInt:1] forKey:@"twistatus"];
 		}
 
@@ -1065,7 +1178,8 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 		
       
       // radr vorhanden??
-		NSString* EEPROM_Adresse_String= @"radr"; 
+		NSString* EEPROM_Adresse_String= @"radr";
+      
 		CheckRange = [HTML_Inhalt rangeOfString:EEPROM_Adresse_String];
 		if (CheckRange.location < NSNotFound)
 		{
@@ -1192,6 +1306,8 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 		CheckRange = [HTML_Inhalt rangeOfString:Data_String];
 		if (CheckRange.location < NSNotFound)
 		{
+         // data ist angekommen, sendTimer ausschalten
+         
          NSLog(@"didFinishLoadForFrame read EEPROM Antwort: \nHTML_Inhalt: \t\t\t\t%@",HTML_Inhalt);
 			//NSLog(@"didFinishLoadForFrame: data ist da  loc: %d",CheckRange.location);
 			[tempDataDic setObject:[NSNumber numberWithInt:1] forKey:@"data"];

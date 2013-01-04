@@ -20,6 +20,7 @@
 	// NO:	TWI wird AUSgeschaltet
 	NSLog(@"AVRClient setTWIState: state: %d",[sender state]);
 	//[readTagTaste setEnabled:YES];
+   
 	if ([sender state])
 	{
 		Webserver_busy=0;
@@ -82,6 +83,8 @@
 
 - (IBAction)readEthTagplan:(id)sender
 {
+   enum webtaskflag{idle, eepromread, eepromwrite,eepromreadwoche,eepromwritewoche}webtaskflag;
+
 	if (Webserver_busy || WriteWoche_busy)
 	{
       NSLog(@"readEthTagplan Webserver_busy beep");
@@ -89,7 +92,7 @@
       
 		return;
 	}
-	
+	WebTask=eepromread; // eepromlesen
 	[readTagTaste setEnabled:NO];
 	[ReadFeld setStringValue:@""];
 	[WriteFeld setStringValue:@""];
@@ -108,6 +111,129 @@
    
    NSLog(@"PList tagbalkentyp: %d",tagbalkentyp);
    //[readTagTaste setEnabled:YES];
+   //return;
+   
+   
+   //NSLog(@"tempRaum index: %d titel: %@",tempRaum, [[RaumPop selectedItem]title]);
+   //NSLog(@"tempObjekt index: %d titel: %@",tempObjekt, [[ObjektPop selectedItem]title]);
+   
+	//NSLog(@"tempRaum indexdez: %d hex: %x",[[RaumPop selectedItem]tag],[[RaumPop selectedItem]tag]);
+	
+   //NSLog(@"tempRaum: %d,tempRaum*RAUMPLANBREITE: %X",tempRaum,tempRaum*RAUMPLANBREITE);
+   //NSLog(@"tempObjekt: %d tempObjekt*TAGPLANBREITE: %X",tempObjekt,tempObjekt*TAGPLANBREITE);
+   //NSLog(@"tempTag: %d tempTag*0x08: %X",tempTag,tempTag*0x08);
+   uint16_t startadresse=tempRaum*RAUMPLANBREITE + tempObjekt*TAGPLANBREITE + tempTag*0x08;
+	
+   //NSLog(@"tempRaum: %X tempObjekt: %X tempTag: %X startadresse hex: %X dez: %d",tempRaum, tempObjekt, tempTag,startadresse,startadresse);
+   
+   
+   NSString* AdresseKontrollString = [NSString string];
+	int hbyte=startadresse/0x100;
+	if (hbyte < 0x0F)
+	{
+      AdresseKontrollString= [NSString stringWithFormat:@"hbyte: 0%X",hbyte];
+	}
+	else
+	{
+		AdresseKontrollString= [NSString stringWithFormat:@"hbyte: %X",hbyte];
+	}
+   /*
+    NSString* hbString= [[NSNumber numberWithInt:hbyte]stringValue];
+    if ([hbString length]==1) // nur eine Stelle, fuehrende Null einfuegen
+    {
+    hbString=[NSString stringWithFormat:@"0%@",hbString];
+    }
+    */
+	int lbyte=startadresse%0x100;
+	if (lbyte < 0x0F)
+	{
+		AdresseKontrollString= [NSString stringWithFormat:@"%@ lbyte: 0%X",AdresseKontrollString,lbyte];
+	}
+	else
+	{
+		AdresseKontrollString= [NSString stringWithFormat:@"%@ lbyte: %X",AdresseKontrollString,lbyte];
+	}
+   
+	uint16_t kontrollstartadresse = 0x100*hbyte+lbyte;
+   //NSLog(@"kontrollstartadresse: %d",kontrollstartadresse);
+   
+   uint16_t kontrolltag = (kontrollstartadresse & 0x38)/0x08; // 0x38: 111 000 Bit 3-6
+   //NSLog(@"kontrolltag: %d",kontrolltag);
+   
+   uint16_t kontrollobjekt = (kontrollstartadresse & 0x1C0)/0x40 ; // 0x1C0: 111 000 000 Bit 7-9
+   //NSLog(@"kontrollobjekt: %d",kontrollobjekt);
+   
+   uint16_t kontrollraum = (kontrollstartadresse & 0xE00)/0x200; // 0xE0: 111 000 000 000 Bit 10-12
+   //NSLog(@"kontrollraum: %d",kontrollraum);
+   
+   /*
+    NSString* lbString= [[NSNumber numberWithInt:lbyte]stringValue];
+    if ([lbString length]==1) // nur eine Stelle, fuehrende Null einfuegen
+    {
+    lbString=[NSString stringWithFormat:@"0%@",lbString];
+    }
+    */
+	
+	[Adresse setStringValue:AdresseKontrollString];
+	[Cmd setStringValue:@""];
+   
+   
+   
+   
+   
+	NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+	[NotificationDic setObject:[NSNumber numberWithInt:[I2CPop indexOfSelectedItem]] forKey:@"eepromadressezusatz"];
+	[NotificationDic setObject:[NSNumber numberWithInt:hbyte] forKey:@"hbyte"];
+	[NotificationDic setObject:[NSNumber numberWithInt:lbyte] forKey:@"lbyte"];
+   
+   [NotificationDic setObject:[[ObjektPop selectedItem]title] forKey:@"titel"];
+   [NotificationDic setObject:[NSNumber numberWithInt:tagbalkentyp] forKey:@"typ"];
+   
+   
+	
+	NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
+	[nc postNotificationName:@"EEPROMReadStart" object:self userInfo:NotificationDic];
+	Webserver_busy=1;
+	
+	//	[i2cAdressArray addObject:[NSNumber numberWithInt:hbyte]];						// Hi-Bit der Adresse
+	//	[i2cAdressArray addObject:[NSNumber numberWithInt:lbyte]];						// Lo-Bit der Adresse
+	
+	NSLog(@"AVRClient readEthTagplan EEPROMAddresse: %X startadresse: %X  hbyte: %X lbyte: %X", [I2CPop indexOfSelectedItem], startadresse, hbyte, lbyte);
+	
+	//	NSString* ReadURL=[self ReadURLForEEPROM: EEPROMAddresse hByte: hbyte lByte: lbyte];
+   
+}
+
+- (IBAction)readEthWochenplan:(id)sender
+{
+	if (Webserver_busy || WriteWoche_busy)
+	{
+      NSLog(@"readEthWochenplan Webserver_busy beep");
+		NSBeep();
+      
+		return;
+	}
+	
+	[readTagTaste setEnabled:NO];
+	[ReadFeld setStringValue:@""];
+	[WriteFeld setStringValue:@""];
+	[AdresseFeld setStringValue:@""];
+	//int	tempTag=[TagPop indexOfSelectedItem];
+   // Start ist MO
+   int	tempTag=0;
+   
+	int	tempRaum=[RaumPop indexOfSelectedItem];
+	int	tempObjekt=[ObjektPop indexOfSelectedItem];
+   
+   
+   int tagbalkentyp = [[[[[[[HomebusArray objectAtIndex:tempRaum]
+                            objectForKey:@"wochenplanarray"]
+                           objectAtIndex:0]
+                          objectForKey:@"tagplanarray"]
+                         objectAtIndex:tempObjekt]
+                        objectForKey:@"tagbalkentyp"]intValue];
+   
+   NSLog(@"readEthWochenplan PList tagbalkentyp: %d",tagbalkentyp);
    //return;
    
    
@@ -163,6 +289,7 @@
    uint16_t kontrollraum = (kontrollstartadresse & 0xE00)/0x200; // 0xE0: 111 000 000 000 Bit 10-12
    //NSLog(@"kontrollraum: %d",kontrollraum);
    
+   
 /*	
 	NSString* lbString= [[NSNumber numberWithInt:lbyte]stringValue];
 	if ([lbString length]==1) // nur eine Stelle, fuehrende Null einfuegen
@@ -185,7 +312,7 @@
    
    [NotificationDic setObject:[[ObjektPop selectedItem]title] forKey:@"titel"];
    [NotificationDic setObject:[NSNumber numberWithInt:tagbalkentyp] forKey:@"typ"];
-
+   [NotificationDic setObject:[NSNumber numberWithInt:tagbalkentyp] forKey:@"typ"];
    
 	
 	NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
@@ -195,11 +322,14 @@
 	//	[i2cAdressArray addObject:[NSNumber numberWithInt:hbyte]];						// Hi-Bit der Adresse
 	//	[i2cAdressArray addObject:[NSNumber numberWithInt:lbyte]];						// Lo-Bit der Adresse
 	
-	NSLog(@"AVRClient readEthTagplan EEPROMAddresse: %X startadresse: %X  hbyte: %X lbyte: %X", [I2CPop indexOfSelectedItem], startadresse, hbyte, lbyte);
+	NSLog(@"AVRClient readEthWochenplan EEPROMAddresse: %X startadresse: %X  hbyte: %X lbyte: %X", [I2CPop indexOfSelectedItem], startadresse, hbyte, lbyte);
 	
 	//	NSString* ReadURL=[self ReadURLForEEPROM: EEPROMAddresse hByte: hbyte lByte: lbyte];
 
 }
+
+
+
 
 
 - (void)readEthSim:(id)sender
@@ -662,6 +792,7 @@ if (Webserver_busy)
 {
 
 }
+
 - (void)setURLToLoad:(NSURL *)URL
 {
 
@@ -710,7 +841,7 @@ if (Webserver_busy)
 
 - (void)FinishLoadAktion:(NSNotification*)note
 {
-	//NSLog(@"FinishLoadAktion: %@",[[note userInfo]description]);
+	NSLog(@"FinishLoadAktion: %@",[[note userInfo]description]);
 	//NSString* Status_String= @"status";
 	
 	//NSString* Status0_String= @"status0";
@@ -738,7 +869,6 @@ if (Webserver_busy)
 			
 		}
 		
-		
 		if ([[note userInfo]objectForKey:@"twistatus"]) 
 		{
 			TWI_Status=[[[note userInfo]objectForKey:@"twistatus"]intValue];
@@ -762,10 +892,12 @@ if (Webserver_busy)
             NSLog(@"FinishLoadAktion Kontakt beendet beep");
 				
             NSBeep();
+            WebTask=idle; // nichts tun
 				[StatusFeld setStringValue:@"Kontakt mit HomeCentral beendet"]; // TWI wieder aktiviert
 				[readTagTaste setEnabled:0];// TWI-Status ON, EEPROM gesperrt
 				[PWFeld setStringValue:@""];
-             
+            
+            
 				//[AdresseFeld setStringValue:@""];
 				//[WriteFeld setStringValue:@""];
 				//[ReadFeld setStringValue:@""];
@@ -819,8 +951,11 @@ if (Webserver_busy)
 		}
 	
 		// end isstatus0ok
-		
-		if ([[note userInfo]objectForKey:@"radrok"]) // Adresse fuer Lesen angekommen
+      
+      
+      
+		// Adresse fuer Lesen angekommen?
+		if ([[note userInfo]objectForKey:@"radrok"]) 
 		{
 			Adresse_OK=[[[note userInfo]objectForKey:@"radrok"]intValue];
 			// Anzeigen, dass die EEPROM-Adresse erfolgreich uebertragen wurde: 
@@ -836,6 +971,10 @@ if (Webserver_busy)
 				
 				NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
 				[NotificationDic setObject:[NSNumber numberWithInt:1] forKey:@"rdata"];
+            if ([[note userInfo]objectForKey:@"webtask"])
+            {
+               [NotificationDic setObject:[[note userInfo]objectForKey:@"webtask"] forKey:@"webtask"];
+            }
 				
 				NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
 				[nc postNotificationName:@"EEPROMReadData" object:self userInfo:NotificationDic];

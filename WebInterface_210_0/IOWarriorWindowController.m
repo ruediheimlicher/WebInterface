@@ -1317,12 +1317,12 @@ SolarDataDownload
 			NSLog(@"SolarDataDownloadAktion datum");
 
          
-			if ([DownloadTimer isValid])
+			//if ([DownloadTimer isValid])
 			{
 				NSLog(@"  SolarDataDownloadAktion DownloadTimer invalidate");
 
 				[DownloadTimer invalidate];
-            //DownloadTimer = nil;
+            DownloadTimer = nil;
 			}
 			
 			if ([[note userInfo] objectForKey:@"lastdatazeit"])

@@ -1399,15 +1399,19 @@ if (Webserver_busy)
 			[finishLoadTimerDic setObject:@"Read Data OK" forKey:@"timertext"];
          [finishLoadTimerDic setObject:[NSNumber numberWithInt:WebTask] forKey:@"webtask"];
          [finishLoadTimerDic setObject:[NSNumber numberWithInt:wochentagindex] forKey:@"wochentagindex"];
-			//NSLog(@"TimeoutTimer start");
+			
          
-         if ([TimeoutTimer isValid])
+         //NSLog(@"TimeoutTimer start");
+         
+         //if ([TimeoutTimer isValid])
          {
             [TimeoutTimer invalidate];
+            TimeoutTimer=nil;
          }
          
          if (WebTask == eepromreadwoche) // Fortsetzung einleiten
          {
+            // 4 sekunden notwendig, da WebServer viel Zeit braucht, um die Daten aus dem EEPROM zu laden
 			TimeoutTimer=[[NSTimer scheduledTimerWithTimeInterval:4
 																		  target:self 
 																		selector:@selector(TimeoutTimerFunktion:) 
@@ -1428,25 +1432,6 @@ if (Webserver_busy)
 		
 	} // if data
 	
-	
-	/*
-	 if ([[note userInfo]objectForKey:@"twistatus"]) 
-	 {
-	 TWI_Status=[[[note userInfo]objectForKey:@"twistatus"]intValue];
-	 if (TWI_Status)// Statusmeldung
-	 {
-	 [StatusFeld setStringValue:@"-"]; // TWI wieder aktiviert
-	 
-	 }
-	 else 
-	 {
-	 [StatusFeld setStringValue:@"Kontakt hergestellt"];// TWI erfolgreich deaktiviert
-	 }
-	 
-	 
-	 
-	 }
-	 */
 	
 	int Error_OK=0;
 	if ([[note userInfo]objectForKey:@"error"]) 
@@ -1524,124 +1509,7 @@ if (Webserver_busy)
 		
 		
 	}
-	
-	
-	
-	//NSString* EEPROM_Adresse_Key= @"radr";
-	/*
-	 if ([AntwortString isEqualToString:Status_String])// Statusmeldung
-	 {
-	 if ([[note userInfo]objectForKey:@"wert"]) // 
-	 {
-	 int wert=[[[note userInfo]objectForKey:@"wert"]intValue];
-	 if (wert)
-	 {
-	 [StatusFeld setStringValue:@"EEPROM-Adresse gesendet"];
-	 }
-	 else 
-	 {
-	 [StatusFeld setStringValue:@"EEPROM-Adresse nicht gesendet"];
-	 }
-	 
-	 }
-	 }
-	 */
-	
-	
-	/*
-	 if ([[note userInfo]objectForKey:@"data"])
-	 {	
-	 //NSLog(@"FinishLoadAktion: %@",[[[note userInfo]objectForKey:@"data"]description]);
-	 NSArray* tempDataArray=[[note userInfo]objectForKey:@"data"]; // Array der Key-Value-Werte
-	 
-	 if (tempDataArray && [tempDataArray count])
-	 {
-	 //NSLog(@"tempDataArray: %@",[tempDataArray description]);
-	 int i=0;
-	 int webtaskindex=0;
-	 for (i=0;i<[tempDataArray count];i++)
-	 {
-	 NSDictionary* tempDataDic=[tempDataArray objectAtIndex:i];
-	 //int tempStatus=[[tempDataDic objectForKey:@"status"]intValue];
-	 
-	 // Status der TWIStatus-Taste abfragen, readTag-Taste enablen
-	 if ([tempDataDic objectForKey:@"status"])
-	 {
-	 //int tempStatus=[[tempDataDic objectForKey:@"status"]intValue];
-	 //NSLog(@"tempStatus: %d",tempStatus);
-	 // Anzeigen, dass der Status auf dem Webserver erfolgreich modifiziert wurde: 
-	 [readTagTaste setEnabled:[[tempDataDic objectForKey:@"status"]intValue]==0];// TWI-Status muss OFF sein, um EEPROM lesen zu koennen
-	 
-	 
-	 NSMutableDictionary* tempDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
-	 [tempDic setObject:@"status" forKey:@"art"];
-	 [tempDic setObject:[tempDataDic objectForKey:@"status"] forKey:@"wert"];
-	 //[WEBDATATabelle addObject:tempDic];
-	 [WEBDATA_DS addValueKeyZeile:tempDic];
-	 //NSLog(@"AVR awake WEBDATATabelle: %@",[WEBDATATabelle description]); 
-	 }
-	 
-	 if ([tempDataDic objectForKey:@"radr"])
-	 {
-	 //int tempStatus=[[tempDataDic objectForKey:@"status"]intValue];
-	 //NSLog(@"tempStatus: %d",tempStatus);
-	 NSMutableDictionary* tempDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
-	 [tempDic setObject:@"radr" forKey:@"art"];
-	 [tempDic setObject:[tempDataDic objectForKey:@"radr"] forKey:@"wert"];
-	 [WEBDATA_DS addValueKeyZeile:tempDic];
-	 
-	 //NSLog(@"AVR awake WEBDATATabelle: %@",[WEBDATATabelle description]); 
-	 [WEBDATATable reloadData];
-	 [WEBDATATable scrollRowToVisible:[WEBDATATable numberOfRows]-1];
-	 webtaskindex=1;
-	 }
-	 if ([tempDataDic objectForKey:@"hb"])
-	 {
-	 NSLog(@"objectForKey:hb");
-	 NSMutableDictionary* tempAdressDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
-	 [tempAdressDic setObject:@"hb" forKey:@"art"];
-	 [tempAdressDic setObject:[tempDataDic objectForKey:@"hb"] forKey:@"wert"];
-	 [WEBDATA_DS addValueKeyZeile:tempAdressDic];
-	 webtaskindex++;
-	 }
-	 if([tempDataDic objectForKey:@"lb"])
-	 {
-	 NSLog(@"objectForKey:lb");
-	 NSMutableDictionary* tempAdressDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
-	 [tempAdressDic setObject:@"lb" forKey:@"art"];
-	 [tempAdressDic setObject:[tempDataDic objectForKey:@"lb"] forKey:@"wert"];
-	 [WEBDATA_DS addValueKeyZeile:tempAdressDic];
-	 webtaskindex++;
-	 }
-	 
-	 if (webtaskindex == 3) // Vollständig
-	 {
-	 WebTask=eepromread;
-	 NSLog(@"webtaskindex == 3: WebTask: %d",WebTask);
-	 }
-	 }
-	 [WEBDATATable reloadData];
-	 [WEBDATATable scrollRowToVisible:[WEBDATATable numberOfRows]-1];
-	 
-	 
-	 switch (WebTask)
-	 {
-	 case eepromread:
-	 {
-	 
-	 
-	 }break;
-	 
-	 
-	 }// switch WebTask
-	 } // if tempArray count
-	 
-	 
-	 
-	 } // if data
-	 */
-	
-	
+
 }
 
 
@@ -1685,8 +1553,9 @@ if (Webserver_busy)
             wochentagindex++;
             if (wochentagindex < 7)
             {
-               
-               [self readEthTagplanVonTag:wochentagindex];
+               [self readEthTagplanVonRaum:[RaumPop indexOfSelectedItem] vonObjekt:[ObjektPop indexOfSelectedItem] vonTag:wochentagindex];
+
+               //[self readEthTagplanVonTag:wochentagindex];
             }
             else
             {

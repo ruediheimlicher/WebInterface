@@ -127,6 +127,7 @@ NSTimer*                TimeoutTimer;
 
 
 }
+- (NSArray*)StundenArrayAusByteArray:(NSArray*)derStundenByteArray;
 - (void)HomebusAnlegen;
 - (void)setRaum:(int)derRaum;
 - (void)saveLabel:(NSString*)dasLabel forRaum:(int)derRaum forSegment:(int)dasSegment;

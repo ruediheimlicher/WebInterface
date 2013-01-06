@@ -65,6 +65,45 @@ return BinString;
 return returnInt;
 }
 
+
+- (NSArray*)StundenArrayAusByteArray:(NSArray*)derStundenByteArray
+{
+	//NSLog(@"setStundenArrayAusByteArray derStundenByteArray: %@",[derStundenByteArray description]);
+	
+	NSMutableArray* tempStundenArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+	//NSArray* bitnummerArray=[NSArray arrayWithObjects: @"null", @"eins",@"zwei",@"drei",@"vier",@"fuenf",nil];
+   
+	int i,k;
+	for (i=0;i<6;i++)
+	{
+		
+		//NSString* tempString=[[derStundenByteArray objectAtIndex:0]objectForKey:[bitnummerArray objectAtIndex:i]];
+		NSString* tempString=[derStundenByteArray objectAtIndex:i];
+		unsigned int tempByte=0;
+		NSScanner *scanner;
+		scanner = [NSScanner scannerWithString:tempString];
+		[scanner scanHexInt:&tempByte];
+      //NSString* dezString = [NSString stringWithFormat:@"%d",tempByte];
+		
+		
+		//NSLog(@"i: %d tempString: %@ tempByte hex: %2.2X dez: %d dezString: %@",i,tempString,tempByte,tempByte,dezString);
+		NSMutableArray* tempStundenCodeArray=[[[NSMutableArray alloc]initWithCapacity:4]autorelease];
+		for (k=0;k<4;k++)
+		{
+			uint8_t tempStundencode = tempByte & 0x03;
+			//NSLog(@"k: %d tempStundencode hex: %2.2X dez: %d",k,tempStundencode,tempStundencode);
+			[tempStundenCodeArray insertObject:[NSNumber numberWithInt:tempStundencode]atIndex:0];
+			//[tempStundenArray addObject:[NSNumber numberWithInt:tempStundencode]];
+			tempByte>>=2;
+         
+		}
+		[tempStundenArray addObjectsFromArray:tempStundenCodeArray];
+	}//for i
+	//NSLog(@"setStundenArrayAusByteArray tempStundenArray: %@",[tempStundenArray description]);
+	return tempStundenArray ;
+}
+
+
 - (id) init
 {
     //if ((self = [super init]))

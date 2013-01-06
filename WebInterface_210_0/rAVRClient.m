@@ -1074,11 +1074,14 @@ if (Webserver_busy)
    
    // **
    
-   
+   if (EEPROMScroller)
+   {
+       NSLog(@"EEPROMScroller schon da");
+   }
    NSRect RaumViewFeld=[EEPROMUpdatefeld frame];
      NSRect RaumScrollerFeld=RaumViewFeld;	//	Feld fuer Scroller, in dem der RaumView liegt
    NSScrollView* RaumScroller = [[NSScrollView alloc] initWithFrame:RaumScrollerFeld];
-   [[[WochenplanTab tabViewItemAtIndex:8]view]addSubview:RaumScroller];
+  // [[[WochenplanTab tabViewItemAtIndex:8]view]addSubview:RaumScroller];
 
    
    int AnzRaumObjekte=2;
@@ -1095,7 +1098,9 @@ if (Webserver_busy)
    
    //	EEPROMPlan  anlegen
    EEPROMPlan = [[NSView alloc]initWithFrame:RaumViewFeld];
-   [RaumScroller setDocumentView:EEPROMPlan];
+   
+   //[RaumScroller setDocumentView:EEPROMPlan];
+   [EEPROMScroller setDocumentView:EEPROMPlan];
    
    NSRect EEPROMUpdateFeld=[EEPROMPlan frame];
 	//NSLog(@"EEPROMUpdateFeld y: %2.2f  height %2.2F",EEPROMUpdateFeld.origin.y,EEPROMUpdateFeld.size.height);
@@ -1115,6 +1120,14 @@ if (Webserver_busy)
    [RaumScroller setHasHorizontalScroller:NO];
    [RaumScroller setLineScroll:10.0];
    [RaumScroller setAutohidesScrollers:NO];
+
+   [EEPROMScroller setBorderType:NSLineBorder];
+   [EEPROMScroller setHasVerticalScroller:YES];
+   [EEPROMScroller setHasHorizontalScroller:NO];
+   [EEPROMScroller setLineScroll:10.0];
+   [EEPROMScroller setAutohidesScrollers:NO];
+
+   
    
    float docH=[[RaumScroller documentView] frame].size.height;
    float contH=[[RaumScroller contentView] frame].size.height;
@@ -1124,11 +1137,11 @@ if (Webserver_busy)
    //  [[RaumScroller documentView] scrollPoint:newRaumScrollOrigin];
    
    //[RaumTabView addSubview:RaumScroller];
-   NSLog(@"[[WochenplanTab tabViewItemAtIndex:8]view]: %@",[[[[WochenplanTab tabViewItemAtIndex:8]view ]subviews]description]);
+   //NSLog(@"[[WochenplanTab tabViewItemAtIndex:8]view]: %@",[[[[WochenplanTab tabViewItemAtIndex:8]view ]subviews]description]);
    
    
    
-   [RaumScroller setIdentifier:@"eepromscroller"];
+   //[RaumScroller setIdentifier:@"eepromscroller"];
   // [[[WochenplanTab tabViewItemAtIndex:8]view]addSubview:RaumScroller];
    
    
@@ -1158,13 +1171,18 @@ if (Webserver_busy)
       //newScrollerrect.size.height = [UpdateArray count] *2* offsetY;
       //[[EEPROMScroller documentView] setFrame:newPlanrect];
       
-      float docH=[[RaumScroller documentView] frame].size.height;
-      float contH=[[RaumScroller contentView] frame].size.height;
+      //float docH=[[RaumScroller documentView] frame].size.height;
+      //float contH=[[RaumScroller contentView] frame].size.height;
+      float docH=[[EEPROMScroller documentView] frame].size.height;
+      float contH=[[EEPROMScroller contentView] frame].size.height;
+
+      
       //float offset = [[RaumScroller documentView] frame].origin.y;
       
       //NSLog(@"RaumScroller documentView orig.y: %.2f contH: %.2f docH: %.2f",[[RaumScroller documentView] frame].origin.y,contH, docH);
 		NSPoint   newRaumScrollOrigin=NSMakePoint(0.0,docH-contH);
-      [[RaumScroller documentView] scrollPoint:newRaumScrollOrigin];
+      //[[RaumScroller documentView] scrollPoint:newRaumScrollOrigin];
+      [[EEPROMScroller documentView] scrollPoint:newRaumScrollOrigin];
       
       float positionY = [EEPROMPlan frame].size.height - 40;
       //EEPROMFeld.origin.x +=10;

@@ -554,6 +554,14 @@ return returnInt;
 	}//	End for Raum
 	
    //
+   NSRect EEPROMScrollerFeld=[EEPROMUpdatefeld frame];
+   if (!EEPROMScroller)
+   {
+      NSLog(@"neuer EEPROMScroller");
+   EEPROMScroller = [[NSScrollView alloc] initWithFrame:EEPROMScrollerFeld];
+   [[[WochenplanTab tabViewItemAtIndex:8]view]addSubview:EEPROMScroller];
+   }
+
    /*
    RaumViewFeld=[EEPROMUpdatefeld frame];
    int AnzRaumObjekte=2;
@@ -895,6 +903,20 @@ return returnInt;
 		
 		
 	}
+
+- (void)checkUpdate
+{
+   int update=0;
+   //Check fuer neue Werte auf eepromupdatedaten.txt
+   NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+   [NotificationDic setObject:[NSNumber numberWithInt:1] forKey:@"update"];
+   
+   NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
+   [nc postNotificationName:@"EEPROMUpdate" object:self userInfo:NotificationDic];
+
+   // Notific mit HomeDataUpdateAktion: auf AVRClient
+}
+
 
 - (void)checkHomebus
 {

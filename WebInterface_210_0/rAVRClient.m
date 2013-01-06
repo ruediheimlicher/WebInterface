@@ -1073,7 +1073,14 @@ if (Webserver_busy)
    //[EEPROMTextfeld setStringValue:[[[[note userInfo]objectForKey:@"updatearray"]objectAtIndex:0]objectForKey:@"zeile"]];
    
    // **
+   
+   
    NSRect RaumViewFeld=[EEPROMUpdatefeld frame];
+     NSRect RaumScrollerFeld=RaumViewFeld;	//	Feld fuer Scroller, in dem der RaumView liegt
+   NSScrollView* RaumScroller = [[NSScrollView alloc] initWithFrame:RaumScrollerFeld];
+   [[[WochenplanTab tabViewItemAtIndex:8]view]addSubview:RaumScroller];
+
+   
    int AnzRaumObjekte=2;
    int RaumTitelfeldhoehe=10;
    int RaumTagbalkenhoehe=32;				//Hoehe eines Tagbalkens
@@ -1081,10 +1088,7 @@ if (Webserver_busy)
    int RaumTagplanAbstand=RaumTagplanhoehe+10;	// Abstand zwischen den Ecken der Tagplanfelder
    int RaumKopfbereich=0;	// Bereich ueber dem Scroller
    
-   NSRect RaumScrollerFeld=RaumViewFeld;	//	Feld fuer Scroller, in dem der RaumView liegt
-   NSScrollView* RaumScroller = [[NSScrollView alloc] initWithFrame:RaumScrollerFeld];
-   
-   
+
    // Feld im Scroller ist abhaengig von Anzahl Tagbalken
    RaumViewFeld.size.height=2*(RaumTagplanAbstand +RaumKopfbereich); // Hoehe vergroessern
    //	NSLog(@"RaumTagplanAbstand: %d	",RaumTagplanAbstand);
@@ -1119,11 +1123,13 @@ if (Webserver_busy)
    //newRaumScrollOrigin.y -=(RaumTagplanAbstand+RaumKopfbereich);
    //  [[RaumScroller documentView] scrollPoint:newRaumScrollOrigin];
    
-   
-   
    //[RaumTabView addSubview:RaumScroller];
+   NSLog(@"[[WochenplanTab tabViewItemAtIndex:8]view]: %@",[[[[WochenplanTab tabViewItemAtIndex:8]view ]subviews]description]);
    
-   [[[WochenplanTab tabViewItemAtIndex:8]view]addSubview:RaumScroller];
+   
+   
+   [RaumScroller setIdentifier:@"eepromscroller"];
+  // [[[WochenplanTab tabViewItemAtIndex:8]view]addSubview:RaumScroller];
    
    
    
@@ -1135,9 +1141,8 @@ if (Webserver_busy)
    Kontrollzeilenrect.size.height = 20;
    Kontrollzeilenrect.origin.y = EEPROMFeld.size.height - 40;
    
-   if ([[[note userInfo]objectForKey:@"updatearray"]count])
+   if ([[[note userInfo]objectForKey:@"updatearray"]count]) // es hat geaenderte Daten
    {
-      
       
       //NSLog(@"EEPROMFeld origin.y: %.2f height %2.2F",EEPROMFeld.origin.y,EEPROMFeld.size.height);
       
@@ -1234,6 +1239,8 @@ if (Webserver_busy)
          
          [KontrollzeilenFeld_a setStringValue:[[oldStundenplanDic objectForKey:@"stundenplanarray"]componentsJoinedByString:@"  "]];
       }
+      
+      
    } // if count
    else
    {

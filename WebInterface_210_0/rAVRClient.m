@@ -1103,8 +1103,8 @@ if (Webserver_busy)
       EEPROMFeld.size.height = 30;
       EEPROMFeld.size.width -= 40;
       
-      //Kontrollzeilenrect.origin.y = [EEPROMPlan frame].size.height - 62;
-      Kontrollzeilenrect.size.width -= 40;
+      Kontrollzeilenrect.origin.y = [EEPROMPlan frame].size.height - 62;
+     Kontrollzeilenrect.size.width -= 40;
       for (int i=0;i< [UpdateArray count]; i++)
       {
          NSArray* tempZeilenArray = [[[UpdateArray objectAtIndex:i]objectForKey:@"zeile"]componentsSeparatedByString:@"\t"];
@@ -1121,8 +1121,6 @@ if (Webserver_busy)
          //NSLog(@"tempObjektnamenArray: %@",[tempObjektnamenArray description] );
          
          EEPROMFeld.origin.y = positionY - i*offsetY;
-         Kontrollzeilenrect.origin.y = EEPROMFeld.origin.y - 22;
-         
          //NSLog(@"EEPROMFeld i: %d origin.y: %.2f ",i,EEPROMFeld.origin.y);
          rEEPROMbalken* newEEPROMbalken=[[rEEPROMbalken alloc]initWithFrame:EEPROMFeld];
          [newEEPROMbalken BalkenAnlegen];
@@ -1157,7 +1155,7 @@ if (Webserver_busy)
          NSTextField* KontrollzeilenFeld_a = [[NSTextField alloc]initWithFrame:Kontrollzeilenrect];
          [KontrollzeilenFeld_a setEditable:NO];
          [EEPROMPlan addSubview:KontrollzeilenFeld_a];
-         [KontrollzeilenFeld_a setStringValue:[[oldStundenplanDic objectForKey:@"stundenplanarray"]componentsJoinedByString:@"\t"]];
+         [KontrollzeilenFeld_a setStringValue:[oldStundenplanDic objectForKey:@"stundenplanarray"]];
       }
    } // if count
    else

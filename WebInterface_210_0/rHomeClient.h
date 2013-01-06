@@ -16,7 +16,7 @@ static NSString *HTMLDocumentType = @"HTML document";
 enum webtaskflag{idle, eepromread, eepromwrite,eepromreadwoche,eepromwritewoche}webtaskflag;
 
 
-@interface rHomeClient : NSObject 
+@interface rHomeClient : NSObject <NSURLConnectionDelegate>
 {
 	NSString* HomeCentralURL;
   // NSString* LocalHomeCentralURL;
@@ -38,7 +38,6 @@ enum webtaskflag{idle, eepromread, eepromwrite,eepromreadwoche,eepromwritewoche}
 	int							WebTask;          // Auszuführende Aktion aufgrund von Web-Requests
    int							Webserver_busy;
    int							WriteWoche_busy;
-
 
 }
 

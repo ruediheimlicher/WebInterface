@@ -689,67 +689,103 @@ return mark;
 		StdFeld.size.height-=6;
 		StdFeld.origin.y+=4;
 		//NSLog(@"i: %d Eckex: %2.2f h: %2.2f b: %2.2f",i,StdFeld.origin.x,StdFeld.size.height,StdFeld.size.width);
-		[NSBezierPath fillRect:StdFeld];
+      //		[NSBezierPath fillRect:StdFeld];
 		
 		NSRect StdFeldL=StdFeld;
 		StdFeldL.size.width/=2;
 		StdFeldL.size.width-=2;
 		StdFeldL.origin.x+=1;
 		
-		[[NSColor blueColor]set];
-		[NSBezierPath strokeRect:StdFeldL];
-
+      
 		NSRect StdFeldR=StdFeld;
 		StdFeldR.origin.x+=(StdFeld.size.width/2)+1;
 		StdFeldR.size.width/=2;
 		StdFeldR.size.width-=2;
 		
-		[[NSColor blueColor]set];
-		[NSBezierPath strokeRect:StdFeldR];
+		NSRect StdFeldG=StdFeld;
+		StdFeldG.origin = StdFeldL.origin;
+		StdFeldG.size.width-=2;
 		
-		
-		NSRect StdFeldU=StdFeld;
-		StdFeldU.size.height=5;
-		StdFeldU.origin.y-=8;
-		[[NSColor grayColor]set];
-//		[NSBezierPath fillRect:StdFeldU];
-		
+
+      if (TagbalkenTyp == 0)
+      {
+         [[NSColor blueColor]set];
+         [NSBezierPath strokeRect:StdFeldL];
+         
+         
+         [[NSColor blueColor]set];
+         [NSBezierPath strokeRect:StdFeldR];
+      }
+      else if (TagbalkenTyp == 1)
+      {
+         [[NSColor blueColor]set];
+         [NSBezierPath strokeRect:StdFeldG];
+         
+      }
+      
 		int ON=[[[StundenArray objectAtIndex:i]objectForKey:@"code"]intValue];
-		switch (ON)
-		{
-			case 0://ganze Stunde OFF
-				[[NSColor whiteColor]set];
-				[NSBezierPath fillRect:StdFeldL];
-				[NSBezierPath fillRect:StdFeldR];
-				
-				break;
-			case 2://erste halbe Stunde ON
-				[[NSColor redColor]set];
-				[NSBezierPath fillRect:StdFeldL];
-				[[NSColor whiteColor]set];
-				[NSBezierPath fillRect:StdFeldR];
-				
-				
-				break;
-			case 1://zweite halbe Stunde ON
-				[[NSColor redColor]set];
-				[NSBezierPath fillRect:StdFeldR];
-				[[NSColor whiteColor]set];
-				[NSBezierPath fillRect:StdFeldL];
-				
-				break;
-			case 3://ganze Stunde ON
-				[[NSColor redColor]set];
-				[NSBezierPath fillRect:StdFeldL];
-				[NSBezierPath fillRect:StdFeldR];
-				
-				break;
-		}
+      if (TagbalkenTyp == 0)
+      {
+         
+         switch (ON)
+         {
+               
+            case 0://ganze Stunde OFF
+               [[NSColor whiteColor]set];
+               [NSBezierPath fillRect:StdFeldL];
+               [NSBezierPath fillRect:StdFeldR];
+               
+               break;
+            case 2://erste halbe Stunde ON
+               [[NSColor redColor]set];
+               [NSBezierPath fillRect:StdFeldL];
+               [[NSColor whiteColor]set];
+               [NSBezierPath fillRect:StdFeldR];
+               
+               
+               break;
+            case 1://zweite halbe Stunde ON
+               [[NSColor redColor]set];
+               [NSBezierPath fillRect:StdFeldR];
+               [[NSColor whiteColor]set];
+               [NSBezierPath fillRect:StdFeldL];
+               
+               break;
+            case 3://ganze Stunde ON
+               [[NSColor redColor]set];
+               [NSBezierPath fillRect:StdFeldL];
+               [NSBezierPath fillRect:StdFeldR];
+               break;
+               
+         } 
+      }// typ 0
+      else if (TagbalkenTyp == 1)
+      {
+         switch (ON)
+         {
+               
+            case 0://ganze Stunde OFF
+               [[NSColor whiteColor]set];
+               [NSBezierPath fillRect:StdFeldG];
+               
+               
+               break;
+            case 2://ganze Stunde ON
+            case 1:
+            case 3:
+               [[NSColor redColor]set];
+               [NSBezierPath fillRect:StdFeldG];
+                
+               
+               break;
+         } // typ 1
+      }
 	}//for i
 }
 
 - (void)mouseDown:(NSEvent *)theEvent
 {
+   return;
 	//	NSLog(@"Tagplanbalken mouseDown: event: x: %2.2f y: %2.2f",[theEvent locationInWindow].x,[theEvent locationInWindow].y);
 	//NSLog(@"mouseDown: Nullpunkt: x: %2.2f y: %2.2f",Nullpunkt.x,Nullpunkt.y);
 	//NSLog(@"Bounds: x: %2.2f y: %2.2f h: %2.2f w: %2.2f ",[self frame].origin.x,[self frame].origin.y,[self frame].size.height,[self frame].size.width);

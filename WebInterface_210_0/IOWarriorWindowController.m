@@ -2525,7 +2525,7 @@ return;
 
 - (void) FensterSchliessenAktion:(NSNotification*)note
 {
-	NSLog(@"IOW FensterSchliessenAktion: %@ titel: %@ anz Window: %d",[[note object]description],[[note object]title],[[NSApp windows]count]);
+	//NSLog(@"IOW FensterSchliessenAktion: %@ titel: %@ anz Window: %d",[[note object]description],[[note object]title],[[NSApp windows]count]);
 	//[[NSNotificationCenter defaultCenter] removeObserver:self];
 /*
 	[nc removeObserver:self

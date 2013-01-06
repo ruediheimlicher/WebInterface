@@ -1051,14 +1051,128 @@ if (Webserver_busy)
 		return;
 		
 	}
-	
-	
-	
-	
-	
+	}
+
+
+- (IBAction)reportUpdateTaste:(id)sender
+{
+   //NSLog(@"reportUpdateTaste");
+   NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+   [NotificationDic setObject:[NSNumber numberWithInt:1] forKey:@"update"];
+   
+   NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
+   [nc postNotificationName:@"EEPROMUpdate" object:self userInfo:NotificationDic];
+
+
 }
-	
-	
+
+- (void)HomeDataUpdateAktion:(NSNotification*)note
+{
+   NSLog(@"HomeDataUpdateAktion note: %@",[[note userInfo]description]);
+   //[EEPROMPop setDocumentView:EEPROMPlan];
+      //[EEPROMTextfeld setStringValue:[[[[note userInfo]objectForKey:@"updatearray"]objectAtIndex:0]objectForKey:@"zeile"]];
+      
+      
+  
+      
+      
+      //EEPROMFeld.origin.y = positionY;
+      NSArray* Wochentag=[NSArray arrayWithObjects:@"MO",@"DI",@"MI",@"DO",@"FR",@"SA",@"SO",nil];
+      NSRect EEPROMFeld=[EEPROMPlan frame];
+      NSRect Kontrollzeilenrect = EEPROMFeld;
+      Kontrollzeilenrect.size.height = 20;
+      Kontrollzeilenrect.origin.y = EEPROMFeld.size.height - 40;
+   
+   if ([[[note userInfo]objectForKey:@"updatearray"]count])
+   {
+      
+      
+      //NSLog(@"EEPROMFeld origin.y: %.2f height %2.2F",EEPROMFeld.origin.y,EEPROMFeld.size.height);
+       
+      NSArray* UpdateArray = [[note userInfo]objectForKey:@"updatearray"];
+      float offsetY = 120;
+      NSRect newPlanrect =[EEPROMPlan frame];
+      newPlanrect.size.height = [UpdateArray count] *2* offsetY;
+      [EEPROMPlan setFrame:newPlanrect];
+      float docH=[[EEPROMScroller documentView] frame].size.height;
+		float contH=[EEPROMScroller frame].size.height;
+		NSPoint   newRaumScrollOrigin=NSMakePoint(0.0,docH-contH);
+
+      float positionY = [EEPROMPlan frame].size.height - 40;
+      //EEPROMFeld.origin.x +=10;
+      EEPROMFeld.size.height = 30;
+      EEPROMFeld.size.width -= 40;
+      
+      //Kontrollzeilenrect.origin.y = [EEPROMPlan frame].size.height - 62;
+      Kontrollzeilenrect.size.width -= 40;
+      for (int i=0;i< [UpdateArray count]; i++)
+      {
+         NSArray* tempZeilenArray = [[[UpdateArray objectAtIndex:i]objectForKey:@"zeile"]componentsSeparatedByString:@"\t"];
+         //NSLog(@"tempZeilenArray: %@",[tempZeilenArray description]);
+         int raumnummer = [[tempZeilenArray objectAtIndex:1]intValue];
+         int objektnummer = [[tempZeilenArray objectAtIndex:2]intValue];
+         int wochentag = [[tempZeilenArray objectAtIndex:3]intValue];
+         //int hbyte = [[tempZeilenArray objectAtIndex:4]intValue];
+         //int lbyte = [[tempZeilenArray objectAtIndex:5]intValue];
+         int typ = [[tempZeilenArray objectAtIndex:14]intValue];
+         //int permanent = [[tempZeilenArray objectAtIndex:15]intValue];
+         //int zeitstempel = [[tempZeilenArray objectAtIndex:16]intValue];
+         NSArray* tempObjektnamenArray = [[[[[HomebusArray objectAtIndex:raumnummer]objectForKey:@"wochenplanarray"]objectAtIndex:0]objectForKey:@"tagplanarray"]valueForKey:@"objektname"];
+         //NSLog(@"tempObjektnamenArray: %@",[tempObjektnamenArray description] );
+         
+         EEPROMFeld.origin.y = positionY - i*offsetY;
+         Kontrollzeilenrect.origin.y = EEPROMFeld.origin.y - 22;
+         
+         //NSLog(@"EEPROMFeld i: %d origin.y: %.2f ",i,EEPROMFeld.origin.y);
+         rEEPROMbalken* newEEPROMbalken=[[rEEPROMbalken alloc]initWithFrame:EEPROMFeld];
+         [newEEPROMbalken BalkenAnlegen];
+         [EEPROMPlan addSubview:newEEPROMbalken];
+         [newEEPROMbalken setRaumString:[RaumPop itemTitleAtIndex:raumnummer]];
+         [newEEPROMbalken setObjektString:[NSString stringWithFormat:@"%@_n",[tempObjektnamenArray objectAtIndex:objektnummer]]];
+         [newEEPROMbalken setWochentagString:[Wochentag objectAtIndex:wochentag]];
+         [newEEPROMbalken setTagbalkenTyp:typ];
+         [newEEPROMbalken setStundenArrayAusByteArray:[[[[note userInfo]objectForKey:@"updatearray"]objectAtIndex:i]objectForKey:@"data"]];
+         
+         // Kontrollzeile neu
+         NSTextField* KontrollzeilenFeld_n = [[NSTextField alloc]initWithFrame:Kontrollzeilenrect];
+         [KontrollzeilenFeld_n setEditable:NO];
+         [EEPROMPlan addSubview:KontrollzeilenFeld_n];
+         [KontrollzeilenFeld_n setStringValue:[[[[[note userInfo]objectForKey:@"updatearray"]objectAtIndex:i]objectForKey:@"data"]componentsJoinedByString:@"\t"]];
+         
+         EEPROMFeld.origin.y -=55;
+         Kontrollzeilenrect.origin.y = EEPROMFeld.origin.y - 22;
+         
+         NSDictionary* oldStundenplanDic = [self StundenplanDicVonRaum:raumnummer vonObjekt:objektnummer vonWochentag:wochentag];
+         
+         rEEPROMbalken* oldEEPROMbalken=[[rEEPROMbalken alloc]initWithFrame:EEPROMFeld];
+         [oldEEPROMbalken BalkenAnlegen];
+         [EEPROMPlan addSubview:oldEEPROMbalken];
+         [oldEEPROMbalken setRaumString:[RaumPop itemTitleAtIndex:raumnummer]];
+         [oldEEPROMbalken setObjektString:[NSString stringWithFormat:@"%@_a",[tempObjektnamenArray objectAtIndex:objektnummer]]];
+         [oldEEPROMbalken setWochentagString:[Wochentag objectAtIndex:wochentag]];
+         [oldEEPROMbalken setTagbalkenTyp:typ];
+         [oldEEPROMbalken setStundenArray:[oldStundenplanDic objectForKey:@"stundenplanarray"]forKey:@"code"];
+         
+         // Kontrollzeile alt
+         NSTextField* KontrollzeilenFeld_a = [[NSTextField alloc]initWithFrame:Kontrollzeilenrect];
+         [KontrollzeilenFeld_a setEditable:NO];
+         [EEPROMPlan addSubview:KontrollzeilenFeld_a];
+         [KontrollzeilenFeld_a setStringValue:[[oldStundenplanDic objectForKey:@"stundenplanarray"]componentsJoinedByString:@"\t"]];
+      }
+   } // if count
+   else
+   {
+      NSLog(@"Keine Daten fuer Update");
+      NSTextField* KontrollzeilenFeld = [[NSTextField alloc]initWithFrame:Kontrollzeilenrect];
+      [KontrollzeilenFeld setEditable:NO];
+      [EEPROMPlan addSubview:KontrollzeilenFeld];
+      [KontrollzeilenFeld setStringValue:@"Keine Daten für Update"];
+
+   }
+}
+
+
+
 - (void)setHomeCentralI2C:(int)derStatus
 {
 

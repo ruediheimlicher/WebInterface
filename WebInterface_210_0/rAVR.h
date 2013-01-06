@@ -65,6 +65,7 @@ IBOutlet	id		AdresseFeld;
 IBOutlet	id		ReadFeld;
 IBOutlet	id		WriteFeld;
 IBOutlet	id		WriteWocheFeld;
+IBOutlet	id		UpdateTaste;
    
 IBOutlet	id		Waitrad;
 
@@ -118,7 +119,11 @@ rWEBDATA_DS*				WEBDATA_DS;
 IBOutlet	 id            maxSimAnzahlFeld;
 NSTimer*                simTimer;
 NSTimer*                TimeoutTimer;
-   
+
+   IBOutlet id             EEPROMUpdatefeld;
+   IBOutlet NSView*        EEPROMPlan;
+   IBOutlet id             EEPROMScroller;
+   IBOutlet id             EEPROMTextfeld;
 
 
 }
@@ -137,6 +142,7 @@ NSTimer*                TimeoutTimer;
 - (void)setObjektTitelVonRaum:(int)raumnummer;
 - (void)setSegmentLabel:(NSString*)derTitel forSegment:(int)dasSegment forRaum:(int)derRaum;
 - (void)setStundenplanArray:(NSArray*)derStundenplanArray forObjekt:(int)dasObjekt forRaum:(int)derRaum;
+- (NSDictionary*)StundenplanDicVonRaum:(int)raum vonObjekt:(int)objekt vonWochentag:(int)wochentag;
 - (int)saveHomeDic;
 - (NSArray*)HomebusArray;
 - (IBAction)setTWIState:(id)sender;
@@ -167,6 +173,7 @@ NSTimer*                TimeoutTimer;
 - (IBAction)reportObjektPop:(id)sender;
 
 
+
 - (BOOL)windowShouldClose:(id)sender;
 @end
 
@@ -179,4 +186,5 @@ NSTimer*                TimeoutTimer;
 - (void)setTWITaste:(int)status;
 - (int)TWIStatus;
 - (IBAction)reportLocalTaste:(id)sender;
+- (IBAction)reportUpdateTaste:(id)sender;
 @end

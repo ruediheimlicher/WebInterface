@@ -27,7 +27,6 @@ enum downloadflag{downloadpause, heute, last, datum}downloadFlag;
  	self = [super initWithWindowNibName:@"HomeData"];
 	//NSLog(@"HomeData init");
 	DownloadPfad = [[NSHomeDirectory() stringByAppendingPathComponent:@"Documents/TempDaten"]retain];
-	//ServerPfad =@"http://www.schuleduernten.ch/blatt/cgi-bin";
 	ServerPfad =@"http://www.ruediheimlicher.ch/Data";
 	[ServerPfad retain];
 	DataSuffix=[[NSString string]retain];
@@ -48,6 +47,12 @@ enum downloadflag{downloadpause, heute, last, datum}downloadFlag;
 			 selector:@selector(DatenVonHeuteAktion:)
 				  name:@"datenvonheute"
 				object:nil];
+	
+	[nc addObserver:self
+			 selector:@selector(EEPROMUpdateAktion:)
+				  name:@"EEPROMUpdate"
+				object:nil];
+	
 	
 	return self;
 }
@@ -840,7 +845,7 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 		NSData* lastTimeData=[ NSURLConnection sendSynchronousRequest:lastTimeRequest returningResponse: nil error: &syncErr ];
 		if (syncErr)
 		{
-			NSLog(@"LastData syncErr: :%@",syncErr);
+			NSLog(@"LastSolarData syncErr: :%@",syncErr);
 			//ERROR: 503
 		}
 		NSString *lastTimeString = [[NSString alloc] initWithBytes: [lastTimeData bytes] length:[lastTimeData length] encoding: NSUTF8StringEncoding];
@@ -863,7 +868,7 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 		}
 		
 		NSString* lastDatumString = [lastTimeString substringFromIndex:7];
-		//NSLog(@"lastDatumString: %@",lastDatumString);
+		//NSLog(@"lastSolarDatumString: %@",lastDatumString);
 		[NotificationDic setObject:lastDatumString forKey:@"lasttimestring"];
 		
 		[lastTimeString release];
@@ -994,6 +999,74 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 }
 
 #pragma mark Statistik
+
+
+- (void)EEPROMUpdateAktion:(NSNotification*)note
+{
+   //NSLog(@"EEPROMUpdateAktion");
+   DataSuffix=@"eepromdaten/eepromupdatedaten.txt";
+   NSURL* URLPfad=[NSURL URLWithString:[ServerPfad stringByAppendingPathComponent:DataSuffix]];
+   NSLog(@"EEPROMUpdateAktion URLPfad: %@",URLPfad);
+   NSError* err;
+   NSString* UpdateString = [NSString stringWithContentsOfURL:URLPfad encoding:NSUTF8StringEncoding error:&err];
+   
+   NSLog(@"EEPROMUpdateAktion UpdateString: %@",UpdateString);
+   NSArray* UpdateArrayRaw = [UpdateString componentsSeparatedByString:@"\n"];
+   //NSLog(@"EEPROMUpdateAktion UpdateArrayRaw: %@",[UpdateArrayRaw description]);
+   NSMutableIndexSet* ZeilenIndex = [NSMutableIndexSet indexSet];
+   NSMutableArray* UpdateArray = [[NSMutableArray alloc]initWithCapacity:0];
+
+   for (int i=[UpdateArrayRaw count];i>0;i--)
+   {
+      NSString* tempZeile = [UpdateArrayRaw objectAtIndex:i-1];
+      if ([tempZeile length] && ![ZeilenIndex containsIndex:[[[tempZeile componentsSeparatedByString:@"\t"]objectAtIndex:0]intValue]])
+      {
+         //$dataadresse\t$raum\t$objekt\t$wochentag\t$hbyte\t$lbyte\t$data                         \t$typ\t$permanent\t$zeitstempel\n";
+         // 115          2       0        3           04       24    204	0	3	0	2	2	255	255	0        3           130103
+         
+         NSArray* tempZeilenArray = [tempZeile componentsSeparatedByString:@"\t"];
+         int zeilennummer = [[tempZeilenArray objectAtIndex:0]intValue];
+         [ZeilenIndex addIndex:zeilennummer];
+         NSArray* tempDataArray = [tempZeilenArray subarrayWithRange:NSMakeRange(6, 8)];
+         NSDictionary* tempDataDic = [NSDictionary dictionaryWithObjectsAndKeys:
+                                      [NSNumber numberWithInt:zeilennummer],@"zeilennummer",
+                                      tempZeile,@"zeile",
+                                      tempDataArray,@"data",
+                                      /*
+                                      [NSNumber numberWithInt:[[tempZeilenArray objectAtIndex:1]intValue]],@"raum",
+                                      [NSNumber numberWithInt:[[tempZeilenArray objectAtIndex:2]intValue]],@"objekt",
+                                      [NSNumber numberWithInt:[[tempZeilenArray objectAtIndex:3]intValue]],@"wochentag",
+                                      [NSNumber numberWithInt:[[tempZeilenArray objectAtIndex:4]intValue]],@"hbyte",
+                                      [NSNumber numberWithInt:[[tempZeilenArray objectAtIndex:5]intValue]],@"lbyte",
+                                      [NSNumber numberWithInt:[[tempZeilenArray objectAtIndex:14]intValue]],@"typ",
+                                      [NSNumber numberWithInt:[[tempZeilenArray objectAtIndex:15]intValue]],@"perm",
+                                      [NSNumber numberWithInt:[[tempZeilenArray objectAtIndex:16]intValue]],@"zeitstempel",
+                                       */
+                                      nil];
+         
+         [UpdateArray addObject:tempDataDic];
+      }
+   }
+   //NSLog(@"EEPROMUpdateAktion UpdateArray: %@",[UpdateArray description]);
+  // NSLog(@"EEPROMUpdateAktion UpdateArray vor: %@",[[UpdateArray valueForKey:@"zeilennummer" ] description]);
+  
+   NSComparator sortByNumber = ^(id dict1, id dict2)
+   {
+      NSNumber* n1 = [dict1 objectForKey:@"zeilennummer"];
+                      NSNumber* n2 = [dict2 objectForKey:@"zeilennummer"];
+                                      return (NSComparisonResult)[n1 compare:n2];
+                                      };
+   [UpdateArray sortUsingComparator: sortByNumber];
+   
+   NSLog(@"EEPROMUpdateAktion UpdateArray nach: %@",[[UpdateArray valueForKey:@"zeilennummer" ] description]);
+   NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+	[NotificationDic setObject:UpdateArray forKey:@"updatearray"];
+	NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
+	[nc postNotificationName:@"HomeDataUpdate" object:self userInfo:NotificationDic];
+
+}
+
+
 - (NSArray*)BrennerStatistikVonJahr:(int)dasJahr Monat:(int)derMonat
 {
 	NSMutableArray* BrennerdatenArray=[[NSMutableArray alloc]initWithCapacity:0];
@@ -1095,7 +1168,8 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 			//NSLog(@"DataVonHeute: String korrigieren");
 			DataString=[DataString substringFromIndex:1];
 		}
-		//NSLog(@"TemperaturStatistikVon DataString: \n%@",DataString);
+
+      //NSLog(@"TemperaturStatistikVon DataString: \n%@",DataString);
 		NSArray* tempZeilenArray = [DataString componentsSeparatedByString:@"\n"];
 		//NSLog(@"TemperaturStatistikVon tempZeilenArray: \n%@",[tempZeilenArray description]);
 		NSEnumerator* ZeilenEnum =[tempZeilenArray objectEnumerator];

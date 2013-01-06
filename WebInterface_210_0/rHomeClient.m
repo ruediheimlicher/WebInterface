@@ -33,7 +33,7 @@ unsigned char h2int(char c)
 }
 
 
-@implementation rHomeClient
+@implementation rHomeClient 
 
 - (int)HexStringZuInt:(NSString*) derHexString
 {
@@ -1083,9 +1083,9 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 {
 	//NSLog(@"loadURL: %@",URL);
 	NSURLRequest *HCRequest = [ [NSURLRequest alloc] initWithURL: URL cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:1.0];
-//	[[NSURLCache sharedURLCache] removeAllCachedResponses];
+	[[NSURLCache sharedURLCache] removeAllCachedResponses];
 //	NSLog(@"Cache mem: %d",[[NSURLCache sharedURLCache]memoryCapacity]);
-//	[[NSURLCache sharedURLCache] removeCachedResponseForRequest:HCRequest];
+//	[[NSURLCache sharedURLCache] removeCachedResponseForRequest:HCRequest]; // > crash
 //	NSLog(@"loadURL:Vor loadRequest");
 	if (HCRequest)
 	{
@@ -1120,6 +1120,11 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 	[_source release];
 	_source = webContent;
 }
+
+- (NSCachedURLResponse *)connection:(NSURLConnection *)connection willCacheResponse:(NSCachedURLResponse *)cachedResponse {
+   return nil;
+}
+
 
 - (void)webView:(WebView *)sender didFinishLoadForFrame:(WebFrame *)frame
 {

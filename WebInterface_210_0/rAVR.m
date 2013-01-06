@@ -142,6 +142,11 @@ return returnInt;
 			 selector:@selector(StatusWaitAktion:)
 				  name:@"StatusWait"
 				object:nil];
+   
+ 	[nc addObserver:self
+			 selector:@selector(HomeDataUpdateAktion:)
+				  name:@"HomeDataUpdate"
+				object:nil];
 
  
 	
@@ -362,11 +367,16 @@ return returnInt;
 			}break;
 				
 				
+				
 		}//switch
 		
 		//	Dic mit den Daten von Raum:
 		//	NSMutableDictionary* RaumDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
-		int	AnzRaumObjekte= [self anzAktivForRaum:raum];
+		int	AnzRaumObjekte=0;
+     
+      {
+      AnzRaumObjekte= [self anzAktivForRaum:raum];
+      }
 		//NSLog(@"Raum AnzObjekte: %d",AnzRaumObjekte);
 		//		NSArray* RaumAktivArray=[self aktivObjekteArrayForRaum:raum];
 		
@@ -383,8 +393,9 @@ return returnInt;
 		//	NSLog(@"RaumTagplanAbstand: %d	",RaumTagplanAbstand);
 		
 		NSScrollView* RaumScroller = [[NSScrollView alloc] initWithFrame:RaumScrollerFeld];
-		
-		
+      
+      
+
 		//	RaumView mit rWochenplan anlegen
 		rWochenplan* RaumView = [[rWochenplan alloc]initWithFrame:RaumViewFeld];
 		
@@ -407,6 +418,9 @@ return returnInt;
 		NSRect RaumRect=[RaumView frame];
 		RaumRect.size.height=[[tempGeometrieArray lastObject]floatValue];
 		//[RaumView setFrame:RaumRect];
+      
+      
+      
 		[RaumScroller setDocumentView:RaumView];
 		[RaumScroller setBorderType:NSLineBorder];
 		[RaumScroller setHasVerticalScroller:YES];
@@ -428,7 +442,7 @@ return returnInt;
 		NSPoint   newRaumScrollOrigin=NSMakePoint(0.0,docH-contH);
 		//NSLog(@"raum: %d docH: %2.2f contH: %2.2f diff: %2.2f",raum, docH,contH,docH-contH);
 		//newRaumScrollOrigin.y -=(RaumTagplanAbstand+RaumKopfbereich);
-		int aktuellerWochentag=4;
+		int aktuellerWochentag=0;
 		
 		if (aktuellerWochentag)
 		{
@@ -472,6 +486,59 @@ return returnInt;
 		
 	}//	End for Raum
 	
+   // 
+   RaumViewFeld=[EEPROMUpdatefeld frame];
+   int AnzRaumObjekte=2;
+   int RaumTitelfeldhoehe=10;
+   int RaumTagbalkenhoehe=32;				//Hoehe eines Tagbalkens
+   int RaumTagplanhoehe=AnzRaumObjekte*(RaumTagbalkenhoehe)+RaumTitelfeldhoehe;	// Hoehe des Tagplanfeldes mit den (AnzRaumobjekte) Tagbalken
+   int RaumTagplanAbstand=RaumTagplanhoehe+10;	// Abstand zwischen den Ecken der Tagplanfelder
+   int RaumKopfbereich=50;	// Bereich ueber dem Scroller
+   
+   NSRect RaumScrollerFeld=RaumViewFeld;	//	Feld fuer Scroller, in dem der RaumView liegt
+   NSScrollView* RaumScroller = [[NSScrollView alloc] initWithFrame:RaumScrollerFeld];
+
+   
+   // Feld im Scroller ist abhaengig von Anzahl Tagbalken
+   RaumViewFeld.size.height=2*(RaumTagplanAbstand +RaumKopfbereich); // Hoehe vergroessern
+   //	NSLog(@"RaumTagplanAbstand: %d	",RaumTagplanAbstand);
+   
+   //	EEPROMPlan  anlegen
+   EEPROMPlan = [[NSView alloc]initWithFrame:RaumViewFeld];
+   [RaumScroller setDocumentView:EEPROMPlan];
+   
+   NSRect EEPROMUpdateFeld=[EEPROMPlan frame];
+	NSLog(@"EEPROMUpdateFeld y: %2.2f  height %2.2F",EEPROMUpdateFeld.origin.y,EEPROMUpdateFeld.size.height);
+	//EEPROMUpdateFeld +=40;
+   EEPROMUpdateFeld.origin.y = EEPROMUpdateFeld.size.height-40;
+	EEPROMUpdateFeld.size.height = 30;
+	EEPROMUpdateFeld.size.width -= 30;
+	EEPROMbalken=[[rEEPROMbalken alloc]initWithFrame:EEPROMUpdateFeld];
+	[EEPROMbalken BalkenAnlegen];
+   // [EEPROMbalken setNeedsDisplay:YES];
+//   [EEPROMPlan addSubview:EEPROMbalken];
+
+
+   //[RaumScroller setDocumentView:EEPROMPlan];
+   [RaumScroller setBorderType:NSLineBorder];
+   [RaumScroller setHasVerticalScroller:YES];
+   [RaumScroller setHasHorizontalScroller:NO];
+   [RaumScroller setLineScroll:10.0];
+   [RaumScroller setAutohidesScrollers:NO];
+   
+   float docH=[[RaumScroller documentView] frame].size.height;
+   float contH=[[RaumScroller contentView] frame].size.height;
+   NSPoint   newRaumScrollOrigin=NSMakePoint(0.0,docH-contH);
+   NSLog(@"raum: %d docH: %2.2f contH: %2.2f diff: %2.2f",raum, docH,contH,docH-contH);
+   //newRaumScrollOrigin.y -=(RaumTagplanAbstand+RaumKopfbereich);
+   [[RaumScroller documentView] scrollPoint:newRaumScrollOrigin];
+
+
+   
+   //[RaumTabView addSubview:RaumScroller];
+   
+   [[[WochenplanTab tabViewItemAtIndex:8]view]addSubview:RaumScroller];
+
 	
 	
 	//EEPROM-Feld oben im Fenster einrichten
@@ -523,7 +590,7 @@ return returnInt;
 	
 	
 	
-	//NSLog(@"tempByteArray: %@",[tempByteArray description]);
+	NSLog(@"EEPROMbalken tempByteArray: %@",[tempByteArray description]);
 	//	[EEPROMbalken setStundenArrayAusByteArray:tempByteArray];
 	[EEPROMbalken setStundenArrayAusByteArray:tempByteArray];
 	
@@ -560,7 +627,9 @@ return returnInt;
 	EEPROMTabelle=[[NSMutableArray alloc]initWithCapacity:0];
 	[EEPROMTable setDelegate:AVR_DS];
 	[EEPROMTable setDataSource:AVR_DS];
-	
+	[EEPROMPlan addSubview:EEPROMTextfeld];
+   [EEPROMScroller addSubview:EEPROMPlan];
+   
 	NSString* logString=[NSString string];
 	logString=[logString stringByAppendingString:[NSString stringWithFormat:@"%02X ",0x02]];
 	logString=[logString stringByAppendingString:[NSString stringWithFormat:@"%02X ",161]];
@@ -1164,10 +1233,26 @@ return returnInt;
 
 }
 
+- (NSDictionary*)StundenplanDicVonRaum:(int)raum vonObjekt:(int)objekt vonWochentag:(int)wochentag
+{
+	NSDictionary* tempStundenplanArray=[[[[[HomebusArray objectAtIndex:raum]objectForKey:@"wochenplanarray"]objectAtIndex:wochentag]objectForKey:@"tagplanarray"]objectAtIndex:objekt];
+   
+	
+   NSLog(@"tempStundenplanArray: %@",[tempStundenplanArray description]);
+ 		//NSMutableDictionary* tempTagplanDic=[[[[tempWochenplanArray objectAtIndex:raum]objectAtIndex:wochentag]objectForKey:@"tagplanarray"]objectAtIndex:objekt];
+      
+	
+   return tempStundenplanArray;
+}
+
+
+
+
 - (void)writeTagplan:(id)sender
 {
 
 }
+
 
 
 
@@ -2623,6 +2708,9 @@ n=0;
 	
 	return sendErr;
 }
+
+
+
 
 - (IBAction)readAVRSlave:(id)sender
 {

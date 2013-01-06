@@ -1068,36 +1068,99 @@ if (Webserver_busy)
 
 - (void)HomeDataUpdateAktion:(NSNotification*)note
 {
-   NSLog(@"HomeDataUpdateAktion note: %@",[[note userInfo]description]);
+   //NSLog(@"HomeDataUpdateAktion note: %@",[[note userInfo]description]);
    //[EEPROMPop setDocumentView:EEPROMPlan];
-      //[EEPROMTextfeld setStringValue:[[[[note userInfo]objectForKey:@"updatearray"]objectAtIndex:0]objectForKey:@"zeile"]];
-      
-      
-  
-      
-      
-      //EEPROMFeld.origin.y = positionY;
-      NSArray* Wochentag=[NSArray arrayWithObjects:@"MO",@"DI",@"MI",@"DO",@"FR",@"SA",@"SO",nil];
-      NSRect EEPROMFeld=[EEPROMPlan frame];
-      NSRect Kontrollzeilenrect = EEPROMFeld;
-      Kontrollzeilenrect.size.height = 20;
-      Kontrollzeilenrect.origin.y = EEPROMFeld.size.height - 40;
+   //[EEPROMTextfeld setStringValue:[[[[note userInfo]objectForKey:@"updatearray"]objectAtIndex:0]objectForKey:@"zeile"]];
+   
+   // **
+   NSRect RaumViewFeld=[EEPROMUpdatefeld frame];
+   int AnzRaumObjekte=2;
+   int RaumTitelfeldhoehe=10;
+   int RaumTagbalkenhoehe=32;				//Hoehe eines Tagbalkens
+   int RaumTagplanhoehe=AnzRaumObjekte*(RaumTagbalkenhoehe)+RaumTitelfeldhoehe;	// Hoehe des Tagplanfeldes mit den (AnzRaumobjekte) Tagbalken
+   int RaumTagplanAbstand=RaumTagplanhoehe+10;	// Abstand zwischen den Ecken der Tagplanfelder
+   int RaumKopfbereich=0;	// Bereich ueber dem Scroller
+   
+   NSRect RaumScrollerFeld=RaumViewFeld;	//	Feld fuer Scroller, in dem der RaumView liegt
+   NSScrollView* RaumScroller = [[NSScrollView alloc] initWithFrame:RaumScrollerFeld];
+   
+   
+   // Feld im Scroller ist abhaengig von Anzahl Tagbalken
+   RaumViewFeld.size.height=2*(RaumTagplanAbstand +RaumKopfbereich); // Hoehe vergroessern
+   //	NSLog(@"RaumTagplanAbstand: %d	",RaumTagplanAbstand);
+   
+   //	EEPROMPlan  anlegen
+   EEPROMPlan = [[NSView alloc]initWithFrame:RaumViewFeld];
+   [RaumScroller setDocumentView:EEPROMPlan];
+   
+   NSRect EEPROMUpdateFeld=[EEPROMPlan frame];
+	//NSLog(@"EEPROMUpdateFeld y: %2.2f  height %2.2F",EEPROMUpdateFeld.origin.y,EEPROMUpdateFeld.size.height);
+	//EEPROMUpdateFeld +=40;
+   EEPROMUpdateFeld.origin.y = EEPROMUpdateFeld.size.height-40;
+	EEPROMUpdateFeld.size.height = 30;
+	EEPROMUpdateFeld.size.width -= 30;
+	EEPROMbalken=[[rEEPROMbalken alloc]initWithFrame:EEPROMUpdateFeld];
+	[EEPROMbalken BalkenAnlegen];
+   // [EEPROMbalken setNeedsDisplay:YES];
+   //   [EEPROMPlan addSubview:EEPROMbalken];
+   
+   
+   //[RaumScroller setDocumentView:EEPROMPlan];
+   [RaumScroller setBorderType:NSLineBorder];
+   [RaumScroller setHasVerticalScroller:YES];
+   [RaumScroller setHasHorizontalScroller:NO];
+   [RaumScroller setLineScroll:10.0];
+   [RaumScroller setAutohidesScrollers:NO];
+   
+   float docH=[[RaumScroller documentView] frame].size.height;
+   float contH=[[RaumScroller contentView] frame].size.height;
+   NSPoint   newRaumScrollOrigin=NSMakePoint(0.0,docH-contH);
+   //NSLog(@"raum: %d docH: %2.2f contH: %2.2f diff: %2.2f",raum, docH,contH,docH-contH);
+   //newRaumScrollOrigin.y -=(RaumTagplanAbstand+RaumKopfbereich);
+   //  [[RaumScroller documentView] scrollPoint:newRaumScrollOrigin];
+   
+   
+   
+   //[RaumTabView addSubview:RaumScroller];
+   
+   [[[WochenplanTab tabViewItemAtIndex:8]view]addSubview:RaumScroller];
+   
+   
+   
+   // **
+   //EEPROMFeld.origin.y = positionY;
+   NSArray* Wochentag=[NSArray arrayWithObjects:@"MO",@"DI",@"MI",@"DO",@"FR",@"SA",@"SO",nil];
+   NSRect EEPROMFeld=[EEPROMPlan frame];
+   NSRect Kontrollzeilenrect = EEPROMFeld;
+   Kontrollzeilenrect.size.height = 20;
+   Kontrollzeilenrect.origin.y = EEPROMFeld.size.height - 40;
    
    if ([[[note userInfo]objectForKey:@"updatearray"]count])
    {
       
       
       //NSLog(@"EEPROMFeld origin.y: %.2f height %2.2F",EEPROMFeld.origin.y,EEPROMFeld.size.height);
-       
+      
       NSArray* UpdateArray = [[note userInfo]objectForKey:@"updatearray"];
-      float offsetY = 120;
+      // keys: data: ByteArray   zeile: ByteString zeilennummer: zeilennummer auf eepromdaten.txt
+      float offsetY = 140;
       NSRect newPlanrect =[EEPROMPlan frame];
-      newPlanrect.size.height = [UpdateArray count] *2* offsetY;
+      newPlanrect.size.height = [UpdateArray count] *1.0* offsetY;
       [EEPROMPlan setFrame:newPlanrect];
-      float docH=[[EEPROMScroller documentView] frame].size.height;
-		float contH=[EEPROMScroller frame].size.height;
+      //[EEPROMScroller setDocumentView:EEPROMPlan];
+      
+      //NSRect newScrollerrect =[[EEPROMScroller documentView] frame];
+      //newScrollerrect.size.height = [UpdateArray count] *2* offsetY;
+      //[[EEPROMScroller documentView] setFrame:newPlanrect];
+      
+      float docH=[[RaumScroller documentView] frame].size.height;
+      float contH=[[RaumScroller contentView] frame].size.height;
+      //float offset = [[RaumScroller documentView] frame].origin.y;
+      
+      //NSLog(@"RaumScroller documentView orig.y: %.2f contH: %.2f docH: %.2f",[[RaumScroller documentView] frame].origin.y,contH, docH);
 		NSPoint   newRaumScrollOrigin=NSMakePoint(0.0,docH-contH);
-
+      [[RaumScroller documentView] scrollPoint:newRaumScrollOrigin];
+      
       float positionY = [EEPROMPlan frame].size.height - 40;
       //EEPROMFeld.origin.x +=10;
       EEPROMFeld.size.height = 30.0;
@@ -1122,7 +1185,7 @@ if (Webserver_busy)
          
          EEPROMFeld.origin.y = positionY - i*offsetY;
          Kontrollzeilenrect.origin.y = EEPROMFeld.origin.y - 22;
-
+         
          //NSLog(@"EEPROMFeld i: %d origin.y: %.2f ",i,EEPROMFeld.origin.y);
          rEEPROMbalken* newEEPROMbalken=[[rEEPROMbalken alloc]initWithFrame:EEPROMFeld];
          [newEEPROMbalken BalkenAnlegen];
@@ -1131,15 +1194,24 @@ if (Webserver_busy)
          [newEEPROMbalken setObjektString:[NSString stringWithFormat:@"%@_n",[tempObjektnamenArray objectAtIndex:objektnummer]]];
          [newEEPROMbalken setWochentagString:[Wochentag objectAtIndex:wochentag]];
          [newEEPROMbalken setTagbalkenTyp:typ];
-         [newEEPROMbalken setStundenArrayAusByteArray:[[[[note userInfo]objectForKey:@"updatearray"]objectAtIndex:i]objectForKey:@"data"]];
+         int zeilennummer = [[[UpdateArray objectAtIndex:i]objectForKey:@"zeilennummer"]intValue];
+         //NSLog(@"i: %d, zeilennummer: %d",i,zeilennummer);
+         NSArray* dataArray = [[[[note userInfo]objectForKey:@"updatearray"]objectAtIndex:i]objectForKey:@"data"];
+         //NSLog(@"dataArray: %@",[dataArray description]);
+         
+          
+         NSArray* dezstundenarray = [self StundenArrayAusDezArray:dataArray];
+         //NSLog(@"dezstundenarray: %@",[dezstundenarray description]);
+         
+         [newEEPROMbalken setStundenArray:dezstundenarray forKey:@"code"];
          
          // Kontrollzeile neu
          NSTextField* KontrollzeilenFeld_n = [[NSTextField alloc]initWithFrame:Kontrollzeilenrect];
          [KontrollzeilenFeld_n setEditable:NO];
          [EEPROMPlan addSubview:KontrollzeilenFeld_n];
          NSArray* KontrollByteArray = [[[[note userInfo]objectForKey:@"updatearray"]objectAtIndex:i]objectForKey:@"data"];
-         NSLog(@"i: %d KontrollByteArray: %@",i,[KontrollByteArray description]  );
-         [KontrollzeilenFeld_n setStringValue:[[self StundenArrayAusByteArray:KontrollByteArray ] componentsJoinedByString:@"  "]];
+         //NSLog(@"i: %d KontrollByteArray: %@",i,[KontrollByteArray description]  );
+         [KontrollzeilenFeld_n setStringValue:[[self StundenArrayAusDezArray:KontrollByteArray ] componentsJoinedByString:@"  "]];
          
          EEPROMFeld.origin.y -=55;
          Kontrollzeilenrect.origin.y = EEPROMFeld.origin.y - 22;
@@ -1159,6 +1231,7 @@ if (Webserver_busy)
          NSTextField* KontrollzeilenFeld_a = [[NSTextField alloc]initWithFrame:Kontrollzeilenrect];
          [KontrollzeilenFeld_a setEditable:NO];
          [EEPROMPlan addSubview:KontrollzeilenFeld_a];
+         
          [KontrollzeilenFeld_a setStringValue:[[oldStundenplanDic objectForKey:@"stundenplanarray"]componentsJoinedByString:@"  "]];
       }
    } // if count
@@ -1169,7 +1242,7 @@ if (Webserver_busy)
       [KontrollzeilenFeld setEditable:NO];
       [EEPROMPlan addSubview:KontrollzeilenFeld];
       [KontrollzeilenFeld setStringValue:@"Keine Daten für Update"];
-
+      
    }
 }
 

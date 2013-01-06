@@ -1006,11 +1006,11 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
    //NSLog(@"EEPROMUpdateAktion");
    DataSuffix=@"eepromdaten/eepromupdatedaten.txt";
    NSURL* URLPfad=[NSURL URLWithString:[ServerPfad stringByAppendingPathComponent:DataSuffix]];
-   NSLog(@"EEPROMUpdateAktion URLPfad: %@",URLPfad);
+   //NSLog(@"EEPROMUpdateAktion URLPfad: %@",URLPfad);
    NSError* err;
    NSString* UpdateString = [NSString stringWithContentsOfURL:URLPfad encoding:NSUTF8StringEncoding error:&err];
    
-   NSLog(@"EEPROMUpdateAktion UpdateString: %@",UpdateString);
+   //NSLog(@"EEPROMUpdateAktion UpdateString: %@",UpdateString);
    NSArray* UpdateArrayRaw = [UpdateString componentsSeparatedByString:@"\n"];
    //NSLog(@"EEPROMUpdateAktion UpdateArrayRaw: %@",[UpdateArrayRaw description]);
    NSMutableIndexSet* ZeilenIndex = [NSMutableIndexSet indexSet];
@@ -1058,7 +1058,8 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
                                       };
    [UpdateArray sortUsingComparator: sortByNumber];
    
-   NSLog(@"EEPROMUpdateAktion UpdateArray nach: %@",[[UpdateArray valueForKey:@"zeilennummer" ] description]);
+   //NSLog(@"EEPROMUpdateAktion UpdateArray nach sort  (data): %@",[[UpdateArray valueForKey:@"data" ] description]);
+   
    NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
 	[NotificationDic setObject:UpdateArray forKey:@"updatearray"];
 	NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];

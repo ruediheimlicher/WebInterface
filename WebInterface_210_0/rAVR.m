@@ -104,6 +104,38 @@ return returnInt;
 }
 
 
+- (NSArray*)StundenArrayAusDezArray:(NSArray*)derStundenByteArray
+{
+	//NSLog(@"StundenArrayAusDezArray derStundenByteArray: %@",[derStundenByteArray description]);
+	
+	NSMutableArray* tempStundenArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+	//NSArray* bitnummerArray=[NSArray arrayWithObjects: @"null", @"eins",@"zwei",@"drei",@"vier",@"fuenf",nil];
+   
+	int i,k;
+	for (i=0;i<6;i++)
+	{
+		
+		//NSString* tempString=[[derStundenByteArray objectAtIndex:0]objectForKey:[bitnummerArray objectAtIndex:i]];
+		NSString* tempString=[derStundenByteArray objectAtIndex:i];
+		unsigned int tempByte=[[derStundenByteArray objectAtIndex:i]intValue];
+		//NSLog(@"i: %d tempString: %@ tempByte hex: %2.2X dez: %d dezString: %@",i,tempString,tempByte,tempByte,dezString);
+		NSMutableArray* tempStundenCodeArray=[[[NSMutableArray alloc]initWithCapacity:4]autorelease];
+		for (k=0;k<4;k++)
+		{
+			uint8_t tempStundencode = tempByte & 0x03;
+			//NSLog(@"k: %d tempStundencode hex: %2.2X dez: %d",k,tempStundencode,tempStundencode);
+			[tempStundenCodeArray insertObject:[NSNumber numberWithInt:tempStundencode]atIndex:0];
+			//[tempStundenArray addObject:[NSNumber numberWithInt:tempStundencode]];
+			tempByte>>=2;
+         
+		}
+		[tempStundenArray addObjectsFromArray:tempStundenCodeArray];
+	}//for i
+	//NSLog(@"setStundenArrayAusByteArray tempStundenArray: %@",[tempStundenArray description]);
+	return tempStundenArray ;
+}
+
+
 - (id) init
 {
     //if ((self = [super init]))
@@ -443,7 +475,7 @@ return returnInt;
 		NSArray* tempWochenplanArray = [[HomebusArray objectAtIndex:raum]objectForKey:@"wochenplanarray"];
 		if (raum==0)
 		{
-			//NSLog(@"AVR awake: Wochenplanarray Raum: %@",[[[HomebusArray objectAtIndex:raum]objectForKey:@"wochenplanarray"]description]);
+//			NSLog(@"AVR awake: Wochenplanarray Raum: %@",[[[HomebusArray objectAtIndex:raum]objectForKey:@"wochenplanarray"]description]);
 			
 		}
 		
@@ -451,11 +483,11 @@ return returnInt;
 		
 		//NSLog(@"tempGeometrieArray: %@",[tempGeometrieArray description]);
 		// View-Hierarchie
-		float y=[RaumView frame].origin.y;
-		float h=[RaumView frame].size.height;
+		//float y=[RaumView frame].origin.y;
+		//float h=[RaumView frame].size.height;
 		//NSLog(@"y: %2.2f h: %2.2f",y,h);
-		NSRect RaumRect=[RaumView frame];
-		RaumRect.size.height=[[tempGeometrieArray lastObject]floatValue];
+		//NSRect RaumRect=[RaumView frame];
+		//RaumRect.size.height=[[tempGeometrieArray lastObject]floatValue];
 		//[RaumView setFrame:RaumRect];
       
       
@@ -482,11 +514,7 @@ return returnInt;
 		//NSLog(@"raum: %d docH: %2.2f contH: %2.2f diff: %2.2f",raum, docH,contH,docH-contH);
 		//newRaumScrollOrigin.y -=(RaumTagplanAbstand+RaumKopfbereich);
 		int aktuellerWochentag=0;
-		
-		if (aktuellerWochentag)
-		{
-         //       newRaumScrollOrigin.y -=	[[GeometrieArray objectAtIndex:aktuellerWochentag-1]floatValue];
-		}
+      
 		[[RaumScroller documentView] scrollPoint:newRaumScrollOrigin];
 		
 		
@@ -525,7 +553,8 @@ return returnInt;
 		
 	}//	End for Raum
 	
-   // 
+   //
+   /*
    RaumViewFeld=[EEPROMUpdatefeld frame];
    int AnzRaumObjekte=2;
    int RaumTitelfeldhoehe=10;
@@ -578,7 +607,7 @@ return returnInt;
    
    [[[WochenplanTab tabViewItemAtIndex:8]view]addSubview:RaumScroller];
 
-	
+*/
 	
 	//EEPROM-Feld oben im Fenster einrichten
 	raum=9;
@@ -629,7 +658,7 @@ return returnInt;
 	
 	
 	
-	NSLog(@"EEPROMbalken tempByteArray: %@",[tempByteArray description]);
+	//NSLog(@"EEPROMbalken tempByteArray: %@",[tempByteArray description]);
 	//	[EEPROMbalken setStundenArrayAusByteArray:tempByteArray];
 	[EEPROMbalken setStundenArrayAusByteArray:tempByteArray];
 	
@@ -1277,7 +1306,7 @@ return returnInt;
 	NSDictionary* tempStundenplanArray=[[[[[HomebusArray objectAtIndex:raum]objectForKey:@"wochenplanarray"]objectAtIndex:wochentag]objectForKey:@"tagplanarray"]objectAtIndex:objekt];
    
 	
-   NSLog(@"tempStundenplanArray: %@",[tempStundenplanArray description]);
+   //NSLog(@"tempStundenplanArray: %@",[tempStundenplanArray description]);
  		//NSMutableDictionary* tempTagplanDic=[[[[tempWochenplanArray objectAtIndex:raum]objectAtIndex:wochentag]objectForKey:@"tagplanarray"]objectAtIndex:objekt];
       
 	

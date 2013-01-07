@@ -21,7 +21,7 @@ int					Raum;
 int					Objekt;
 int					Typ;
 int					Wochentag;
-int				tag;
+int               tag;
 int					mark;
 int					Hoehe, Breite, Balkenbreite;
 int					Elementbreite,  Elementhoehe, RandL, RandR, RandU;
@@ -47,6 +47,9 @@ NSMutableArray*				lastONArray;
 - (void)setObjekt:(NSNumber*)dieObjektNumber;
 - (void)setRaum:(int)derRaum;
 - (void)setWochentag:(int)derWochentag;
+- (int)Wochentag;
+- (int)Raum;
+
 - (void)setAktiv:(int)derStatus;
 - (void)setTagbalkenTyp:(int)derTyp;
 - (void)AllTasteAktion:(id)sender;

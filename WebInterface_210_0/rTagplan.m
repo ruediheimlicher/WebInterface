@@ -91,7 +91,7 @@
 - (void)setTagplan:(NSArray*)derStundenArray forTag:(int)derTag // nicht verwendet
 {
 	//NSLog(@"Tagplan setTagplan");
-	//NSLog(@"Tagplan setTagplan Tag: %d StundenArray: %@",derTag, [[StundenArray valueForKey:@"code"]description]);
+	NSLog(@"Tagplan setTagplan Tag: %d StundenArray: %@",derTag, [[StundenArray valueForKey:@"code"]description]);
 	if (StundenArray==NULL)
 	{
 	StundenArray=[[NSMutableArray alloc]initWithCapacity:0];

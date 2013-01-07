@@ -145,7 +145,12 @@ NSTimer*                TimeoutTimer;
 - (void)setObjektTitelVonRaum:(int)raumnummer;
 - (void)setSegmentLabel:(NSString*)derTitel forSegment:(int)dasSegment forRaum:(int)derRaum;
 - (void)setStundenplanArray:(NSArray*)derStundenplanArray forObjekt:(int)dasObjekt forRaum:(int)derRaum;
+- (void)setStundenplanArray:(NSArray*)derStundenplanArray forWochentag:(int)derWochentag forObjekt:(int)dasObjekt forRaum:(int)derRaum;
+
 - (NSDictionary*)StundenplanDicVonRaum:(int)raum vonObjekt:(int)objekt vonWochentag:(int)wochentag;
+- (NSScrollView*)ScrollerVonRaum:(int)raum;
+
+
 - (int)saveHomeDic;
 - (NSArray*)HomebusArray;
 - (IBAction)setTWIState:(id)sender;
@@ -191,4 +196,6 @@ NSTimer*                TimeoutTimer;
 - (IBAction)reportLocalTaste:(id)sender;
 - (IBAction)reportUpdateTaste:(id)sender;
 - (IBAction)reportFixTaste:(id)sender;
+- (void)updateEEPROMMitDicArray:(NSArray*)updateArry;
+- (void)updatePListMitDicArray:(NSArray*)updateArry;
 @end

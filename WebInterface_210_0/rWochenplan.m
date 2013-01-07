@@ -78,8 +78,6 @@
 	anzAktiv=[aktivObjektArray count];
 	//NSLog(@"setWochenplanForRaum  anzAktiv: %d",anzAktiv);
 	
-	//Array mit Arrays der aktiven Stundenplanarrays der einzelnen Wochentage
-	//NSMutableArray* aktivTagplanArray=[[NSMutableArray alloc]initWithCapacity:0]; 
 	
 	//Array mit Arrays der aktiven Stundenplanarrays (aktivTagplanArray) der Wochentage
 	NSMutableArray* aktivTagplanDicArray=[[NSMutableArray alloc]initWithCapacity:0]; 	

@@ -839,9 +839,29 @@ if (Webserver_busy)
 	}
 }
 
-
-- (void)UpdatePlan:(NSDictionary*)updateDic
+- (void)updatePListMitDicArray:(NSArray*)updateArray
 {
+   
+   // PList anpassen
+   for (int i=0;i<[updateArray count];i++)
+   {
+      
+      int raum = [[[updateArray objectAtIndex:i]objectForKey:@"raum"]intValue];
+      int objekt = [[[updateArray objectAtIndex:i]objectForKey:@"objekt"]intValue];
+      int wochentag = [[[updateArray objectAtIndex:i]objectForKey:@"wochentag"]intValue];
+      NSArray* stundenplanarray  = [[updateArray objectAtIndex:i]objectForKey:@"stundenplanarray"];
+      [self setStundenplanArray:stundenplanarray forWochentag:wochentag forObjekt:objekt forRaum:raum];
+      NSArray* subViews = [[[self ScrollerVonRaum:raum]documentView ]subviews];
+      NSLog(@"i: %d subViews: %@",i,[subViews description]);
+   }
+      
+//   [self saveHomeDic];
+
+}
+
+- (void)updateEEPROMMitDicArray:(NSArray*)updateArray
+{
+   NSLog(@"UpdatePlan dic: %@",[updateArray description]);
    if (Webserver_busy)
 	{
       NSLog(@"UpdatePlan Webserver_busy beep");
@@ -849,7 +869,7 @@ if (Webserver_busy)
 		return;
 	}
    
-	if ([TWIStatusTaste state])
+/*	if ([TWIStatusTaste state])
 	{
 		//NSLog(@"TWIStatustaste: %d",[TWIStatusTaste state]);
 		NSAlert *Warnung = [[[NSAlert alloc] init] autorelease];
@@ -865,25 +885,24 @@ if (Webserver_busy)
 		[Warnung setInformativeText:InformationString];
 		[Warnung setAlertStyle:NSWarningAlertStyle];
 		
-		int antwort=[Warnung runModal];
-		
+		//int antwort=[Warnung runModal];
+		return;
 	}
-	/*
-    else if (Webserver_busy)
-    {
-    NSBeep();
-    }
-    */
+
 	else
+ */
 	{
+      
 		Webserver_busy=1;// Wird jeweils in der Finishloadaktion zurueckgestellt, sobald das writeok angekommen ist.
 		[AdresseFeld setStringValue:@""];
 		[WriteFeld setStringValue:@""];
 		[ReadFeld setStringValue:@""];
 		[WriteWocheFeld setStringValue:@""];
 		[StatusFeld setStringValue:@"Adresse wird übertragen"];
+      
+      
 		/*
-		//NSLog(@"UpdatePlan dic: %@",[[note userInfo]description]);
+		
 		int Raum=[[[note userInfo]objectForKey:@"raum"]intValue];
       
 		int Wochentag=[[[note userInfo]objectForKey:@"wochentag"]intValue];
@@ -938,6 +957,12 @@ if (Webserver_busy)
       }
 		*/
 	}
+}
+
+- (void)EEPROMUpdateTimerFunktion:(NSTimer*)timer
+{
+   
+   
 }
 
 - (void)WriteModifierAktion:(NSNotification*)note
@@ -1300,6 +1325,7 @@ if (Webserver_busy)
                                                  numberOfColumns:1];
          [UpdateRadio setCellSize:NSMakeSize(20, distanzBalken + offsetKontrollzeile)];
          [UpdateRadio setTag:1000+zeilennummer];
+         [UpdateRadio selectCellAtRow:1 column:0];
          
          
          //NSLog(@"EEPROMFeld i: %d origin.y: %.2f ",i,EEPROMFeld.origin.y);
@@ -1342,7 +1368,7 @@ if (Webserver_busy)
          [EEPROMPlan addSubview:oldEEPROMbalken];
          [oldEEPROMbalken setRaumString:[RaumPop itemTitleAtIndex:raumnummer]];
          [oldEEPROMbalken setRaum:raumnummer];
-         [oldEEPROMbalken setObjektString:[NSString stringWithFormat:@"%@_EE",[tempObjektnamenArray objectAtIndex:objektnummer]]];
+         [oldEEPROMbalken setObjektString:[NSString stringWithFormat:@"%@_Anzeige",[tempObjektnamenArray objectAtIndex:objektnummer]]];
          [oldEEPROMbalken setWochentagString:[Wochentag objectAtIndex:wochentag]];
          [oldEEPROMbalken setWochentag:wochentag];
 
@@ -1412,8 +1438,10 @@ if (Webserver_busy)
    NSArray* viewListe = [EEPROMPlan subviews];
    int newbalkenoffset=1000;
    int oldbalkenoffset=3000;
-   
+   NSMutableArray* PListFixArray = [[NSMutableArray alloc]initWithCapacity:0];
+    NSMutableArray* HomeServerFixArray = [[NSMutableArray alloc]initWithCapacity:0];
    for (int i=0;i<[viewListe count];i++)
+      for (int i=0;i<3;i++)
    {
       //NSLog(@"i: %d view: %@ tag: %d",i,[[viewListe objectAtIndex:i]description], [[viewListe objectAtIndex:i]tag]);
       int tempTag = [[viewListe objectAtIndex:i]tag];
@@ -1422,7 +1450,7 @@ if (Webserver_busy)
          if ([EEPROMPlan  viewWithTag:tempTag]) // Radio
          {
             int wahl = [[EEPROMPlan  viewWithTag:tempTag]selectedRow];
-            NSLog(@"i: %d radiotag: %d wahl: %d",i,tempTag,wahl);
+            //NSLog(@"i: %d radiotag: %d wahl: %d",i,tempTag,wahl);
             switch (wahl)
             {
                case 0:
@@ -1430,12 +1458,19 @@ if (Webserver_busy)
                   if ([EEPROMPlan  viewWithTag:tempTag+newbalkenoffset])
                   {
                      rEEPROMbalken* tempBalken = (rEEPROMbalken* )[EEPROMPlan  viewWithTag:tempTag+newbalkenoffset];
-                     NSLog(@"Balken neu raum: %d StundenArray: %@",[tempBalken Raum], [[[tempBalken StundenArray]valueForKey:@"code"] description]);
+                     //NSLog(@"Balken neu raum: %d StundenArray: %@",[tempBalken Raum], [[[tempBalken StundenArray]valueForKey:@"code"] description]);
                      NSMutableDictionary* UpdateDic = [[NSMutableDictionary alloc]initWithCapacity:0];
-                     [UpdateDic setObject:[[tempBalken StundenArray]valueForKey:@"code"] forKey:@"wochenplan"];
+                     [UpdateDic setObject:[[tempBalken StundenArray]valueForKey:@"code"] forKey:@"stundenplanarray"];
                      [UpdateDic setObject:[NSNumber numberWithInt:[tempBalken Raum]] forKey:@"raum"];
-                     [UpdateDic setObject:[[tempBalken StundenArray]valueForKey:@"code"] forKey:@"wochenplan"];
-                  
+                     [UpdateDic setObject:[NSNumber numberWithInt:[tempBalken Wochentag]] forKey:@"wochentag"];
+                     [UpdateDic setObject:[NSNumber numberWithInt:[tempBalken Objekt]] forKey:@"objekt"];
+                     
+                     if ([PListFixArray count]<2)
+                     {
+                        //NSLog(@"EEPROM UpdateDic: %@",[UpdateDic description]);
+                     }
+                     [PListFixArray addObject:UpdateDic];
+                     
                   
                   }
                }break;
@@ -1444,8 +1479,20 @@ if (Webserver_busy)
                   if ([EEPROMPlan  viewWithTag:tempTag+oldbalkenoffset])
                   {
                      rEEPROMbalken* tempBalken = (rEEPROMbalken* )[EEPROMPlan  viewWithTag:tempTag+oldbalkenoffset];
-                     NSLog(@"Balken alt raum: %d StundenArray: %@",[tempBalken Raum], [[[tempBalken StundenArray]valueForKey:@"code"] description]);
-                   
+                     //NSLog(@"Balken alt raum: %d StundenArray: %@",[tempBalken Raum], [[[tempBalken StundenArray]valueForKey:@"code"] description]);
+                     NSMutableDictionary* UpdateDic = [[NSMutableDictionary alloc]initWithCapacity:0];
+                     [UpdateDic setObject:[[tempBalken StundenArray]valueForKey:@"code"] forKey:@"stundenarray"];
+                     [UpdateDic setObject:[NSNumber numberWithInt:[tempBalken Raum]] forKey:@"raum"];
+                     [UpdateDic setObject:[NSNumber numberWithInt:[tempBalken Wochentag]] forKey:@"wochentag"];
+                     [UpdateDic setObject:[NSNumber numberWithInt:[tempBalken Objekt]] forKey:@"objekt"];
+                     if ([HomeServerFixArray count]<2)
+                     {
+
+                        //NSLog(@"HomeServer UpdateDic: %@",[UpdateDic description]);
+                     }
+                     
+                     
+                     [HomeServerFixArray addObject:UpdateDic];
                      
                   }
 
@@ -1453,6 +1500,8 @@ if (Webserver_busy)
                   
                   
             }// switch
+            
+            
             /*
             if ([EEPROMPlan  viewWithTag:tempTag+newbalkenoffset])
             {
@@ -1468,7 +1517,11 @@ if (Webserver_busy)
             }
              */
          }
-
+   }
+//[self updateEEPROMMitDicArray:PListFixArray];
+   if ([PListFixArray count])
+   {
+      [self updatePListMitDicArray:PListFixArray];
    }
 }
 

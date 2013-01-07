@@ -394,7 +394,6 @@ return returnInt;
 	int raum;
 	NSRect RaumViewFeld = NSMakeRect(0,0,0,0);
 	for (raum=0;raum<8;raum++)
-		
 	{
 		switch (raum)
 		{
@@ -480,17 +479,6 @@ return returnInt;
 		}
 		
 		NSArray*  tempGeometrieArray=[RaumView setWochenplanForRaum:raum mitWochenplanArray:[[HomebusArray objectAtIndex:raum]objectForKey:@"wochenplanarray"]];
-		
-		//NSLog(@"tempGeometrieArray: %@",[tempGeometrieArray description]);
-		// View-Hierarchie
-		//float y=[RaumView frame].origin.y;
-		//float h=[RaumView frame].size.height;
-		//NSLog(@"y: %2.2f h: %2.2f",y,h);
-		//NSRect RaumRect=[RaumView frame];
-		//RaumRect.size.height=[[tempGeometrieArray lastObject]floatValue];
-		//[RaumView setFrame:RaumRect];
-      
-      
       
 		[RaumScroller setDocumentView:RaumView];
 		[RaumScroller setBorderType:NSLineBorder];
@@ -499,14 +487,8 @@ return returnInt;
 		[RaumScroller setLineScroll:10.0];
 		[RaumScroller setAutohidesScrollers:NO];
 		
-		//[RaumTabView addSubview:RaumScroller];
 		
 		[[[WochenplanTab tabViewItemAtIndex:raum]view]addSubview:RaumScroller];
-		
-		
-		//NSPoint   newRaumScrollOrigin=NSMakePoint(0.0,NSMaxY([[RaumScroller documentView] frame])
-		//										  -NSHeight([[RaumScroller contentView] bounds]));
-		
 		
 		float docH=[[RaumScroller documentView] frame].size.height;
 		float contH=[[RaumScroller contentView] frame].size.height;
@@ -547,9 +529,16 @@ return returnInt;
 		
 		
 		[[[WochenplanTab tabViewItemAtIndex:raum]view]addSubview:ObjektSeg];
-		
-		
-		
+      
+      
+      //NSLog(@"** raum: %d raum subviews: %@",raum,[[[[WochenplanTab tabViewItemAtIndex:raum]view]subviews]description]);
+      for (int i=0;i<[[[[WochenplanTab tabViewItemAtIndex:raum]view]subviews]count];i++)
+      {
+         if ([[[[[WochenplanTab tabViewItemAtIndex:raum]view]subviews]objectAtIndex:i] isKindOfClass:[NSScrollView class]])
+         {
+            NSLog(@"ScrollViewgefunden: i: %d Scroller: %@",i,[[[[[WochenplanTab tabViewItemAtIndex:raum]view]subviews]objectAtIndex:i ]description]);
+         }
+      }
 		
 	}//	End for Raum
 	
@@ -561,61 +550,6 @@ return returnInt;
    EEPROMScroller = [[NSScrollView alloc] initWithFrame:EEPROMScrollerFeld];
    [[[WochenplanTab tabViewItemAtIndex:8]view]addSubview:EEPROMScroller];
    }
-
-   /*
-   RaumViewFeld=[EEPROMUpdatefeld frame];
-   int AnzRaumObjekte=2;
-   int RaumTitelfeldhoehe=10;
-   int RaumTagbalkenhoehe=32;				//Hoehe eines Tagbalkens
-   int RaumTagplanhoehe=AnzRaumObjekte*(RaumTagbalkenhoehe)+RaumTitelfeldhoehe;	// Hoehe des Tagplanfeldes mit den (AnzRaumobjekte) Tagbalken
-   int RaumTagplanAbstand=RaumTagplanhoehe+10;	// Abstand zwischen den Ecken der Tagplanfelder
-   int RaumKopfbereich=50;	// Bereich ueber dem Scroller
-   
-   NSRect RaumScrollerFeld=RaumViewFeld;	//	Feld fuer Scroller, in dem der RaumView liegt
-   NSScrollView* RaumScroller = [[NSScrollView alloc] initWithFrame:RaumScrollerFeld];
-
-   
-   // Feld im Scroller ist abhaengig von Anzahl Tagbalken
-   RaumViewFeld.size.height=2*(RaumTagplanAbstand +RaumKopfbereich); // Hoehe vergroessern
-   //	NSLog(@"RaumTagplanAbstand: %d	",RaumTagplanAbstand);
-   
-   //	EEPROMPlan  anlegen
-   EEPROMPlan = [[NSView alloc]initWithFrame:RaumViewFeld];
-   [RaumScroller setDocumentView:EEPROMPlan];
-   
-   NSRect EEPROMUpdateFeld=[EEPROMPlan frame];
-	NSLog(@"EEPROMUpdateFeld y: %2.2f  height %2.2F",EEPROMUpdateFeld.origin.y,EEPROMUpdateFeld.size.height);
-	//EEPROMUpdateFeld +=40;
-   EEPROMUpdateFeld.origin.y = EEPROMUpdateFeld.size.height-40;
-	EEPROMUpdateFeld.size.height = 30;
-	EEPROMUpdateFeld.size.width -= 30;
-	EEPROMbalken=[[rEEPROMbalken alloc]initWithFrame:EEPROMUpdateFeld];
-	[EEPROMbalken BalkenAnlegen];
-   // [EEPROMbalken setNeedsDisplay:YES];
-//   [EEPROMPlan addSubview:EEPROMbalken];
-
-
-   //[RaumScroller setDocumentView:EEPROMPlan];
-   [RaumScroller setBorderType:NSLineBorder];
-   [RaumScroller setHasVerticalScroller:YES];
-   [RaumScroller setHasHorizontalScroller:NO];
-   [RaumScroller setLineScroll:10.0];
-   [RaumScroller setAutohidesScrollers:NO];
-   
-   float docH=[[RaumScroller documentView] frame].size.height;
-   float contH=[[RaumScroller contentView] frame].size.height;
-   NSPoint   newRaumScrollOrigin=NSMakePoint(0.0,docH-contH);
-   NSLog(@"raum: %d docH: %2.2f contH: %2.2f diff: %2.2f",raum, docH,contH,docH-contH);
-   //newRaumScrollOrigin.y -=(RaumTagplanAbstand+RaumKopfbereich);
-   [[RaumScroller documentView] scrollPoint:newRaumScrollOrigin];
-
-
-   
-   //[RaumTabView addSubview:RaumScroller];
-   
-   [[[WochenplanTab tabViewItemAtIndex:8]view]addSubview:RaumScroller];
-
-*/
 	
 	//EEPROM-Feld oben im Fenster einrichten
 	raum=9;
@@ -1323,6 +1257,22 @@ return returnInt;
 
 }
 
+
+- (void)setStundenplanArray:(NSArray*)derStundenplanArray forWochentag:(int)derWochentag forObjekt:(int)dasObjekt forRaum:(int)derRaum
+{
+   //NSLog(@"setStundenplanArray raum: %d objekt: %d wochentag: %d stundenplan: %@",derRaum,dasObjekt, derWochentag,[derStundenplanArray description]);
+   
+	NSMutableArray* tempWochenplanArray=[HomebusArray valueForKey:@"wochenplanarray"];
+	
+   NSMutableDictionary* tempTagplanDic=[[[[tempWochenplanArray objectAtIndex:derRaum]objectAtIndex:derWochentag]objectForKey:@"tagplanarray"]objectAtIndex:dasObjekt];
+ 
+   //NSLog(@"setStundenplanArray  stundenplanarray vor %@",[[tempTagplanDic objectForKey:@"stundenplanarray" ]description]);
+   [tempTagplanDic setObject:derStundenplanArray forKey:@"stundenplanarray"];
+   //NSLog(@"setStundenplanArray  stundenplanarray nach %@",[[tempTagplanDic objectForKey:@"stundenplanarray" ]description]);
+   
+   
+}
+
 - (NSDictionary*)StundenplanDicVonRaum:(int)raum vonObjekt:(int)objekt vonWochentag:(int)wochentag
 {
 	NSDictionary* tempStundenplanArray=[[[[[HomebusArray objectAtIndex:raum]objectForKey:@"wochenplanarray"]objectAtIndex:wochentag]objectForKey:@"tagplanarray"]objectAtIndex:objekt];
@@ -1338,9 +1288,22 @@ return returnInt;
 
 
 
-- (void)writeTagplan:(id)sender
+- (NSScrollView*)ScrollerVonRaum:(int)raum
 {
-
+   NSScrollView* scroller;
+   //NSLog(@"** raum: %d raum subviews: %@",raum,[[[[WochenplanTab tabViewItemAtIndex:raum]view]subviews]description]);
+   int scrollerindex = -1;
+   for (int i=0;i<[[[[WochenplanTab tabViewItemAtIndex:raum]view]subviews]count];i++)
+   {
+      if ([[[[[WochenplanTab tabViewItemAtIndex:raum]view]subviews]objectAtIndex:i] isKindOfClass:[NSScrollView class]])
+      {
+         //NSLog(@"ScrollerVonRaum ScrollViewgefunden: i: %d Scroller: %@",i,[[[[[WochenplanTab tabViewItemAtIndex:raum]view]subviews]objectAtIndex:i ]description]);
+         scrollerindex = i;
+         //scroller = [[[[WochenplanTab tabViewItemAtIndex:raum]view]subviews]objectAtIndex:i ];
+      }
+   }
+   
+   return [[[[WochenplanTab tabViewItemAtIndex:raum]view]subviews]objectAtIndex:scrollerindex ];
 }
 
 
@@ -1350,7 +1313,7 @@ return returnInt;
 
    // Mausklicks im Tagplanbalken speichern
 {
-	//NSLog(@"AVR TagplancodeAktion: %@",[[note userInfo]description]);
+	NSLog(@"AVR TagplancodeAktion: %@",[[note userInfo]description]);
 	//NSLog(@"AVR TagplancodeAktion: %@",[[note userInfo]objectForKey:@"quelle"]);
 	NSArray* Raumnamen=[[NSArray arrayWithObjects:@"Heizung", @"Werkstatt", @"WoZi", @"Buero", @"Labor", @"OG1", @"OG2", @"Estrich", nil]retain];
 	NSArray* Wochentage=[NSArray arrayWithObjects:@"MO",@"DI",@"MI",@"DO",@"FR",@"SA",@"SO",nil];
@@ -1539,7 +1502,7 @@ return returnInt;
 			[sender setLabel:[LabelTextFeld stringValue] forSegment:clickedSegment];
 			if ([HomebusArray objectAtIndex:Raum])
 			{
-				//NSLog(@"TagplancodeAktion Raumdic");
+				NSLog(@"TagplancodeAktion Raumdic");
 				if ([[HomebusArray objectAtIndex:Raum]objectForKey:@"wochenplanarray"])
 				{
 					NSView* tempTabview=[[WochenplanTab tabViewItemAtIndex:Raum]view];
@@ -1863,7 +1826,7 @@ return returnInt;
 
 - (int)saveHomeDic
 {
-	//NSLog(@"saveHomeDic: HomePListPfad: %@",HomePListPfad);
+	NSLog(@"saveHomeDic: HomePListPfad: %@",HomePListPfad);
 	//NSLog(@"saveHomeDic: HomeDic: %@",[HomeDic description]);
 	BOOL writeOK=[HomeDic writeToFile:HomePListPfad atomically:YES];
 	//NSLog(@"saveHomeDic: writeOK: %d",writeOK);

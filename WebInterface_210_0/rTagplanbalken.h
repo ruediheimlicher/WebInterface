@@ -17,10 +17,10 @@ NSString*			RaumString;
 NSString*			ObjektString;
 NSString*			WochentagString;
 
-int					Raum;
-int					Objekt;
-int					Typ;
-int					Wochentag;
+int					raum;
+int					objekt;
+int					typ;
+int					wochentag;
 int               tag;
 int					mark;
 int					Hoehe, Breite, Balkenbreite;
@@ -47,8 +47,14 @@ NSMutableArray*				lastONArray;
 - (void)setObjekt:(NSNumber*)dieObjektNumber;
 - (void)setRaum:(int)derRaum;
 - (void)setWochentag:(int)derWochentag;
-- (int)Wochentag;
-- (int)Raum;
+
+- (int)wochentag;
+- (int)raum;
+- (int)objekt;
+
+
+
+
 
 - (void)setAktiv:(int)derStatus;
 - (void)setTagbalkenTyp:(int)derTyp;

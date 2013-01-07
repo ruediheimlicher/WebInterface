@@ -12,6 +12,7 @@
 @interface rTagplan : NSView 
 {
 NSString*                  Wochentag;
+   
 int                        wochentag;
 int                        raum;
 int                        Hoehe, Breite, Balkenbreite;
@@ -34,6 +35,7 @@ rTaste* heuteTaste;
 - (void)setRaum:(int)derRaum;
 - (int)Wochentag;
 - (int)Raum;
+- (NSString*)Titel;
 - (void)setTagplan:(NSArray*)derStundenArray forTag:(int)derTag;
 - (void)setNullpunkt:(NSPoint)derPunkt;
 - (void)setStundenArray:(NSArray*)derStundenArray forKey:(NSString*)derKey;

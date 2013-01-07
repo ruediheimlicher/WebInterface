@@ -82,9 +82,15 @@
 {
    return wochentag;
 }
+
 - (int)Raum
 {
    return raum;
+}
+
+- (NSString*)Titel
+{
+   return Wochentag;
 }
 
 

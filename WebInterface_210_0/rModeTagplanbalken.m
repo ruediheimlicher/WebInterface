@@ -15,7 +15,7 @@
     self = [super initWithFrame:frame];
     if (self) 
 	{
-        Typ=1;
+        typ=1;
 		RandL=60;
 		RandR=20;
 		RandU=2;
@@ -98,7 +98,7 @@ return self;
 	[[WriteTaste cell]setShowsStateBy:NSPushInCellMask];
    [WriteTaste setFont:[NSFont fontWithName:@"Helvetica" size:8]];
 	[WriteTaste setTitle:@"E"];
-	[WriteTaste setTag:Objekt];
+	[WriteTaste setTag:objekt];
 	[WriteTaste setAction:@selector(WriteTasteAktion:)];
 	[self addSubview:WriteTaste];
   
@@ -112,7 +112,7 @@ return self;
 	[[HeuteTaste cell]setShowsStateBy:NSPushInCellMask];
    [HeuteTaste setFont:[NSFont fontWithName:@"Helvetica" size:8]];
 	[HeuteTaste setTitle:@"H"];
-	[HeuteTaste setTag:Objekt];
+	[HeuteTaste setTag:objekt];
 	[HeuteTaste setAction:@selector(reportHeuteTaste:)]; // Auszufuehrende Funktion
 	[self addSubview:HeuteTaste];
 
@@ -188,19 +188,19 @@ return self;
 
 - (void)setObjekt:(NSNumber*)dieObjektNumber
 {
-	Objekt=[dieObjektNumber intValue];	
+	objekt=[dieObjektNumber intValue];
 }
 
 
 - (void)setRaum:(int)derRaum
 {
-	Raum=derRaum;
+	raum = derRaum;
 	
 }
 - (void)setWochentag:(int)derWochentag
 {
 	//tag=derWochentag;
-	Wochentag=derWochentag;
+	wochentag=derWochentag;
 	
 }
 
@@ -216,8 +216,8 @@ return self;
 		StundenArray=[[NSMutableArray alloc]initWithCapacity:0];
 		[StundenArray retain];
 	}
-		//tag=derTag;
-	Wochentag=derTag;
+		
+	wochentag=derTag;
 	//NSLog(@"ModeTagplanbalken setTagplan Tag: %d StundenArray: %@",derTag, [[StundenArray valueForKey:@"code"] description]);
 	
 	int i;
@@ -318,11 +318,11 @@ NSMutableDictionary* tempDic=(NSMutableDictionary*)[StundenArray objectAtIndex:d
 	//NSLog(@"AllTasteAktion: %d", [(rTagplanbalken*)[sender superview]Objekt]);
 	//NSLog(@"AllTasteAktion: %@", [(rTagplanbalken*)[sender superview]Titel]);
 	NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
-	[NotificationDic setObject:[NSNumber numberWithInt:Wochentag] forKey:@"wochentag"];
+	[NotificationDic setObject:[NSNumber numberWithInt:wochentag] forKey:@"wochentag"];
 	[NotificationDic setObject:lastONArray forKey:@"lastonarray"];
-	[NotificationDic setObject:[NSNumber numberWithInt:Raum] forKey:@"raum"];
+	[NotificationDic setObject:[NSNumber numberWithInt:raum] forKey:@"raum"];
 	[NotificationDic setObject:Titel forKey:@"titel"];
-	[NotificationDic setObject:[NSNumber numberWithInt:Objekt] forKey:@"objekt"];
+	[NotificationDic setObject:[NSNumber numberWithInt:objekt] forKey:@"objekt"];
 	int modKey=0;
 	int all=-1;
 	if(([[NSApp currentEvent] modifierFlags] & NSAlternateKeyMask)  != 0)
@@ -609,12 +609,12 @@ key "modenacht"	Einschaltzeiten Mode Nacht		0: off						1: reduziert				2: voll
 //	int all=-1;
 	NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
 	//[NotificationDic setObject:Raum forKey:@"raum"];
-	[NotificationDic setObject:[NSNumber numberWithInt:Wochentag] forKey:@"wochentag"];
+	[NotificationDic setObject:[NSNumber numberWithInt:wochentag] forKey:@"wochentag"];
 	[NotificationDic setObject:lastONArray forKey:@"lastonarray"];
 
-	[NotificationDic setObject:[NSNumber numberWithInt:Raum] forKey:@"raum"];
+	[NotificationDic setObject:[NSNumber numberWithInt:raum] forKey:@"raum"];
 	[NotificationDic setObject:Titel forKey:@"titel"];
-	[NotificationDic setObject:[NSNumber numberWithInt:Objekt] forKey:@"objekt"];
+	[NotificationDic setObject:[NSNumber numberWithInt:objekt] forKey:@"objekt"];
 
 	
 	

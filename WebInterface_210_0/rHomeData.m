@@ -561,7 +561,7 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 	NSString* DataString=[NSString stringWithContentsOfURL:URL usedEncoding: enc error:NULL];
 	NSLog(@"IP von Server: %@",DataString);
    NSArray* IP_Array = [DataString componentsSeparatedByString:@"\r\n"];
-   NSLog(@"IP von Server IP_Array: %@",IP_Array);
+   //NSLog(@"IP von Server IP_Array: %@",IP_Array);
    
    NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
    [NotificationDic setObject:DataString forKey:@"routerip"];

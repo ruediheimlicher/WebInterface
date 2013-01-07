@@ -852,10 +852,15 @@ if (Webserver_busy)
       NSArray* stundenplanarray  = [[updateArray objectAtIndex:index]objectForKey:@"stundenplanarray"];
       [self setStundenplanArray:stundenplanarray forWochentag:wochentag forObjekt:objekt forRaum:raum];
       NSArray* subViews = [[[self ScrollerVonRaum:raum]documentView ]subviews];
-      NSLog(@"updatePListMitDicArray index: %d subViews: %@",index,[subViews description]);
+      //NSLog(@"updatePListMitDicArray index: %d subViews: %@",index,[subViews description]);
+      NSLog(@"updatePListMitDicArray index: %d  raum: %d objekt: %d wochentag: %d",index,raum,objekt,wochentag);
       for (int k=0;k<[subViews count];k++)
       {
-         NSLog(@"subViews k: %d subview %@",k,[[subViews objectAtIndex:k ]Titel]);
+         if ( [[subViews objectAtIndex:k ]isKindOfClass:[rTagplanbalken class]] && ([[subViews objectAtIndex:k ]wochentag]==wochentag ) && ([[subViews objectAtIndex:k ]objekt] == objekt))
+         {
+            NSLog(@"subViews k: %d subview %@",k,[[subViews objectAtIndex:k ]Titel]);
+         }
+         //
 
       }
    
@@ -1208,7 +1213,7 @@ if (Webserver_busy)
    
    if (EEPROMScroller)
    {
-       NSLog(@"EEPROMScroller schon da");
+       //NSLog(@"EEPROMScroller schon da");
    }
    NSRect RaumViewFeld=[EEPROMUpdatefeld frame];
    //NSRect RaumScrollerFeld=RaumViewFeld;	//	Feld fuer Scroller, in dem der RaumView liegt
@@ -1229,7 +1234,7 @@ if (Webserver_busy)
    //	EEPROMPlan  anlegen
    if (!EEPROMPlan)
    {
-      NSLog(@"neuer EEPROMPlan");
+      //NSLog(@"neuer EEPROMPlan");
       EEPROMPlan = [[NSView alloc]initWithFrame:RaumViewFeld];
       [EEPROMScroller setDocumentView:EEPROMPlan];
    }
@@ -1446,10 +1451,10 @@ if (Webserver_busy)
    int oldbalkenoffset=3000;
    NSMutableArray* PListFixArray = [[NSMutableArray alloc]initWithCapacity:0];
     NSMutableArray* HomeServerFixArray = [[NSMutableArray alloc]initWithCapacity:0];
-   //for (int i=0;i<[viewListe count];i++)
+   for (int i=0;i<[viewListe count];i++)
    
    
-   for (int i=0;i<3;i++)
+   //for (int i=0;i<3;i++)
    {
       //NSLog(@"i: %d view: %@ tag: %d",i,[[viewListe objectAtIndex:i]description], [[viewListe objectAtIndex:i]tag]);
       int tempTag = [[viewListe objectAtIndex:i]tag];

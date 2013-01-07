@@ -156,7 +156,7 @@
 		rTagplan* Tagplan=[[rTagplan alloc]initWithFrame:Balkenfeld];
 		[Tagplan setWochentag:wochentag];
 		[Tagplan setRaum:derRaum];
-      [self addSubview:Tagplan];
+//      [self addSubview:Tagplan];
 		
 		[GeometrieArray insertObject:[NSNumber numberWithFloat:Balkenfeld.origin.y] atIndex:0];
 		//[GeometrieArray addObject:[NSNumber numberWithFloat:Balkenfeld.origin.y]];

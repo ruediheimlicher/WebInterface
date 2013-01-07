@@ -528,7 +528,7 @@ return returnInt;
 		[ObjektSeg setEnabled:YES];
 		
 		
-		[[[WochenplanTab tabViewItemAtIndex:raum]view]addSubview:ObjektSeg];
+//		[[[WochenplanTab tabViewItemAtIndex:raum]view]addSubview:ObjektSeg];
       
       
       //NSLog(@"** raum: %d raum subviews: %@",raum,[[[[WochenplanTab tabViewItemAtIndex:raum]view]subviews]description]);

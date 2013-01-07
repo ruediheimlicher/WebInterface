@@ -278,7 +278,7 @@
 			
 			//NSLog(@"setWochenplanForRaum: %d",derRaum);
 			//NSLog(@"setWochenplanForRaum ObjektTagplanbalken: %@",[ObjektTagplanbalken description]);
-			[ObjektTagplanbalken retain];
+//			[ObjektTagplanbalken retain];
 			[self addSubview:ObjektTagplanbalken];
 			//[Tagplan setTagplan:tempStundenArray forTag:6-wochentag];
 			//	[Wochenplan addObject:Tagplan];

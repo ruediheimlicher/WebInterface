@@ -856,13 +856,15 @@ if (Webserver_busy)
       NSLog(@"updatePListMitDicArray index: %d  raum: %d objekt: %d wochentag: %d",index,raum,objekt,wochentag);
       for (int k=0;k<[subViews count];k++)
       {
-         if ( [[subViews objectAtIndex:k ]isKindOfClass:[rTagplanbalken class]] && ([[subViews objectAtIndex:k ]wochentag]==wochentag ) && ([[subViews objectAtIndex:k ]objekt] == objekt))
+         if ( [[subViews objectAtIndex:k ]isKindOfClass:[rTagplanbalken class]] && ([[subViews objectAtIndex:k ]raum]==raum ) && ([[subViews objectAtIndex:k ]wochentag]==wochentag ) && ([[subViews objectAtIndex:k ]objekt] == objekt))
          {
             NSLog(@"subViews k: %d subview %@",k,[[subViews objectAtIndex:k ]Titel]);
+            [[subViews objectAtIndex:k ]setStundenArray:stundenplanarray forKey:@"code"];
+            [[subViews objectAtIndex:k ]setNeedsDisplay:YES];
          }
          //
 
-      }
+      }      
    
    }
       
@@ -1536,6 +1538,7 @@ if (Webserver_busy)
    if ([PListFixArray count])
    {
       [self updatePListMitDicArray:PListFixArray];
+      [PListFixArray removeAllObjects];
    }
 }
 

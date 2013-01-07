@@ -528,7 +528,7 @@ return returnInt;
 		[ObjektSeg setEnabled:YES];
 		
 		
-//		[[[WochenplanTab tabViewItemAtIndex:raum]view]addSubview:ObjektSeg];
+		[[[WochenplanTab tabViewItemAtIndex:raum]view]addSubview:ObjektSeg];
       
       
       //NSLog(@"** raum: %d raum subviews: %@",raum,[[[[WochenplanTab tabViewItemAtIndex:raum]view]subviews]description]);
@@ -536,7 +536,7 @@ return returnInt;
       {
          if ([[[[[WochenplanTab tabViewItemAtIndex:raum]view]subviews]objectAtIndex:i] isKindOfClass:[NSScrollView class]])
          {
-            NSLog(@"ScrollViewgefunden: i: %d Scroller: %@",i,[[[[[WochenplanTab tabViewItemAtIndex:raum]view]subviews]objectAtIndex:i ]description]);
+            //NSLog(@"ScrollViewgefunden: i: %d Scroller: %@",i,[[[[[WochenplanTab tabViewItemAtIndex:raum]view]subviews]objectAtIndex:i ]description]);
          }
       }
 		

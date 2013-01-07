@@ -181,7 +181,7 @@
 			[TagbalkenArray addObject:TagbalkenDic];
 			
 			// Tagbalken erzeugen
-			id ObjektTagplan;
+			id ObjektTagplanbalken;
 			NSString* tempTitel;
 			int TagbalkenTyp=0;
 			if ([[[aktivTagplanDicArray objectAtIndex:wochentag]objectAtIndex:objektbalken]objectForKey:@"tagbalkentyp"])
@@ -203,8 +203,8 @@
 			{
 				case 0: // Standard
 				{
-					ObjektTagplan=[[rTagplanbalken alloc]initWithFrame:Balkenfeld];
-					[ObjektTagplan BalkenAnlegen];
+					ObjektTagplanbalken=[[rTagplanbalken alloc]initWithFrame:Balkenfeld];
+					[ObjektTagplanbalken BalkenAnlegen];
 					tempTitel=[[[aktivTagplanDicArray objectAtIndex:wochentag]objectAtIndex:objektbalken]objectForKey:@"objektname"];
 					//tempTitel=@"-";
 					//tempTitel=@"Brenner";
@@ -212,34 +212,34 @@
 					
 				case 1: // Mode
 				{
-					//		ObjektTagplan=[[rTagplanbalken alloc]initWithFrame:Balkenfeld];
+					//		ObjektTagplanbalken=[[rTagplanbalken alloc]initWithFrame:Balkenfeld];
 					//NSLog(@"setWochenplanForRaum: %d tag: %d objektbalken: %d tagbalkentyp: %d",derRaum, wochentag, objektbalken, TagbalkenTyp);
-					ObjektTagplan=(rModeTagplanbalken*)[[rModeTagplanbalken alloc]initWithFrame:Balkenfeld];
-					//ObjektTagplan=[[rTagplanbalken alloc]initWithFrame:Balkenfeld];
-					[ObjektTagplan BalkenAnlegen];
+					ObjektTagplanbalken=(rModeTagplanbalken*)[[rModeTagplanbalken alloc]initWithFrame:Balkenfeld];
+					//ObjektTagplanbalken=[[rTagplanbalken alloc]initWithFrame:Balkenfeld];
+					[ObjektTagplanbalken BalkenAnlegen];
 					tempTitel=[[[aktivTagplanDicArray objectAtIndex:wochentag]objectAtIndex:objektbalken]objectForKey:@"objektname"];
 					
 				}break; // case objektbalken=1
 					
 				case 2: // Mode Nacht
 				{
-					//		ObjektTagplan=[[rTagplanbalken alloc]initWithFrame:Balkenfeld];
+					//		ObjektTagplanbalken=[[rTagplanbalken alloc]initWithFrame:Balkenfeld];
 					
-					ObjektTagplan=[[rModeTagplanbalken alloc]initWithFrame:Balkenfeld];
-					[ObjektTagplan BalkenAnlegen];
+					ObjektTagplanbalken=[[rModeTagplanbalken alloc]initWithFrame:Balkenfeld];
+					[ObjektTagplanbalken BalkenAnlegen];
+               
 					tempTitel=[[[aktivTagplanDicArray objectAtIndex:wochentag]objectAtIndex:objektbalken]objectForKey:@"objektname"];
 				}break; // case objektbalken=2
 					
 				default:
 				{
-					ObjektTagplan=[[rTagplanbalken alloc]initWithFrame:Balkenfeld];
-					[ObjektTagplan BalkenAnlegen];
+					ObjektTagplanbalken=[[rTagplanbalken alloc]initWithFrame:Balkenfeld];
+					[ObjektTagplanbalken BalkenAnlegen];
 					tempTitel=[[[aktivTagplanDicArray objectAtIndex:wochentag]objectAtIndex:objektbalken]objectForKey:@"objektname"];
 					
 				}
 					
 			}//switch objektbalken
-			
 			/*
 			switch (derRaum)
 			{
@@ -253,8 +253,8 @@
 					
 				default:
 				{
-					ObjektTagplan=[[rTagplanbalken alloc]initWithFrame:Balkenfeld];
-					[ObjektTagplan BalkenAnlegen];
+					ObjektTagplanbalken=[[rTagplanbalken alloc]initWithFrame:Balkenfeld];
+					[ObjektTagplanbalken BalkenAnlegen];
 					tempTitel=[[[aktivTagplanDicArray objectAtIndex:wochentag]objectAtIndex:objektbalken]objectForKey:@"objektname"];
 					
 				}
@@ -265,24 +265,24 @@
 			//NSLog(@"Tag: %d ",wochentag);
 			
 			//NSLog(@"Tag: %d Objekt: %d Titel: %@",wochentag,objektbalken,tempTitel);
-			[ObjektTagplan setTitel:tempTitel];
-			[ObjektTagplan setRaum: derRaum];
-			[ObjektTagplan setObjekt:[[[aktivTagplanDicArray objectAtIndex:wochentag]objectAtIndex:objektbalken]objectForKey:@"objekt"]];
+			[ObjektTagplanbalken setTitel:tempTitel];
+			[ObjektTagplanbalken setRaum: derRaum];
+			[ObjektTagplanbalken setObjekt:[[[aktivTagplanDicArray objectAtIndex:wochentag]objectAtIndex:objektbalken]objectForKey:@"objekt"]];
 			int originalTagplanIndex=[[aktivObjektArray objectAtIndex:objektbalken]intValue]; //originaler Index des Tagbalkens 
 			int mark=100*derRaum +10*wochentag +originalTagplanIndex +WOCHENPLANOFFSET;
-			[ObjektTagplan setTag:mark];
+			[ObjektTagplanbalken setTag:mark];
 			if (derRaum==0)
 				//NSLog(@"setWochenplanForRaum: %d originalTagplanIndex: %d",derRaum,mark );
 				
-			[ObjektTagplan setWochentag:wochentag];
+			[ObjektTagplanbalken setWochentag:wochentag];
 			
 			//NSLog(@"setWochenplanForRaum: %d",derRaum);
-			//NSLog(@"setWochenplanForRaum ObjektTagplan: %@",[ObjektTagplan description]);
-			[ObjektTagplan retain];
-			[self addSubview:ObjektTagplan];
+			//NSLog(@"setWochenplanForRaum ObjektTagplanbalken: %@",[ObjektTagplanbalken description]);
+			[ObjektTagplanbalken retain];
+			[self addSubview:ObjektTagplanbalken];
 			//[Tagplan setTagplan:tempStundenArray forTag:6-wochentag];
 			//	[Wochenplan addObject:Tagplan];
-			[tempTagbalkenArray addObject:ObjektTagplan];
+			[tempTagbalkenArray addObject:ObjektTagplanbalken];
 			Balkenfeld.origin.y-=(Tagbalkenhoehe+4);
 			
 			//Stundenplan erzeugen
@@ -303,14 +303,14 @@
 			}
 			//NSLog(@"setWochenplanForRaum * Tag: %d tempStundenArray: %@",wochentag,[tempStundenArray description]);
 			
-			[ObjektTagplan setTagplan:tempStundenArray forTag:wochentag];
+			[ObjektTagplanbalken setTagplan:tempStundenArray forTag:wochentag];
 			
 			//NSLog(@"setWochenplanForRaum nach setTagplan");
 			//if (derRaum==0)
 			
 			
 			{
-				NSArray* tempStundenByteArray=[ObjektTagplan StundenByteArray];
+				NSArray* tempStundenByteArray=[ObjektTagplanbalken StundenByteArray];
 				//NSLog(@"Raum: %d Tag: %d objekt: %d StundenByteArray: %@",derRaum, wochentag, objektbalken, [tempStundenByteArray componentsJoinedByString:@" "]);
 				int k;
 				NSString* StundenbyteString=[NSString string];
@@ -321,7 +321,7 @@
 					//NSLog(@"      Stundenbyte: %02X ByteString: %@",Stundenbyte , ByteString);
 					StundenbyteString=[StundenbyteString stringByAppendingString:ByteString] ;
 				}
-				//NSLog(@" Objekt: %d,  ByteString: %@ Titel: %@",objektbalken,  StundenbyteString,[ObjektTagplan Titel]);
+				//NSLog(@" Objekt: %d,  ByteString: %@ Titel: %@",objektbalken,  StundenbyteString,[ObjektTagplanbalken Titel]);
 			}
 			
 		}//for objektbalken

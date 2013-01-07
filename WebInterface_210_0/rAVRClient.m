@@ -843,16 +843,16 @@ if (Webserver_busy)
 {
    
    // PList anpassen
-   for (int i=0;i<[updateArray count];i++)
+   for (int index=0;index<[updateArray count];index++)
    {
       
-      int raum = [[[updateArray objectAtIndex:i]objectForKey:@"raum"]intValue];
-      int objekt = [[[updateArray objectAtIndex:i]objectForKey:@"objekt"]intValue];
-      int wochentag = [[[updateArray objectAtIndex:i]objectForKey:@"wochentag"]intValue];
-      NSArray* stundenplanarray  = [[updateArray objectAtIndex:i]objectForKey:@"stundenplanarray"];
+      int raum = [[[updateArray objectAtIndex:index]objectForKey:@"raum"]intValue];
+      int objekt = [[[updateArray objectAtIndex:index]objectForKey:@"objekt"]intValue];
+      int wochentag = [[[updateArray objectAtIndex:index]objectForKey:@"wochentag"]intValue];
+      NSArray* stundenplanarray  = [[updateArray objectAtIndex:index]objectForKey:@"stundenplanarray"];
       [self setStundenplanArray:stundenplanarray forWochentag:wochentag forObjekt:objekt forRaum:raum];
       NSArray* subViews = [[[self ScrollerVonRaum:raum]documentView ]subviews];
-      NSLog(@"i: %d subViews: %@",i,[subViews description]);
+      NSLog(@"index: %d subViews: %@",index,[subViews description]);
    }
       
 //   [self saveHomeDic];
@@ -1467,7 +1467,7 @@ if (Webserver_busy)
                      
                      if ([PListFixArray count]<2)
                      {
-                        //NSLog(@"EEPROM UpdateDic: %@",[UpdateDic description]);
+                        NSLog(@"PList UpdateDic: %@",[UpdateDic description]);
                      }
                      [PListFixArray addObject:UpdateDic];
                      

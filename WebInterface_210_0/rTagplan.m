@@ -29,7 +29,7 @@
 
 	//NSLog(@"Tagplan Init: Nullpunkt: x: %2.2f y: %2.2f",Nullpunkt.x,Nullpunkt.y);
 	int i=0;
-	tag=0;
+	wochentag=0;
 	NSPoint Ecke=NSMakePoint(0.0,0.0);
 	
 	Ecke.x+=RandL;
@@ -62,7 +62,7 @@
 }
 - (IBAction)reportHeuteTaste:(id)sender
 {
-   NSLog(@"reportHeuteTaste Tag: %d Raum: %d",tag,raum);
+   NSLog(@"reportHeuteTaste Tag: %d Raum: %d",wochentag,raum);
 
 }
 
@@ -70,12 +70,21 @@
 {
 	NSArray* Wochentage=[NSArray arrayWithObjects:@"MO",@"DI",@"MI",@"DO",@"FR",@"SA",@"SO",nil];
 	Wochentag=[Wochentage objectAtIndex:derTag];
-	tag = derTag;
+	wochentag = derTag;
 }
 
 - (void)setRaum:(int)derRaum
 {
    raum = derRaum;
+}
+
+- (int)Wochentag
+{
+   return wochentag;
+}
+- (int)Raum
+{
+   return raum;
 }
 
 
@@ -133,9 +142,9 @@
 	
 	
 	//***
-	tag=derTag;
+	wochentag=derTag;
 	
-	if (tag==0)
+	if (wochentag==0)
    {
       //NSLog(@"setTagplan Tag: %d StundenArray: %@",derTag, [StundenArray description]);
    }
@@ -385,7 +394,7 @@ return StundenArray;
 		{
 			[NotificationDic setObject:@"alt" forKey:@"mod"];
 			[NotificationDic setObject:@"Tagplan" forKey:@"quelle"];
-			[NotificationDic setObject:[NSNumber numberWithInt:tag] forKey:@"tag"];
+			[NotificationDic setObject:[NSNumber numberWithInt:wochentag] forKey:@"tag"];
 		}
 		
 		if ([self mouse:localMaus inRect:StdFeldL])

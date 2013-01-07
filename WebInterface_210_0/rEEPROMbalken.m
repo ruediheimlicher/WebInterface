@@ -128,11 +128,13 @@
 	*/
 }
 
+/*
 - (void)setTag:(int)tagwert
 {
 //tag=tagwert;
 mark=tagwert;
 }
+ */
 - (void)setTitel:(NSString*)derTitel
 {
 	[Titel retain];
@@ -615,11 +617,13 @@ return StundenArray;
 	return tempByteArray;
 }
 
+/*
 - (int)tag
 {
 //NSLog(@"Tagplanbalken tag: %d",mark);
 return mark;
 }
+ */
 - (void)drawRect:(NSRect)dasFeld 
 {
 
@@ -647,7 +651,7 @@ return mark;
 	[WochentagString drawAtPoint:TagPunkt withAttributes:TitelAttrs];
 	
 	
-	TagPunkt.x +=50;
+	TagPunkt.x +=30;
 	[RaumString drawAtPoint:TagPunkt withAttributes:TagAttrs];
 
 	TagPunkt.y -=12;

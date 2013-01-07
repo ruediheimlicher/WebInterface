@@ -148,12 +148,13 @@
 	//NSLog(@"Tagplanbalken end init");
 }
 
+/*
 - (void)setTag:(int)tagwert
 {
 //tag=tagwert;
 mark=tagwert;
 }
-
+*/
 
 
 - (void)setTitel:(NSString*)derTitel
@@ -287,7 +288,7 @@ NSMutableDictionary* tempDic=(NSMutableDictionary*)[StundenArray objectAtIndex:d
 
 - (void)setStundenArrayAusByteArray:(NSArray*)derStundenByteArray
 {
-	NSLog(@"Tagplanbalken setStundenArrayAusByteArray derStundenByteArray: %@",[derStundenByteArray description]);
+	//NSLog(@"Tagplanbalken setStundenArrayAusByteArray derStundenByteArray: %@",[derStundenByteArray description]);
 	
 	NSMutableArray* tempStundenArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
 	//NSArray* bitnummerArray=[NSArray arrayWithObjects: @"null", @"eins",@"zwei",@"drei",@"vier",@"fuenf",nil];
@@ -318,7 +319,7 @@ NSMutableDictionary* tempDic=(NSMutableDictionary*)[StundenArray objectAtIndex:d
 		}
 		[tempStundenArray addObjectsFromArray:tempStundenCodeArray];
 	}//for i
-	NSLog(@"Tagplanbalken setStundenArrayAusByteArray tempStundenArray: %@",[tempStundenArray description]);
+	//NSLog(@"Tagplanbalken setStundenArrayAusByteArray tempStundenArray: %@",[tempStundenArray description]);
 	[self setStundenArray:tempStundenArray forKey:@"code"];
 }
 
@@ -704,11 +705,22 @@ return StundenArray;
 	return tempByteArray;
 }
 
+
 - (int)tag
 {
 //NSLog(@"Tagplanbalken tag: %d",mark);
-return mark;
+return tag;
 }
+
+
+- (void)setTag:(NSInteger)derTag
+{
+  // NSLog(@"Tagplanbalken setTag: %d",derTag);
+   tag = derTag;
+ //  NSLog(@"Tagplanbalken tag: %d",[self tag]);
+
+}
+
 - (void)drawRect:(NSRect)dasFeld 
 {
 

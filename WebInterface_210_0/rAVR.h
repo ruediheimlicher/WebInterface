@@ -124,6 +124,7 @@ NSTimer*                TimeoutTimer;
    IBOutlet NSView*        EEPROMPlan;
    IBOutlet id             EEPROMScroller;
    IBOutlet id             EEPROMTextfeld;
+   IBOutlet id             FixTaste;
 
 
 }
@@ -189,4 +190,5 @@ NSTimer*                TimeoutTimer;
 - (int)TWIStatus;
 - (IBAction)reportLocalTaste:(id)sender;
 - (IBAction)reportUpdateTaste:(id)sender;
+- (IBAction)reportFixTaste:(id)sender;
 @end

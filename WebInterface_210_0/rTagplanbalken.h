@@ -21,7 +21,7 @@ int					Raum;
 int					Objekt;
 int					Typ;
 int					Wochentag;
-//int				tag;
+int				tag;
 int					mark;
 int					Hoehe, Breite, Balkenbreite;
 int					Elementbreite,  Elementhoehe, RandL, RandR, RandU;
@@ -58,5 +58,6 @@ NSMutableArray*				lastONArray;
 - (void)setStundenArrayAusByteArray:(NSArray*)derStundenByteArray;
 
 - (int)tag;
+- (void)setTag:(NSInteger)derTag;
 - (NSString*)Titel;
 @end

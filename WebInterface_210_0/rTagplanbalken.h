@@ -32,6 +32,7 @@ int					TagbalkenTyp;
 
 NSPoint						Nullpunkt;
 NSMutableArray*				StundenArray;
+NSArray*				StundenByteArray;
 NSMutableArray*				lastONArray;
 }
 - (void)BalkenAnlegen;
@@ -51,7 +52,10 @@ NSMutableArray*				lastONArray;
 - (int)wochentag;
 - (int)raum;
 - (int)objekt;
+- (int)typ;
 
+
+- (void)setStundenByteArray:(NSArray*)derStundenArray;
 
 
 

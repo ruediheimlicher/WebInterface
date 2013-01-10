@@ -219,6 +219,18 @@ return StundenArray;
 	
 }
 
+- (NSArray*)StundenByteArray
+{
+   return StundenByteArray;
+}
+- (void)setStundenByteArray:(NSArray*)derStundenArray
+{
+   StundenByteArray = derStundenArray;
+   [derStundenArray retain];
+   [StundenByteArray release];
+}
+
+
 
 - (void)setStundenArraywert:(int)derWert vonStunde:(int)dieStunde forKey:(NSString*)derKey
 {

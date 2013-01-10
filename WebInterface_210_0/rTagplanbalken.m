@@ -160,11 +160,13 @@ mark=tagwert;
 - (void)setTitel:(NSString*)derTitel
 {
 	[Titel retain];
-	//NSLog(@"Titel: %@ derTitel: %@",Titel, derTitel);
+	
 
-	Titel=[derTitel copy];
+	Titel=derTitel;
+   
 		//[derTitel release];
 	//[Titelfeld setStringValue:Titel];
+   //NSLog(@"Titel: %@ derTitel: %@",Titel, derTitel);
 	
 }
 
@@ -672,9 +674,16 @@ return TagbalkenTyp;
    return objekt;
 }
 
+- (int)typ
+{
+   return TagbalkenTyp;
+}
+
 
 -(NSString*)Titel
 {
+   //NSLog(@"return Titel: %@",Titel);
+
 return Titel;
 }
 
@@ -682,6 +691,8 @@ return Titel;
 {
 return StundenArray;
 }
+
+
 
 - (NSArray*)StundenByteArray
 {

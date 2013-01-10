@@ -188,7 +188,7 @@
 
 - (void)twiStatusAktion:(NSNotification*)note
 {
-	//NSLog(@"twiStatusAktion note: %@",[[note userInfo]description]);
+	NSLog(@"AVRController twiStatusAktion note: %@",[[note userInfo]description]);
 	if ([[note userInfo]objectForKey:@"status"])
 	{
 		switch ([[[note userInfo]objectForKey:@"status"] intValue]) 

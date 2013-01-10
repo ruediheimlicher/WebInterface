@@ -21,7 +21,7 @@ NSPoint                    Nullpunkt;
 NSPoint                    Tagpunkt;
 NSMutableArray*				StundenArray;
 NSMutableArray*				ModeStundenArray;
-
+NSArray*                   StundenByteArray;
 NSMutableArray*				aktivArray;
 
 NSMutableArray*				lastONArray;
@@ -42,6 +42,8 @@ rTaste* heuteTaste;
 - (void)setStundenArraywert:(int)derWert vonStunde:(int)dieStunde forKey:(NSString*)derKey;
 - (int)StundenarraywertVonStunde:(int)dieStunde forKey:(NSString*)derKey;
 - (NSArray*)StundenArrayForKey:(NSString*) derKey;
+- (NSArray*)StundenByteArray;
+- (void)setStundenByteArray:(NSArray*)derStundenArray;
 
 - (IBAction)reportHeuteTaste:(id)sender;
 - (void)drawRect:(NSRect)dasFeld;

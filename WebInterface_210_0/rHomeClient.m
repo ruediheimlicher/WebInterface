@@ -14,6 +14,7 @@
 #define WEBSERVER_VHOST "www.ruediheimlicher.ch"
 #define PW "ideur00"
 #define CGI "cgi-bin/eeprom.pl"
+#define CGI_UPDATE_CLEAR "cgi-bin/eepromupdate.pl"
 
 
 
@@ -94,8 +95,23 @@ unsigned char h2int(char c)
 			 selector:@selector(HomeClientWriteModifierAktion:)
 				  name:@"HomeClientWriteModifier"
 				object:nil];
+
+   [nc addObserver:self
+			 selector:@selector(EEPROMUpdateClearAktion:)
+				  name:@"EEPROMUpdateClear"
+				object:nil];
 	
-   
+   [nc addObserver:self
+			 selector:@selector(updateEEPROMAktion:)
+				  name:@"updateEEPROM"
+				object:nil];
+	
+
+      [nc addObserver:self
+			 selector:@selector(EEPROMWriteWocheAktion:)
+				  name:@"EEPROMWriteWoche"
+				object:nil];
+
    SendEEPROMDataDic = [[[NSMutableDictionary alloc]initWithCapacity:0]retain];
 
    
@@ -482,7 +498,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 
 - (void)TWIStatusAktion:(NSNotification*)note
 {
-	//NSLog(@"TWIStatusAktion note: %@",[[note userInfo]description]);
+	//NSLog(@"HomeClient TWIStatusAktion note: %@",[[note userInfo]description]);
 	
 	if ([[note userInfo]objectForKey:@"status"])
 	{
@@ -495,7 +511,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
           //NSLog(@"TWIStatusAktion TWIStatusURL: %@",TWIStatusURLString);
 			
          NSURL *URL = [NSURL URLWithString:TWIStatusURLString];
-         //NSLog(@"TWIStatusAktion URL: %@",URL);
+         NSLog(@"TWIStatusAktion URL: %@",URL);
 			[self loadURL:URL];
          
          [sendTimer invalidate];
@@ -666,6 +682,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
     
     
     */
+   NSLog(@"HomeClientWriteStandardAktion note stundenbytearray %@",[[note userInfo]description]);
 	//NSLog(@"HomeClientWriteStandardAktion note stundenbytearray %@",[[[note userInfo]objectForKey:@"stundenbytearray"]description]);
    //	int Raum=[[[note userInfo]objectForKey:@"raum"]intValue];
    //	int Wochentag=[[[note userInfo]objectForKey:@"wochentag"]intValue];
@@ -692,7 +709,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
       hbyte = [@"0" stringByAppendingString:hbyte];
    }
 
-   NSLog(@"HomeClientWriteStandardAktion lbyte als String: %@ hbyte als String: %@",lbyte,hbyte);
+   //NSLog(@"HomeClientWriteStandardAktion lbyte als String: %@ hbyte als String: %@",lbyte,hbyte);
    [SendEEPROMDataDic setObject:hbyte forKey:@"hbyte"];
    [SendEEPROMDataDic setObject:lbyte forKey:@"lbyte"];
    [SendEEPROMDataDic setObject:[NSNumber numberWithInt:1]forKey:@"adrload"];
@@ -842,14 +859,14 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 		//NSLog(@"HomeClientWriteStandardAktion WriteDataSuffix ganz: %@",WriteDataSuffix);
 	}
    NSString* HomeClientURLString =[NSString stringWithFormat:@"%@/twi?%@",HomeCentralURL, WriteDataSuffix];
-   NSLog(@"HomeClientWriteStandardAktion HomeClientURLString: %@",HomeClientURLString);
+   //NSLog(@"HomeClientWriteStandardAktion HomeClientURLString: %@",HomeClientURLString);
    NSURL *URL = [NSURL URLWithString:HomeClientURLString];
    
    [self loadURL:URL];
    
    NSString* EEPROM_DataString=[DatenByteArray componentsJoinedByString:@"+"];
    EEPROM_DataString= [EEPROM_DataString stringByAppendingString:@"+255+255"];
-   NSLog(@"HomeClientWriteStandardAktion EEPROM_DataString: %@",EEPROM_DataString);
+   //NSLog(@"HomeClientWriteStandardAktion EEPROM_DataString: %@",EEPROM_DataString);
    //NSLog(@"EEPROM_DataString: l=%d",[EEPROM_DataString length]);
    
  
@@ -871,6 +888,137 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
    
 }
 
+
+- (void)HomeClientWriteEEPROM:(NSDictionary*)updateDic
+{
+	/*
+    Einfuegen in ehemaliger EEPROMWrite-Aktion (iow):
+    - Daten aus StundenByteArray
+    - logString=[logString stringByAppendingString:[NSString stringWithFormat:@"%02X ",[[dieDaten objectAtIndex:xy]intValue]]];
+    
+    
+    */
+   int ladeposition = [[updateDic objectForKey:@"ladeposition"]intValue];
+   NSLog(@"HomeClientWriteEEPROM ladeposition vor abschicken: %d",ladeposition  );
+   if ([[updateDic objectForKey:@"updatearray"]count])
+   {
+      NSMutableDictionary* sendDic = (NSMutableDictionary*)[[updateDic objectForKey:@"updatearray"]objectAtIndex:ladeposition];
+      //NSLog(@"HomeClientWriteEEPROM updateDic stundenbytearray %@",[[sendDic objectForKey:@"stundenbytearray"] description]);
+      
+      //NSLog(@"HomeClientWriteStandardAktion note stundenbytearray %@",[[[note userInfo]objectForKey:@"stundenbytearray"]description]);
+      //	int Raum=[[[note userInfo]objectForKey:@"raum"]intValue];
+      //	int Wochentag=[[[note userInfo]objectForKey:@"wochentag"]intValue];
+      //	int Objekt=[[[note userInfo]objectForKey:@"objekt"]intValue];
+      //	NSArray* DatenArray=[[note userInfo]objectForKey:@"stundenarray"];
+      
+      //[sendDic setObject:[NSNumber numberWithInt:ladeposition]forKey:@"ladeposition"];
+      
+      WebTask = idle;
+      
+      [SendEEPROMDataDic setObject:[sendDic objectForKey:@"titel"] forKey:@"titel"];
+      [SendEEPROMDataDic setObject:[sendDic objectForKey:@"typ"] forKey:@"typ"];
+      
+      NSArray* DatenByteArray=[sendDic objectForKey:@"stundenbytearray"];
+      
+      NSString* lbyte=[[sendDic objectForKey:@"lbyte"]stringValue];
+      NSString* hbyte=[[sendDic objectForKey:@"hbyte"]stringValue];
+      
+      if ([lbyte length]==1)
+      {
+         lbyte = [@"0" stringByAppendingString:lbyte];
+      }
+      
+      if ([hbyte length]==1)
+      {
+         hbyte = [@"0" stringByAppendingString:hbyte];
+      }
+      
+      //NSLog(@"HomeClientWriteEEPROM lbyte als String: %@ hbyte als String: %@",lbyte,hbyte);
+      [SendEEPROMDataDic setObject:hbyte forKey:@"hbyte"];
+      [SendEEPROMDataDic setObject:lbyte forKey:@"lbyte"];
+      [SendEEPROMDataDic setObject:[NSNumber numberWithInt:1]forKey:@"adrload"];
+      [SendEEPROMDataDic setObject:[NSNumber numberWithInt:0]forKey:@"dataload"];
+      [SendEEPROMDataDic setObject:[NSNumber numberWithInt:1]forKey:@"permanent"];
+      
+      
+      //NSString* EEPROM_i2cAdresseString=[I2CPop itemTitleAtIndex:I2CIndex];
+      //AnzahlDaten=0x20; //32 Bytes, TAGPLANBREITE;
+      //	unsigned int EEPROM_i2cAdresse = [[[note userInfo]objectForKey:@"eepromadresse"]intValue];
+      //	NSString*  EEPROM_i2cAdresse_String = [[note userInfo]objectForKey:@"eepromadressestring"];
+      NSString*  EEPROM_i2cAdresse_Zusatz = [sendDic objectForKey:@"eepromadressezusatz"];
+      // URL aufbauen
+      NSString* WriteDataSuffix=[NSString string];
+      //if ([[note userInfo]objectForKey:@"pw"])//
+      {
+         // URL aufbauen
+         // pw, Adresszusatz fuer das EEPROM (wadr) anfuegen
+         WriteDataSuffix = [NSString stringWithFormat:@"pw=%@&wadr=%@",pw,EEPROM_i2cAdresse_Zusatz];
+         
+         // lbyte, hbyte anfuegen
+         WriteDataSuffix = [NSString stringWithFormat:@"%@&lbyte=%@&hbyte=%@",WriteDataSuffix,lbyte,hbyte];
+         //NSLog(@"HomeClientWriteEEPROM WriteDataSuffix: %@",WriteDataSuffix);
+         
+         // data anfuegen
+         int i=0;
+         NSString* DataString=@"&data=";
+         //NSLog(@" Datenarray count %d",[DatenArray count]);
+         //NSLog(@" DataString: %@",DataString);
+         NSString* TestString=[NSString string];// Kontrolle
+         //			for (i=0;i<[DatenByteArray count];i++)
+         for (i=0;i<8;i++)
+         {
+            //DataString  = [DataString stringByAppendingString:[[DatenByteArray objectAtIndex:i]stringValue]];
+            if (i<[DatenByteArray count])
+            {
+               DataString= [NSString stringWithFormat:@"%@%x",DataString,[[DatenByteArray objectAtIndex:i]intValue]];
+               //TestString= [NSString stringWithFormat:@"%@%x",TestString,[[DatenByteArray objectAtIndex:i]intValue]];
+               
+            }
+            else
+            {
+               DataString= [NSString stringWithFormat:@"%@%x",DataString,0xFF];
+               //TestString= [NSString stringWithFormat:@"%@%x",TestString,0xFF];
+               
+            }
+            if (i< (8-1))
+            {
+               DataString = [DataString stringByAppendingString:@"+"];
+               //TestString = [TestString stringByAppendingString:@"+"];
+            }
+         }
+         
+         WriteDataSuffix = [NSString stringWithFormat:@"%@%@",WriteDataSuffix,DataString];
+         //NSLog(@"HomeClientWriteStandardAktion WriteDataSuffix ganz: %@",WriteDataSuffix);
+      }
+      NSString* HomeClientURLString =[NSString stringWithFormat:@"%@/twi?%@",HomeCentralURL, WriteDataSuffix];
+      //NSLog(@"HomeClientWriteEEPROM HomeClientURLString: %@",HomeClientURLString);
+      NSURL *URL = [NSURL URLWithString:HomeClientURLString];
+      
+      [self loadURL:URL];
+      
+      NSString* EEPROM_DataString=[DatenByteArray componentsJoinedByString:@"+"];
+      EEPROM_DataString= [EEPROM_DataString stringByAppendingString:@"+255+255"];
+      //NSLog(@"HomeClientWriteStandardAktion EEPROM_DataString: %@",EEPROM_DataString);
+      //NSLog(@"EEPROM_DataString: l=%d",[EEPROM_DataString length]);
+      
+      
+      // Datastring sichern fuer senden an HomeServer
+      if ([EEPROM_DataString length])
+      {
+         [SendEEPROMDataDic setObject:EEPROM_DataString forKey:@"eepromdatastring"];
+         [SendEEPROMDataDic setObject:[NSNumber numberWithInt:1] forKey:@"dataload"];
+         if ([SendEEPROMDataDic objectForKey:@"adrload"])
+         {
+            if ([[SendEEPROMDataDic objectForKey:@"adrload"]intValue]==1 )// EEPROMAdresse ist da
+            {
+               //            NSLog(@"HomeClientWriteStandardAktion SendEEPROMDataDic: %@",[SendEEPROMDataDic description]);
+               //[nc postNotificationName:@"EEPROMsend2HomeServer" object:self userInfo:tempDataDic];
+               //           [self sendEEPROMDataMitDic:SendEEPROMDataDic];
+            }
+         }// adrload
+      } // if length
+   } // if count
+}
 
 - (void)HomeClientWriteModifierAktion:(NSNotification*)note
 {
@@ -1066,6 +1214,180 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 }
 
 
+
+
+- (void)EEPROMUpdateClearAktion:(NSNotification*)note
+{
+   
+   NSString* URLString = [NSString stringWithFormat:@"http://%s/%s?pw=%s&perm=%d",
+                          WEBSERVER_VHOST,
+                          CGI_UPDATE_CLEAR,
+                          PW,
+                          13
+                          ];
+   
+   //NSString* URLString = @"http://www.ruediheimlicher.ch/cgi-bin/hello.pl";
+   NSURL *URL = [NSURL URLWithString:URLString];
+   NSLog(@"EEPROMUpdateClearAktion URL: %@",URL );
+   NSURLRequest *HCRequest = [ [NSURLRequest alloc] initWithURL: URL cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:4.0];
+   if (HCRequest)
+   {
+      //NSLog(@"loadURL:Request OK");
+      [[webView mainFrame] loadRequest:HCRequest];
+   }
+   
+   //cgi-bin/eepromupdate.pl?perm=13
+   [self loadURL:URL];
+}
+
+
+- (void)EEPROMWriteWocheAktion:(NSNotification*)note
+{
+   //NSLog(@"EEPROMWriteWocheAktion %@ ",[[note userInfo]description]);
+   [self updateEEPROMAktion:note];
+}
+
+
+
+- (void)updateEEPROMAktion:(NSNotification*)note
+{
+   NSLog(@"updateEEPROMAktion ");
+   NSMutableDictionary* updateDic=(NSMutableDictionary*) [note userInfo];
+   //NSLog(@"updateEEPROMAktion updateDic: %@",[updateDic description]);
+   //NSLog(@"updateEEPROMAktion updatearray: %@",[[updateDic objectForKey:@"updatearray"]objectAtIndex:0]);
+   //NSDictionary* sendDic = [[updateDic objectForKey:@"updatearray"]objectAtIndex:0];
+   NSMutableDictionary* sendDic = [[NSMutableDictionary alloc]initWithDictionary:updateDic];
+   
+   
+   // Startwert fuer anzahl Versuche beim Warten auf busy=0
+   [sendDic setObject:[NSNumber numberWithInt:10] forKey:@"anzahl"];
+   
+   // Ladeposition
+   [sendDic setObject:[NSNumber numberWithInt:0 ] forKey:@"ladeposition"];
+
+   // Anzahl Pakete
+   [sendDic setObject:[NSNumber numberWithInt:[[updateDic objectForKey:@"updatearray"]count]] forKey:@"updatecounter"];
+   //NSLog(@"updateEEPROMAktion sendDic: %@",[sendDic description]);
+   
+   //NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+   
+   //[NotificationDic setObject:sendDic forKey:@"userInfo"];
+
+   //[self HomeClientWriteEEPROM:sendDic];
+  //[self HomeClientWriteStandardAktion:(NSNotification*)sendDic];
+   
+   int sendDelay=1.0;
+   
+   EEPROMUpdateTimer=[[NSTimer scheduledTimerWithTimeInterval:sendDelay
+                                                       target:self
+                                                     selector:@selector(EEPROMUpdateTimerfunktion:)
+                                                     userInfo:sendDic
+                                                      repeats:YES]retain];
+
+   
+}
+
+- (void)EEPROMUpdateTimerfunktion:(NSTimer*)timer
+{
+   //NSLog(@"EEPROMUpdateTimerfunktion WriteWoche_busy: %d",WriteWoche_busy);
+	NSMutableDictionary* updateDic=(NSMutableDictionary*) [timer userInfo];
+	//NSLog(@"WriteModifierTimerfunktion  WriteTimerDic: %@",[WriteTimerDic description]);
+	int anzahlcounter=[[updateDic objectForKey:@"anzahl"]intValue];
+   int updatecounter=[[updateDic objectForKey:@"updatecounter"]intValue];
+   int ladeposition=[[updateDic objectForKey:@"ladeposition"]intValue];
+	
+   
+   //NSLog(@"EEPROMUpdateTimerfunktion anzahlcounter: %d",anzahlcounter);
+   //NSLog(@"EEPROMUpdateTimerfunktion updatecounter: %d",updatecounter);
+   //NSLog(@"EEPROMUpdateTimerfunktion ladeposition: %d",ladeposition);
+   
+   anzahlcounter--;
+   
+   if ((anzahlcounter == 0) ) // zu lange gewartet oder alles geschickt
+   {
+      NSLog(@"anzahlcounter == 0 > EEPROMUpdateTimer invalidate");
+      [timer invalidate];
+      [timer release];
+      
+   }
+   else if (ladeposition == updatecounter-1)
+   {
+      NSLog(@"ladeposition == updatecounter-1 > EEPROMUpdateTimer invalidate");
+      [timer invalidate];
+      [timer release];
+      NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
+      NSDictionary* tempDataDic=[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:1],@"fertig", nil];
+      [nc postNotificationName:@"EEPROMWriteFertig" object:self userInfo:tempDataDic];
+
+   }
+
+	//NSLog(@"EEPROMUpdateTimerfunktion Webserver_busy: %d",Webserver_busy);
+   // Webserver busy??
+	//if (Webserver_busy)
+	if (WriteWoche_busy)
+   {
+      //NSLog(@"EEPROMUpdateTimerfunktion WriteWoche_busy blockiert Ablauf: WriteWoche_busy: %d ",WriteWoche_busy);
+      WriteWoche_busy--;
+      if (WriteWoche_busy==1)
+      {
+         [[NSSound soundNamed:@"Pop"] play];
+      }
+   
+   }
+   else 
+   {
+      NSLog(@"EEPROMUpdateTimerfunktion WriteWoche_busy laesst Ablauf zu");
+      
+      NSDictionary* tempDataDic=[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:ladeposition],@"ladeposition", nil];
+      NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
+      [nc postNotificationName:@"EEPROMLadeposition" object:self userInfo:tempDataDic];
+
+      WriteWoche_busy=10;
+      [self HomeClientWriteEEPROM:updateDic];
+      [updateDic setObject:[NSNumber numberWithInt:ladeposition+1]forKey:@"ladeposition"];
+   }
+  
+  
+   
+   //[updateDic setObject:[NSNumber numberWithInt:anzahlcounter]forKey:@"anzahlcounter"];
+   //
+   
+}
+
+/*
+- (void)EEPROMUpdateTimerFunktion:(NSTimer*)timer
+{
+   NSLog(@"WriteModifierTimerfunktion WriteWoche_busy: %d",WriteWoche_busy);
+	NSMutableDictionary* updateDic=(NSMutableDictionary*) [timer userInfo];
+	//NSLog(@"WriteModifierTimerfunktion  WriteTimerDic: %@",[WriteTimerDic description]);
+	int timeoutcounter=[[updateDic objectForKey:@"timeoutcounter"]intValue];
+	NSLog(@"timeoutcounter: %d",timeoutcounter);
+	
+   // Webserver busy??
+	if (Webserver_busy)
+	{
+      NSLog(@"EEPROMUpdateTimerFunktion Webserver_busy beep");
+		NSBeep();
+		timeoutcounter--;
+		[updateDic setObject:[NSNumber numberWithInt:timeoutcounter] forKey:@"timeoutcounter"];
+		
+		if (timeoutcounter == 0)
+		{
+			NSLog(@"timeoutcounter ist null");
+			[timer invalidate];
+			[timer release];
+			WriteWoche_busy=0;
+			
+			//[self setTWITaste:YES];
+		}
+		return;
+	}
+   
+   
+}
+*/
+
+
 #pragma mark URL-Stuff
 - (NSString *)url
 {
@@ -1146,6 +1468,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 	
 	NSString* status0_String= @"status0+"; // Status 0 ist bestaetigt
    
+   NSString* EEPROMUpdate_String= @"eepromupdate";
    
 	//NSString* Status0_String= @"status=0";
 	//NSString* Status1_String= @"status=1";
@@ -1274,31 +1597,37 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 			//NSLog(@"didFinishLoadForFrame: write+ ist da");
 			[tempDataDic setObject:[NSNumber numberWithInt:1] forKey:@"writeok"];
 			[confirmTimer invalidate];
-			
+			Webserver_busy=0;
+         WriteWoche_busy --;
+         
+         
          // Daten an HomeServer schicken
          if ([SendEEPROMDataDic objectForKey:@"dataload"])
          {
             if ([[SendEEPROMDataDic objectForKey:@"dataload"]intValue]==1 )// EEPROM Data ist da
             {
-               
                if ([SendEEPROMDataDic objectForKey:@"adrload"])
                {
                   if ([[SendEEPROMDataDic objectForKey:@"adrload"]intValue]==1 )// EEPROMAdresse ist da
                   {
                      //NSLog(@"didFinishLoad SendEEPROMDataDic: %@",[SendEEPROMDataDic description]);
                      //[nc postNotificationName:@"EEPROMsend2HomeServer" object:self userInfo:tempDataDic];
-                     [self sendEEPROMDataMitDic:SendEEPROMDataDic];
+                     
+                     //if (WriteWoche_busy==3)
+                     {
+                        WriteWoche_busy--;
+                        [self sendEEPROMDataMitDic:SendEEPROMDataDic];
+                     }
                   }
                }// adrload
             }
          }
          
-         
-         
       }
 		else
 		{
 			[tempDataDic setObject:[NSNumber numberWithInt:0] forKey:@"writeok"];
+         
 		}
 
 		//EEPROm schreiben ist nicht gelungen
@@ -1400,7 +1729,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
                   {
                      //NSLog(@"didFinishLoad SendEEPROMDataDic: %@",[SendEEPROMDataDic description]);
                      //[nc postNotificationName:@"EEPROMsend2HomeServer" object:self userInfo:tempDataDic];
-                     [self sendEEPROMDataMitDic:SendEEPROMDataDic];
+ //                    [self sendEEPROMDataMitDic:SendEEPROMDataDic];
                   }
                }// adrload
             }
@@ -1413,8 +1742,26 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 		
 	} // if pw vorhanden
 	
-	
-	
+   
+   NSString* HomeServerOK_String= @"homeserver+";
+   CheckRange = [HTML_Inhalt rangeOfString:HomeServerOK_String];
+   if (CheckRange.location < NSNotFound)
+   {
+      //NSLog(@"didFinishLoadForFrame: homeserver+ ist da");
+      WriteWoche_busy--;
+
+   }
+   
+   
+	//NSString* EEPROMUpdate_String= @"eepromupdate";
+   CheckRange = [HTML_Inhalt rangeOfString:EEPROMUpdate_String];
+   if (CheckRange.location < NSNotFound)
+   {
+      NSLog(@"didFinishLoadForFrame: eepromupdate ist da");
+      [tempDataDic setObject:@"eepromupdate ist geleert" forKey:@"eepromupdate"];
+      
+   }
+   
 	[nc postNotificationName:@"FinishLoad" object:self userInfo:tempDataDic];
 	
    
@@ -1444,12 +1791,18 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 	// String: didStartProvisionalLoadForFrame: URL: http://ruediheimlicher.dyndns.org/twi?pw=ideur00&status=1
 	if (frame == [sender mainFrame])
 	{
+      if ([error code] == NSURLErrorCancelled)
+      {
+         NSLog(@"didFailProvisionalLoadWithError: -999");
+         return;
+      }
 		NSRange CheckRange;
 		NSString* Code_String= @"okcode=";
 		NSString* Status0_String= @"status=0";
 		NSString* Status1_String= @"status=1";
 		NSString* PW_String= @"ideur00";
 		NSString* Error_String= @"error";
+      NSString* EEPROMUpdate_String= @"eepromupdate";
 		
 		NSMutableDictionary* tempDataDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
 		
@@ -1479,8 +1832,13 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 				[tempDataDic setObject:[NSNumber numberWithInt:1] forKey:@"twistatus"];
 			}
 		}
-		
-		NSString *errorDescription = [error localizedDescription];
+      CheckRange = [provurl rangeOfString:EEPROMUpdate_String]; // P
+		if (CheckRange.location < NSNotFound)
+      {
+         return;
+      }
+      
+      NSString *errorDescription = [error localizedDescription];
       NSLog(@"didFailProvisionalLoadWithError: errorDescription: %@",errorDescription);
 		if (!errorDescription) 
 		{

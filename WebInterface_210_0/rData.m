@@ -1206,7 +1206,7 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
  HTML_Inhalt: 				<html><head></head><body><p>data=0+f+f3+33+ff+fd+ff+ff</p></body></html>
  2012-12-16 20:21:47.176 WebInterface[20669:303] FinishLoadAktion EEPROM lesen: data ist da
  2012-12-16 20:21:47.178 WebInterface[20669:303] TimeoutTimer start
- 2012-12-16 20:21:49.379 WebInterface[20669:303] AVRClient setTWIState: state: 1
+ 2012-12-16 20:21:49.379 WebInterface[20669:303] AVRClient reportTWIState: state: 1
  2012-12-16 20:21:49.380 WebInterface[20669:303] didStartProvisionalLoadForFrame: URL: http://ruediheimlicher.dyndns.org/twi?pw=ideur00&status=1
  2012-12-16 20:21:49.459 WebInterface[20669:303] didFinishLoadForFrame Antwort:
  HTML_Inhalt: 				<html><head></head><body><p>okcode=status1</p></body></html>

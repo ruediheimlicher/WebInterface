@@ -1058,7 +1058,7 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
                                       };
    [UpdateArray sortUsingComparator: sortByNumber];
    
-   //NSLog(@"EEPROMUpdateAktion UpdateArray nach sort  (data): %@",[[UpdateArray valueForKey:@"data" ] description]);
+   NSLog(@"EEPROMUpdateAktion UpdateArray nach sort  (data): %@",[[UpdateArray valueForKey:@"data" ] description]);
    
    NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
 	[NotificationDic setObject:UpdateArray forKey:@"updatearray"];

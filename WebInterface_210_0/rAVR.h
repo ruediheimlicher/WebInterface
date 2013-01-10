@@ -65,6 +65,7 @@ IBOutlet	id		AdresseFeld;
 IBOutlet	id		ReadFeld;
 IBOutlet	id		WriteFeld;
 IBOutlet	id		WriteWocheFeld;
+IBOutlet	id		writeWocheTaste;
 IBOutlet	id		UpdateTaste;
    
 IBOutlet	id		Waitrad;
@@ -119,12 +120,20 @@ rWEBDATA_DS*				WEBDATA_DS;
 IBOutlet	 id            maxSimAnzahlFeld;
 NSTimer*                simTimer;
 NSTimer*                TimeoutTimer;
+   
+NSTimer*                EEPROMUpdateTimer;
 
    IBOutlet id             EEPROMUpdatefeld;
    IBOutlet NSView*        EEPROMPlan;
    IBOutlet id             EEPROMScroller;
    IBOutlet id             EEPROMTextfeld;
    IBOutlet id             FixTaste;
+   
+   IBOutlet id             Errorfeld;
+   IBOutlet id             Ablauffeld;
+   int                     TWI_ON_Flag;
+   IBOutlet id             writeEEPROMcounterfeld;
+   int                     writeEEPROMcounter;
 
 
 }
@@ -136,7 +145,7 @@ NSTimer*                TimeoutTimer;
 - (void)checkHomebus;
 - (NSArray*)neuerWochenplanForRaum:(int)derRaum;
 - (NSArray*)neuerTagplanForTag:(int)derWochentag forRaum:(int)derRaum;
-- (NSArray*)neuerStundenplan;
+- (NSMutableArray*)neuerStundenplan;
 - (int)anzAktivForRaum:(int)derRaum;
 - (NSArray*)aktivObjekteArrayForRaum:(int)derRaum;
 - (void)setAktiv:(int)derStatus forObjekt:(int)dasObjekt forRaum:(int)derRaum;
@@ -153,7 +162,7 @@ NSTimer*                TimeoutTimer;
 
 - (int)saveHomeDic;
 - (NSArray*)HomebusArray;
-- (IBAction)setTWIState:(id)sender;
+
 - (void)setTWIStatus:(int)derStatus;
 - (void)setI2CStatus:(int)derStatus;
 - (void)writeTagplan:(id)sender;
@@ -190,8 +199,11 @@ NSTimer*                TimeoutTimer;
 - (void)readEthTagplanVonTag:(int)wochentag;
 - (void)readEthTagplanVonRaum:(int)raum vonObjekt: (int)objekt vonTag:(int)wochentag;
 - (IBAction)readWochenplan:(id)sender;
+- (IBAction)writeEEPROMWochenplan:(id)sender;
 - (void)setWEBDATAArray:(NSArray*)derDatenArray;
+- (IBAction)reportTWIState:(id)sender;
 - (void)setTWITaste:(int)status;
+- (void)setTWIState:(int)status;
 - (int)TWIStatus;
 - (IBAction)reportLocalTaste:(id)sender;
 - (IBAction)reportUpdateTaste:(id)sender;

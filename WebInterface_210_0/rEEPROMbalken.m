@@ -156,6 +156,7 @@ mark=tagwert;
 {
 	[ObjektString retain];
 	ObjektString=[derObjektString copy];
+   
 }
 
 

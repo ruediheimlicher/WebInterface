@@ -34,6 +34,7 @@ enum webtaskflag{idle, eepromread, eepromwrite,eepromreadwoche,eepromwritewoche}
   
    // Dic fuer Senden von EEPROMDaten an HomeServer
    NSMutableDictionary*    SendEEPROMDataDic;
+   NSTimer*                EEPROMUpdateTimer;
    
 	int							WebTask;          // Auszuführende Aktion aufgrund von Web-Requests
    int							Webserver_busy;

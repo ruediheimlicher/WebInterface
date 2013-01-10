@@ -219,7 +219,17 @@ return returnInt;
 				  name:@"HomeDataUpdate"
 				object:nil];
 
- 
+  	[nc addObserver:self
+			 selector:@selector(EEPROMWriteFertigAktion:)
+				  name:@"EEPROMWriteFertig"
+				object:nil];
+
+   
+  	[nc addObserver:self
+			 selector:@selector(EEPROMLadepositionAktion:)
+				  name:@"EEPROMLadeposition"
+				object:nil];
+
 	
 	WochenplanDic=[[[NSMutableDictionary alloc]initWithCapacity:0]retain];
 	Eingangsdaten=[[[NSMutableArray alloc]initWithCapacity:0]retain];
@@ -1093,7 +1103,7 @@ return returnInt;
 	return tempTagplanArray;
 }
 
-- (NSArray*)neuerStundenplan
+- (NSMutableArray*)neuerStundenplan
 {
 	NSMutableArray* tempStundenplanArray =[[NSMutableArray alloc]initWithCapacity:8];
 	int l;
@@ -1244,9 +1254,9 @@ return returnInt;
 
 }
 
-- (void)setStundenplanArray:(NSArray*)derStundenplanArray forObjekt:(int)dasObjekt forRaum:(int)derRaum
+- (void)setStundenplanArray:(NSMutableArray*)derStundenplanArray forObjekt:(int)dasObjekt forRaum:(int)derRaum
 {
-	NSMutableArray* tempWochenplanArray=[HomebusArray valueForKey:@"wochenplanarray"];
+	NSMutableArray* tempWochenplanArray=(NSMutableArray*)[HomebusArray valueForKey:@"wochenplanarray"];
 	int wochentag;
 	for (wochentag=0;wochentag<7;wochentag++)
 	{
@@ -1258,7 +1268,7 @@ return returnInt;
 }
 
 
-- (void)setStundenplanArray:(NSArray*)derStundenplanArray forWochentag:(int)derWochentag forObjekt:(int)dasObjekt forRaum:(int)derRaum
+- (void)setStundenplanArray:(NSMutableArray*)derStundenplanArray forWochentag:(int)derWochentag forObjekt:(int)dasObjekt forRaum:(int)derRaum
 {
    //NSLog(@"setStundenplanArray raum: %d objekt: %d wochentag: %d stundenplan: %@",derRaum,dasObjekt, derWochentag,[derStundenplanArray description]);
    
@@ -1275,14 +1285,14 @@ return returnInt;
 
 - (NSDictionary*)StundenplanDicVonRaum:(int)raum vonObjekt:(int)objekt vonWochentag:(int)wochentag
 {
-	NSDictionary* tempStundenplanArray=[[[[[HomebusArray objectAtIndex:raum]objectForKey:@"wochenplanarray"]objectAtIndex:wochentag]objectForKey:@"tagplanarray"]objectAtIndex:objekt];
+	NSDictionary* tempStundenplanDic=[[[[[HomebusArray objectAtIndex:raum]objectForKey:@"wochenplanarray"]objectAtIndex:wochentag]objectForKey:@"tagplanarray"]objectAtIndex:objekt];
    
 	
    //NSLog(@"tempStundenplanArray: %@",[tempStundenplanArray description]);
  		//NSMutableDictionary* tempTagplanDic=[[[[tempWochenplanArray objectAtIndex:raum]objectAtIndex:wochentag]objectForKey:@"tagplanarray"]objectAtIndex:objekt];
       
 	
-   return tempStundenplanArray;
+   return tempStundenplanDic;
 }
 
 
@@ -1351,7 +1361,8 @@ return returnInt;
 			{
 				//NSLog(@"TagplancodeAktion tempTagplanArray");
 				NSMutableArray* tempStundenplanArray=(NSMutableArray*)[[tempTagplanArray objectAtIndex:Objekt]objectForKey:@"stundenplanarray"];
-				if (tempStundenplanArray)
+				NSLog(@"TagplancodeAktion tempStundenplanArray: %@",[tempStundenplanArray description]);
+            if (tempStundenplanArray)
 				{
 					if (Stunde==99) // All-taste
 					{
@@ -1377,9 +1388,10 @@ return returnInt;
 					}
 					else
 					{
-						//NSLog(@"TagplancodeAktion tempStundenplanArray vor: %@",[tempStundenplanArray description]);
+						NSLog(@"TagplancodeAktion tempStundenplanArray vor: %@",[tempStundenplanArray description]);
 						//NSLog(@"TagplancodeAktion Mutable vor"); 
-						[tempStundenplanArray replaceObjectAtIndex:Stunde withObject:[NSNumber numberWithInt:ON]];
+						
+                  [tempStundenplanArray replaceObjectAtIndex:Stunde withObject:[NSNumber numberWithInt:ON]];
 						//NSLog(@"TagplancodeAktion Mutable nach"); 
 						//NSLog(@"TagplancodeAktion tempStundenplanArray nach: %@",[tempStundenplanArray description]);
 					}
@@ -1666,6 +1678,7 @@ return returnInt;
 
 - (IBAction)reportRaumPop:(id)sender
 {
+   
    NSLog(@"reportRaumPop");
    [self setObjektPopVonRaum:[sender indexOfSelectedItem]];
 }
@@ -2128,11 +2141,11 @@ return returnInt;
 }
 
 /* In AVRClient verschoben
-- (IBAction)setTWIState:(id)sender
+- (IBAction)reportTWIState:(id)sender
 {
 	// YES: TWI wird EINgeschaltet
 	// NO:	TWI wird AUSgeschaltet
-	//NSLog(@"setTWIState: state: %d",[sender state]);
+	//NSLog(@"reportTWIState: state: %d",[sender state]);
 	//[readTagTaste setEnabled:YES];
 
 	NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
@@ -2264,6 +2277,7 @@ return returnInt;
 
 - (IBAction)clearEEPROMTabelle:(id)sender
 {
+   [self setTWITaste:1];
 	[AVR_DS clearWochenplan];
 	[EEPROMArray removeAllObjects];
 	[EEPROMTable reloadData];

@@ -551,7 +551,7 @@ NSMutableDictionary* tempDic=(NSMutableDictionary*)[StundenArray objectAtIndex:d
 	[NotificationDic setObject:[(rServoTagplanbalken*)[sender superview]Titel] forKey:@"titel"];//
 	[NotificationDic setObject:[NSNumber numberWithInt:1] forKey:@"permanent"];//
    [NotificationDic setObject:[NSNumber numberWithInt:Typ] forKey:@"typ"];//
-	NSLog(@"rServoTagplanbalken WriteTasteAktion Typ: %d",Typ);
+	//NSLog(@"rServoTagplanbalken WriteTasteAktion Typ: %d",Typ);
 	int modKey=0;
 	//int all=-1;
 	if(([[NSApp currentEvent] modifierFlags] & NSAlternateKeyMask)  != 0)

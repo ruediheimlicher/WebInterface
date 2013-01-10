@@ -556,9 +556,9 @@ return returnInt;
    NSRect EEPROMScrollerFeld=[EEPROMUpdatefeld frame];
    if (!EEPROMScroller)
    {
-      NSLog(@"neuer EEPROMScroller");
-   EEPROMScroller = [[NSScrollView alloc] initWithFrame:EEPROMScrollerFeld];
-   [[[WochenplanTab tabViewItemAtIndex:8]view]addSubview:EEPROMScroller];
+      //NSLog(@"neuer EEPROMScroller");
+      EEPROMScroller = [[NSScrollView alloc] initWithFrame:EEPROMScrollerFeld];
+      [[[WochenplanTab tabViewItemAtIndex:8]view]addSubview:EEPROMScroller];
    }
 	
 	//EEPROM-Feld oben im Fenster einrichten
@@ -682,6 +682,9 @@ return returnInt;
 	[DatumFeld setStringValue:DatumString];
 	NSString* VersionString = [NSString stringWithFormat:@"Version %@",VERSION];
 	[VersionFeld setStringValue:VersionString];
+   
+   [WochenplanTab selectTabViewItemAtIndex:0];
+   
 	/*
     NSMutableDictionary* StartDicA=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
     [StartDicA setObject:@"AAA" forKey:@"art"];
@@ -864,7 +867,7 @@ return returnInt;
 
 - (void)checkHomebus
 {
-	NSLog(@"checkHomebus");
+	//NSLog(@"checkHomebus");
 	NSArray* Wochentage=[[NSArray arrayWithObjects:@"MO",@"DI", @"MI", @"DO", @"FR", @"SA", @"SO",nil]retain];
 	NSArray* Raumnamen=[[NSArray arrayWithObjects:@"Heizung", @"Werkstatt", @"WoZi", @"Buero", @"Labor", @"OG1", @"OG2", @"Estrich", nil]retain];
 	int i,k,l,s;
@@ -1323,10 +1326,10 @@ return returnInt;
 
    // Mausklicks im Tagplanbalken speichern
 {
-	NSLog(@"AVR TagplancodeAktion: %@",[[note userInfo]description]);
+	//NSLog(@"AVR TagplancodeAktion: %@",[[note userInfo]description]);
 	//NSLog(@"AVR TagplancodeAktion: %@",[[note userInfo]objectForKey:@"quelle"]);
-	NSArray* Raumnamen=[[NSArray arrayWithObjects:@"Heizung", @"Werkstatt", @"WoZi", @"Buero", @"Labor", @"OG1", @"OG2", @"Estrich", nil]retain];
-	NSArray* Wochentage=[NSArray arrayWithObjects:@"MO",@"DI",@"MI",@"DO",@"FR",@"SA",@"SO",nil];
+	//NSArray* Raumnamen=[[NSArray arrayWithObjects:@"Heizung", @"Werkstatt", @"WoZi", @"Buero", @"Labor", @"OG1", @"OG2", @"Estrich", nil]retain];
+	//NSArray* Wochentage=[NSArray arrayWithObjects:@"MO",@"DI",@"MI",@"DO",@"FR",@"SA",@"SO",nil];
 	
 	int Wochentag=[[[note userInfo]objectForKey:@"wochentag"]intValue];
 	int Stunde=[[[note userInfo]objectForKey:@"stunde"]intValue];
@@ -1340,7 +1343,7 @@ return returnInt;
 		Objekt=[[[note userInfo]objectForKey:@"objekt"]intValue];
 	}
 	
-	NSString* Raumname=[[note userInfo]objectForKey:@"raumname"];
+	//NSString* Raumname=[[note userInfo]objectForKey:@"raumname"];
 	
 	int RaumIndex=[[[note userInfo]objectForKey:@"raum"]intValue];
 	//NSLog(@"AVR TagplancodeAktion Raum: %@ RaumIndex: %d Wochentag: %d Objekt: %d Stunde: %d",Raum, RaumIndex, Wochentag, Objekt, Stunde);
@@ -1361,7 +1364,7 @@ return returnInt;
 			{
 				//NSLog(@"TagplancodeAktion tempTagplanArray");
 				NSMutableArray* tempStundenplanArray=(NSMutableArray*)[[tempTagplanArray objectAtIndex:Objekt]objectForKey:@"stundenplanarray"];
-				NSLog(@"TagplancodeAktion tempStundenplanArray: %@",[tempStundenplanArray description]);
+				//NSLog(@"TagplancodeAktion tempStundenplanArray: %@",[tempStundenplanArray description]);
             if (tempStundenplanArray)
 				{
 					if (Stunde==99) // All-taste
@@ -1388,7 +1391,7 @@ return returnInt;
 					}
 					else
 					{
-						NSLog(@"TagplancodeAktion tempStundenplanArray vor: %@",[tempStundenplanArray description]);
+						//NSLog(@"TagplancodeAktion tempStundenplanArray vor: %@",[tempStundenplanArray description]);
 						//NSLog(@"TagplancodeAktion Mutable vor"); 
 						
                   [tempStundenplanArray replaceObjectAtIndex:Stunde withObject:[NSNumber numberWithInt:ON]];
@@ -1690,7 +1693,7 @@ return returnInt;
 
 - (void)setObjektPopVonRaum:(int)raumnummer
 {
-   NSLog(@"AVR setObjektPopVonRaum: %d",raumnummer);
+   //NSLog(@"AVR setObjektPopVonRaum: %d",raumnummer);
    //  von Einstellungen  [self setObjektnamenVonArray:[[[[[HomebusArray objectAtIndex:raumnummer]objectForKey:@"wochenplanarray"]objectAtIndex:0]objectForKey:@"tagplanarray"]valueForKey:@"objektname"]];
    [ObjektPop removeAllItems];
    NSArray* tempObjektnamenArray = [[[[[HomebusArray objectAtIndex:raumnummer]objectForKey:@"wochenplanarray"]objectAtIndex:0]objectForKey:@"tagplanarray"]valueForKey:@"objektname"];
@@ -1839,7 +1842,7 @@ return returnInt;
 
 - (int)saveHomeDic
 {
-	NSLog(@"saveHomeDic: HomePListPfad: %@",HomePListPfad);
+	//NSLog(@"saveHomeDic: HomePListPfad: %@",HomePListPfad);
 	//NSLog(@"saveHomeDic: HomeDic: %@",[HomeDic description]);
 	BOOL writeOK=[HomeDic writeToFile:HomePListPfad atomically:YES];
 	//NSLog(@"saveHomeDic: writeOK: %d",writeOK);

@@ -18,19 +18,20 @@
 {
 	// YES: TWI wird EINgeschaltet
 	// NO:	TWI wird AUSgeschaltet
-	NSLog(@"AVRClient reportTWIState: state: %u",(unsigned int)[sender state]);
+	//NSLog(@"AVRClient reportTWIState: state: %u",(unsigned int)[sender state]);
 	//[readTagTaste setEnabled:YES];
    
 	if ([sender state])
 	{
       [[NSSound soundNamed:@"Ping"] play];
 		Webserver_busy=0;
-       NSLog(@"TWI wird ON: TWI_ON_Flag: %d",TWI_ON_Flag);
+       //NSLog(@"TWI wird ON: TWI_ON_Flag: %d",TWI_ON_Flag);
 	}
    else
    {
-      [[NSSound soundNamed:@"Glass"] play];
-      NSLog(@"TWI wird OFF: TWI_ON_Flag: %d",TWI_ON_Flag);
+      [[NSSound soundNamed:@"Frog"] play];
+      [Waitrad  startAnimation:NULL];
+      //NSLog(@"TWI wird OFF: TWI_ON_Flag: %d",TWI_ON_Flag);
    }
    
    [LocalTaste setEnabled:[sender state]];
@@ -41,7 +42,7 @@
 	//int twiOK=0;
    if (![sender state])
    {
-      [Waitrad  startAnimation:NULL];
+      
    }
 	NSMutableDictionary* twiStatusDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
    [twiStatusDic setObject:[NSNumber numberWithInt:[sender state]]forKey:@"status"];
@@ -61,6 +62,7 @@
 	}
    else
    {
+      [Waitrad  startAnimation:NULL];
       [[NSSound soundNamed:@"Glass"] play];
       TWI_ON_Flag=0;
       NSLog(@"TWI_ON_Flag ist 0");
@@ -139,6 +141,7 @@
    [readWocheTaste setEnabled:NO];
 	[ReadFeld setStringValue:@""];
 	[WriteFeld setStringValue:@""];
+   [writeWocheTaste setEnabled:NO];
 	[AdresseFeld setStringValue:@""];
    
 	int	tempTag=[TagPop indexOfSelectedItem];
@@ -274,6 +277,8 @@
    [readWocheTaste setEnabled:NO];
 	[ReadFeld setStringValue:@""];
 	[WriteFeld setStringValue:@""];
+   [writeWocheTaste setEnabled:NO];
+
 	[AdresseFeld setStringValue:@""];
 	int	tempTag=[TagPop indexOfSelectedItem];
    // Start ist MO
@@ -405,6 +410,8 @@
    [readWocheTaste setEnabled:NO];
    [ReadFeld setStringValue:@""];
    [WriteFeld setStringValue:@""];
+   [writeWocheTaste setEnabled:NO];
+
    [AdresseFeld setStringValue:@""];
    //int	tempTag=[TagPop indexOfSelectedItem];
    // Start ist MO
@@ -533,6 +540,8 @@
       [readWocheTaste setEnabled:NO];
       [ReadFeld setStringValue:@""];
       [WriteFeld setStringValue:@""];
+      [writeWocheTaste setEnabled:NO];
+
       [AdresseFeld setStringValue:@""];
       //int	tempTag=[TagPop indexOfSelectedItem];
       // Start ist MO
@@ -846,7 +855,7 @@ if (Webserver_busy)
 		
 		
 		uint16_t i2cStartadresse=Raum*RAUMPLANBREITE + Objekt*TAGPLANBREITE+ Wochentag*0x08;
-		NSLog(@"i2cStartadresse: %04X",i2cStartadresse);
+		//NSLog(@"i2cStartadresse: %04X",i2cStartadresse);
 		uint8_t lb = i2cStartadresse & 0x00FF;
 		[HomeClientDic setObject:[NSNumber numberWithInt:lb] forKey:@"lbyte"];
 		uint8_t hb = i2cStartadresse >> 8;
@@ -855,7 +864,7 @@ if (Webserver_busy)
 		
 		[HomeClientDic setObject:[NSNumber numberWithInt:hb] forKey:@"hbyte"];
 		[HomeClientDic setObject:DatenArray forKey:@"stundenbytearray"];
-		NSLog(@"WriteStandardAktion Raum: %d wochentag: %d Objekt: %d EEPROM: %02X lb: 0x%02X hb: 0x%02X ",Raum, Wochentag, Objekt,EEPROM_i2cAdresse,lb, hb);
+		//NSLog(@"WriteStandardAktion Raum: %d wochentag: %d Objekt: %d EEPROM: %02X lb: 0x%02X hb: 0x%02X ",Raum, Wochentag, Objekt,EEPROM_i2cAdresse,lb, hb);
 		
 		// Information an HomeClient schicken
 		
@@ -1403,6 +1412,10 @@ if (Webserver_busy)
    //NSLog(@"reportUpdateTaste");
    [Errorfeld setStringValue:@""];
    [Ablauffeld setStringValue:@""];
+   [WochenplanTab selectTabViewItemAtIndex:8];
+   [writeEEPROMcounterfeld setStringValue:@" "];
+   
+
    NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
    [NotificationDic setObject:[NSNumber numberWithInt:1] forKey:@"update"];
    
@@ -1422,7 +1435,7 @@ if (Webserver_busy)
     old: Daten von PList
     Auswahl mit RadioButton
     */
-   NSLog(@"HomeDataUpdateAktion note: %@",[[note userInfo]description]);
+   //NSLog(@"HomeDataUpdateAktion note: %@",[[note userInfo]description]);
    //[EEPROMPop setDocumentView:EEPROMPlan];
    //[EEPROMTextfeld setStringValue:[[[[note userInfo]objectForKey:@"updatearray"]objectAtIndex:0]objectForKey:@"zeile"]];
    
@@ -1969,7 +1982,7 @@ if (Webserver_busy)
 
 - (void)setReadOK
 {
-   NSBeep();
+   [[NSSound soundNamed:@"Glass"] play];
    [Waitrad stopAnimation:NULL];
    [AdresseFeld setStringValue:@""];
    [WriteFeld setStringValue:@""];
@@ -1980,6 +1993,7 @@ if (Webserver_busy)
    [PWFeld setStringValue:@"OK"];
    [readTagTaste setEnabled:1];// TWI-Status muss OFF sein, um EEPROM lesen zu koennen
    [readWocheTaste setEnabled:YES];
+   [writeWocheTaste setEnabled:YES];
    Webserver_busy =0;
 
 }
@@ -2041,6 +2055,8 @@ if (Webserver_busy)
 				[StatusFeld setStringValue:@"Kontakt mit HomeCentral beendet"]; // TWI wieder aktiviert
 				[readTagTaste setEnabled:0];// TWI-Status ON, EEPROM gesperrt
             [readWocheTaste setEnabled:NO];
+            [writeWocheTaste setEnabled:NO];
+
 				[PWFeld setStringValue:@""];
             [TWIStatusTaste setState:1];
             
@@ -2077,7 +2093,7 @@ if (Webserver_busy)
 			
 			if ([[[note userInfo]objectForKey:@"status0"]intValue]==1) // Status 0 hat geklappt
 			{
-            NSLog(@"FinishLoadAktion Status 0 OK beep");
+            //NSLog(@"FinishLoadAktion Status 0 OK beep");
 				//NSBeep();
             [self performSelector:@selector(setReadOK) withObject:nil afterDelay:4];
             
@@ -2184,6 +2200,7 @@ if (Webserver_busy)
 				//NSLog(@"FinishLoadAktion Write und Passwort OK beep");
 				//NSBeep();
 				[WriteFeld setStringValue:@"OK"];
+            [[NSSound soundNamed:@"Tink"] play];
 				[StatusFeld setStringValue:@"EEPROM-Daten geschrieben"];
 				Webserver_busy =0;
             if (TWI_ON_Flag)
@@ -2213,7 +2230,7 @@ if (Webserver_busy)
 		if ((TWI_Status==0)&&Data_OK)// Data OK
 		{
 			//NSLog(@"FinishLoadAktion EEPROM lesen: data ist da");
-			[[NSSound soundNamed:@"Ping"] play];
+			[[NSSound soundNamed:@"Tink"] play];
          
 			[ReadFeld setStringValue:@"OK"];
 			[StatusFeld setStringValue:@"Daten angekommen"];
@@ -2265,6 +2282,7 @@ if (Webserver_busy)
 					Webserver_busy=0;
 					[readTagTaste setEnabled:YES];
                [readWocheTaste setEnabled:YES];
+               
 				}
 			
          

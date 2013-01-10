@@ -552,7 +552,7 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 	//NSLog(@"Router_IP");
 	NSString*IP_DataSuffix=@"ip.txt";
 	NSString* URLPfad=[NSURL URLWithString:[ServerPfad stringByAppendingPathComponent:IP_DataSuffix]];
-	NSLog(@"Router_IP URLPfad: %@",URLPfad);
+	//NSLog(@"Router_IP URLPfad: %@",URLPfad);
 	//NSLog(@"SolarErtragVonJahr  DownloadPfad: %@ IP_DataSuffix: %@",DownloadPfad,IP_DataSuffix);
 	NSURL *URL = [NSURL URLWithString:[ServerPfad stringByAppendingPathComponent:IP_DataSuffix]];
 	

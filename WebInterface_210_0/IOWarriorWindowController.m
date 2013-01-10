@@ -373,7 +373,7 @@ void IOWarriorCallback ()
 		[self setStatistikDaten];
       
       NSArray* IP_Array = [HomeData Router_IP];
-      NSLog(@"IP_Array: %@",[IP_Array description]);
+      //NSLog(@"IP_Array: %@",[IP_Array description]);
       if ([IP_Array count] >1)
       {
          if ([[IP_Array objectAtIndex:0] isEqualToString:[IP_Array objectAtIndex:1]]) // gleiche IP

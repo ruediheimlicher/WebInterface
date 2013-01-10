@@ -1258,11 +1258,11 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
 		
 		// Zeit des ersten Datensatzes
 		int firstZeit = [[[[tempDatenArray objectAtIndex:0] componentsSeparatedByString:@"\t"]objectAtIndex:0]intValue];
-		NSLog(@"firstZeit: %d",firstZeit);
+		//NSLog(@"firstZeit: %d",firstZeit);
 		
 		// Zeit des letzten Datensatzes
 		int lastZeit = [[[[tempDatenArray lastObject] componentsSeparatedByString:@"\t"]objectAtIndex:0]intValue];
-		NSLog(@"lastZeit: %d",lastZeit);
+		//NSLog(@"lastZeit: %d",lastZeit);
 		[LaufzeitFeld setStringValue:[self stringAusZeit:lastZeit]]; 
 		
 		// Breite des DocumentViews bestimmen
@@ -4847,93 +4847,8 @@ NSString* tempFehlerString=[IOWFehlerLog string];
 		[tempTagplanArray addObject:[NSNumber numberWithInt:hexWert]];
 		
 	}
-	
-	//NSLog(@"writeTagplan: tempTagplan: %@",[tempTagplan description]);
-	
-	//NSLog(@"writeTagplan: tempTagplan: %@",[tempKesselStundenplanArray description]);
-	
-	/*
-	 int charCode;
-	 int hexCode=0;
-	 NSString* codeString=[NSString alloc];
-	 if ([tempKesselStundenplanArray count])
-	 {
-	 
-	 int i;
-	 for (i=0;i<24;i++)
-	 {
-	 if (i<[tempKesselStundenplanArray count])
-	 {
-	 int hexWert=[[tempKesselStundenplanArray objectAtIndex:i]intValue]<<6;
-	 //				hexWert+=0x08;
-	 
-	 //				[tempTagplanArray addObject:[NSNumber numberWithInt:hexWert]];
-	 //				NSLog(@"writeTagplan: i: %d Wert: %02X",i,hexWert);
-	 }
-	 else // leere Werte
-	 {
-	 //[tempIOWTagplanArray addObject:@"0"];
-	 [tempTagplanArray addObject:[NSNumber numberWithInt:0x00]];
-	 }
-	 
-	 }//for i
-	 */
-	/*
-	 NSArray* tempModeStundenplanArray=[tempTagplan BrennerStundenArrayForKey:@"modetag"];
-	 if ([tempModeStundenplanArray count])
-	 {
-	 int i;
-	 for (i=0;i<24;i++)
-	 {
-	 if (i<[tempModeStundenplanArray count])
-	 {
-	 //				int hexWert=[[tempModeStundenplanArray objectAtIndex:i]intValue]<<6;
-	 int hexWert=[[tempModeStundenplanArray objectAtIndex:i]intValue]<<4;
-	 hexWert&=0x30;
-	 
-	 //				[tempTagplanArray addObject:[NSNumber numberWithInt:hexWert]];
-	 //				NSLog(@"writeTagplan Modetag :  i: %d Wert: %02X, hexwert: %02X",i,[[tempModeStundenplanArray objectAtIndex:i]intValue],hexWert);
-	 }
-	 else // leere Werte
-	 {
-	 //[tempIOWTagplanArray addObject:@"0"];
-	 //				[tempTagplanArray addObject:[NSNumber numberWithInt:0x08]];
-	 }
-	 
-	 }//for i
-	 
-	 }
-	 */
-	/*
-	 NSArray* tempModeNachtStundenplanArray=[tempTagplan BrennerStundenArrayForKey:@"modenacht"];
-	 if ([tempModeStundenplanArray count])
-	 {
-	 int i;
-	 for (i=0;i<24;i++)
-	 {
-	 if (i<[tempModeNachtStundenplanArray count])
-	 {
-	 //				int hexWert=[[tempModeNachtStundenplanArray objectAtIndex:i]intValue]<<6;
-	 int hexWert=[[tempModeNachtStundenplanArray objectAtIndex:i]intValue]<<2;
-	 hexWert&=0x0C;
-	 
-	 //				[tempTagplanArray addObject:[NSNumber numberWithInt:hexWert]];
-	 //				NSLog(@"writeTagplan Modenacht :  i: %d Wert: %02X, hexwert: %02X",i,[[tempModeNachtStundenplanArray objectAtIndex:i]intValue],hexWert);
-	 }
-	 else // leere Werte
-	 {
-	 //[tempIOWTagplanArray addObject:@"0"];
-	 //				[tempTagplanArray addObject:[NSNumber numberWithInt:0x08]];
-	 }
-	 
-	 }//for i
-	 
-	 }
-	 
-	 }//if Tagplan count
-	 */
 	//NSLog(@"writeTagplan: tempIOWTagplanArray: %@ Anzahl: %d",[tempIOWTagplanArray description],[tempIOWTagplanArray count]);
-	NSLog(@"writeTagplan: tempIOWTagplanArray Anzahl: %d",[tempTagplanArray count]);
+	//NSLog(@"writeTagplan: tempIOWTagplanArray Anzahl: %d",[tempTagplanArray count]);
 	
 	//	[self setI2CStatus:1];
 	[self writeEEPROM:0xA0 anAdresse:TagPopIndex*0x20 mitDaten: tempTagplanArray];
@@ -5066,7 +4981,7 @@ return YES;
 
 -(BOOL)windowShouldClose:(id)sender
 {
-	NSLog(@"Data windowShouldClose");
+	//NSLog(@"Data windowShouldClose");
     return YES;
 }
 

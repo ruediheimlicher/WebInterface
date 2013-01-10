@@ -511,7 +511,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
           //NSLog(@"TWIStatusAktion TWIStatusURL: %@",TWIStatusURLString);
 			
          NSURL *URL = [NSURL URLWithString:TWIStatusURLString];
-         NSLog(@"TWIStatusAktion URL: %@",URL);
+         //NSLog(@"TWIStatusAktion URL: %@",URL);
 			[self loadURL:URL];
          
          [sendTimer invalidate];
@@ -521,6 +521,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
       }
 		else        // neuer Status ist 0
 		{
+         
 			TWIStatusSuffix = [NSString stringWithFormat:@"pw=%@&status=%@",pw,@"0"];
 			
 			
@@ -529,12 +530,12 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
            //NSLog(@"TWIStatusAktion TWIStatusURL: %@",TWIStatusURLString);
          
          NSURL *URL = [NSURL URLWithString:TWIStatusURLString];
-			NSLog(@"TWIStatusAktion URL: %@",URL);
+			//NSLog(@"TWIStatusAktion URL: %@",URL);
 			[self loadURL:URL];
 			
 			//  Blinkanzeige im PWFeld
 			NSMutableDictionary* tempDataDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
-			[tempDataDic setObject:@"*" forKey:@"wait"];
+			//[tempDataDic setObject:@"*" forKey:@"wait"];
 			
 			NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
 			[nc postNotificationName:@"StatusWait" object:self userInfo:tempDataDic];
@@ -605,11 +606,11 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 			{
 			//[self loadURL:URL];
 
-				[tempDataDic setObject:@"*" forKey:@"wait"];
+				//[tempDataDic setObject:@"*" forKey:@"wait"];
 			}
 			else
 			{
-				[tempDataDic setObject:@" " forKey:@"wait"];
+				//[tempDataDic setObject:@" " forKey:@"wait"];
 			}
 			
 			NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
@@ -682,7 +683,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
     
     
     */
-   NSLog(@"HomeClientWriteStandardAktion note stundenbytearray %@",[[note userInfo]description]);
+   //NSLog(@"HomeClientWriteStandardAktion note stundenbytearray %@",[[note userInfo]description]);
 	//NSLog(@"HomeClientWriteStandardAktion note stundenbytearray %@",[[[note userInfo]objectForKey:@"stundenbytearray"]description]);
    //	int Raum=[[[note userInfo]objectForKey:@"raum"]intValue];
    //	int Wochentag=[[[note userInfo]objectForKey:@"wochentag"]intValue];
@@ -1494,7 +1495,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 		CheckRange = [HTML_Inhalt rangeOfString:Status1_String];
 		if (CheckRange.location < NSNotFound)
 		{
-         NSLog(@"didFinishLoadForFrame: Status = 1");
+         //NSLog(@"didFinishLoadForFrame: Status = 1");
 			//[tempDataDic setObject:@"status" forKey:@"antwort"];
 			[tempDataDic setObject:[NSNumber numberWithInt:1] forKey:@"twistatus"];
 		}
@@ -1505,7 +1506,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 		CheckRange = [HTML_Inhalt rangeOfString:status0_String];
 		if (CheckRange.location < NSNotFound)
 		{
-			NSLog(@"didFinishLoadForFrame: status0+ ist da");
+			//NSLog(@"didFinishLoadForFrame: status0+ ist da");
 			[tempDataDic setObject:[NSNumber numberWithInt:1] forKey:@"status0"];
 			[confirmStatusTimer invalidate];
 		}

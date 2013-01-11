@@ -204,13 +204,13 @@ IBOutlet id							SolaranlageBild;
 
 
 // SolarStatistikTab
-IBOutlet id				SolarStatistikDiagrammFeld;
-IBOutlet	id				SolarStatistikDiagrammScroller;
-IBOutlet	id				SolarStatistikJahrPop;
-IBOutlet	id				SolarStatistikMonatPop;
-IBOutlet	id				SolarStatistikTagPop;
-IBOutlet	id				SolarStatistikKalender;
-IBOutlet	id				SolarStatistikAuswahlTaste;
+IBOutlet id                   SolarStatistikDiagrammFeld;
+IBOutlet	id                   SolarStatistikDiagrammScroller;
+IBOutlet	id                   SolarStatistikJahrPop;
+IBOutlet	id                   SolarStatistikMonatPop;
+IBOutlet	id                   SolarStatistikTagPop;
+IBOutlet	id                   SolarStatistikKalender;
+IBOutlet	id                   SolarStatistikAuswahlTaste;
 //rStatistikDiagramm*			SolarStatistikDiagramm;
 //rLegende*							SolarStatistikLegende;
 //rDiagrammGitterlinien*		SolarGitterlinien;
@@ -243,6 +243,8 @@ rLegende*							SolarStatistikLegende;
 - (IBAction)reportStatistikMonat:(id)sender;
 - (IBAction)reportSuchen:(id)sender;
 - (IBAction)reportSolarClear:(id)sender;
+- (IBAction)reportSolarZeitKompression:(id)sender;
+
 - (void)clearSolarData;
 - (IBAction)reportSolarKalender:(id)sender;
 - (void)readTagplan:(int)i2cAdresse vonAdresse:(int)startAdresse anz:(int)anzDaten;

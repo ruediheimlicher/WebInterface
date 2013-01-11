@@ -328,6 +328,7 @@
 	float stretch = dieKompression/ZeitKompression;
 	//NSLog(@"Gitterlinien setZeitKompression ZeitKompression: %2.2f dieKompression: %2.2f stretch: %2.2f",ZeitKompression,dieKompression,stretch);
 	ZeitKompression=dieKompression;
+   
 	
 	int i;
 	
@@ -436,7 +437,7 @@
 		
 		
 	}
-	
+	[self setNeedsDisplay:YES];
 	/*
 	NSRect tempRect=[self frame];
 	tempRect.size.width = tempRect.size.width * stretch;

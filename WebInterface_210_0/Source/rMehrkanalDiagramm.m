@@ -73,7 +73,9 @@ void r_itoa(int32_t zahl, char* string)
 		for (i=0;i<8;i++)
 		{
 			NSBezierPath* tempGraph=[NSBezierPath bezierPath];
+         
 			[tempGraph retain];
+         [tempGraph setLineWidth:1.5];
 			float varRed=sin(i+(float)i/10.0)/3.0+0.6;
 			float varGreen=sin(2*i+(float)i/10.0)/3.0+0.6;
 			float varBlue=sin(3*i+(float)i/10.0)/3.0+0.6;
@@ -85,7 +87,7 @@ void r_itoa(int32_t zahl, char* string)
 			[GraphFarbeArray addObject:tempColor];
 			[GraphArray addObject:tempGraph];
 			//[GraphKanalArray addObject:[NSMutableDictionary alloc]initWithCapacity:0]];
-
+in i
 			[GraphKanalArray addObject:[NSNumber numberWithInt:0]];
 			[DatenArray addObject:[[NSMutableArray alloc]initWithCapacity:0]];
 			NSRect tempRect=NSMakeRect(0,0,55,18);
@@ -384,7 +386,7 @@ NSLog(@"setWert Kanal: %d  x: %2.2f y: %2.2f ",derKanal, derWert.x, derWert.y);
 - (void)setZeitKompression:(float)dieKompression
 {
 	float stretch = dieKompression/ZeitKompression;
-	//NSLog(@"MKDiagramm setZeitKompression ZeitKompression: %2.2f dieKompression: %2.2f stretch: %2.2f",ZeitKompression,dieKompression,stretch);
+	NSLog(@"MKDiagramm setZeitKompression ZeitKompression: %2.2f dieKompression: %2.2f stretch: %2.2f",ZeitKompression,dieKompression,stretch);
 	ZeitKompression=dieKompression;
 	NSAffineTransform *transform = [NSAffineTransform transform];
 	[transform scaleXBy: stretch yBy: 1.0];
@@ -442,9 +444,10 @@ NSLog(@"setWert Kanal: %d  x: %2.2f y: %2.2f ",derKanal, derWert.x, derWert.y);
 		//NSLog(@"setWerteArray: Kanal: %d x: %2.2f y: %2.2f",i,neuerPunkt.x,neuerPunkt.y);
 
 		NSBezierPath* neuerGraph=[NSBezierPath bezierPath];
+      
 		[neuerGraph moveToPoint:[[GraphArray objectAtIndex:i]currentPoint]];//last Point			
 		[neuerGraph lineToPoint:neuerPunkt];
-		[[GraphArray objectAtIndex:i]appendBezierPath:neuerGraph];			
+		[[GraphArray objectAtIndex:i]appendBezierPath:neuerGraph];
 	}
 	[derKanalArray retain];
 	[GraphKanalArray setArray:derKanalArray];
@@ -621,7 +624,8 @@ NSLog(@"setWert Kanal: %d  x: %2.2f y: %2.2f ",derKanal, derWert.x, derWert.y);
 		//NSLog(@"drawRect Farbe Kanal: %d Color: %@",i,[[GraphFarbeArray objectAtIndex:i] description]);
 		if ([[GraphKanalArray objectAtIndex:i]intValue])
 		{
-			[[GraphFarbeArray objectAtIndex:i]set];
+			[(NSColor*)[GraphFarbeArray objectAtIndex:i]set];
+         //[[GraphArray objectAtIndex:i]setLineWidth:4.5];
 			[[GraphArray objectAtIndex:i]stroke];
 			NSPoint cP=[[GraphArray objectAtIndex:i]currentPoint];
 			//cP.x+=2;

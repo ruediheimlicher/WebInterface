@@ -852,10 +852,13 @@ extern NSMutableArray* DatenplanTabelle;
 	//[SolarDiagramm setMaxEingangswert:40];
 	[SolarDiagramm  setPostsFrameChangedNotifications:YES];
 	[SolarDiagramm setTag:400];
-	[SolarDiagramm setGraphFarbe:[NSColor redColor] forKanal:0];
-	[SolarDiagramm setGraphFarbe:[NSColor blueColor] forKanal:1];
-	[SolarDiagramm setGraphFarbe:[NSColor blackColor] forKanal:2];
-	[SolarDiagramm setGraphFarbe:[NSColor grayColor] forKanal:3];
+	[SolarDiagramm setGraphFarbe:[NSColor greenColor] forKanal:0]; // KV
+	[SolarDiagramm setGraphFarbe:[NSColor redColor] forKanal:1]; // KR
+	[SolarDiagramm setGraphFarbe:[NSColor blueColor] forKanal:2];// BU
+	[SolarDiagramm setGraphFarbe:[NSColor lightGrayColor] forKanal:3];// BM
+   [SolarDiagramm setGraphFarbe:[NSColor redColor] forKanal:4];// BO
+   [SolarDiagramm setGraphFarbe:[NSColor orangeColor] forKanal:5];// KT
+   //[SolarDiagramm setGraphFarbe:[NSColor redColor] forKanal:6];//
 	[SolarDiagramm setZeitKompression:[[SolarZeitKompressionTaste titleOfSelectedItem]floatValue]];
 	
 	[[SolarDiagrammScroller documentView]addSubview:SolarDiagramm];
@@ -4022,6 +4025,7 @@ if ([[note userInfo]objectForKey:@"err"])
 }
 
 
+
 - (IBAction)reportZeitKompression:(id)sender
 {
 	float stretch=[[sender titleOfSelectedItem]floatValue]/ZeitKompression;
@@ -4102,37 +4106,148 @@ if ([[note userInfo]objectForKey:@"err"])
 	NSRect ContRect=[[TemperaturDiagrammScroller contentView]frame];
 	if ((DocRect.size.width * stretch) > ContRect.size.width)
 	{
-	DocRect.size.width *= stretch;
-	
-	NSRect MKRect=[TemperaturMKDiagramm frame];
-	MKRect.size.width = DocRect.size.width;
-	[TemperaturMKDiagramm setFrame:MKRect];
-	
-	NSRect BrennerRect=[BrennerDiagramm frame];
-	BrennerRect.size.width = DocRect.size.width;
-	[BrennerDiagramm setFrame:BrennerRect];
-
-	NSRect GitterRect=[Gitterlinien frame];
-	GitterRect.size.width = DocRect.size.width;
-	[Gitterlinien setFrame:GitterRect];
-
-	
-	
-	
-	[[TemperaturDiagrammScroller documentView] setFrame:DocRect];
-	NSPoint tempOrigin=[[TemperaturDiagrammScroller documentView] frame].origin;
-	
-	[[TemperaturDiagrammScroller documentView] setFrameOrigin:tempOrigin];
-	
-	NSPoint scrollPoint=[[TemperaturDiagrammScroller documentView]bounds].origin;
-	
-	[[TemperaturDiagrammScroller contentView] scrollPoint:scrollPoint];
-	[TemperaturDiagrammScroller setNeedsDisplay:YES];
-	
-	
-	[[TemperaturDiagrammScroller contentView]setNeedsDisplay:YES];
+      DocRect.size.width *= stretch;
+      
+      NSRect MKRect=[TemperaturMKDiagramm frame];
+      MKRect.size.width = DocRect.size.width;
+      [TemperaturMKDiagramm setFrame:MKRect];
+      
+      NSRect BrennerRect=[BrennerDiagramm frame];
+      BrennerRect.size.width = DocRect.size.width;
+      [BrennerDiagramm setFrame:BrennerRect];
+      
+      NSRect GitterRect=[Gitterlinien frame];
+      GitterRect.size.width = DocRect.size.width;
+      [Gitterlinien setFrame:GitterRect];
+      
+      
+      
+      
+      [[TemperaturDiagrammScroller documentView] setFrame:DocRect];
+      NSPoint tempOrigin=[[TemperaturDiagrammScroller documentView] frame].origin;
+      
+      [[TemperaturDiagrammScroller documentView] setFrameOrigin:tempOrigin];
+      
+      NSPoint scrollPoint=[[TemperaturDiagrammScroller documentView]bounds].origin;
+      
+      [[TemperaturDiagrammScroller contentView] scrollPoint:scrollPoint];
+      [TemperaturDiagrammScroller setNeedsDisplay:YES];
+      
+      
+      [[TemperaturDiagrammScroller contentView]setNeedsDisplay:YES];
 	}
 	
+}
+
+
+- (IBAction)reportSolarZeitKompression:(id)sender
+{
+   
+   float stretch=[[sender titleOfSelectedItem]floatValue]/SolarZeitKompression;
+	
+	NSLog(@"reportSolarZeitKompression: %2.2F stretch: %2.2f",[[sender titleOfSelectedItem]floatValue],stretch);
+	
+	SolarZeitKompression=[[sender titleOfSelectedItem]floatValue];
+   
+   [SolarDiagramm setZeitKompression:SolarZeitKompression];
+	[SolarDiagramm setEinheitenDicY:[NSDictionary dictionaryWithObject:[sender titleOfSelectedItem] forKey:@"zeitkompression"]];
+   
+	[SolarEinschaltDiagramm setZeitKompression:SolarZeitKompression];
+
+   int tempIntervall=2;
+   
+   switch ([[sender selectedItem]tag])
+	{
+		case 0: // 5
+			break;
+		case 1: // 2
+			break;
+		case 2: // 1.0
+			break;
+			
+		case 3: // 0.75
+		case 4: // 0.5
+			tempIntervall=5;
+			break;
+			
+		case 5: // 0.2
+			tempIntervall=10;
+			break;
+		case 6: // 0.1
+			tempIntervall=20;
+			break;
+		case 7: // 0.05
+			tempIntervall=30;
+			break;
+		case 8: // 0.02
+			tempIntervall=60;
+			break;
+		case 9: // 0.01
+			tempIntervall=120;
+			break;
+         
+	} // switch tag
+   
+   [SolarGitterlinien setEinheitenDicY:[NSDictionary dictionaryWithObject:[NSNumber numberWithInt:tempIntervall] forKey:@"intervall"]];
+   
+   
+	NSArray* StringArray=[[SolarDatenFeld string]componentsSeparatedByString:@"\r"];
+	NSMutableArray* AbszissenArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+	int i;
+	for (i=0;i<[StringArray count];i++)
+	{
+		if ([StringArray objectAtIndex:i])
+		{
+			NSArray* ZeilenArray=[[StringArray objectAtIndex:i]componentsSeparatedByString:@"\t"];
+			if ([ZeilenArray count]>1)
+			{
+				[AbszissenArray addObject:[ZeilenArray objectAtIndex:1]]; // Object 0 ist
+			}
+		}
+	}
+	//NSLog(@"Data AbszissenArray: %@",[AbszissenArray description]);
+	[SolarGitterlinien setZeitKompression:ZeitKompression mitAbszissenArray:AbszissenArray];
+
+   [SolarGitterlinien setNeedsDisplay:YES];
+   
+   //
+   
+	NSRect DocRect=	[[SolarDiagrammScroller documentView]frame];
+	NSRect ContRect=[[SolarDiagrammScroller contentView]frame];
+	if ((DocRect.size.width * stretch) > ContRect.size.width)
+	{
+      DocRect.size.width *= stretch;
+      
+      NSRect MKRect=[SolarDiagramm frame];
+      MKRect.size.width = DocRect.size.width;
+      [SolarDiagramm setFrame:MKRect];
+      
+      NSRect BrennerRect=[SolarEinschaltDiagramm frame];
+      BrennerRect.size.width = DocRect.size.width;
+      [SolarEinschaltDiagramm setFrame:BrennerRect];
+      
+      NSRect GitterRect=[SolarGitterlinien frame];
+      GitterRect.size.width = DocRect.size.width;
+      [SolarGitterlinien setFrame:GitterRect];
+      
+      
+      
+      
+      [[SolarDiagrammScroller documentView] setFrame:DocRect];
+      NSPoint tempOrigin=[[SolarDiagrammScroller documentView] frame].origin;
+      
+      [[SolarDiagrammScroller documentView] setFrameOrigin:tempOrigin];
+      
+      NSPoint scrollPoint=[[SolarDiagrammScroller documentView]bounds].origin;
+      
+      [[SolarDiagrammScroller contentView] scrollPoint:scrollPoint];
+      [SolarDiagrammScroller setNeedsDisplay:YES];
+      
+      
+      [[SolarDiagrammScroller contentView]setNeedsDisplay:YES];
+   }
+   
+   //
 }
 
 

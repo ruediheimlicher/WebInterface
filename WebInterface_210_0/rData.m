@@ -4206,7 +4206,7 @@ if ([[note userInfo]objectForKey:@"err"])
 		}
 	}
 	//NSLog(@"Data AbszissenArray: %@",[AbszissenArray description]);
-	[SolarGitterlinien setZeitKompression:ZeitKompression mitAbszissenArray:AbszissenArray];
+	[SolarGitterlinien setZeitKompression:SolarZeitKompression mitAbszissenArray:AbszissenArray];
 
    [SolarGitterlinien setNeedsDisplay:YES];
    

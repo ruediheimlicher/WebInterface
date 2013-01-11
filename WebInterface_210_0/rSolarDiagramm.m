@@ -36,7 +36,7 @@
 }
 - (void)setEinheitenDicY:(NSDictionary*)derEinheitenDic
 {
-   NSLog(@"SolarDiagramm setEinheitenDicY: %@",[derEinheitenDic description]);
+   //NSLog(@"SolarDiagramm setEinheitenDicY: %@",[derEinheitenDic description]);
 	[super setEinheitenDicY:derEinheitenDic];
 }
 

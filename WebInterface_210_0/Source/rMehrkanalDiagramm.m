@@ -87,7 +87,6 @@ void r_itoa(int32_t zahl, char* string)
 			[GraphFarbeArray addObject:tempColor];
 			[GraphArray addObject:tempGraph];
 			//[GraphKanalArray addObject:[NSMutableDictionary alloc]initWithCapacity:0]];
-in i
 			[GraphKanalArray addObject:[NSNumber numberWithInt:0]];
 			[DatenArray addObject:[[NSMutableArray alloc]initWithCapacity:0]];
 			NSRect tempRect=NSMakeRect(0,0,55,18);

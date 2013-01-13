@@ -211,14 +211,16 @@ IBOutlet	id                   SolarStatistikMonatPop;
 IBOutlet	id                   SolarStatistikTagPop;
 IBOutlet	id                   SolarStatistikKalender;
 IBOutlet	id                   SolarStatistikAuswahlTaste;
-//rStatistikDiagramm*			SolarStatistikDiagramm;
-//rLegende*							SolarStatistikLegende;
-//rDiagrammGitterlinien*		SolarGitterlinien;
-rTagGitterlinien*					SolarTagGitterlinien;
-rSolarStatistikDiagramm*		SolarStatistikDiagramm;
-rOrdinate*							SolarStatistikOrdinate;
-rLegende*							SolarStatistikLegende;
 
+rStatistikDiagramm*           SolarStatistikDiagramm;
+rLegende*							SolarStatistikLegende;
+rDiagrammGitterlinien*        SolarStatistikGitterlinien;
+
+rSolarStatistikDiagramm*		ElektroStatistikDiagramm;
+rOrdinate*							SolarStatistikOrdinate;
+rLegende*							ElektroStatistikLegende;
+
+rTagGitterlinien*					SolarTagGitterlinien;
 
 
 
@@ -264,6 +266,8 @@ rLegende*							SolarStatistikLegende;
 - (IBAction)reportPrint:(id)sender;
 - (void)setBrennerStatistik:(NSDictionary*)derDatenDic;
 - (IBAction)reload:(id)sender;
+
+- (void)setSolarStatistik:(NSDictionary*)derDatenDic;
 - (IBAction)reportSolarUpdate:(id)sender;
 - (void)setSolarKalenderBlocker:(int)derStatus;
 - (IBAction)reportSolarStatistikKalender:(id)sender;

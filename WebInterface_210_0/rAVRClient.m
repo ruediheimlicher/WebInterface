@@ -1119,6 +1119,7 @@ if (Webserver_busy)
       [updateDic setObject:updateArray forKey:@"updatearray"];
 		[updateDic setObject:[NSNumber numberWithInt:10]forKey:@"timeoutcounter"];
       
+      
       NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
       [nc postNotificationName:@"updateEEPROM" object:self userInfo:updateDic];
       
@@ -1429,7 +1430,7 @@ if (Webserver_busy)
 {
    /*
     Daten aus HomeData EEPROMUpdateAktion. File eepromupdate.txt enthaelt Daten, die vom iPhone aus geaendert wurden, aber im Webinterface
-    noch nicht im PList sind. 
+    noch nicht in der PList sind.
     Aktion sucht die PListeintraege dazu und setzt zwei Tagplanbalken in den EEPROM-Scroller.
     new: Daten vom Server
     old: Daten von PList
@@ -1685,11 +1686,11 @@ if (Webserver_busy)
 {
    /*
     Stellt je nach Wert des Radiobuttons zwei Array zusammen
-    PListFixArray: Daten vom Homeserver sollen in die PList geschrieben werden, Tagplanbalken soll neu gezeichnet werden.
+    PListFixArray: Daten vom Homeserver (und vom damit synchronisierten EEPROM) sollen in die PList geschrieben werden, Tagplanbalken soll neu gezeichnet werden.
     > updatePListMitDicArray
     
     
-    HomeServerFixArray: Daten auf dem Homeserver werden verworfen, die urspruenglichen Daten aus der PList werden auf den Server geschrieben
+    HomeServerFixArray: Daten auf dem Homeserver werden verworfen, die urspruenglichen Daten aus der PList werden ins EEPROM und auf den Server geschrieben
     > updateEEPROMMitDicArray
     */
    
@@ -1747,7 +1748,7 @@ if (Webserver_busy)
                            
                         }
                      }break;
-                     case 1: // old
+                     case 1: // Anzeige  in EEPROm uebernehmen
                      {
                         if ([EEPROMPlan  viewWithTag:tempTag+oldbalkenoffset])
                         {
@@ -1905,7 +1906,7 @@ if (Webserver_busy)
       [NotificationDic setObject:[NSNumber numberWithInt:13] forKey:@"perm"];
       
       NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
-      [nc postNotificationName:@"EEPROMUpdateClear" object:self userInfo:NotificationDic];
+//      [nc postNotificationName:@"EEPROMUpdateClear" object:self userInfo:NotificationDic];
    }
    
    [PListFixArray release];

@@ -1254,7 +1254,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 {
    NSLog(@"updateEEPROMAktion ");
    NSMutableDictionary* updateDic=(NSMutableDictionary*) [note userInfo];
-   //NSLog(@"updateEEPROMAktion updateDic: %@",[updateDic description]);
+   NSLog(@"updateEEPROMAktion updateDic: %@",[updateDic description]);
    //NSLog(@"updateEEPROMAktion updatearray: %@",[[updateDic objectForKey:@"updatearray"]objectAtIndex:0]);
    //NSDictionary* sendDic = [[updateDic objectForKey:@"updatearray"]objectAtIndex:0];
    NSMutableDictionary* sendDic = [[NSMutableDictionary alloc]initWithDictionary:updateDic];
@@ -1268,7 +1268,8 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 
    // Anzahl Pakete
    [sendDic setObject:[NSNumber numberWithInt:[[updateDic objectForKey:@"updatearray"]count]] forKey:@"updatecounter"];
-   //NSLog(@"updateEEPROMAktion sendDic: %@",[sendDic description]);
+   
+   NSLog(@"updateEEPROMAktion sendDic: %@",[sendDic description]);
    
    //NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
    
@@ -1278,6 +1279,8 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
   //[self HomeClientWriteStandardAktion:(NSNotification*)sendDic];
    
    int sendDelay=1.0;
+   
+   
    
    EEPROMUpdateTimer=[[NSTimer scheduledTimerWithTimeInterval:sendDelay
                                                        target:self

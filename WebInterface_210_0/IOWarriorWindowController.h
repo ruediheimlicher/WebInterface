@@ -173,6 +173,7 @@
 - (IBAction)ResetI2C:(id)sender;
 - (void)setBrennerDatenFor:(int)dasJahr;
 - (void)setStatistikDaten;
+- (void)setSolarStatistikDaten;
 @end
 
 @interface IOWarriorWindowController(rDataController)

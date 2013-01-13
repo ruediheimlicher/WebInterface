@@ -2883,6 +2883,28 @@ n=0;
 	}
 	else 
 	{
+      
+      if ([self TWIStatus] == 0) // Homebus noch deaktiviert
+      {
+			NSAlert *Warnung = [[[NSAlert alloc] init] autorelease];
+         [Warnung addButtonWithTitle:@"OK"];
+         //	[Warnung addButtonWithTitle:@""];
+         //	[Warnung addButtonWithTitle:@""];
+         //	[Warnung addButtonWithTitle:@"Abbrechen"];
+         [Warnung setMessageText:[NSString stringWithFormat:@"%@",@"Homebus ist deaktiviert!"]];
+         
+         NSString* s1=@"Der Homebus muss aktiviert sein, um beenden zu koennen.";
+         NSString* s2=@"";
+         NSString* InformationString=[NSString stringWithFormat:@"%@\n%@",s1,s2];
+         [Warnung setInformativeText:InformationString];
+         [Warnung setAlertStyle:NSWarningAlertStyle];
+         
+         int antwort=[Warnung runModal];
+         return NO;
+         
+         
+      }
+
 	return NO;
 	}
 

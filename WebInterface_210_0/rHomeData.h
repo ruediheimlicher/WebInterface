@@ -64,6 +64,7 @@
 - (NSArray*)TemperaturStatistikVonJahr:(int)dasJahr Monat:(int)derMonat;
 - (int)lastDataZeitVon:(NSString*)derDatenString;
 
+- (NSArray*)ElektroStatistikVonJahr:(int)dasJahr Monat:(int)derMonat;
 - (IBAction)reportURLPop:(id)sender;
 - (NSArray*)SolarErtragVonHeute;
 - (NSArray*)SolarErtragVonJahr:(int)dasJahr Monat:(int)derMonat Tag:(int)derTag;

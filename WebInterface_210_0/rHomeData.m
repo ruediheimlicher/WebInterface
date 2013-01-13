@@ -392,7 +392,7 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 		//ruediheimlicher
 		NSURL *lastTimeURL = [NSURL URLWithString:@"http://www.ruediheimlicher.ch/Data/HomeCentralPrefs.txt"];
 		//NSURLRequest* lastTimeRequest=[ [NSURLRequest alloc] initWithURL: lastTimeURL cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:30.0];
-		NSURLRequest* lastTimeRequest=[ [NSURLRequest alloc] initWithURL: lastTimeURL cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData timeoutInterval:10.0];
+		NSURLRequest* lastTimeRequest=[ [NSURLRequest alloc] initWithURL: lastTimeURL cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData timeoutInterval:5.0];
 		//NSLog(@"Cache mem: %d",[[NSURLCache sharedURLCache]memoryCapacity]);
 		
 	
@@ -1209,6 +1209,83 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 	}
 	
 	return TemperaturdatenArray;
+}
+
+
+
+
+- (NSArray*)ElektroStatistikVonJahr:(int)dasJahr Monat:(int)derMonat
+{
+   // Zeile: 29.12.10	tab Elektro-Laufzeit: 1101	tab Pumpe-Laufzeit: 0.0
+	NSMutableArray* ElektrodatenArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+	//NSLog(@"ElektroStatistikVon: %d",dasJahr);
+	DataSuffix=@"ElektroZeit.txt";
+	NSString* URLPfad=[NSURL URLWithString:[ServerPfad stringByAppendingPathComponent:DataSuffix]];
+	//NSLog(@"ElektroStatistikVonJahr URLPfad: %@",URLPfad);
+	//NSLog(@"ElektroStatistikVonJahr  DownloadPfad: %@ DataSuffix: %@",DownloadPfad,DataSuffix);
+	NSURL *URL = [NSURL URLWithString:[ServerPfad stringByAppendingPathComponent:DataSuffix]];
+   
+	NSLog(@"ElektroStatistikVonJahr URL: %@",URL);
+	
+	NSStringEncoding *  enc=0;
+	NSCharacterSet* CharOK=[NSCharacterSet alphanumericCharacterSet];
+	NSString* DataString=[NSString stringWithContentsOfURL:URL usedEncoding: enc error:NULL];
+	//NSLog(@"ElektroStatistikVonJahr DataString: %@",DataString);
+	
+	if ([DataString length])
+	{
+		char first=[DataString characterAtIndex:0];
+		
+		// eventuellen Leerschlag am Anfang entfernen
+		
+		if (![CharOK characterIsMember:first])
+		{
+			//NSLog(@"DataVonHeute: String korrigieren");
+			DataString=[DataString substringFromIndex:1];
+		}
+		//NSLog(@"ElektroStatistikVonJahr DataString: \n%@",DataString);
+		NSArray* tempZeilenArray = [DataString componentsSeparatedByString:@"\n"];
+		//NSLog(@"ElektroStatistikVonJahr tempZeilenArray: \n%@",[tempZeilenArray description]);
+		NSEnumerator* ZeilenEnum =[tempZeilenArray objectEnumerator];
+		id eineZeile;
+		while (eineZeile=[ZeilenEnum nextObject])
+		{
+			NSMutableDictionary* tempDic=[[NSMutableDictionary alloc]initWithCapacity:0];
+			
+			NSArray* tempDatenArray = [eineZeile componentsSeparatedByString:@"\t"];
+			int n=[tempDatenArray count];
+			//NSLog(@"ElektroStatistikVonJahr tempDatenArray: %@, n %d",[tempDatenArray description], n);
+			// calendarFormat:@"%d, %m %y"];
+			
+			if (n==3)
+			{
+				NSCalendarDate* Datum=[NSCalendarDate dateWithString:[tempDatenArray objectAtIndex:0] calendarFormat:@"%d.%m.%y"];
+				int TagDesJahres = [Datum dayOfYear];
+				int Jahr=[Datum yearOfCommonEra];
+				int Monat=[Datum monthOfYear];
+				if ((Jahr == dasJahr)&& ((derMonat==0)||(Monat==derMonat)))
+				{
+               //NSLog(@" ElektroStatistikVonJahr Datum: %@, TagDesJahres: %d",[Datum description],TagDesJahres);
+               [tempDic setObject:[NSNumber numberWithInt:TagDesJahres] forKey:@"tagdesjahres"];
+               [tempDic setObject:Datum forKey:@"calenderdatum"];
+               [tempDic setObject:[tempDatenArray objectAtIndex:0] forKey:@"datum"];
+               NSArray* laufzeitArray=[[tempDatenArray objectAtIndex:1]componentsSeparatedByString:@" "];
+               [tempDic setObject:[laufzeitArray lastObject] forKey:@"elektrolaufzeit"];
+              
+               
+               NSArray* elektroZeitArray=[[tempDatenArray objectAtIndex:2]componentsSeparatedByString:@" "];
+               [tempDic setObject:[elektroZeitArray lastObject] forKey:@"pumpelaufzeit"];
+               
+               //[tempDic setObject:[tempDatenArray objectAtIndex:1] forKey:@"laufzeit"];
+               
+               [ElektrodatenArray addObject:tempDic];
+				}
+			}
+		}//while
+		
+	}
+	
+	return ElektrodatenArray;
 }
 
 

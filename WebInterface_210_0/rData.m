@@ -760,8 +760,6 @@ extern NSMutableArray* DatenplanTabelle;
 	
 	[BrennerStatistikDiagramm setEinheitenDicY: BrennerStatistikEinheitenDic];
 	
-	
-	
 	NSRect BrennerStatistikOrdinatenFeld=[StatistikDiagrammScroller frame];	// Feld des ScrollViews
 	BrennerStatistikOrdinatenFeld.size.width=40;													// Breite setzen
 	BrennerStatistikOrdinatenFeld.size.height=[BrennerStatistikDiagramm frame].size.height;	// Hoehe gleich wie StatisikDiagramm
@@ -1031,10 +1029,10 @@ extern NSMutableArray* DatenplanTabelle;
 	
 	NSMutableDictionary* SolarStatistikEinheitenDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
 	[SolarStatistikEinheitenDic setObject:[NSNumber numberWithInt:2]forKey:@"minorteile"];
-	[SolarStatistikEinheitenDic setObject:[NSNumber numberWithInt:6]forKey:@"majorteile"];
+	[SolarStatistikEinheitenDic setObject:[NSNumber numberWithInt:7]forKey:@"majorteile"];
 	[SolarStatistikEinheitenDic setObject:[NSNumber numberWithInt:10]forKey:@"nullpunkt"];
 	[SolarStatistikEinheitenDic setObject:[NSNumber numberWithInt:120]forKey:@"maxy"];
-	[SolarStatistikEinheitenDic setObject:[NSNumber numberWithInt:0]forKey:@"miny"];
+	[SolarStatistikEinheitenDic setObject:[NSNumber numberWithInt:-20]forKey:@"miny"];
 	//[SolarStatistikEinheitenDic setObject:[NSNumber numberWithFloat:[[ZeitKompressionTaste titleOfSelectedItem]floatValue]]forKey:@"zeitkompression"];
 	[SolarStatistikEinheitenDic setObject:@" °C"forKey:@"einheit"];
 	
@@ -1045,6 +1043,7 @@ extern NSMutableArray* DatenplanTabelle;
 	
 	// Diagrammzeichnen veranlassen
 	NSMutableDictionary* BalkendatenDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+   
 	[BalkendatenDic setObject:[NSNumber numberWithInt:1]forKey:@"statistikdaten"];
 	[BalkendatenDic setObject:[NSNumber numberWithInt:1]forKey:@"aktion"];
 	
@@ -3431,6 +3430,7 @@ if ([[note userInfo]objectForKey:@"err"])
 			[StatistikArray addObject:tempDic];
 		}
 	}
+   
 	//NSLog(@"Data setBrennerStatstik: D");
 	//NSLog(@"Data setBrennerStatstik: StatistikArray: %@",[StatistikArray description]);
 	int i=0;
@@ -3566,6 +3566,106 @@ if ([[note userInfo]objectForKey:@"err"])
 
 }
 
+
+- (void)setSolarStatistik:(NSDictionary*)derDatenDic
+{
+	/*
+	 derDatenDic enthaelt Arrays der setSolarStatistik und der Temperaturstatistik
+	 Jedes Objekt der Arrays enthaelt das Datum und den TagDesJahres
+	 elektrodatenarray: Einschaltdauer von Pumpe und Elektroeinsatz
+    elektrokanalarray: Angabe der Kanaele, die angezeigt weden sollen. Hier kanal 0 und 1
+
+    temperaturdatenarray: Mittelwerte fuer Ganzen Tag, Tag und Nacht
+    temperaturkanalarray: Angabe der Kanaele, die angezeigt weden sollen. Hier kanal 0, 1 und 2
+
+    */
+	
+   NSArray* TemperaturdatenArray =[NSArray array];
+	NSArray* ElektrodatenArray =[NSArray array];
+
+   
+	//NSLog(@"[StatistikDiagrammScroller documentView]: w: %2.2f",[[StatistikDiagrammScroller documentView]frame].size.width);
+	
+	//NSLog(@"Data setSolarStatistik: %@",[derDatenDic description]);
+   
+   if ([derDatenDic objectForKey:@"elektrodatenarray"])
+	{
+      NSSet* ElektrodatenSet = [NSSet setWithArray:[derDatenDic objectForKey:@"elektrodatenarray"]]; // entfernt doppelte Werte
+      ElektrodatenArray=[ElektrodatenSet allObjects];
+     
+      
+		//NSLog(@"Data setSolarStatstik: TemperaturdatenArray %@",[[derDatenDic objectForKey:@"elektrodatenarray"] description]);
+		NSSortDescriptor* tagDescriptor = [[[NSSortDescriptor alloc] initWithKey:@"tagdesjahres"
+																							ascending:YES] autorelease];
+		NSArray* sortDescriptors = [NSArray arrayWithObject:tagDescriptor];
+		ElektrodatenArray = [ElektrodatenArray sortedArrayUsingDescriptors:sortDescriptors];
+		//ElektrodatenArray = [derDatenDic objectForKey:@"elektrodatenarray"];
+	}
+
+   if ([derDatenDic objectForKey:@"temperaturdatenarray"])
+	{
+      NSSet* TemperaturdatenSet = [NSSet setWithArray:[derDatenDic objectForKey:@"temperaturdatenarray"]]; // entfernt doppelte Werte
+      TemperaturdatenArray=[TemperaturdatenSet allObjects];
+
+		//NSLog(@"Data setSolarStatstik: TemperaturdatenArray %@",[[derDatenDic objectForKey:@"temperaturdatenarray"] description]);
+		NSSortDescriptor* tagDescriptor = [[[NSSortDescriptor alloc] initWithKey:@"tagdesjahres"
+																							ascending:YES] autorelease];
+		NSArray* sortDescriptors = [NSArray arrayWithObject:tagDescriptor];
+		TemperaturdatenArray = [TemperaturdatenArray sortedArrayUsingDescriptors:sortDescriptors];
+		//TemperaturdatenArray = [derDatenDic objectForKey:@"temperaturdatenarray"];
+	}
+   
+   NSArray* ElektrotagArray=[ElektrodatenArray valueForKey:@"tagdesjahres"];
+   
+	NSArray* TemperaturtagArray=[TemperaturdatenArray valueForKey:@"tagdesjahres"];
+	//NSLog(@"TemperaturtagArray count: %d last: %d array: %@",[TemperaturtagArray count],[[TemperaturtagArray lastObject]intValue],[TemperaturtagArray description]);
+	
+	NSMutableArray* StatistikArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+
+   int index=0;
+	
+	for (index=0;index<366;index++)
+	{
+		
+		int anz=0;
+		NSNumber* indexNumber = [NSNumber numberWithInt:index];
+		NSMutableDictionary* tempDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+      
+		int TempIndex=[TemperaturtagArray indexOfObject:indexNumber];
+		if (TempIndex < [TemperaturdatenArray count] && [TemperaturdatenArray objectAtIndex:TempIndex])
+         {
+      
+      if (TempIndex < NSNotFound) // Es gibt einen Eintrag
+		{
+         //NSLog(@"index: %d TempIndex: %d TemperaturdatenArray at index: %@",index,TempIndex,[[TemperaturdatenArray objectAtIndex:TempIndex]description]);
+
+			anz++;
+         
+			[tempDic addEntriesFromDictionary:[TemperaturdatenArray objectAtIndex:TempIndex]];
+		}
+                       }
+		int ElektroIndex=[ElektrotagArray indexOfObject:indexNumber];
+		if (ElektroIndex < NSNotFound) // Es gibt einen Eintrag
+		{
+         //NSLog(@"index: %d TempIndex: %d ElektrotagArray at index: %@",index,TempIndex,[[ElektrodatenArray objectAtIndex:TempIndex]description]);
+
+			anz++;
+			[tempDic addEntriesFromDictionary:[ElektrodatenArray objectAtIndex:ElektroIndex]];
+		}
+		//		NSLog(@"index: %d tagindex: %d anz: %d tempDic: %@",index, tagindex, anz, [tempDic description]);
+		
+		if (anz)
+		{
+			[StatistikArray addObject:tempDic];
+		}
+	}
+   
+	//NSLog(@"Data setBrennerStatstik: D");
+	NSLog(@"Data setBrennerStatstik: StatistikArray: %@",[[StatistikArray objectAtIndex:0]description]);
+
+   
+   
+}
 
 - (NSString*)stringAusZeit:(NSTimeInterval) dieZeit
 {

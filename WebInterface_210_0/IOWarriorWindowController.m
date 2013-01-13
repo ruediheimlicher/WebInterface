@@ -411,6 +411,8 @@ void IOWarriorCallback ()
 	{
 		//NSLog(@"awake openWithSolarString\n\n");
 		[self openWithSolarString:AktuelleSolarDaten];
+      
+      [self setSolarStatistikDaten];
 
 	}
 	else
@@ -2484,14 +2486,14 @@ return;
 		return NO;
 	}
 	NSLog(@"Beenden");
-	if ([AVR TWIStatus] ==0) // Homebus noch deaktiviert
+	if ([AVR TWIStatus] == 0) // Homebus noch deaktiviert
 	{
 			NSAlert *Warnung = [[[NSAlert alloc] init] autorelease];
 		[Warnung addButtonWithTitle:@"OK"];
 		//	[Warnung addButtonWithTitle:@""];
 		//	[Warnung addButtonWithTitle:@""];
 		//	[Warnung addButtonWithTitle:@"Abbrechen"];
-		[Warnung setMessageText:[NSString stringWithFormat:@"%@",@"Homebus aktiv!"]];
+		[Warnung setMessageText:[NSString stringWithFormat:@"%@",@"Homebus ist deaktiviert!"]];
 		
 		NSString* s1=@"Der Homebus muss aktiviert sein, um beenden zu koennen.";
 		NSString* s2=@"";

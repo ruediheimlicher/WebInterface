@@ -370,6 +370,7 @@ void IOWarriorCallback ()
 	{
 		//NSLog(@"awake openWithString\n\n");
 		[self openWithString:AktuelleDaten];
+      
 		[self setStatistikDaten];
       
       NSArray* IP_Array = [HomeData Router_IP];

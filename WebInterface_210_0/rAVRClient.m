@@ -1177,6 +1177,39 @@ if (Webserver_busy)
              [viewsToRemove release];
              [EEPROMPlan setNeedsDisplay:YES];
              //[HomeServerFixArray removeAllObjects];
+            
+            // Daten auf eepromupdatedaten.txt loeschen
+            NSAlert *Warnung = [[[NSAlert alloc] init] autorelease];
+            [Warnung addButtonWithTitle:@"Ja"];
+            //	[Warnung addButtonWithTitle:@""];
+            //	[Warnung addButtonWithTitle:@""];
+           	[Warnung addButtonWithTitle:@"Nein"];
+            [Warnung setMessageText:[NSString stringWithFormat:@"%@",@"EEPROMUpdateDaten?"]];
+            
+            NSString* s1=@"Daten auf eepromupdatedaten.txt loeschen?";
+            NSString* s2=@"";
+            NSString* InformationString=[NSString stringWithFormat:@"%@\n%@",s1,s2];
+            [Warnung setInformativeText:InformationString];
+            [Warnung setAlertStyle:NSWarningAlertStyle];
+            
+            int antwort=[Warnung runModal];
+            if (antwort == NSAlertFirstButtonReturn)
+            {
+               NSLog(@"Daten auf eepromupdatedaten.txt loeschen");
+               NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+               [NotificationDic setObject:[NSNumber numberWithInt:13] forKey:@"perm"];
+               
+               NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
+               [nc postNotificationName:@"EEPROMUpdateClear" object:self userInfo:NotificationDic];
+
+               
+            }
+            else if (antwort == NSAlertAlternateReturn)
+            {
+               NSLog(@"Daten auf eepromupdatedaten.txt behalten");
+            }
+            
+
              
             
          }break;
@@ -1902,6 +1935,7 @@ if (Webserver_busy)
       
       // eepromupdate.txt ueberschreiben
       //"EEPROMUpdateClear"
+      // in WriteFertig verschoben
       NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
       [NotificationDic setObject:[NSNumber numberWithInt:13] forKey:@"perm"];
       

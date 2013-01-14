@@ -34,7 +34,7 @@
 		 // Unterer Rand 25, oberer Rand 30
 		 
 		 FaktorY=MaxOrdinate/(MaxY-MinY); // Reduktion auf Feldhoehe
-		 //NSLog(@"SolarStatistikDiagramm Diagrammfeldhoehe: %2.2f FaktorY: %2.2f",(frame.size.height-55),FaktorY);
+		 NSLog(@"SolarStatistikDiagramm Diagrammfeldhoehe: %2.2f FaktorY: %2.2f",(frame.size.height-55),FaktorY);
        int i=0;
 		 NSMutableDictionary* StatistikEinheitenDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
 		 [StatistikEinheitenDic setObject:[NSNumber numberWithInt:2]forKey:@"minorteile"];
@@ -126,6 +126,7 @@ return dayOfYear;
 {
 	[super setEinheitenDicY:derEinheitenDic];
 	FaktorY=MaxOrdinate/(MaxY-MinY);
+   NSLog(@"Solarstatistik derEinheitenDic: %@",[derEinheitenDic description]);
 }
 
 - (void)setWertMitX:(float)x mitY:(float)y forKanal:(int)derKanal
@@ -140,18 +141,19 @@ return dayOfYear;
 
 - (void)setWerteArray:(NSArray*)derWerteArray mitKanalArray:(NSArray*)derKanalArray
 {
-		//NSLog(@"TemperaturStatistikDiagramm setWerteArray");
+		//NSLog(@"TemperaturStatistikDiagramm setWerteArray; %@",[derWerteArray description]);
 		//[self logRect:[self frame]];
 
 	//NSLog(@"SolarStatistikDiagramm setWerteArray anz: %d WerteArray: %@ \nKanalArray: %@",[derWerteArray count],[derWerteArray description],[derKanalArray description]);
-	
+	//NSLog(@"SolarStatistikDiagramm setWerteArray anz: %d 0: %d 1: %.2f 2: %.2f 3: %.2f",[derWerteArray count],[[derWerteArray objectAtIndex:0]intValue],[[derWerteArray objectAtIndex:1]floatValue],[[derWerteArray objectAtIndex:2]floatValue],[[derWerteArray objectAtIndex:3]floatValue]);
 	//return;
 	/*
 	
-	Kanal 0: Laufzeit (Saeulen)
-	Kanal 1: 
-	Kanal 2:(Vorlauf)
-	
+	Kanal 0: tagdesjahres (Saeulen)
+	Kanal 1: mittel
+	Kanal 2: tagmittel
+	Kanal 3: nachtmittel
+   Kanal 4: kollektormittel
 	 
 	 NSMutableArray* tempArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
 	 
@@ -163,7 +165,8 @@ return dayOfYear;
 	 
 	 */
 	// [super setWerteArray:derWerteArray mitKanalArray:derKanalArray];
-	 
+	 //NSLog(@"MinY: %2.2f MaxY: %2.2f",MinY,MaxY);
+   
 	float	maxSortenwert=100.0;	// Temperatur, 100° entspricht 200
 	float	SortenFaktor= 1.0;
 	float	maxAnzeigewert=MaxY-MinY;
@@ -172,24 +175,96 @@ return dayOfYear;
 	//StartwertX=0.0;
 	//NSLog(@"MinY: %2.2f FaktorY: %2.2f SortenFaktor: %2.2f",MinY,FaktorY,SortenFaktor);
 	//NSLog(@"StartwertX: %2.2f ZeitKompression: %2.2f",StartwertX,ZeitKompression);
+   
+   // Fusspunkt bestimmen
+   NSPoint neuerPunkt=DiagrammEcke; // y ist unterer Rand
+			//		NSLog(@"WertArray 0: %2.2f StartwertX: %2.2f ZeitKompression: %2.2f",[[derWerteArray objectAtIndex:0]floatValue],StartwertX,ZeitKompression);
+   neuerPunkt.x=([[derWerteArray objectAtIndex:0]intValue]-StartwertX)*ZeitKompression+0.1;	//	Zeit, x-Wert, erster Wert im Array
+			//neuerPunkt.x-=300;
+			
+   NSPoint nachtpunkt=neuerPunkt;
+   NSPoint tagpunkt=neuerPunkt;
+   NSPoint mittelwertpunkt=neuerPunkt;
+   NSPoint kollektormittelwertpunkt=neuerPunkt;
+   
+   //NSLog(@"setWerteArray FaktorY: %2.2f",FaktorY);
+   
+   
+   // unterer Wert: Nachtmittel
+   float nachtmittel=[[derWerteArray objectAtIndex:3]floatValue];	// nachtmitteltemperatur
 
-	for (i=0;i<[derWerteArray count]-1; i++)
+   
+   nachtmittel = (nachtmittel-MinY)*FaktorY;								// Red auf reale Diagrammhoehe
+   nachtpunkt.y += nachtmittel;
+   
+   
+   // oberer Wert: tagmittel
+   float tagmittel=[[derWerteArray objectAtIndex:1]floatValue];	// tagmitteltemperatur
+   //NSLog(@"setWerteArray FaktorY: %2.2f",FaktorY);
+   tagmittel = (tagmittel-MinY)*FaktorY;								// Red auf reale Diagrammhoehe
+   //float rawWert=nachtmittel;//*SortenFaktor;							// Wert fuer Anzeige des ganzen Bereichs
+   tagpunkt.y += tagmittel;
+   //NSLog(@"setWerteArray nachtmittel: %2.2f tagmittel: %2.2f",nachtmittel,tagmittel);
+   //NSLog(@"SolarStatistikDiagramm setWerteArray tag: %d neuerPunkt.x: %.2f nachtpunkt.y: %.2f tagpunkt.y: %.2f",[[derWerteArray objectAtIndex:0]intValue],neuerPunkt.x,nachtpunkt.y,tagpunkt.y);
+
+   NSBezierPath* bereichGraph=[NSBezierPath bezierPath];
+  
+   // Säulen
+   [bereichGraph setLineWidth:1.0];
+   [bereichGraph moveToPoint:nachtpunkt];
+   [bereichGraph lineToPoint:tagpunkt];
+   //NSLog(@" elementCount: %d graph: %@",[bereichGraph elementCount],[[GraphArray objectAtIndex:i] description]);
+   
+//   [[GraphArray objectAtIndex:1]appendBezierPath:bereichGraph];
+   
+   // mittelwert
+   
+   float mittel=[[derWerteArray objectAtIndex:1]floatValue];	// mitteltemperatur
+   //NSLog(@"setWerteArray FaktorY: %2.2f",FaktorY);
+   mittel = (mittel-MinY)*FaktorY;								// Red auf reale Diagrammhoehe
+   
+   NSBezierPath* mittelwertGraph=[NSBezierPath bezierPath];
+   [bereichGraph setLineWidth:1.0];
+
+   mittelwertpunkt.y += mittel;
+   NSRect n=NSMakeRect(mittelwertpunkt.x-2.0, mittelwertpunkt.y-2.0, 4,4);
+   //[neuerGraph setLineWidth:1.0];
+   [mittelwertGraph moveToPoint:mittelwertpunkt];
+   [mittelwertGraph appendBezierPathWithOvalInRect:n];
+   [[GraphArray objectAtIndex:2]appendBezierPath:mittelwertGraph];
+
+   // Kollektormittelwert
+   if ([derWerteArray count]==5)
+   {
+      float kollektormittel=[[derWerteArray objectAtIndex:4]floatValue]/2;	// mitteltemperatur
+      //NSLog(@"setWerteArray FaktorY: %2.2f",FaktorY);
+      kollektormittel = (kollektormittel-MinY)*FaktorY;								// Red auf reale Diagrammhoehe
+      
+      NSBezierPath* kollektorGraph=[NSBezierPath bezierPath];
+      [kollektorGraph setLineWidth:1.0];
+      
+      kollektormittelwertpunkt.y += kollektormittel;
+      NSRect kollektorkreisfeld=NSMakeRect(kollektormittelwertpunkt.x-2.0, kollektormittelwertpunkt.y-2.0, 4,4);
+      //[neuerGraph setLineWidth:1.0];
+      [kollektorGraph moveToPoint:kollektormittelwertpunkt];
+      [kollektorGraph appendBezierPathWithOvalInRect:kollektorkreisfeld];
+      [[GraphArray objectAtIndex:3]appendBezierPath:kollektorGraph];
+   }
+   
+   [GraphKanalArray setArray:derKanalArray];
+
+   return;
+
+	for (i=1;i<[derWerteArray count]; i++) // jeder Wert ergibt eine Anzeige
 	{
 		if ([[derKanalArray objectAtIndex:i]intValue])
 		{
 			
 			int TagDesMonats;
-			NSPoint neuerPunkt=DiagrammEcke;
-			//			NSLog(@"WertArray 0: %2.2f StartwertX: %2.2f ZeitKompression: %2.2f",[[derWerteArray objectAtIndex:0]floatValue],StartwertX,ZeitKompression);
-			neuerPunkt.x=([[derWerteArray objectAtIndex:0]floatValue]-StartwertX)*ZeitKompression+0.1;	//	Zeit, x-Wert, erster Wert im Array
-			//			neuerPunkt.x=([[derWerteArray objectAtIndex:0]floatValue])*ZeitKompression+0.1;	//	Zeit, x-Wert, erster Wert im Array
-			//neuerPunkt.x-=300;
-			NSPoint neuerFusspunkt=neuerPunkt;
 			//NSLog(@"SolarstatistikDiagramm neuerPunkt %d StartwertX: %2.2f x: %2.2f",i,StartwertX,neuerPunkt.x);
 			
-			//float InputZahl=[[derWerteArray objectAtIndex:i+2]floatValue]/3600;	// laufzeit
-// 20.1.09			
-			float InputZahl=[[derWerteArray objectAtIndex:i+2]floatValue]/3600;	// laufzeit
+
+			float InputZahl=[[derWerteArray objectAtIndex:i]floatValue];	// temperatur
 			//NSLog(@"setWerteArray FaktorY: %2.2f",FaktorY);
 			//			float graphZahl=(InputZahl-2*MinY)*FaktorY;								// Red auf reale Diagrammhoehe
 			float graphZahl=(InputZahl-MinY)*FaktorY;								// Red auf reale Diagrammhoehe
@@ -207,8 +282,8 @@ return dayOfYear;
 			//NSLog(@"setWerteArray: Kanal: %d InputZahl: %2.2F graphZahl: %2.2F rawWert: %2.2F DiagrammWert: %2.2F",i,InputZahl,graphZahl,rawWert,DiagrammWert);
 			
 			neuerPunkt.y += DiagrammWert;
-			NSPoint neuerEndpunkt=neuerPunkt;
-			neuerEndpunkt.x +=10;
+			//NSPoint neuerEndpunkt=neuerPunkt;
+			//neuerEndpunkt.x +=10;
 			
 			//neuerPunkt.y=InputZahl;
 			
@@ -237,12 +312,13 @@ return dayOfYear;
 			 }		
 			 */ 
 			
+         /*
 			// Säulen
 			[neuerGraph setLineWidth:4.0];
 			[neuerGraph moveToPoint:neuerFusspunkt];
 			[neuerGraph lineToPoint:neuerPunkt];
 			[[GraphArray objectAtIndex:i]appendBezierPath:neuerGraph];
-			
+			*/
 			
 			/*
 			 // Waagrechte Balkenstücke
@@ -461,17 +537,21 @@ return dayOfYear;
 		//NSLog(@"drawRect Farbe Kanal: %d Color: %@",i,[[GraphFarbeArray objectAtIndex:i] description]);
 		if ([[GraphKanalArray objectAtIndex:i]intValue])
 		{
-			[[GraphFarbeArray objectAtIndex:i]set];
-			[[GraphArray objectAtIndex:i] setLineWidth:4.0];
+         //NSLog(@"drawRect i: %d Graph: %@",i,[[GraphArray objectAtIndex:i]description]);
+         //NSLog(@" elementCount: %d",[[GraphArray objectAtIndex:i] elementCount]);
+
+			[(NSColor*)[GraphFarbeArray objectAtIndex:i]set];
+			//[[GraphArray objectAtIndex:i] setLineWidth:4.0];
 			[[GraphArray objectAtIndex:i]stroke];
-			//NSLog(@"linewidth: %2.2f",[[GraphArray objectAtIndex:i]lineWidth]);
-			NSPoint cP=[[GraphArray objectAtIndex:i]currentPoint];
-			cP.x+=2;
-			cP.y-=12;
-			[[DatenFeldArray objectAtIndex:i]setFrameOrigin:cP];
+			//NSLog(@"i: %d linewidth: %2.2f",i,[[GraphArray objectAtIndex:i]lineWidth]);
+			//NSPoint cP=[[GraphArray objectAtIndex:i]currentPoint];
+         //NSLog(@"i: %d cP.x: %2.2f cP.y: %2.2f",i,cP.x,cP.y);
+			//cP.x+=2;
+			//cP.y-=12;
+			//[[DatenFeldArray objectAtIndex:i]setFrameOrigin:cP];
 			//NSLog(@"drawRect: %@",[[DatenArray objectAtIndex:i]description]);
 			
-			NSString* AnzeigeString=[NSString stringWithFormat:@"%@: %@",[DatenTitelArray objectAtIndex:i],[[[DatenArray objectAtIndex:i]lastObject]objectForKey:@"wert"]];
+			//NSString* AnzeigeString=[NSString stringWithFormat:@"%@: %@",[DatenTitelArray objectAtIndex:i],[[[DatenArray objectAtIndex:i]lastObject]objectForKey:@"wert"]];
 //			[[DatenFeldArray objectAtIndex:i]setStringValue:AnzeigeString];
 	//		[[DatenFeldArray objectAtIndex:i]setStringValue:[[[DatenArray objectAtIndex:i]lastObject]objectForKey:@"wert"]];
 		}

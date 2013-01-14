@@ -54,5 +54,5 @@ enum webtaskflag{idle, eepromread, eepromwrite,eepromreadwoche,eepromwritewoche}
 
 // Data an Homeserver schicken
 - (int)sendEEPROMDataMitDic:(NSDictionary*)EEPROMDataDic;
-
+- (void)Kollektormittelwerteberechnen;
 @end

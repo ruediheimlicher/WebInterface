@@ -57,6 +57,24 @@ enum downloadflag{downloadpause, heute, last, datum}downloadFlag;
 	return self;
 }
 
+- (int)tagdesjahresvonJahr:(int)jahr Monat:(int)monat Tag:(int)tag
+{
+   // http://stackoverflow.com/questions/7664786/generate-nsdate-from-day-month-and-year
+   NSCalendar *tagcalendar = [NSCalendar currentCalendar];
+   NSDateComponents *components = [[NSDateComponents alloc] init];
+   [components setDay:tag];
+   [components setMonth:monat];
+   [components setYear:jahr];
+   NSDate *tagdatum = [tagcalendar dateFromComponents:components];
+   //NSLog(@"tagdatum: %@",[tagdatum description]);
+   NSCalendar *gregorian =[[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
+   int dayOfYear =[gregorian ordinalityOfUnit:NSDayCalendarUnit
+                                       inUnit:NSYearCalendarUnit forDate:tagdatum];
+   [gregorian release];
+   return dayOfYear;
+}
+
+
 -(void)awakeFromNib
 {
 //NSLog(@"HomeData awake");
@@ -506,7 +524,7 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 						DataString = [tempDataArray componentsJoinedByString:@"\t"];
 						
 					}
-					NSLog(@"tempDataArray: %@ DataString: %@",[tempDataArray description],DataString);
+					//NSLog(@"tempDataArray: %@ DataString: %@",[tempDataArray description],DataString);
 					//DataString=prevDataString;
 				}
 			
@@ -798,6 +816,8 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 
 }
 
+
+
 - (NSString*)LastSolarData
 {
 	//NSLog(@"LastSolarData");
@@ -998,8 +1018,229 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 	return returnString;
 }
 
-#pragma mark Statistik
 
+
+#pragma mark Statistik
+/*
+- (NSArray*)KollektorMittelwerte
+{
+	//NSLog(@"KollektorMittelwerte");
+   NSCharacterSet* CharOK=[NSCharacterSet alphanumericCharacterSet];
+   
+	NSString* returnString = [NSString string];
+	NSMutableArray* KollektorTemperaturArray = [[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+   NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+	NSString* KollektorDataSuffix=@"SolarTemperaturMittel.txt";
+   
+	if (isDownloading)
+	{
+		[NotificationDic setObject:@"busy" forKey:@"erfolg"];
+		NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
+		[nc postNotificationName:@"SolarDataDownload" object:self userInfo:NotificationDic];
+		[self cancel];
+	}
+	else
+	{
+		[[NSURLCache sharedURLCache] setMemoryCapacity:0];
+		[[NSURLCache sharedURLCache] setDiskCapacity:0];
+		//	WebPreferences *prefs = [webView preferences];
+		//[prefs setUsesPageCache:NO];
+		//[prefs setCacheModel:WebCacheModelDocumentViewer];
+		
+		NSURL *URL = [NSURL URLWithString:[ServerPfad stringByAppendingPathComponent:KollektorDataSuffix]];
+		//NSLog(@"LastSolarData: URL: %@",URL);
+      
+		NSString* DataString=[NSString stringWithContentsOfURL:URL encoding:NSUTF8StringEncoding error:NULL];
+		NSLog(@"DataVon... laden von URL: %@",URL);
+		//NSLog(@"DataVon... laden von URL: %@ DataString: %@",URL,DataString);
+		
+		
+		if (DataString && [DataString length])
+		{
+			//NSLog(@"LastSolarData: DataString: %@",DataString);
+         
+         NSArray* DataArray = [DataString componentsSeparatedByString:@"\n"];
+         
+         
+         
+         for (int i=0;i < [DataArray count];i++)
+         {
+            if ([[DataArray objectAtIndex:i] length])
+            {
+               NSArray* tempZeilenarray = [[DataArray objectAtIndex:i]componentsSeparatedByString:@"\t"];
+               if ([tempZeilenarray count]>1)
+               {
+                  NSArray* tempDataArray = [tempZeilenarray subarrayWithRange:NSMakeRange(1, [tempZeilenarray count]-1)];
+                  float mittelwert=0;
+                  if ([tempDataArray count])
+                  {
+                     for (int k=0;k<[tempDataArray count];k++)
+                     {
+                        mittelwert += [[tempDataArray objectAtIndex:k]floatValue];
+                     }
+                     mittelwert /= [tempDataArray count];
+                  }
+                  NSDictionary* tempZeilenDic = [NSDictionary dictionaryWithObjectsAndKeys:[tempZeilenarray objectAtIndex:0],@"datum",tempDataArray,@"data", [NSNumber numberWithFloat:mittelwert],@"mittelwert",nil];
+                  [KollektorTemperaturArray addObject:tempZeilenDic];
+               }
+               
+            }// if length
+            
+            
+            
+         }// for i
+         NSLog(@"KollektorTemperaturArray: %@",[[KollektorTemperaturArray valueForKey:@"mittelwert" ]description]);
+			char first=[DataString characterAtIndex:0];
+			
+			// eventuellen Leerschlag am Anfang entfernen
+			
+			if (![CharOK characterIsMember:first])
+			{
+				DataString=[DataString substringFromIndex:1];
+			}
+			
+			NSMutableArray* tempDataArray = (NSMutableArray*)[DataString componentsSeparatedByString:@"\t"];
+			//NSLog(@"LastSolarData tempDataArray: %@",[tempDataArray description]);
+			
+			NSArray* prevDataArray = [prevSolarDataString componentsSeparatedByString:@"\t"];
+			if ([prevDataArray count]>3)
+			{
+				float prevVorlauf=[[prevDataArray objectAtIndex:1]floatValue];
+				float prevRuecklauf=[[prevDataArray objectAtIndex:2]floatValue];
+				
+				float lastVorlauf=[[tempDataArray objectAtIndex:1]floatValue];
+				float lastRuecklauf=[[tempDataArray objectAtIndex:2]floatValue];
+				float VorlaufQuotient=lastVorlauf/prevVorlauf;
+				float RuecklaufQuotient=lastRuecklauf/prevRuecklauf;
+				
+				int KollektortemperaturH=[[tempDataArray objectAtIndex:3]intValue];
+				int KollektortemperaturL=[[tempDataArray objectAtIndex:4]intValue];
+				KollektortemperaturH -=163;
+				int Kollektortemperatur=KollektortemperaturH;
+				Kollektortemperatur<<=2;
+				Kollektortemperatur += KollektortemperaturL;
+				int Kontrolle=Kollektortemperatur;
+				Kontrolle>>=2;
+				//NSLog(@"LastSolarData Kollektortemperatur H: %d L: %d T: %d K: %d",KollektortemperaturH,KollektortemperaturL,Kollektortemperatur,Kontrolle);
+				//NSLog(@"LastData prevVorlauf: %2.2f lastVorlauf: %2.2f \tprevRuecklauf: %2.2f lastRuecklauf: %2.2f",prevVorlauf, lastVorlauf, prevRuecklauf, lastRuecklauf);
+				
+				//NSLog(@"\nVorlaufQuotient: %2.3f \nRuecklaufQuotient: %2.3f\n",VorlaufQuotient,RuecklaufQuotient);
+            
+ 			}
+			
+			
+			prevSolarDataString= [DataString copy];
+			
+			lastSolarDataZeit=[self lastDataZeitVon:DataString];
+			[NotificationDic setObject:[NSNumber numberWithInt:downloadFlag] forKey:@"downloadflag"];
+			[NotificationDic setObject:[NSNumber numberWithInt:lastSolarDataZeit] forKey:@"lastdatazeit"];
+			[NotificationDic setObject:DataString forKey:@"datastring"];
+			
+			NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
+			[nc postNotificationName:@"SolarDataDownload" object:self userInfo:NotificationDic];
+			
+			[SolarCentralRequest release];
+			SolarCentralRequest = NULL;
+			return DataString;
+		}
+		else
+		{
+			//NSLog(@"LastSolarData: kein String");
+			[self setErrString:@"lastData: kein String"];
+			[SolarCentralRequest release];
+			
+		}
+		//NSLog(@"LastSolarData: D");
+		NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
+		[nc postNotificationName:@"SolarDataDownload" object:self userInfo:NotificationDic];
+		
+		[DataString release];
+		
+	}
+	
+	return KollektorTemperaturArray;
+}
+*/
+
+- (NSArray*)KollektorMittelwerteVonJahr:(int)jahr
+{
+   NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+   NSMutableArray* KollektorTemperaturArray = [[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+   if (isDownloading)
+	{
+		[NotificationDic setObject:@"busy" forKey:@"erfolg"];
+		NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
+		[nc postNotificationName:@"SolarDataDownload" object:self userInfo:NotificationDic];
+		[self cancel];
+	}
+	else
+	{
+      
+      //NSLog(@"KollektorMittelwerteVonJahr: %d",jahr);
+      NSString* jahrString = [NSString stringWithFormat:@"kollektordaten/%d",jahr];
+      
+      
+      NSString* jahrPfad =[ServerPfad stringByAppendingPathComponent:jahrString];
+      //NSLog(@"jahrPfad: %@",[ServerPfad stringByAppendingPathComponent:jahrString]);
+      //http://www.ruediheimlicher.ch/Data/kollektordaten/2013/kollektormittelwerte.txt
+      
+      //NSString* tagsuffix = [NSString stringWithFormat:@"/SolarDaten%d%.2d%.2d.txt",jahrkurz,monat,tag];
+      //NSLog(@"tagsuffix: %@",tagsuffix);
+      NSString* tagPfad =[jahrPfad stringByAppendingPathComponent:@"kollektormittelwerte.txt"];
+      NSLog(@"tagPfad: %@",tagPfad);
+      
+      NSURL *tagURL = [NSURL URLWithString:tagPfad];
+      NSString* DataString=[NSString stringWithContentsOfURL:tagURL encoding:NSUTF8StringEncoding error:NULL];
+      
+      
+      //NSLog(@"jahr: %d   DataString: \n%@",jahr,DataString);
+		if (DataString && [DataString length])
+		{
+         //NSArray* jahrArray =[DataString componentsSeparatedByString:@"\n"];
+         // NSLog(@"DataString: %@",DataString);
+         //NSLog(@"jahrArray: %@",[jahrArray description]);
+         
+         NSCharacterSet* CharOK=[NSCharacterSet alphanumericCharacterSet];
+         
+         
+         
+			//NSLog(@"LastSolarData: DataString: %@",DataString);
+         
+         NSArray* DataArray = [DataString componentsSeparatedByString:@"\n"];
+         //NSLog(@"DataArray: %@",[DataArray description]);
+         for (int i=0;i < [DataArray count];i++)
+         {
+            if ([[DataArray objectAtIndex:i] length])
+            {
+               NSArray* tempZeilenarray = [[DataArray objectAtIndex:i]componentsSeparatedByString:@"\t"];
+               if ([tempZeilenarray count]>1)
+               {
+                  int jahr = [[tempZeilenarray objectAtIndex:0]intValue];
+                  int monat = [[tempZeilenarray objectAtIndex:1]intValue];
+                  int tagdesmonats = [[tempZeilenarray objectAtIndex:2]intValue];
+                  // (int)tagdesjahresvonJahr:(int)jahr Monat:(int)monat Tag: (int)tag
+                  
+                  int tagdesjahres = [self tagdesjahresvonJahr:jahr Monat:monat Tag:tagdesmonats];
+                  //NSLog(@"tagdesjahres\t%d\t%d\t%d\t%d",jahr,monat,tagdesmonats,tagdesjahres);
+                  NSDictionary* tempZeilenDic = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:tagdesjahres],@"tagdesjahres",[tempZeilenarray objectAtIndex:0],@"jahr",[tempZeilenarray objectAtIndex:1],@"monat", [tempZeilenarray objectAtIndex:2],@"tagdesmonats",[tempZeilenarray objectAtIndex:5],@"kollektormittelwert",nil];
+                  [KollektorTemperaturArray addObject:tempZeilenDic];
+               }
+               
+            }// if length
+            
+         }// for i
+      }
+      
+      //NSLog(@"KollektorTemperaturArray: %@",[[KollektorTemperaturArray valueForKey:@"mittelwert" ]description]);
+		//NSLog(@"LastSolarData: D");
+      [NotificationDic setObject:KollektorTemperaturArray forKey:@"mittelwerte"];
+      [NotificationDic setObject:[NSNumber numberWithInt:jahr] forKey:@"jahr"];
+		NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
+		[nc postNotificationName:@"Mittelwerte" object:self userInfo:NotificationDic];
+	}
+	
+	return KollektorTemperaturArray;
+}
 
 - (void)EEPROMUpdateAktion:(NSNotification*)note
 {

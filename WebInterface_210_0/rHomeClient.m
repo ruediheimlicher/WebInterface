@@ -1391,6 +1391,34 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 }
 */
 
+#pragma mark Statistik pl
+
+- (void)Kollektormittelwerteberechnen
+{
+   int jahr = 2013;
+   int monat = 1;
+   
+   NSString* URLString = [NSString stringWithFormat:@"http://%s/%s?jahr=%d&monat=%d",
+                          WEBSERVER_VHOST,
+                          "cgi-bin/kollektormittelwerte.pl",
+                          jahr,
+                          monat
+                          
+                          ];
+   
+   //NSString* URLString = @"http://www.ruediheimlicher.ch/cgi-bin/hello.pl";
+   NSURL *URL = [NSURL URLWithString:URLString];
+   NSLog(@"Kollektormittelwerteberechnen URL: %@",URL );
+   NSURLRequest *HCRequest = [ [NSURLRequest alloc] initWithURL: URL cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:4.0];
+   if (HCRequest)
+   {
+      //NSLog(@"loadURL:Request OK");
+      [[webView mainFrame] loadRequest:HCRequest];
+   }
+   
+   //cgi-bin/eepromupdate.pl?perm=13
+   [self loadURL:URL];
+}
 
 #pragma mark URL-Stuff
 - (NSString *)url

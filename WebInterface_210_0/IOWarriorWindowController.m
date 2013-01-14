@@ -321,6 +321,12 @@ void IOWarriorCallback ()
 				  name:@"HomeDataSolarKalender"
 				object:nil];
 
+   [nc addObserver:self
+			 selector:@selector(SolarStatistikDatenAktion:)
+				  name:@"SolarStatistikDaten"
+				object:nil];
+   
+
 
 	
 	lastDataRead=[[NSData alloc]init];
@@ -410,7 +416,7 @@ void IOWarriorCallback ()
 	//NSLog(@"awake AktuelleSolarDaten: \n%@",AktuelleSolarDaten);
 	if (AktuelleSolarDaten &&[AktuelleSolarDaten length])
 	{
-		//NSLog(@"awake openWithSolarString\n\n");
+		NSLog(@"awake openWithSolarString\n\n");
 		[self openWithSolarString:AktuelleSolarDaten];
       
       [self setSolarStatistikDaten];
@@ -421,7 +427,7 @@ void IOWarriorCallback ()
 		NSLog(@"awake Kein SolarInput");
 	}
 	
-
+   
 
 
 
@@ -1364,6 +1370,8 @@ return;
 	}
 	
 }
+
+
 
 
 -(void)openWithSolarString:(NSString*)derDatenString

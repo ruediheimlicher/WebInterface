@@ -1151,6 +1151,8 @@ if (Webserver_busy)
             NSLog(@"AVRClient EEPROMWriteFertigAktion timeout");
             [[NSSound soundNamed:@"Basso"] play];
             [writeEEPROMcounterfeld setStringValue:@"X"];
+            
+            
          }break;
          
          
@@ -1181,8 +1183,6 @@ if (Webserver_busy)
             // Daten auf eepromupdatedaten.txt loeschen
             NSAlert *Warnung = [[[NSAlert alloc] init] autorelease];
             [Warnung addButtonWithTitle:@"Ja"];
-            //	[Warnung addButtonWithTitle:@""];
-            //	[Warnung addButtonWithTitle:@""];
            	[Warnung addButtonWithTitle:@"Nein"];
             [Warnung setMessageText:[NSString stringWithFormat:@"%@",@"EEPROMUpdateDaten?"]];
             
@@ -1193,22 +1193,26 @@ if (Webserver_busy)
             [Warnung setAlertStyle:NSWarningAlertStyle];
             
             int antwort=[Warnung runModal];
+            
+            NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+
             if (antwort == NSAlertFirstButtonReturn)
             {
                NSLog(@"Daten auf eepromupdatedaten.txt loeschen");
-               NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
                [NotificationDic setObject:[NSNumber numberWithInt:13] forKey:@"perm"];
-               
-               NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
-               [nc postNotificationName:@"EEPROMUpdateClear" object:self userInfo:NotificationDic];
+
 
                
             }
             else if (antwort == NSAlertAlternateReturn)
             {
                NSLog(@"Daten auf eepromupdatedaten.txt behalten");
+               [NotificationDic setObject:[NSNumber numberWithInt:12] forKey:@"perm"];
+
             }
             
+               NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
+               [nc postNotificationName:@"EEPROMUpdateClear" object:self userInfo:NotificationDic];
 
              
             
@@ -1344,12 +1348,10 @@ if (Webserver_busy)
 		}
 		return;
 	}
-   
-	
-	
+
 	// Webserver auf busy setzen
 	Webserver_busy=1; // Wird jeweils in der Finishloadaktion zurueckgestellt, sobald das writeok angekommen ist.
-	timeoutcounter = 10;
+	timeoutcounter = 12;
 	
 	// Information des aktuellen Tages an HomeClient schicken
 	
@@ -1936,10 +1938,10 @@ if (Webserver_busy)
       // eepromupdate.txt ueberschreiben
       //"EEPROMUpdateClear"
       // in WriteFertig verschoben
-      NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
-      [NotificationDic setObject:[NSNumber numberWithInt:13] forKey:@"perm"];
+ //     NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+ //     [NotificationDic setObject:[NSNumber numberWithInt:13] forKey:@"perm"];
       
-      NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
+ //     NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
 //      [nc postNotificationName:@"EEPROMUpdateClear" object:self userInfo:NotificationDic];
    }
    
@@ -2538,7 +2540,7 @@ if (Webserver_busy)
 - (void)setWEBDATAArray:(NSArray*)derDatenArray
 {
 	
-	NSLog(@"AVR setWEBDATAArray: %@",[derDatenArray description]); 
+	//NSLog(@"AVR setWEBDATAArray: %@",[derDatenArray description]);
 	
 	[WEBDATA_DS setValueKeyArray:derDatenArray];
 	[WEBDATATable reloadData];

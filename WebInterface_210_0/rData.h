@@ -190,7 +190,7 @@ NSMutableArray*					BrennerKanalArray;
 NSMutableArray*					BrennerStatistikKanalArray;
 NSMutableArray*					BrennerStatistikTemperaturKanalArray;
 
-NSMutableArray*					SolarKanalArray;
+NSMutableArray*					SolarTemperaturKanalArray;
 NSMutableArray*					StatusKanalArray;
 
 IBOutlet id							BoilerobenFeld;
@@ -219,7 +219,9 @@ rDiagrammGitterlinien*        SolarStatistikGitterlinien;
 rSolarStatistikDiagramm*		ElektroStatistikDiagramm;
 rOrdinate*							SolarStatistikOrdinate;
 rLegende*							ElektroStatistikLegende;
-
+NSMutableArray*					 SolarStatistikTemperaturKanalArray;
+NSMutableArray*					SolarStatistikElektroKanalArray;
+   
 rTagGitterlinien*					SolarTagGitterlinien;
 
 
@@ -270,9 +272,12 @@ rTagGitterlinien*					SolarTagGitterlinien;
 - (void)setSolarStatistik:(NSDictionary*)derDatenDic;
 - (IBAction)reportSolarUpdate:(id)sender;
 - (void)setSolarKalenderBlocker:(int)derStatus;
+- (IBAction)reportSolarStatistikJahr:(id)sender;
 - (IBAction)reportSolarStatistikKalender:(id)sender;
 - (int)StatistikJahr;
 - (int)StatistikMonat;
+- (int)SolarStatistikJahr;
+- (int)SolarStatistikMonat;
 - (NSDictionary*)SolarStatistikDatum;
 -(BOOL)windowShouldClose:(id)sender;
 @end

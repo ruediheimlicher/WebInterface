@@ -69,6 +69,7 @@
 - (NSArray*)SolarErtragVonHeute;
 - (NSArray*)SolarErtragVonJahr:(int)dasJahr Monat:(int)derMonat Tag:(int)derTag;
 
-
-
+- (NSArray*)KollektorMittelwerte;
+- (NSArray*)KollektorMittelwerteVonJahr:(int)jahr;
+- (int)tagdesjahresvonJahr:(int)jahr Monat:(int)monat Tag:(int)tag;
 @end

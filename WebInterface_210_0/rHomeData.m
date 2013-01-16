@@ -333,13 +333,8 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 			return DataString;
 
 		}
-		
-		
-		
-		
-		
-		
-		if (URL) 
+
+		if (URL)
 		{
 			NSURLRequest* URLReq=[NSURLRequest requestWithURL:URL ];
 			if (URLReq)
@@ -563,6 +558,28 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 	
 	return returnString;
 }
+
+
+-(void)setPumpeLeistungsfaktor:(float)faktor
+{
+   pumpeleistungsfaktor = faktor;
+   
+}
+
+-(void)setElektroLeistungsfaktor:(float)faktor
+{
+   elektroleistungsfaktor = faktor;
+   
+}
+
+
+-(void)setFluidLeistungsfaktor:(float)faktor
+{
+   fluidleistungsfaktor = faktor;
+   
+}
+
+
 
 - (NSArray*)Router_IP
 {
@@ -1187,7 +1204,7 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
       //NSString* tagsuffix = [NSString stringWithFormat:@"/SolarDaten%d%.2d%.2d.txt",jahrkurz,monat,tag];
       //NSLog(@"tagsuffix: %@",tagsuffix);
       NSString* tagPfad =[jahrPfad stringByAppendingPathComponent:@"kollektormittelwerte.txt"];
-      NSLog(@"tagPfad: %@",tagPfad);
+      //NSLog(@"tagPfad: %@",tagPfad);
       
       NSURL *tagURL = [NSURL URLWithString:tagPfad];
       NSString* DataString=[NSString stringWithContentsOfURL:tagURL encoding:NSUTF8StringEncoding error:NULL];
@@ -1299,7 +1316,7 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
                                       };
    [UpdateArray sortUsingComparator: sortByNumber];
    
-   NSLog(@"EEPROMUpdateAktion UpdateArray nach sort  (data): %@",[[UpdateArray valueForKey:@"data" ] description]);
+   //NSLog(@"EEPROMUpdateAktion UpdateArray nach sort  (data): %@",[[UpdateArray valueForKey:@"data" ] description]);
    
    NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
 	[NotificationDic setObject:UpdateArray forKey:@"updatearray"];
@@ -1452,9 +1469,6 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 	return TemperaturdatenArray;
 }
 
-
-
-
 - (NSArray*)ElektroStatistikVonJahr:(int)dasJahr Monat:(int)derMonat
 {
    // Zeile: 29.12.10	tab Elektro-Laufzeit: 1101	tab Pumpe-Laufzeit: 0.0
@@ -1466,7 +1480,7 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 	//NSLog(@"ElektroStatistikVonJahr  DownloadPfad: %@ DataSuffix: %@",DownloadPfad,DataSuffix);
 	NSURL *URL = [NSURL URLWithString:[ServerPfad stringByAppendingPathComponent:DataSuffix]];
    
-	NSLog(@"ElektroStatistikVonJahr URL: %@",URL);
+	//NSLog(@"ElektroStatistikVonJahr URL: %@",URL);
 	
 	NSStringEncoding *  enc=0;
 	NSCharacterSet* CharOK=[NSCharacterSet alphanumericCharacterSet];
@@ -1511,11 +1525,19 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
                [tempDic setObject:Datum forKey:@"calenderdatum"];
                [tempDic setObject:[tempDatenArray objectAtIndex:0] forKey:@"datum"];
                NSArray* laufzeitArray=[[tempDatenArray objectAtIndex:1]componentsSeparatedByString:@" "];
-               [tempDic setObject:[laufzeitArray lastObject] forKey:@"elektrolaufzeit"];
+               
+               float elektrolaufzeit = [[laufzeitArray lastObject]floatValue];
+               elektrolaufzeit *= elektroleistungsfaktor;
+               
+               [tempDic setObject:[NSNumber numberWithFloat:elektrolaufzeit] forKey:@"elektrolaufzeit"];
               
                
                NSArray* elektroZeitArray=[[tempDatenArray objectAtIndex:2]componentsSeparatedByString:@" "];
-               [tempDic setObject:[elektroZeitArray lastObject] forKey:@"pumpelaufzeit"];
+               
+               float pumpelaufzeit = [[elektroZeitArray lastObject]floatValue];
+               pumpelaufzeit *= pumpeleistungsfaktor;
+               
+               [tempDic setObject:[NSNumber numberWithFloat:pumpelaufzeit] forKey:@"pumpelaufzeit"];
                
                //[tempDic setObject:[tempDatenArray objectAtIndex:1] forKey:@"laufzeit"];
                
@@ -1536,7 +1558,94 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 	//NSLog(@"SolarErtragVonJahr: %d",dasJahr);
 	DataSuffix=@"SolarTagErtrag.txt";
 	NSString* URLPfad=[NSURL URLWithString:[ServerPfad stringByAppendingPathComponent:DataSuffix]];
-	NSLog(@"SolarErtragVonJahr URLPfad: %@",URLPfad);
+	//NSLog(@"SolarErtragVonJahr URLPfad: %@",URLPfad);
+	//NSLog(@"SolarErtragVonJahr  DownloadPfad: %@ DataSuffix: %@",DownloadPfad,DataSuffix);
+	NSURL *URL = [NSURL URLWithString:[ServerPfad stringByAppendingPathComponent:DataSuffix]];
+	
+	NSStringEncoding *  enc=0;
+	NSCharacterSet* CharOK=[NSCharacterSet alphanumericCharacterSet];
+	NSString* DataString=[NSString stringWithContentsOfURL:URL usedEncoding: enc error:NULL];
+	//NSLog(@"SolarErtragVonJahr DataString: %@",DataString);
+	NSArray* tempDatenArray = [NSArray array];
+	if ([DataString length])
+	{
+		char first=[DataString characterAtIndex:0];
+		
+		// eventuellen Leerschlag am Anfang entfernen
+		
+		if (![CharOK characterIsMember:first])
+		{
+			//NSLog(@"DataVonHeute: String korrigieren");
+			DataString=[DataString substringFromIndex:1];
+		}
+		//NSLog(@"SolarErtragVonJahr DataString: \n%@",DataString);
+		NSArray* tempZeilenArray = [DataString componentsSeparatedByString:@"\n"];
+		//NSLog(@"SolarErtragVonJahr tempZeilenArray: \n%@",[tempZeilenArray description]);
+		NSEnumerator* ZeilenEnum =[tempZeilenArray objectEnumerator];
+		id eineZeile;
+		while (eineZeile=[ZeilenEnum nextObject])
+		{
+			NSMutableDictionary* tempDic=[[NSMutableDictionary alloc]initWithCapacity:0];
+			
+			tempDatenArray = [eineZeile componentsSeparatedByString:@"\t"];
+			int n=[tempDatenArray count];
+			if (n>1) // keine Leerzeile
+			{
+				//NSLog(@"tempDatenArray: %@, n %d",[tempDatenArray description], n);
+            
+				NSArray* DatumArray = [[tempDatenArray objectAtIndex:0]componentsSeparatedByString:@"."];
+				
+				//NSLog(@"Zeile : %@ DatumArray: %@",[tempDatenArray objectAtIndex:0],[DatumArray description]);
+				/*
+             Temperaturdifferenz dT zwischen Ein- und Ausfluss des Kollektors
+             Volumenstrom Q  in kg/s der Flüssigkeit
+             Wärmekapazität c: kJ/kg*K der Flüssigkeit
+             Betriebsdauer T in s
+             
+             Damit ist die Energie: Summe 0..T(c*dT*Q*)
+             */
+				int temptag=[[DatumArray objectAtIndex:0]intValue];
+				int tempmonat=[[DatumArray objectAtIndex:1]intValue];
+				int tempjahr=[[DatumArray objectAtIndex:2]intValue]+2000;
+				
+				
+				if (dasJahr == tempjahr && derMonat == tempmonat && derTag == temptag)
+				{
+					
+					NSRange DatenRange;
+               
+					DatenRange.location = 1;
+					DatenRange.length = [tempDatenArray count]-1;
+               
+					tempDatenArray = [tempDatenArray subarrayWithRange:DatenRange];
+					n=[tempDatenArray count];
+					NSEnumerator* DatenEnum=[tempDatenArray objectEnumerator];
+					id eineZeile;
+					float ErtragSumme=0;
+					while (eineZeile=[DatenEnum nextObject])
+               {
+						ErtragSumme += [eineZeile floatValue];
+					}
+               
+               
+					NSLog(@"\nDatum: %d.%d.%d \ntempDatenArray: %@, \nn %d Ertrag: %2.3F",temptag,tempmonat,tempjahr,[tempDatenArray description], n,ErtragSumme);
+				}
+				
+            
+            
+			}
+		}//while
+	}
+	return tempDatenArray;
+}
+
+- (NSArray*)SolarErtragVonJahr:(int)dasJahr vonMonat:(int)monat
+{
+	NSMutableArray* ErtragdatenArray=[[NSMutableArray alloc]initWithCapacity:0];
+	//NSLog(@"SolarErtragVonJahr: %d",dasJahr);
+	DataSuffix=@"SolarTagErtrag.txt";
+	NSString* URLPfad=[NSURL URLWithString:[ServerPfad stringByAppendingPathComponent:DataSuffix]];
+	//NSLog(@"SolarErtragVonJahr URLPfad: %@",URLPfad);
 	//NSLog(@"SolarErtragVonJahr  DownloadPfad: %@ DataSuffix: %@",DownloadPfad,DataSuffix);
 	NSURL *URL = [NSURL URLWithString:[ServerPfad stringByAppendingPathComponent:DataSuffix]];
 	
@@ -1580,33 +1689,70 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 				int tempmonat=[[DatumArray objectAtIndex:1]intValue];
 				int tempjahr=[[DatumArray objectAtIndex:2]intValue]+2000;
 				
+            
 				
-				if (dasJahr == tempjahr && derMonat == tempmonat && derTag == temptag)
+				if (dasJahr == tempjahr && ((monat==0)||(monat==tempmonat)))
 				{
-					
+					int tagdesjahres = [self tagdesjahresvonJahr:tempjahr Monat:tempmonat Tag:temptag];
+               
+               
 					NSRange DatenRange;
  
 					DatenRange.location = 1;
 					DatenRange.length = [tempDatenArray count]-1;
  
 					tempDatenArray = [tempDatenArray subarrayWithRange:DatenRange];
-					n=[tempDatenArray count];
+					int anzWerte = 0;
 					NSEnumerator* DatenEnum=[tempDatenArray objectEnumerator];
 					id eineZeile;
 					float ErtragSumme=0;
+               float maxtagertrag=0;
 					while (eineZeile=[DatenEnum nextObject])
 					 {
-						ErtragSumme += [eineZeile floatValue];
+                   float stundenertrag = [eineZeile floatValue];// stundenertrag ist Kelvin pro Minute aufsummiert waehrend einer Stunde
+                   if (stundenertrag > maxtagertrag)
+                   {
+                      maxtagertrag = stundenertrag;
+                   }
+                   //NSLog(@"wert: %.5f",[eineZeile floatValue]);
+                   if (stundenertrag > 0)
+                   {
+                      anzWerte++;
+                   }
+                   
+						ErtragSumme += stundenertrag;
 					}
-					NSLog(@"\nDatum: %d.%d.%d \ntempDatenArray: %@, \nn %d Ertrag: %2.3F",temptag,tempmonat,tempjahr,[tempDatenArray description], n,ErtragSumme);
-				}
+               // Ertragsumme ist Integral der Differenztemp in K*min
+               
+               //float ErtragMittelwert = ErtragSumme/anzWerte; // Mittelwert
+               
+              
+               NSLog(@"fluidleistungsfaktor: %2.5f",fluidleistungsfaktor);
+               // Fluidleistungsfaktor in kJ/s*K, fuer 1 Stunde
+               float Fluidertrag = (fluidleistungsfaktor *60)* ErtragSumme;
+               
+               
+					//NSLog(@"\nDatum: %d.%d.%d \ntagdesjahres: %d\ntempDatenArray: %@, \nanzWerte %d Ertrag: %2.3F",temptag,tempmonat,tempjahr, tagdesjahres,[tempDatenArray description], anzWerte,ErtragSumme);
+               NSDictionary* tempZeilenDic = [NSDictionary dictionaryWithObjectsAndKeys:
+                                              [NSNumber numberWithInt:tagdesjahres],@"tagdesjahres",
+                                              [NSNumber numberWithFloat:ErtragSumme],@"ertrag",
+                                              [NSNumber numberWithFloat:ErtragSumme/anzWerte],@"ertragmittel",
+                                              [NSNumber numberWithFloat:maxtagertrag],@"maxtagertrag",
+                                              [NSNumber numberWithFloat:Fluidertrag],@"fluidertrag",
+                                              [NSNumber numberWithInt:n],@"anzahlertragstunden",
+                                              
+                                              nil];
+               [ErtragdatenArray addObject:tempZeilenDic];
+            
+            
+            }
 				
 			
 			
 			}
 		}//while
 	}
-	return tempDatenArray;
+	return ErtragdatenArray;
 }
 
 - (NSArray*)SolarErtragVonHeute

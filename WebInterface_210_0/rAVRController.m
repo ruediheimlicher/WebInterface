@@ -469,29 +469,46 @@ NSLog(@"lastDataRead: %@",lastDataRead);
 		
 	}
 }
+
 - (void)SolarStatistikDatenAktion:(NSNotification*)note
 {
 	/*
 	 Aufgerufen, wenn der Tab von SolarStatistik geoeffnet wird
 	 */
 	//NSLog(@"AVRController SolarStatistikDatenAktion");
-	//NSLog(@"AVRController SolarStatistikDatenAktion note: %@ ",[[note userInfo]description]);
+	NSLog(@"AVRController SolarStatistikDatenAktion note *** aktion: %d ",[[[note userInfo]objectForKey:@"aktion" ]intValue]);
 	if ([[note userInfo]objectForKey:@"aktion"])
 	{
 		int jahr=[Data SolarStatistikJahr];
 		int monat=[Data SolarStatistikMonat];
       monat=0;
 		NSArray* TemperaturKanalArray=[NSArray arrayWithObjects:@"1",@"0",@"0",@"0" ,@"0",@"0",@"0",@"0",nil];
-		NSArray* ElektroKanalArray=	[NSArray arrayWithObjects:@"1",@"0",@"0",@"0" ,@"0",@"0",@"0",@"0",nil];
+
+      NSArray* ElektroKanalArray=	[NSArray arrayWithObjects:@"0",@"1",@"1",@"0" ,@"0",@"0",@"0",@"0",nil];
+      NSArray* StatistikKanalArray=	[NSArray arrayWithObjects:@"0",@"1",@"1",@"1" ,@"0",@"0",@"0",@"0",nil];
+      
+      
+    NSArray* ElektroStatistikKanalArray=	[NSArray arrayWithObjects:@"1",@"1",@"0",@"0" ,@"0",@"0",@"0",@"0",nil];
 		
 		NSMutableDictionary* StatDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 		
 		if ([[[note userInfo]objectForKey:@"aktion"]intValue]==1) // Pop
 		{
+         [self setSolarStatistikDaten];
+         return;
+         
+         
+         NSDictionary* tempDatumDic = [Data SolarStatistikDatum];
+			
+			int jahr=[[tempDatumDic objectForKey:@"jahr"]intValue];
+			int monat=[[tempDatumDic objectForKey:@"monat"]intValue];
+			int tag=[[tempDatumDic objectForKey:@"tag"]intValue];
+
 			
 			NSArray* ElektroDatenArray=[HomeData ElektroStatistikVonJahr:jahr Monat:monat];
 			if (ElektroDatenArray && [ElektroDatenArray count])
 			{
+            
 				//NSLog(@"AVRController ElektroStatistik: %@",[ElektroDatenArray description]);
 				
 				[StatDic setObject:ElektroDatenArray forKey:@"brennerdatenarray"];
@@ -510,6 +527,18 @@ NSLog(@"lastDataRead: %@",lastDataRead);
 				//[StatDic setObject:[NSNumber numberWithInt:2] forKey:@"aktion"];
 				
 			}
+         
+         NSArray* SolarDatenArray=[HomeData SolarErtragVonJahr:jahr vonMonat:monat];
+			if (SolarDatenArray && [SolarDatenArray count])
+			{
+				//NSLog(@"AVRController SolarStatistik: %@",[SolarDatenArray description]);
+            
+				[StatDic setObject:SolarDatenArray forKey:@"elektrodatenarray"];
+				[StatDic setObject:ElektroKanalArray forKey:@"elektrokanalarray"];
+				[StatDic setObject:[NSNumber numberWithInt:3] forKey:@"aktion"];
+				
+			}
+
 
          NSArray* KollektorDatenArray=[HomeData KollektorMittelwerteVonJahr:jahr];
          
@@ -517,7 +546,7 @@ NSLog(@"lastDataRead: %@",lastDataRead);
 			{
 				//NSLog(@"AVRController StatistikDatenAktion KollektorDatenArray: %@",[KollektorDatenArray description]);
 				[StatDic setObject:KollektorDatenArray forKey:@"kollektortemperaturarray"];
-				//[StatDic setObject:TemperaturKanalArray forKey:@"temperaturkanalarray"];
+				[StatDic setObject:StatistikKanalArray forKey:@"temperaturkanalarray"];
 				//[StatDic setObject:[NSNumber numberWithInt:2] forKey:@"aktion"];
 				
 			}
@@ -528,6 +557,11 @@ NSLog(@"lastDataRead: %@",lastDataRead);
       
 		if ([[[note userInfo]objectForKey:@"aktion"]intValue]==3)
 		{
+         
+         
+         [self setSolarStatistikDaten];
+         return;
+         
 			NSDictionary* tempDatumDic = [Data SolarStatistikDatum];
 			
 			int jahr=[[tempDatumDic objectForKey:@"jahr"]intValue];
@@ -535,19 +569,35 @@ NSLog(@"lastDataRead: %@",lastDataRead);
 			int tag=[[tempDatumDic objectForKey:@"tag"]intValue];
 			
 			
-			NSArray* SolarDatenArray=[HomeData SolarErtragVonJahr:jahr Monat:monat Tag:tag];
+			
+         
+         
+         NSArray* SolarDatenArray=[HomeData SolarErtragVonJahr:jahr vonMonat:monat];
 			if (SolarDatenArray && [SolarDatenArray count])
 			{
 				//NSLog(@"AVRController SolarStatistik: %@",[SolarDatenArray description]);
-				
-				
 
 				[StatDic setObject:SolarDatenArray forKey:@"elektrodatenarray"];
 				[StatDic setObject:ElektroKanalArray forKey:@"elektrokanalarray"];
 				[StatDic setObject:[NSNumber numberWithInt:3] forKey:@"aktion"];
 				
 			}
-		}	
+         
+         
+         NSArray* KollektorDatenArray=[HomeData KollektorMittelwerteVonJahr:jahr];
+         
+			if (KollektorDatenArray && [KollektorDatenArray count])
+			{
+				//NSLog(@"AVRController StatistikDatenAktion KollektorDatenArray: %@",[KollektorDatenArray description]);
+				[StatDic setObject:KollektorDatenArray forKey:@"kollektortemperaturarray"];
+				[StatDic setObject:StatistikKanalArray forKey:@"temperaturkanalarray"];
+				//[StatDic setObject:[NSNumber numberWithInt:2] forKey:@"aktion"];
+				
+			}
+         
+         [Data setSolarStatistik:StatDic];
+
+		}
 		
 		
 		
@@ -598,19 +648,23 @@ NSLog(@"lastDataRead: %@",lastDataRead);
 	int jahr=[Data SolarStatistikJahr];
 	int monat=[Data SolarStatistikMonat];
    
-	NSLog(@"setSolarStatistikDaten: jahr: %d monat: %d",jahr, monat);
+	//NSLog(@"setSolarStatistikDaten: jahr: %d monat: %d",jahr, monat);
    
 	NSMutableDictionary* StatDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 
    NSArray* KollektorTemperaturArray = [HomeData KollektorMittelwerteVonJahr:jahr];
    if (KollektorTemperaturArray && [KollektorTemperaturArray count])
    {
+      //NSLog(@"AVRController setSolarStatistikDaten KollektorTemperaturArray count: %d",[KollektorTemperaturArray count]);
+
       [StatDic setObject:KollektorTemperaturArray forKey:@"kollektortemperaturarray"];
       
    }
 	NSArray* ElektroDatenArray=[HomeData ElektroStatistikVonJahr:jahr Monat:monat];
 	if (ElektroDatenArray && [ElektroDatenArray count])
 	{
+      //NSLog(@"AVRController setSolarStatistikDaten ElektroDatenArray count: %d",[ElektroDatenArray count]);
+      
 		//NSLog(@"AVRController setSolarStatistikDaten ElektroDatenArray: %@",[ElektroDatenArray description]);
 
 		NSArray* ElektroKanalArray=[NSArray arrayWithObjects:@"1",@"1",@"0",@"0" ,@"0",@"0",@"0",@"0",nil]; // angezeigte Kanaele
@@ -624,19 +678,33 @@ NSLog(@"lastDataRead: %@",lastDataRead);
 	NSArray* TemperaturDatenArray=[HomeData TemperaturStatistikVonJahr:jahr Monat:monat];
 	if (TemperaturDatenArray && [TemperaturDatenArray count])
 	{
+      //NSLog(@"AVRController setSolarStatistikDaten TemperaturDatenArray count: %d",[TemperaturDatenArray count]);
+
 		//NSLog(@"AVRController setStatistikDaten TemperaturDatenArray: %@",[TemperaturDatenArray description]);
 		NSArray* TemperaturKanalArray=[NSArray arrayWithObjects:@"1",@"1",@"1",@"1" ,@"0",@"0",@"0",@"0",nil]; // angezeigte Kanaele
-		
 		[StatDic setObject:TemperaturKanalArray forKey:@"temperaturkanalarray"];
-
 		[StatDic setObject:TemperaturDatenArray forKey:@"temperaturdatenarray"];
+		//[StatDic setObject:[NSNumber numberWithInt:2] forKey:@"aktion"];
+	}
+ 
+   NSArray* SolarertragArray=[HomeData SolarErtragVonJahr:jahr vonMonat:0];
+	if (SolarertragArray && [SolarertragArray count])
+	{
+      //NSLog(@"AVRController setSolarStatistikDaten SolarertragArray count: %d",[SolarertragArray count]);
+      
+		//NSLog(@"AVRController setStatistikDaten SolarertragArray: %@",[SolarertragArray description]);
+		//NSArray* TemperaturKanalArray=[NSArray arrayWithObjects:@"1",@"1",@"1",@"1" ,@"0",@"0",@"0",@"0",nil]; // angezeigte Kanaele
+		
+		[StatDic setObject:SolarertragArray forKey:@"solarertragarray"];
+      
+		//[StatDic setObject:SolarertragDatenArray forKey:@""];
 		
 		//[StatDic setObject:[NSNumber numberWithInt:2] forKey:@"aktion"];
-		
-		[Data setSolarStatistik:StatDic];
-		
 	}
-	
+
+   
+   
+	[Data setSolarStatistik:StatDic];
 }
 
 @end

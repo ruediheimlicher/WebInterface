@@ -385,7 +385,7 @@ NSLog(@"setWert Kanal: %d  x: %2.2f y: %2.2f ",derKanal, derWert.x, derWert.y);
 - (void)setZeitKompression:(float)dieKompression
 {
 	float stretch = dieKompression/ZeitKompression;
-	NSLog(@"MKDiagramm setZeitKompression ZeitKompression: %2.2f dieKompression: %2.2f stretch: %2.2f",ZeitKompression,dieKompression,stretch);
+	//NSLog(@"MKDiagramm setZeitKompression ZeitKompression: %2.2f dieKompression: %2.2f stretch: %2.2f",ZeitKompression,dieKompression,stretch);
 	ZeitKompression=dieKompression;
 	NSAffineTransform *transform = [NSAffineTransform transform];
 	[transform scaleXBy: stretch yBy: 1.0];

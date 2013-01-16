@@ -21,6 +21,8 @@
 #import "rSolarDiagramm.h"
 #import "rSolarEinschaltDiagramm.h"
 #import "rSolarStatistikDiagramm.h"
+#import "rElektroStatistikDiagramm.h"
+
 #import "datum.c"
 #import "version.c"
 
@@ -29,7 +31,7 @@
 @class WebDownload;
 
 
-@interface rData : NSWindowController 
+@interface rData : NSWindowController <NSTabViewDelegate>
 {
 IBOutlet	id				DatenplanTab;
 
@@ -216,15 +218,16 @@ rStatistikDiagramm*           SolarStatistikDiagramm;
 rLegende*							SolarStatistikLegende;
 rDiagrammGitterlinien*        SolarStatistikGitterlinien;
 
-rSolarStatistikDiagramm*		ElektroStatistikDiagramm;
 rOrdinate*							SolarStatistikOrdinate;
+   
+rElektroStatistikDiagramm*		ElektroStatistikDiagramm;
+
 rLegende*							ElektroStatistikLegende;
 NSMutableArray*					 SolarStatistikTemperaturKanalArray;
 NSMutableArray*					SolarStatistikElektroKanalArray;
    
 rTagGitterlinien*					SolarTagGitterlinien;
-
-
+ rTagGitterlinien*				SolarStatistikTagGitterlinien;
 
 
 

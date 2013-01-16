@@ -34,7 +34,7 @@
 		 // Unterer Rand 25, oberer Rand 30
 		 
 		 FaktorY=MaxOrdinate/(MaxY-MinY); // Reduktion auf Feldhoehe
-		 NSLog(@"SolarStatistikDiagramm Diagrammfeldhoehe: %2.2f FaktorY: %2.2f",(frame.size.height-55),FaktorY);
+		 //NSLog(@"SolarStatistikDiagramm Diagrammfeldhoehe: %2.2f FaktorY: %2.2f",(frame.size.height-55),FaktorY);
        int i=0;
 		 NSMutableDictionary* StatistikEinheitenDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
 		 [StatistikEinheitenDic setObject:[NSNumber numberWithInt:2]forKey:@"minorteile"];
@@ -126,7 +126,7 @@ return dayOfYear;
 {
 	[super setEinheitenDicY:derEinheitenDic];
 	FaktorY=MaxOrdinate/(MaxY-MinY);
-   NSLog(@"Solarstatistik derEinheitenDic: %@",[derEinheitenDic description]);
+   //NSLog(@"Solarstatistik derEinheitenDic: %@",[derEinheitenDic description]);
 }
 
 - (void)setWertMitX:(float)x mitY:(float)y forKanal:(int)derKanal
@@ -141,7 +141,12 @@ return dayOfYear;
 
 - (void)setWerteArray:(NSArray*)derWerteArray mitKanalArray:(NSArray*)derKanalArray
 {
-		//NSLog(@"TemperaturStatistikDiagramm setWerteArray; %@",[derWerteArray description]);
+   //NSLog(@"SolarStatistikDiagramm setWerteArray 2: %@",[derWerteArray description]);
+   if ([derWerteArray count]<2)
+   {
+      NSLog(@"Error SolarStatistikDiagramm setWerteArray <2: %@",[derWerteArray description]);
+      return;
+   }
 		//[self logRect:[self frame]];
 
 	//NSLog(@"SolarStatistikDiagramm setWerteArray anz: %d WerteArray: %@ \nKanalArray: %@",[derWerteArray count],[derWerteArray description],[derKanalArray description]);
@@ -154,6 +159,8 @@ return dayOfYear;
 	Kanal 2: tagmittel
 	Kanal 3: nachtmittel
    Kanal 4: kollektormittel
+   
+    
 	 
 	 NSMutableArray* tempArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
 	 
@@ -191,6 +198,7 @@ return dayOfYear;
    
    
    // unterer Wert: Nachtmittel
+   
    float nachtmittel=[[derWerteArray objectAtIndex:3]floatValue];	// nachtmitteltemperatur
 
    
@@ -250,6 +258,7 @@ return dayOfYear;
       [kollektorGraph appendBezierPathWithOvalInRect:kollektorkreisfeld];
       [[GraphArray objectAtIndex:3]appendBezierPath:kollektorGraph];
    }
+   
    
    [GraphKanalArray setArray:derKanalArray];
 
@@ -459,6 +468,8 @@ return dayOfYear;
 
 - (void)drawRect:(NSRect)rect
 {
+   [[NSGraphicsContext currentContext] setShouldAntialias:NO];
+
 	NSRect NetzBoxRahmen=[self frame];//NSMakeRect(NetzEcke.x,NetzEcke.y,200,100);
 	NetzBoxRahmen.size.height-=10;
 	NetzBoxRahmen.size.width-=15;
@@ -531,7 +542,7 @@ return dayOfYear;
 	[WaagrechteLinie moveToPoint:untenH];
 	[WaagrechteLinie lineToPoint:rechtsH];
 	//	[WaagrechteLinie stroke];
-	
+	[[NSGraphicsContext currentContext] setShouldAntialias:YES];
 	for (i=0;i<8;i++)
 	{
 		//NSLog(@"drawRect Farbe Kanal: %d Color: %@",i,[[GraphFarbeArray objectAtIndex:i] description]);

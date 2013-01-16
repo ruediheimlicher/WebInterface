@@ -45,6 +45,9 @@
 	NSURLRequest *				SolarCentralRequest;
 	NSMutableData *			SolarCentralData;
 
+   float                         pumpeleistungsfaktor;
+   float                         elektroleistungsfaktor;
+   float                         fluidleistungsfaktor;
 	
 }
 - (IBAction)downloadOrCancel:(id)sender;
@@ -68,8 +71,13 @@
 - (IBAction)reportURLPop:(id)sender;
 - (NSArray*)SolarErtragVonHeute;
 - (NSArray*)SolarErtragVonJahr:(int)dasJahr Monat:(int)derMonat Tag:(int)derTag;
+- (NSArray*)SolarErtragVonJahr:(int)dasJahr vonMonat:(int)monat;
 
 - (NSArray*)KollektorMittelwerte;
 - (NSArray*)KollektorMittelwerteVonJahr:(int)jahr;
 - (int)tagdesjahresvonJahr:(int)jahr Monat:(int)monat Tag:(int)tag;
+
+-(void)setPumpeLeistungsfaktor:(float)faktor;
+-(void)setElektroLeistungsfaktor:(float)faktor;
+-(void)setFluidLeistungsfaktor:(float)faktor;
 @end

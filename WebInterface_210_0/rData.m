@@ -183,7 +183,7 @@ extern NSMutableArray* DatenplanTabelle;
 
 
 	SolarStatistikElektroKanalArray=[[[NSMutableArray alloc]initWithCapacity:0]retain];
-	[SolarStatistikElektroKanalArray setArray:[NSArray arrayWithObjects:@"1",@"1",@"0",@"0" ,@"0",@"0",@"0",@"0",nil]];
+	[SolarStatistikElektroKanalArray setArray:[NSArray arrayWithObjects:@"0",@"1",@"1",@"1" ,@"0",@"0",@"0",@"0",nil]];
 	
 	
 	n=0;
@@ -280,6 +280,7 @@ extern NSMutableArray* DatenplanTabelle;
 	GesamtDatenArray=[[[NSMutableArray alloc]initWithCapacity:0]retain];
 	
 	Datenplan=[[[NSMutableArray alloc]initWithCapacity:0]retain];
+   [DatenplanTab setDelegate:self];
 	
 	//	NSRect DatenplanTabRect=[DatenplanTab bounds];
 	//NSLog(@"Data awake: x: %2.2f y: %2.2f",[DatenplanTab bounds].size.height,[DatenplanTab bounds].size.width);
@@ -642,7 +643,7 @@ extern NSMutableArray* DatenplanTabelle;
 	[StatistikDiagrammScroller setHasHorizontalScroller:YES];
 	[StatistikDiagrammScroller setHasVerticalScroller:NO];
 	[StatistikDiagrammScroller setDrawsBackground:YES];
-	[StatistikDiagrammScroller setAutoresizingMask:NSViewWidthSizable];
+	//[StatistikDiagrammScroller setAutoresizingMask:NSViewWidthSizable];
 	//[StatistikDiagrammScroller setBackgroundColor:[NSColor blueColor]];
 	[StatistikDiagrammScroller setHorizontalLineScroll:1.0];
 	//[StatistikDiagrammScroller setAutohidesScrollers:NO];
@@ -1061,7 +1062,61 @@ extern NSMutableArray* DatenplanTabelle;
 	
 	[SolarStatistikDiagramm setEinheitenDicY: SolarStatistikEinheitenDic];
 
-	[SolarStatistikKalender setDateValue: [NSDate date]];
+   
+   
+// ElektrostatistikDiagramm
+   
+   float ElektroStatistikDiagrammhoehe = 150;
+   float ElektroStatistikDiagrammlage = 220;
+   
+   NSRect ElektroStatistikDiagrammFeld = SolarStatistikScrollerRect;
+	ElektroStatistikDiagrammFeld.origin.x += 0.1;
+	ElektroStatistikDiagrammFeld.origin.y += 0.1;
+	ElektroStatistikDiagrammFeld.size.width -= 2;
+	ElektroStatistikDiagrammFeld.size.height=ElektroStatistikDiagrammhoehe;
+   
+	ElektroStatistikDiagramm= [[rElektroStatistikDiagramm alloc]initWithFrame:ElektroStatistikDiagrammFeld];
+   
+	[ElektroStatistikDiagramm setGrundlinienOffset:10.0];					// Abstand der
+	[ElektroStatistikDiagramm setDiagrammlageY:ElektroStatistikDiagrammlage];	// Abstand vom unteren Rand des Scrollviews
+	[ElektroStatistikDiagramm setMaxOrdinate:ElektroStatistikDiagrammhoehe];
+	//[TemperaturStatistikDiagramm setMaxEingangswert:40];
+	[ElektroStatistikDiagramm  setPostsFrameChangedNotifications:YES];
+	[ElektroStatistikDiagramm setTag:210];
+	[ElektroStatistikDiagramm setGraphFarbe:[NSColor redColor] forKanal:0];
+	[ElektroStatistikDiagramm setGraphFarbe:[NSColor blueColor] forKanal:1];
+	[ElektroStatistikDiagramm setGraphFarbe:[NSColor redColor] forKanal:2];
+	[ElektroStatistikDiagramm setGraphFarbe:[NSColor greenColor] forKanal:3];
+   
+   
+   
+	[[SolarStatistikDiagrammScroller documentView]addSubview:ElektroStatistikDiagramm];
+
+	// set Ordinate
+   
+   NSMutableDictionary* ElektroStatistikEinheitenDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+	[ElektroStatistikEinheitenDic setObject:[NSNumber numberWithInt:2]forKey:@"minorteile"];
+	[ElektroStatistikEinheitenDic setObject:[NSNumber numberWithInt:6]forKey:@"majorteile"];
+	[ElektroStatistikEinheitenDic setObject:[NSNumber numberWithInt:10]forKey:@"nullpunkt"];
+	[ElektroStatistikEinheitenDic setObject:[NSNumber numberWithInt:50000]forKey:@"maxy"];
+	[ElektroStatistikEinheitenDic setObject:[NSNumber numberWithInt:0]forKey:@"miny"];
+	//[ElektroStatistikEinheitenDic setObject:[NSNumber numberWithFloat:[[ZeitKompressionTaste titleOfSelectedItem]floatValue]]forKey:@"zeitkompression"];
+	[ElektroStatistikEinheitenDic setObject:@" °C"forKey:@"einheit"];
+	
+	[ElektroStatistikDiagramm setEinheitenDicY: ElektroStatistikEinheitenDic];
+
+   
+   NSRect SolarstatistikTagGitterlinienFeld=SolarStatistikScrollerRect;
+	SolarstatistikTagGitterlinienFeld.origin.x += 0.1;
+	//NSLog(@"SolarstatistikTagGitterlinienFeld x: %.2f y: %.2f",SolarstatistikTagGitterlinienFeld.origin.x,SolarstatistikTagGitterlinienFeld.origin.y);
+   //NSLog(@"SolarstatistikTagGitterlinienFeld w: %.2f h: %.2f",SolarstatistikTagGitterlinienFeld.size.width,SolarstatistikTagGitterlinienFeld.size.height);
+
+	SolarStatistikTagGitterlinien =[[rTagGitterlinien alloc] initWithFrame: SolarstatistikTagGitterlinienFeld];
+	[[SolarStatistikDiagrammScroller documentView]addSubview:SolarStatistikTagGitterlinien positioned:NSWindowBelow relativeTo:SolarStatistikDiagramm];
+
+   
+   
+   [SolarStatistikKalender setDateValue: [NSDate date]];
 	// end Solarstatistik
 	
 	// Diagrammzeichnen veranlassen
@@ -1079,7 +1134,7 @@ extern NSMutableArray* DatenplanTabelle;
 	NSString* VersionString = [NSString stringWithFormat:@"Version %@",VERSION];
 	[VersionFeld setStringValue:VersionString];
 	
-
+   [DatenplanTab selectTabViewItemAtIndex:0];
 
 }
 
@@ -2683,7 +2738,10 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
 			[tempVorgabenDic setObject:[NSNumber numberWithInt:4]forKey:@"anzbalken"];
 			[tempVorgabenDic setObject:[NSNumber numberWithInt:6]forKey:@"datenindex"];
 
-#pragma mark Simulation			
+         
+
+
+#pragma mark Simulation
 // Simulation
 /*
 			NSNumber* filler=[NSNumber numberWithInt:1];
@@ -2814,6 +2872,8 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
 	}// if dataenarray
 	
 }
+
+
 
 
 - (void)clearSolarData
@@ -3380,7 +3440,7 @@ if ([[note userInfo]objectForKey:@"err"])
    [BrennerStatistikDiagramm setGraphFarbe:[NSColor lightGrayColor] forKanal:0];
 	[BrennerStatistikDiagramm setGraphFarbe:[NSColor blueColor] forKanal:1];
 	[BrennerStatistikDiagramm setGraphFarbe:[NSColor blackColor] forKanal:2];
-	[BrennerStatistikDiagramm setGraphFarbe:[NSColor grayColor] forKanal:3];
+	[BrennerStatistikDiagramm setGraphFarbe:[NSColor redColor] forKanal:3];
 	[TemperaturStatistikDiagramm setGraphFarbe:[NSColor redColor] forKanal:0];
 	[TemperaturStatistikDiagramm setGraphFarbe:[NSColor blueColor] forKanal:1];
 	[TemperaturStatistikDiagramm setGraphFarbe:[NSColor greenColor] forKanal:2];
@@ -3602,7 +3662,7 @@ if ([[note userInfo]objectForKey:@"err"])
 	[tempDatenDic setObject:[NSNumber numberWithInt:1]forKey:@"aktion"];
 	NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
 	[nc postNotificationName:@"StatistikDaten" object:NULL userInfo:tempDatenDic];
-		[TagGitterlinien setNeedsDisplay:YES];
+   [TagGitterlinien setNeedsDisplay:YES];
 
 	
 }
@@ -3635,6 +3695,9 @@ if ([[note userInfo]objectForKey:@"err"])
 - (void)setSolarStatistik:(NSDictionary*)derDatenDic
 {
 	/*
+    Wird von AVRController aufgerufen
+    
+    
 	 derDatenDic enthaelt Arrays der setSolarStatistik und der Temperaturstatistik
 	 Jedes Objekt der Arrays enthaelt das Datum und den TagDesJahres
 	 
@@ -3661,8 +3724,10 @@ if ([[note userInfo]objectForKey:@"err"])
 	NSArray* ElektrodatenArray =[NSArray array];
    
    NSArray* KollektortemperaturArray =[NSArray array];
+   
+   NSArray* SolarertragArray =[NSArray array];
 
-
+   NSArray* TemperaturKanalArray=[NSArray arrayWithObjects:@"1",@"0",@"0",@"0" ,@"0",@"0",@"0",@"0",nil];
    
 	//NSLog(@"[StatistikDiagrammScroller documentView]: w: %2.2f",[[StatistikDiagrammScroller documentView]frame].size.width);
 	
@@ -3670,7 +3735,9 @@ if ([[note userInfo]objectForKey:@"err"])
    
    if ([derDatenDic objectForKey:@"elektrodatenarray"])
 	{
-      NSSet* ElektrodatenSet = [NSSet setWithArray:[derDatenDic objectForKey:@"elektrodatenarray"]]; // entfernt doppelte Werte
+      //NSLog(@"Data setSolarStatistik: elektrodatenarray da");
+      /*
+       NSSet* ElektrodatenSet = [NSSet setWithArray:[derDatenDic objectForKey:@"elektrodatenarray"]]; // entfernt doppelte Werte
       ElektrodatenArray=[ElektrodatenSet allObjects];
      
       
@@ -3679,11 +3746,18 @@ if ([[note userInfo]objectForKey:@"err"])
 																							ascending:YES] autorelease];
 		NSArray* sortDescriptors = [NSArray arrayWithObject:tagDescriptor];
 		ElektrodatenArray = [ElektrodatenArray sortedArrayUsingDescriptors:sortDescriptors];
-		//ElektrodatenArray = [derDatenDic objectForKey:@"elektrodatenarray"];
+       */
+		ElektrodatenArray = [derDatenDic objectForKey:@"elektrodatenarray"];
+      //NSLog(@"Data setSolarStatistik: elektrodatenarray end");
 	}
+   else
+   {
+      NSLog(@"Data setSolarStatistik: elektrodatenarray nicht da");
+   }
 
    if ([derDatenDic objectForKey:@"temperaturdatenarray"])
 	{
+      //NSLog(@"Data setSolarStatistik: temperaturdatenarray da");
       NSSet* TemperaturdatenSet = [NSSet setWithArray:[derDatenDic objectForKey:@"temperaturdatenarray"]]; // entfernt doppelte Werte
       TemperaturdatenArray=[TemperaturdatenSet allObjects];
 
@@ -3693,22 +3767,65 @@ if ([[note userInfo]objectForKey:@"err"])
 		NSArray* sortDescriptors = [NSArray arrayWithObject:tagDescriptor];
 		TemperaturdatenArray = [TemperaturdatenArray sortedArrayUsingDescriptors:sortDescriptors];
 		//TemperaturdatenArray = [derDatenDic objectForKey:@"temperaturdatenarray"];
+      //NSLog(@"Data setSolarStatistik: temperaturdatenarray end");
 	}
+   else
+   {
+       NSLog(@"Data setSolarStatistik: temperaturdatenarray nicht da");
+   }
    
    if ([derDatenDic objectForKey:@"kollektortemperaturarray"])
 	{
-      
+      //NSLog(@"Data setSolarStatistik: kollektortemperaturarray da");
       KollektortemperaturArray= [derDatenDic objectForKey:@"kollektortemperaturarray"];
+      for (int i=0;i<5;i++)
+      {
+         //NSLog(@"Data setSolarStatistik i: %d kollektortemperaturarray: %@",i,[[KollektortemperaturArray objectAtIndex:i]description]);
+      }
+      //NSLog(@"Data setSolarStatistik: kollektortemperaturarray end");
 	}
+   else
+   {
+      NSLog(@"Data setSolarStatistik: kollektortemperaturarray nicht da");
+   }
+   
+   if ([derDatenDic objectForKey:@"solarertragarray"])
+	{
+      //NSLog(@"Data setSolarStatistik: solarertragarray da");
+      
+      
+      SolarertragArray= [derDatenDic objectForKey:@"solarertragarray"];
+      for (int i=0;i<[SolarertragArray count];i++)
+      {
+         //NSLog(@"Data setSolarStatistik i: %d SolarertragArray: %@",i,[[SolarertragArray objectAtIndex:i]description]);
+      }
+      //NSLog(@"Data setSolarStatistik: solarertragarray end");
+	}
+   else
+   {
+      NSLog(@"Data setSolarStatistik: solarertragarray nicht da");
+   }
+   
+  
 
    
    NSArray* ElektrotagArray=[ElektrodatenArray valueForKey:@"tagdesjahres"];
    
 	NSArray* TemperaturtagArray=[TemperaturdatenArray valueForKey:@"tagdesjahres"];
    
+   NSArray* KollektortagArray = [NSArray array];
+   if ([KollektortemperaturArray count])
+   {
+      KollektortagArray=[KollektortemperaturArray valueForKey:@"tagdesjahres"];
+   }
    
-    NSArray* KollektortagArray=[KollektortemperaturArray valueForKey:@"tagdesjahres"];
-   
+   NSArray* SolarertragtagArray = [NSArray array];
+   if ([SolarertragArray count])
+   {
+      SolarertragtagArray = [SolarertragArray valueForKey:@"tagdesjahres"];
+      //NSLog(@"SolarertragtagArray count: %d last: %d array: %@",[SolarertragtagArray count],[[SolarertragtagArray lastObject]intValue],[SolarertragtagArray description]);
+   }
+   //NSLog(@"SolarertragtagArray: %@",[SolarertragtagArray description]);
 	//NSLog(@"TemperaturtagArray count: %d last: %d array: %@",[TemperaturtagArray count],[[TemperaturtagArray lastObject]intValue],[TemperaturtagArray description]);
 	
 	NSMutableArray* TemperaturStatistikArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
@@ -3720,12 +3837,13 @@ if ([[note userInfo]objectForKey:@"err"])
 		
 		int anz=0;
 		NSNumber* indexNumber = [NSNumber numberWithInt:index];
+      
+     // NSLog(@"index: %d indexNumber: %@ ",index,indexNumber);
 		NSMutableDictionary* tempDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
       
-		int TempIndex=[TemperaturtagArray indexOfObject:indexNumber];
+		NSUInteger  TempIndex=[TemperaturtagArray indexOfObject:indexNumber];
 		if (TempIndex < [TemperaturdatenArray count] && [TemperaturdatenArray objectAtIndex:TempIndex])
       {
-         
          if (TempIndex < NSNotFound) // Es gibt einen Eintrag
          {
             //NSLog(@"index: %d TempIndex: %d TemperaturdatenArray at index: %@",index,TempIndex,[[TemperaturdatenArray objectAtIndex:TempIndex]description]);
@@ -3736,7 +3854,7 @@ if ([[note userInfo]objectForKey:@"err"])
          }
       }
       
-		int ElektroIndex=[ElektrotagArray indexOfObject:indexNumber];
+		NSUInteger  ElektroIndex=[ElektrotagArray indexOfObject:indexNumber];
 		if (ElektroIndex < NSNotFound) // Es gibt einen Eintrag
 		{
          //NSLog(@"index: %d TempIndex: %d ElektrotagArray at index: %@",index,TempIndex,[[ElektrodatenArray objectAtIndex:TempIndex]description]);
@@ -3746,32 +3864,58 @@ if ([[note userInfo]objectForKey:@"err"])
 		}
 		//		NSLog(@"index: %d tagindex: %d anz: %d tempDic: %@",index, tagindex, anz, [tempDic description]);
 
-      int KollektorIndex=[KollektortagArray indexOfObject:indexNumber];
+      NSUInteger  KollektorIndex=[KollektortagArray indexOfObject:indexNumber];
 		if (KollektorIndex < NSNotFound) // Es gibt einen Eintrag
 		{
          //NSLog(@"index: %d TempIndex: %d ElektrotagArray at index: %@",index,TempIndex,[[KollektortemperaturArray objectAtIndex:TempIndex]description]);
-         
 			anz++;
          
 			[tempDic addEntriesFromDictionary:[KollektortemperaturArray objectAtIndex:KollektorIndex]];
 		}
 		//		NSLog(@"index: %d tagindex: %d anz: %d tempDic: %@",index, tagindex, anz, [tempDic description]);
 		
+      //indexOfObjectIdenticalTo
+      NSUInteger SolarertragIndex=[SolarertragtagArray indexOfObject:indexNumber];
+      //NSLog(@"index: %d SolarertragIndex: %lu ",index,(unsigned long)SolarertragIndex);
+      
+      //if ((SolarertragIndex >=0) && (SolarertragIndex < NSIntegerMax)) // Es gibt einen Eintrag
+      if ((SolarertragIndex < NSIntegerMax)) // Es gibt einen Eintrag
+      {
+         //NSLog(@"F: %d",SolarertragIndex);
+         //NSLog(@"index: %d TempIndex: %d SolarertragArray at index: %@",index,SolarertragIndex,[[SolarertragArray objectAtIndex:SolarertragIndex]description]);
+         
+         anz++;
+         if ([SolarertragArray objectAtIndex:SolarertragIndex])
+         {
+            [tempDic addEntriesFromDictionary:[SolarertragArray objectAtIndex:SolarertragIndex]];
+         }
+         //NSLog(@"tempDic passed");
+      }
+      //		NSLog(@"index: %d tagindex: %d anz: %d tempDic: %@",index, tagindex, anz, [tempDic description]);
+      
+      
+      if (anz)
+      {
+         [TemperaturStatistikArray addObject:tempDic];
+      }
 
 		
       
-      if (anz)
-		{
-			[TemperaturStatistikArray addObject:tempDic];
-		}
 	}
+
    
    //NSLog(@"Data setSolarStatstik: TemperaturStatistikArray von 0: %@",[[TemperaturStatistikArray objectAtIndex:0]description]);
-   NSLog(@"Data setSolarStatstik: TemperaturStatistikArray von 1: %@",[[TemperaturStatistikArray objectAtIndex:1]description]);
+   for (int i=0;i<5;i++)
+   {
+      //NSLog(@"Data setSolarStatstik: TemperaturStatistikArray von %d: %@",i,[[TemperaturStatistikArray objectAtIndex:i]description]);
+   }
+  
    int i=0;
 	[SolarStatistikDiagramm setOffsetX:[[[TemperaturStatistikArray objectAtIndex:i]objectForKey:@"tagdesjahres"]intValue]]; // Startwert der Abszisse setzen
-	[SolarTagGitterlinien setOffsetX:[[[TemperaturStatistikArray objectAtIndex:i]objectForKey:@"tagdesjahres"]intValue]];
-	[ElektroStatistikDiagramm setOffsetX:[[[TemperaturStatistikArray objectAtIndex:i]objectForKey:@"tagdesjahres"]intValue]]; // Startwert der Abszisse setzen
+	[SolarStatistikTagGitterlinien setOffsetX:[[[TemperaturStatistikArray objectAtIndex:i]objectForKey:@"tagdesjahres"]intValue]];
+	
+   
+ //  [ElektroStatistikDiagramm setOffsetX:[[[TemperaturStatistikArray objectAtIndex:i]objectForKey:@"tagdesjahres"]intValue]]; // Startwert der Abszisse setzen
 	int tagdesjahresMin=[[[TemperaturStatistikArray objectAtIndex:0]objectForKey:@"tagdesjahres"]intValue];
 	int tagdesjahresMax=[[[TemperaturStatistikArray objectAtIndex:[TemperaturStatistikArray count]-1]objectForKey:@"tagdesjahres"]intValue];
 	//NSLog(@"tagdesjahresMin: %d tagdesjahresMax: %d ",tagdesjahresMin,tagdesjahresMax);
@@ -3789,17 +3933,14 @@ if ([[note userInfo]objectForKey:@"err"])
 	//NSLog(@"	tempFrame w nach: %2.2f",tempFrame.size.width);
 	[[SolarStatistikDiagrammScroller documentView]setFrame:tempFrame];
 	
-	NSRect tempElektroFrame=[ElektroStatistikDiagramm frame];
-	tempElektroFrame.size.width=newWidth;
-	[ElektroStatistikDiagramm setFrame:tempElektroFrame];
 	
 	NSRect tempTemperaturFrame=[SolarStatistikDiagramm frame];
 	tempTemperaturFrame.size.width=newWidth;
 	[SolarStatistikDiagramm setFrame:tempTemperaturFrame];
 	
-	NSRect tempTagGitterFrame=[SolarTagGitterlinien frame];
+	NSRect tempTagGitterFrame=[SolarStatistikTagGitterlinien frame];
 	tempTagGitterFrame.size.width=newWidth;
-	[SolarTagGitterlinien setFrame:tempTagGitterFrame];
+	[SolarStatistikTagGitterlinien setFrame:tempTagGitterFrame];
 	AnzeigeBreite+=100.0;
 	float delta=maxZeit-AnzeigeBreite;
 	//NSLog(@"delta: %2.2f",delta);
@@ -3813,24 +3954,45 @@ if ([[note userInfo]objectForKey:@"err"])
 		NSMutableArray* tempWerteArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
 		// Abszisse: tag des Jahres
 		[tempWerteArray addObject:[[TemperaturStatistikArray objectAtIndex:i]objectForKey:@"tagdesjahres"]];
-		if ([[TemperaturStatistikArray objectAtIndex:i]objectForKey:@"mittel"])
+		
+      if ([[TemperaturStatistikArray objectAtIndex:i]objectForKey:@"mittel"])
 		{
 			[tempWerteArray addObject:[[TemperaturStatistikArray objectAtIndex:i]objectForKey:@"mittel"]];
 		}
+      else
+      {
+         [tempWerteArray addObject:[NSNumber numberWithFloat:0.0]];
+      }
 		if ([[TemperaturStatistikArray objectAtIndex:i]objectForKey:@"tagmittel"])
 		{
 			[tempWerteArray addObject:[[TemperaturStatistikArray objectAtIndex:i]objectForKey:@"tagmittel"]];
 		}
+      else
+      {
+         [tempWerteArray addObject:[NSNumber numberWithFloat:0.0]];
+      }
+
 		if ([[TemperaturStatistikArray objectAtIndex:i]objectForKey:@"nachtmittel"])
 		{
 			[tempWerteArray addObject:[[TemperaturStatistikArray objectAtIndex:i]objectForKey:@"nachtmittel"]];
 		}
+      else
+      {
+         [tempWerteArray addObject:[NSNumber numberWithFloat:0.0]];
+      }
+
 
       if ([[TemperaturStatistikArray objectAtIndex:i]objectForKey:@"kollektormittelwert"])
 		{
 			[tempWerteArray addObject:[[TemperaturStatistikArray objectAtIndex:i]objectForKey:@"kollektormittelwert"]];
 		}
+      else
+      {
+         [tempWerteArray addObject:[NSNumber numberWithFloat:0.0]];
+      }
 
+
+      
 		//		if ([[StatistikArray objectAtIndex:i]objectForKey:@"calenderdatum"])
 		{
 			//			[tempWerteArray addObject:[[StatistikArray objectAtIndex:i]objectForKey:@"calenderdatum"]];
@@ -3850,22 +4012,62 @@ if ([[note userInfo]objectForKey:@"err"])
 		{
 			[tempElektroWerteArray addObject:[[TemperaturStatistikArray objectAtIndex:i]objectForKey:@"pumpelaufzeit"]];
 		}
+      else
+      {
+         [tempElektroWerteArray addObject:[NSNumber numberWithInt:0]];
+
+      }
 		
 		if ([[TemperaturStatistikArray objectAtIndex:i]objectForKey:@"elektrolaufzeit"])
 		{
 			[tempElektroWerteArray addObject:[[TemperaturStatistikArray objectAtIndex:i]objectForKey:@"elektrolaufzeit"]];
 		}
-		/*
+      else
+      {
+         [tempElektroWerteArray addObject:[NSNumber numberWithInt:0]];
+         
+      }
+      
+      /*
+      if ([[TemperaturStatistikArray objectAtIndex:i]objectForKey:@"ertrag"])
+		{
+         float tagertrag = [[[TemperaturStatistikArray objectAtIndex:i]objectForKey:@"ertrag"]floatValue];
+         
+         [tempElektroWerteArray addObject:[NSNumber numberWithFloat:tagertrag]];
+			//[tempElektroWerteArray addObject:[[TemperaturStatistikArray objectAtIndex:i]objectForKey:@"ertrag"]];
+		}
+      else
+      {
+         [tempElektroWerteArray addObject:[NSNumber numberWithInt:0]];
+         
+      }
+*/
+     
+      if ([[TemperaturStatistikArray objectAtIndex:i]objectForKey:@"fluidertrag"])
+		{
+         float tagertrag = [[[TemperaturStatistikArray objectAtIndex:i]objectForKey:@"fluidertrag"]floatValue];
+         
+         [tempElektroWerteArray addObject:[NSNumber numberWithFloat:tagertrag]];
+			//[tempElektroWerteArray addObject:[[TemperaturStatistikArray objectAtIndex:i]objectForKey:@"ertrag"]];
+		}
+      else
+      {
+         [tempElektroWerteArray addObject:[NSNumber numberWithInt:0]];
+         
+      }
+
+		
        // Breite des Diagramms anpassen
-       NSPoint tempOrigin=[[StatistikDiagrammScroller documentView] frame].origin;
-       NSRect tempFrame=[[StatistikDiagrammScroller documentView] frame];
+      NSRect tempTemperaturFrame=[ElektroStatistikDiagramm frame];
+      tempTemperaturFrame.size.width=newWidth;
+      [ElektroStatistikDiagramm setFrame:tempTemperaturFrame];
+
        
-       int tempZeit=0;
-       //		tempZeit=[[HomeDatenArray objectAtIndex:0]intValue]- firstZeit;
-       
-       */
-		//NSLog(@"setBrennerStatstik i: %d tempBrennerWerteArray: %@",i,[tempElektroWerteArray description]);
-		//NSLog(@"setBrennerStatstik i: %d BrennerKanalArray: %@",i,[ElektroStatistikKanalArray description]);
+      if (i<5)
+      {
+		 //NSLog(@"setSolarStatstik i: %d tempElektroWerteArray: %@",i,[tempElektroWerteArray description]);
+      }
+		//NSLog(@"setSolarStatstik i: %d SolarStatistikElektroKanalArray: %@",i,[SolarStatistikElektroKanalArray description]);
 		
 		[ElektroStatistikDiagramm setWerteArray:tempElektroWerteArray mitKanalArray:SolarStatistikElektroKanalArray];
 		
@@ -3879,8 +4081,9 @@ if ([[note userInfo]objectForKey:@"err"])
 		{
 			[tempDatumArray addObject:[[TemperaturStatistikArray objectAtIndex:i]objectForKey:@"calenderdatum"]];
 		}
-		//NSLog(@"Data setBrennerStatstik: i: %d tempDatumArray: %@",i,[tempDatumArray description]);
-		[SolarTagGitterlinien setWerteArray:tempDatumArray mitKanalArray:SolarStatistikElektroKanalArray];
+		//NSLog(@"Data setSolarStatstik: i: %d tempDatumArray: %@",i,[tempDatumArray description]);
+      // Kanalarray muss 1 als erstes Objekt haben
+		[SolarStatistikTagGitterlinien setWerteArray:tempDatumArray mitKanalArray:TemperaturKanalArray];
 		//[TagGitterlinien  setNeedsDisplay:YES];
 	} // for i
    
@@ -5382,8 +5585,7 @@ NSString* tempFehlerString=[IOWFehlerLog string];
 }
 
 
-
-- (BOOL)tabView:(NSTabView *)tabView shouldSelectTabViewItem:(NSTabViewItem *)tabViewItem
+- (void)tabView:(NSTabView *)tabView didSelectTabViewItem:(NSTabViewItem *)tabViewItem
 {
 //NSLog(@"shouldSelectTabViewItem: %@ Identifier: %d",[tabViewItem label],[[tabViewItem identifier]intValue]);
 if ([[tabViewItem identifier]intValue]==1)
@@ -5391,7 +5593,7 @@ if ([[tabViewItem identifier]intValue]==1)
 		NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
 		NSMutableDictionary* BalkendatenDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
 		[BalkendatenDic setObject:[NSNumber numberWithInt:1]forKey:@"aktion"];
-		[nc postNotificationName:@"StatistikDaten" object:NULL userInfo:BalkendatenDic];
+//		[nc postNotificationName:@"StatistikDaten" object:NULL userInfo:BalkendatenDic];
 
 }
 
@@ -5400,12 +5602,13 @@ if ([[tabViewItem identifier]intValue]==3)
 		NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
 		NSMutableDictionary* BalkendatenDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
 		[BalkendatenDic setObject:[NSNumber numberWithInt:3]forKey:@"aktion"];
-		[nc postNotificationName:@"StatistikDaten" object:NULL userInfo:BalkendatenDic];
+//		[nc postNotificationName:@"SolarStatistikDaten" object:NULL userInfo:BalkendatenDic];
 
 }
 
 
-return YES;
+
+//return YES;
 }
 
 

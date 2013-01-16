@@ -333,7 +333,9 @@ void IOWarriorCallback ()
 	//	[self readPList];
 	
 		[self showAVR:NULL];
-	//[AVR setWochenplan:NULL];
+	
+   
+   //[AVR setWochenplan:NULL];
 
 	//	[self showADWandler:NULL];	
 	/*
@@ -358,6 +360,9 @@ void IOWarriorCallback ()
 	//	
 	//	[self readPList];
 	//	[ADWandler showWindow:self];
+   
+   [self showHomeData:NULL];
+   
 	[self showData:NULL]; // Observer von Data muessen vor HomeData aktiviert sein
 	
 	
@@ -365,7 +370,12 @@ void IOWarriorCallback ()
 	
 	HomeClient = [[rHomeClient alloc]init];
 	
-	[self showHomeData:NULL];
+	
+   
+   
+   
+   
+   
 	lastDataZeit=0;
 	//[self startHomeData];
 	//NSLog(@"awake vor AktuelleDaten");
@@ -375,6 +385,7 @@ void IOWarriorCallback ()
 	if (AktuelleDaten &&[AktuelleDaten length])
 	{
 		//NSLog(@"awake openWithString\n\n");
+      
 		[self openWithString:AktuelleDaten];
       
 		[self setStatistikDaten];
@@ -411,16 +422,19 @@ void IOWarriorCallback ()
 	
 	#pragma mark awake Solar
 	
+   [HomeData setPumpeLeistungsfaktor:0.0138];  // W/s
+   [HomeData setElektroLeistungsfaktor:0.833]; // W/s
+   [HomeData setFluidLeistungsfaktor:0.0625]; // Leistungsuebertragung in kJ/s*K
+   
 	NSString* AktuelleSolarDaten=[HomeData SolarDataVonHeute];
 	//NSLog(@"awake nach AktuelleSolarDaten");
 	//NSLog(@"awake AktuelleSolarDaten: \n%@",AktuelleSolarDaten);
 	if (AktuelleSolarDaten &&[AktuelleSolarDaten length])
 	{
-		NSLog(@"awake openWithSolarString\n\n");
+		//NSLog(@"awake openWithSolarString\n\n");
 		[self openWithSolarString:AktuelleSolarDaten];
       
       [self setSolarStatistikDaten];
-
 	}
 	else
 	{

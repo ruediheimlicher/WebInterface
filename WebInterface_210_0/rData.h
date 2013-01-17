@@ -223,11 +223,12 @@ rOrdinate*							SolarStatistikOrdinate;
 rElektroStatistikDiagramm*		ElektroStatistikDiagramm;
 
 rLegende*							ElektroStatistikLegende;
-NSMutableArray*					 SolarStatistikTemperaturKanalArray;
+   
+NSMutableArray*					SolarStatistikTemperaturKanalArray;
 NSMutableArray*					SolarStatistikElektroKanalArray;
    
 rTagGitterlinien*					SolarTagGitterlinien;
- rTagGitterlinien*				SolarStatistikTagGitterlinien;
+rTagGitterlinien*             SolarStatistikTagGitterlinien;
 
 
 

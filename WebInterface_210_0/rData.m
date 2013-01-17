@@ -2692,7 +2692,7 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
 		//NSLog(@"TemperaturZeilenString: %@",TemperaturZeilenString);
 		
 		
-		NSArray* TemperaturKanalArray=	[NSArray arrayWithObjects:@"1",@"1",@"1",@"1" ,@"1",@"1",@"0",@"1",nil];
+		NSArray* TemperaturKanalArray=	[NSArray arrayWithObjects:@"1",@"1",@"1",@"1",@"1",@"1",@"0",@"0",nil];
 		NSArray* StatusKanalArray=		[NSArray arrayWithObjects:@"1",@"1",@"0",@"0" ,@"0",@"0",@"0",@"0",nil];
 		
 		// Mark des Datenpaketes:	0: Schluss, Null-Werte	1: Gueltige Daten

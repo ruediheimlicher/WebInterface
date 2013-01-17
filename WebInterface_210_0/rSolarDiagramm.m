@@ -51,7 +51,7 @@
 
 - (void)setWerteArray:(NSArray*)derWerteArray mitKanalArray:(NSArray*)derKanalArray
 {
-	//NSLog(@"setWerteArray WerteArray: %@",[derWerteArray description]);//,[derKanalArray description]);
+	NSLog(@"SolarDiagramm setWerteArray WerteArray: %@ KanalArray: %@",[derWerteArray description],[derKanalArray description]);
 	int i;
 	
 	float	maxSortenwert=127.5;	// Temperatur, 100° entspricht 200
@@ -222,7 +222,7 @@
 	//[NSBezierPath strokeRect:NetzBoxRahmen];
 	
 	NSBezierPath* SenkrechteLinie=[NSBezierPath bezierPath];
-	int i;
+	
 	NSPoint untenV=DiagrammEcke;
 	NSPoint obenV=untenV;
 	NSPoint links=untenV;
@@ -235,7 +235,7 @@
 	[SenkrechteLinie lineToPoint:obenV];
 	[SenkrechteLinie stroke];
 	
-	for (i=0;i<[NetzlinienX count];i++)
+	for (int i=0;i<[NetzlinienX count];i++)
 	{
 		untenV.x=[[NetzlinienX objectAtIndex:i]floatValue];
 		untenV.y=mitteH.y;
@@ -283,8 +283,78 @@
 	[WaagrechteLinie moveToPoint:untenH];
 	[WaagrechteLinie lineToPoint:rechtsH];
 	//	[WaagrechteLinie stroke];
+	NSMutableIndexSet* OrdinateSet = [NSMutableIndexSet indexSet];
+	NSMutableIndexSet* DatenlegendeSet = [NSMutableIndexSet indexSet];
+   
+   // Datenanschrift ordnen
+   
+   int schriftgroesse = 9;
+   NSMutableDictionary* ZeitAttrs=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+
+   NSMutableParagraphStyle* ZeitPar=[[[NSMutableParagraphStyle alloc]init]autorelease];
+	[ZeitPar setAlignment:NSRightTextAlignment];
+	[ZeitAttrs setObject:ZeitPar forKey:NSParagraphStyleAttributeName];
+	NSFont* ZeitFont=[NSFont fontWithName:@"Helvetica" size: schriftgroesse];
 	
-	for (i=0;i<8;i++)
+	[ZeitAttrs setObject:ZeitFont forKey:NSFontAttributeName];
+
+   float miny = [self frame].size.height;
+   float maxy = 0;
+   float legendex = 0;
+   for (int i=0;i<8;i++)
+   {
+      
+      if ([[GraphKanalArray objectAtIndex:i]intValue])
+		{
+         
+         NSPoint cP=[[GraphArray objectAtIndex:i]currentPoint];
+         miny = fmin(miny,cP.y);
+         maxy = fmax(maxy,cP.y);
+         [OrdinateSet addIndex:cP.y];
+         if (legendex == 0)
+         {
+            legendex = cP.x;
+         }
+         //NSLog(@"i: %d OrdinateSet: %@",i,[OrdinateSet description]);
+
+      }
+   }
+   NSLog(@"miny: %.2f maxy: %.2f \nOrdinateSet: %@",miny,maxy,[OrdinateSet description]);
+   
+   
+   
+   NSRect Datalegenderect = NSMakeRect(legendex, miny-2, 20, maxy-miny+8);
+   NSBezierPath* DatalegendeGraph=[NSBezierPath bezierPathWithRect:Datalegenderect];
+   [DatalegendeGraph stroke];
+ 
+   // Abstaende bestimmen
+   float abstandy = schriftgroesse+2;
+   float minh = [OrdinateSet count]*abstandy;
+   
+   float lastlage = [OrdinateSet lastIndex];
+   
+   for (int i=([OrdinateSet count]-1);i>=0; i--)
+   {
+      float oldlage = [OrdinateSet lastIndex]; // oberster Wert
+      
+      float newlage= i* abstandy +miny;// Mindestordinate fuer i
+      
+      
+      if (oldlage < newlage) // Abstand ist zu klein
+      {
+         oldlage = newlage; // neue Lage definieren
+      }
+      
+      [OrdinateSet removeIndex:oldlage];
+      [DatenlegendeSet addIndex:oldlage];
+      
+   }
+   NSLog(@"DatenlegendeSet: %@",[DatenlegendeSet description]);
+
+   
+   // [[[GraphArray objectAtIndex:i]objectForKey:@"zeitstring"]drawAtPoint:SchriftPunkt withAttributes:ZeitAttrs];
+
+	for (int i=0;i<8;i++)
 	{
 		//NSLog(@"drawRect Farbe Kanal: %d Color: %@",i,[[GraphFarbeArray objectAtIndex:i] description]);
 		if ([[GraphKanalArray objectAtIndex:i]intValue])
@@ -298,6 +368,7 @@
 			//NSLog(@"drawRect: %@",[[DatenArray objectAtIndex:i]description]);
 			
 			NSString* AnzeigeString=[NSString stringWithFormat:@"%@: %@",[DatenTitelArray objectAtIndex:i],[[[DatenArray objectAtIndex:i]lastObject]objectForKey:@"wert"]];
+         
 			[[DatenFeldArray objectAtIndex:i]setStringValue:AnzeigeString];
 			//		[[DatenFeldArray objectAtIndex:i]setStringValue:[[[DatenArray objectAtIndex:i]lastObject]objectForKey:@"wert"]];
 		}

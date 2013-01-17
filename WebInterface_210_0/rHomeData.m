@@ -1727,11 +1727,10 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
                //float ErtragMittelwert = ErtragSumme/anzWerte; // Mittelwert
                
               
-               NSLog(@"fluidleistungsfaktor: %2.5f",fluidleistungsfaktor);
+               //NSLog(@"fluidleistungsfaktor: %2.5f",fluidleistungsfaktor);
                // Fluidleistungsfaktor in kJ/s*K, fuer 1 Stunde
                float Fluidertrag = (fluidleistungsfaktor *60)* ErtragSumme;
-               
-               
+                              
 					//NSLog(@"\nDatum: %d.%d.%d \ntagdesjahres: %d\ntempDatenArray: %@, \nanzWerte %d Ertrag: %2.3F",temptag,tempmonat,tempjahr, tagdesjahres,[tempDatenArray description], anzWerte,ErtragSumme);
                NSDictionary* tempZeilenDic = [NSDictionary dictionaryWithObjectsAndKeys:
                                               [NSNumber numberWithInt:tagdesjahres],@"tagdesjahres",

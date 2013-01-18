@@ -11,7 +11,7 @@
 
 @interface rDatenlegende : NSObject
 {
-   float randunten, randoben, abstandunten, abstandoben, distanz;
+   float randunten, randoben, abstandnach, abstandvor, mindistanz;
    NSMutableArray* LegendeArray;
 }
 - (void)setVorgabenDic:(NSDictionary*)vorgabendic;

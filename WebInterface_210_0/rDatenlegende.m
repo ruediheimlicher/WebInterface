@@ -16,9 +16,9 @@
    LegendeArray = [[[NSMutableArray alloc]initWithCapacity:0]autorelease];
    randunten=0;
    randoben = 0;
-   abstandoben=10;
-   abstandunten=10;
-   distanz = 10;
+   abstandvor=-1;
+   abstandnach=-1;
+   mindistanz = 10;
    return self;
 }
 
@@ -33,18 +33,18 @@ if ([vorgabendic objectForKey:@"randunten"])
    {
       randoben = [[vorgabendic objectForKey:@"randoben"]floatValue];
    }
-   if ([vorgabendic objectForKey:@"abstandunten"])
+   if ([vorgabendic objectForKey:@"abstandvor"])
    {
-      abstandunten = [[vorgabendic objectForKey:@"abstandunten"]floatValue];
+      abstandvor = [[vorgabendic objectForKey:@"abstandvor"]floatValue];
    }
-   if ([vorgabendic objectForKey:@"abstandoben"])
+   if ([vorgabendic objectForKey:@"abstandnach"])
    {
-      abstandoben = [[vorgabendic objectForKey:@"abstandoben"]floatValue];
+      abstandnach = [[vorgabendic objectForKey:@"abstandnach"]floatValue];
    }
 
-   if ([vorgabendic objectForKey:@"distanz"])
+   if ([vorgabendic objectForKey:@"mindistanz"])
    {
-      distanz = [[vorgabendic objectForKey:@"distanz"]floatValue];
+      mindistanz = [[vorgabendic objectForKey:@"mindistanz"]floatValue];
    }
 
 }
@@ -58,58 +58,83 @@ if ([vorgabendic objectForKey:@"randunten"])
    //LegendeArray = [NSMutableArray arrayWithArray:array];
    
    // Abstande einsetzen
-   float lastposition=randunten;
+   float lastposition=randunten; // effektive Position des vorherigen Elements
+   float minposition = randunten;     // minimalposition fuer Element
+   float distanz=0;      // effektive distanz zum vorherigen Element
+   
    int clusterindex = 0;
    
    [ClusterArray addObject:[[[NSMutableArray alloc]initWithCapacity:0]autorelease]];
    
    for (int i=0;i<[legendearray count];i++)
    {
+      int index = [[[legendearray objectAtIndex:i]objectForKey:@"index"]intValue];
       float tempwert = [[[legendearray objectAtIndex:i]objectForKey:@"wert"]floatValue];
-      int legendeposition = (int)tempwert;
-      if (tempwert <= lastposition) // zum letzten Objekt in ClusterArray zufuegen
+      
+      float legendeposition = tempwert;
+      
+      if (tempwert <= minposition) // zum letzten Objekt in ClusterArray zufuegen
       {
-         legendeposition = lastposition;
+         legendeposition = minposition;
+         
          if (i) // nicht unterste Position
          {
-            
             if ([[ClusterArray lastObject]count]==0) // Array noch leer, vorheriges Objekt zufuegen
             {
                NSMutableDictionary* clusterDic = [LegendeArray lastObject];
+               
                [clusterDic setObject:[NSNumber numberWithInt:clusterindex] forKey:@"clusterindex"];
+               //[clusterDic setObject:[NSNumber numberWithFloat:-1]forKey:@"abstandvor"]; // erste Element in Cluster
                
                [[ClusterArray lastObject]addObject:clusterDic];
 
             }
             
             NSMutableDictionary* clusterDic = [[NSMutableDictionary alloc]initWithObjectsAndKeys:
-                                               [NSNumber numberWithInt:legendeposition],@"legendeposition",
+                                               [NSNumber numberWithFloat:legendeposition],@"legendeposition",
                                                 [NSNumber numberWithInt:clusterindex],@"clusterindex",
                                                [NSNumber numberWithFloat:tempwert],@"wert",
+                                               [NSNumber numberWithFloat:0],@"abstandvor", // kein Abstand
                                                 
                                                 nil];
             [[ClusterArray lastObject]addObject:clusterDic];
          }
+         else // erstes Element
+         {
+            
+         }
       }
-      else
+      else // abstand ausreichend, incl randunten beim ersten öObjekt
       {
-         lastposition = tempwert;
-         // Cluster fertig, neuen Array anfuegen
+         minposition = tempwert;
+         // Cluster fertig, neuen Array fuer eventuellen naechsten Cluster anfuegen
          if ([[ClusterArray lastObject]count]) // der letzte Cluster hatte Objecte
          {
+            // im letzten Element abstandnach einsetzen: legendeposition - legendeposition des letzten Elements
+            float lastlegendeposition = [[[[ClusterArray lastObject]lastObject]objectForKey:@"legendeposition"]floatValue];
+            [[[ClusterArray lastObject]lastObject]setObject:[NSNumber numberWithFloat:legendeposition-lastlegendeposition]forKey:@"abstandnach"];
+            
             [ClusterArray addObject:[[[NSMutableArray alloc]initWithCapacity:0]autorelease]];
             clusterindex ++;
          }
          
       }
-      
+      distanz = legendeposition-distanz;
       
       [LegendeArray addObject:[NSMutableDictionary dictionaryWithObjectsAndKeys:
+                               [NSNumber numberWithInt:index], @"index",
                                [NSNumber numberWithFloat:tempwert], @"wert",
-                              [NSNumber numberWithInt:legendeposition], @"legendeposition",
+                              [NSNumber numberWithFloat:legendeposition], @"legendeposition",
+                               [NSNumber numberWithFloat:distanz],@"abstandvor", // kein Abstand
+                               
                               nil]];
+      
+      
+      
       NSLog(@"DatenLegende i: %d tempwert: %.2f legendeposition: %d",i,tempwert,legendeposition);
-      lastposition += distanz;
+      
+      minposition += mindistanz;
+   
    }// for i
    
    //NSLog(@"DatenLegende LegendeArray: %@",[[LegendeArray valueForKey:@"legendeposition"]description]);
@@ -119,6 +144,9 @@ if ([vorgabendic objectForKey:@"randunten"])
       NSLog(@"DatenLegende k: %d ClusterArray: %@",k,[[ClusterArray objectAtIndex:k ]description]);
    }
    //NSLog(@"DatenLegende ClusterArray: %@",[ClusterArray description]);
+   
+   
+   
    
 
 }

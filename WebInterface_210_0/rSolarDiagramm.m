@@ -325,19 +325,14 @@
 		{
          
          NSPoint cP=[[GraphArray objectAtIndex:i]currentPoint];
-         NSArray* wertDic = [NSDictionary dictionaryWithObject:[NSNumber numberWithFloat:cP.y] forKey:@"wert"];
+         NSDictionary* wertDic = [NSDictionary dictionaryWithObjectsAndKeys:
+                                  [NSNumber numberWithFloat:cP.y],@"wert",
+                                  [NSNumber numberWithInt:i],@"index",
+                                  nil];
          
          [LegendeArray addObject:wertDic];
          miny = fmin(miny,cP.y);
          maxy = fmax(maxy,cP.y);
-         /*
-         [OrdinateSet addIndex:cP.y];
-         if (legendex == 0)
-         {
-            legendex = cP.x;
-         }
-         NSLog(@"i: %d OrdinateSet: %@",i,[OrdinateSet description]);
-          */
       }
    }
    NSLog(@"miny: %.2f maxy: %.2f LegendeArray: %@",miny,maxy,[[LegendeArray valueForKey:@"wert"] description]);
@@ -353,42 +348,28 @@
    [DatenLegende setLegendeArray:LegendeArray];
    
    LegendeArray = (NSMutableArray*)[DatenLegende LegendeArray];
-   NSLog(@"LegendeArray nach: %@",[LegendeArray description]);
+   
+   NSLog(@"LegendeArray nach Datenlegende: %@",[LegendeArray description]);
+   
+   NSComparator sortByIndex = ^(id dict1, id dict2)
+   {
+      NSNumber* n1 = [dict1 objectForKey:@"index"];
+      NSNumber* n2 = [dict2 objectForKey:@"index"];
+      return (NSComparisonResult)[n1 compare:n2];
+   };
+
+   [LegendeArray sortUsingComparator: sortByIndex];
+   NSLog(@"LegendeArray nach sort: %@",[LegendeArray description]);
+   
    NSRect Datalegenderect = NSMakeRect(legendex, miny-2, 20, maxy-miny+8);
    NSBezierPath* DatalegendeGraph=[NSBezierPath bezierPathWithRect:Datalegenderect];
    [DatalegendeGraph stroke];
  
    
-   int lastlage = [OrdinateSet lastIndex];
-   NSLog(@"lastlage: %d",lastlage);
-   
-   
-   
-   
-   for (int i=([OrdinateSet count]-1);i>=0; i--)
-   {
-      float oldlage = [OrdinateSet lastIndex]; // oberster Wert
-      
-      float newlage= i* abstandy +miny;// Mindestordinate fuer i
-      NSLog(@"pos: %d vor korr  oldlage: %.2f newlage %.2f",i,oldlage,newlage);
-      
-      if (oldlage < newlage) // Abstand ist zu klein
-      {
-         NSLog(@"korr: newlage");
-         oldlage = newlage; // neue Lage definieren
-      }
-      
-      
-      NSLog(@"pos: %d nach korr  oldlage: %.2f",i,oldlage);
-      [OrdinateSet removeIndex:oldlage];
-      [DatenlegendeSet addIndex:oldlage];
-      
-   }
-   //return;
-   
+   int legendeindex=0;
+   NSArray* LegendeOrdinatenArray = [LegendeArray valueForKey:@"legendeposition"];
+   NSLog(@"LegendeOrdinatenArray: %@",[LegendeOrdinatenArray description]);
   
-   NSLog(@"DatenlegendeSet: %@",[DatenlegendeSet description]);
-
    
    // [[[GraphArray objectAtIndex:i]objectForKey:@"zeitstring"]drawAtPoint:SchriftPunkt withAttributes:ZeitAttrs];
    
@@ -403,6 +384,8 @@
   
 			NSPoint cP=[[GraphArray objectAtIndex:i]currentPoint];
 			cP.x+=2;
+         cP.y = [[LegendeOrdinatenArray objectAtIndex:legendeindex]floatValue];
+         legendeindex ++;
 			cP.y-=12;
 			[[DatenFeldArray objectAtIndex:i]setFrameOrigin:cP];
 			//NSLog(@"drawRect: %@",[[DatenArray objectAtIndex:i]description]);

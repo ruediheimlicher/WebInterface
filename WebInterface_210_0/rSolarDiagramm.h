@@ -8,6 +8,8 @@
 
 #import <Cocoa/Cocoa.h>
 #import "rMehrkanalDiagramm.h"
+#import "rDatenlegende.h"
+
 
 @interface rSolarDiagramm : rMehrkanalDiagramm
 {

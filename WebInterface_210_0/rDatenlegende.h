@@ -1,0 +1,21 @@
+//
+//  rDatenlegende.h
+//  WebInterface
+//
+//  Created by Ruedi Heimlicher on 18.Januar.13.
+//
+//
+
+#import <Foundation/Foundation.h>
+#import <Cocoa/Cocoa.h>
+
+@interface rDatenlegende : NSObject
+{
+   float randunten, randoben, abstandunten, abstandoben, distanz;
+   NSMutableArray* LegendeArray;
+}
+- (void)setVorgabenDic:(NSDictionary*)vorgabendic;
+- (void)setLegendeArray:(NSArray*)array;
+- (NSArray*)LegendeArray;
+
+@end

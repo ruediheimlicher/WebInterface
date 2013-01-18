@@ -51,7 +51,7 @@
 
 - (void)setWerteArray:(NSArray*)derWerteArray mitKanalArray:(NSArray*)derKanalArray
 {
-	NSLog(@"SolarDiagramm setWerteArray WerteArray: %@ KanalArray: %@",[derWerteArray description],[derKanalArray description]);
+	//NSLog(@"SolarDiagramm setWerteArray WerteArray: %@ KanalArray: %@",[derWerteArray description],[derKanalArray description]);
 	int i;
 	
 	float	maxSortenwert=127.5;	// Temperatur, 100° entspricht 200
@@ -209,8 +209,11 @@
 	//[GraphKanalArray retain];
 //	[self setNeedsDisplay:YES];
 }
+
+
 - (void)drawRect:(NSRect)rect
 {
+   
 	//NSLog(@"MKDiagramm drawRect");
 	NSRect NetzBoxRahmen=[self bounds];//NSMakeRect(NetzEcke.x,NetzEcke.y,200,100);
 	NetzBoxRahmen.size.height-=10;
@@ -283,16 +286,21 @@
 	[WaagrechteLinie moveToPoint:untenH];
 	[WaagrechteLinie lineToPoint:rechtsH];
 	//	[WaagrechteLinie stroke];
+   
+   rDatenlegende* DatenLegende = [[[rDatenlegende alloc]init]autorelease];
+   
+   
 	NSMutableIndexSet* OrdinateSet = [NSMutableIndexSet indexSet];
 	NSMutableIndexSet* DatenlegendeSet = [NSMutableIndexSet indexSet];
+  
    
    // Datenanschrift ordnen
    
    int schriftgroesse = 9;
    NSMutableDictionary* ZeitAttrs=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
-
    NSMutableParagraphStyle* ZeitPar=[[[NSMutableParagraphStyle alloc]init]autorelease];
-	[ZeitPar setAlignment:NSRightTextAlignment];
+  
+   [ZeitPar setAlignment:NSRightTextAlignment];
 	[ZeitAttrs setObject:ZeitPar forKey:NSParagraphStyleAttributeName];
 	NSFont* ZeitFont=[NSFont fontWithName:@"Helvetica" size: schriftgroesse];
 	
@@ -301,6 +309,15 @@
    float miny = [self frame].size.height;
    float maxy = 0;
    float legendex = 0;
+   
+   // Abstaende bestimmen
+   int abstandy = schriftgroesse+2;
+   int minh = [OrdinateSet count]*abstandy;
+   int grundabstand=schriftgroesse;
+   int deltay=0;
+   
+   NSMutableArray* LegendeArray = [[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+   // Ordinaten nach Wert sortiert in IndexSet setzen
    for (int i=0;i<8;i++)
    {
       
@@ -308,61 +325,84 @@
 		{
          
          NSPoint cP=[[GraphArray objectAtIndex:i]currentPoint];
+         NSArray* wertDic = [NSDictionary dictionaryWithObject:[NSNumber numberWithFloat:cP.y] forKey:@"wert"];
+         
+         [LegendeArray addObject:wertDic];
          miny = fmin(miny,cP.y);
          maxy = fmax(maxy,cP.y);
+         /*
          [OrdinateSet addIndex:cP.y];
          if (legendex == 0)
          {
             legendex = cP.x;
          }
-         //NSLog(@"i: %d OrdinateSet: %@",i,[OrdinateSet description]);
-
+         NSLog(@"i: %d OrdinateSet: %@",i,[OrdinateSet description]);
+          */
       }
    }
-   NSLog(@"miny: %.2f maxy: %.2f \nOrdinateSet: %@",miny,maxy,[OrdinateSet description]);
+   NSLog(@"miny: %.2f maxy: %.2f LegendeArray: %@",miny,maxy,[[LegendeArray valueForKey:@"wert"] description]);
    
+   NSComparator sortByNumber = ^(id dict1, id dict2)
+   {
+      NSNumber* n1 = [dict1 objectForKey:@"wert"];
+      NSNumber* n2 = [dict2 objectForKey:@"wert"];
+      return (NSComparisonResult)[n1 compare:n2];
+   };
+   [LegendeArray sortUsingComparator: sortByNumber];
+   NSLog(@"LegendeArray vor: %@",[[LegendeArray valueForKey:@"wert"]description]);
+   [DatenLegende setLegendeArray:LegendeArray];
    
-   
+   LegendeArray = (NSMutableArray*)[DatenLegende LegendeArray];
+   NSLog(@"LegendeArray nach: %@",[LegendeArray description]);
    NSRect Datalegenderect = NSMakeRect(legendex, miny-2, 20, maxy-miny+8);
    NSBezierPath* DatalegendeGraph=[NSBezierPath bezierPathWithRect:Datalegenderect];
    [DatalegendeGraph stroke];
  
-   // Abstaende bestimmen
-   float abstandy = schriftgroesse+2;
-   float minh = [OrdinateSet count]*abstandy;
    
-   float lastlage = [OrdinateSet lastIndex];
+   int lastlage = [OrdinateSet lastIndex];
+   NSLog(@"lastlage: %d",lastlage);
+   
+   
+   
    
    for (int i=([OrdinateSet count]-1);i>=0; i--)
    {
       float oldlage = [OrdinateSet lastIndex]; // oberster Wert
       
       float newlage= i* abstandy +miny;// Mindestordinate fuer i
-      
+      NSLog(@"pos: %d vor korr  oldlage: %.2f newlage %.2f",i,oldlage,newlage);
       
       if (oldlage < newlage) // Abstand ist zu klein
       {
+         NSLog(@"korr: newlage");
          oldlage = newlage; // neue Lage definieren
       }
       
+      
+      NSLog(@"pos: %d nach korr  oldlage: %.2f",i,oldlage);
       [OrdinateSet removeIndex:oldlage];
       [DatenlegendeSet addIndex:oldlage];
       
    }
+   //return;
+   
+  
    NSLog(@"DatenlegendeSet: %@",[DatenlegendeSet description]);
 
    
    // [[[GraphArray objectAtIndex:i]objectForKey:@"zeitstring"]drawAtPoint:SchriftPunkt withAttributes:ZeitAttrs];
-
+   
 	for (int i=0;i<8;i++)
 	{
 		//NSLog(@"drawRect Farbe Kanal: %d Color: %@",i,[[GraphFarbeArray objectAtIndex:i] description]);
 		if ([[GraphKanalArray objectAtIndex:i]intValue])
 		{
-			[[GraphFarbeArray objectAtIndex:i]set];
+			[(NSColor*)[GraphFarbeArray objectAtIndex:i]set];
 			[[GraphArray objectAtIndex:i]stroke];
+         
+  
 			NSPoint cP=[[GraphArray objectAtIndex:i]currentPoint];
-			//cP.x+=2;
+			cP.x+=2;
 			cP.y-=12;
 			[[DatenFeldArray objectAtIndex:i]setFrameOrigin:cP];
 			//NSLog(@"drawRect: %@",[[DatenArray objectAtIndex:i]description]);
@@ -372,6 +412,7 @@
 			[[DatenFeldArray objectAtIndex:i]setStringValue:AnzeigeString];
 			//		[[DatenFeldArray objectAtIndex:i]setStringValue:[[[DatenArray objectAtIndex:i]lastObject]objectForKey:@"wert"]];
 		}
+      
 	}
 	
 	

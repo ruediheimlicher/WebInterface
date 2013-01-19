@@ -902,29 +902,82 @@ if (Webserver_busy)
       int objekt = [[[updateArray objectAtIndex:index]objectForKey:@"objekt"]intValue];
       int wochentag = [[[updateArray objectAtIndex:index]objectForKey:@"wochentag"]intValue];
       NSMutableArray* stundenplanarray  = [NSMutableArray arrayWithArray:[[updateArray objectAtIndex:index]objectForKey:@"stundenplanarray"]];
-
+      NSLog(@"updatePListMitDicArray index: %d stundenplanarray: %@",index,[stundenplanarray description]);
+      
       [self setStundenplanArray:stundenplanarray forWochentag:wochentag forObjekt:objekt forRaum:raum];
       NSArray* subViews = [[[self ScrollerVonRaum:raum]documentView ]subviews];
       //NSLog(@"updatePListMitDicArray index: %d subViews: %@",index,[subViews description]);
+      for (int k=0;k<[subViews count];k++)
+      {
+         if ([[subViews objectAtIndex:k ]isKindOfClass:[rTagplanbalken class]])
+         {
+         //NSLog(@"subViews k: %d titel: %@ tag: %d",k,[[subViews objectAtIndex:k]Titel],[[subViews objectAtIndex:k]tag]);
+         }
+      }
       NSLog(@"updatePListMitDicArray index: %d  raum: %d objekt: %d wochentag: %d",index,raum,objekt,wochentag);
       
       for (int k=0;k<[subViews count];k++)
       {
+          //NSLog(@"subViews k: %d raum: %d wochentag: %d objekt: %d",k,raum,wochentag,objekt);
          if ( [[subViews objectAtIndex:k ]isKindOfClass:[rTagplanbalken class]] && ([[subViews objectAtIndex:k ]raum]==raum ) && ([[subViews objectAtIndex:k ]wochentag]==wochentag ) && ([[subViews objectAtIndex:k ]objekt] == objekt))
          {
-            //NSLog(@"subViews k: %d subview %@",k,[[subViews objectAtIndex:k ]Titel]);
+            NSLog(@"**subViews k: %d subview %@",k,[[subViews objectAtIndex:k ]Titel]);
             [[subViews objectAtIndex:k ]setStundenArray:stundenplanarray forKey:@"code"];
+            
             [[subViews objectAtIndex:k ]setNeedsDisplay:YES];
-            AblaufString = [AblaufString stringByAppendingFormat:@"r:%d wt:%d o:%d ",raum,wochentag,objekt];
+            AblaufString = [AblaufString stringByAppendingFormat:@"raum:%d wochentag:%d objekt:%d ",raum,wochentag,objekt];
          }
-         //
-
-      }      
-   
+         else
+         {
+            //NSLog(@"subViews k: %d nicht da",k);
+         }
+      }
+      
    } // for
    
-  [self saveHomeDic];
+   // Daten in PList sichern
+   [self saveHomeDic];
+   
+   // Daten auf eepromupdatedaten.txt loeschen
+   NSAlert *Warnung = [[[NSAlert alloc] init] autorelease];
+   [Warnung addButtonWithTitle:@"Ja"];
+   [Warnung addButtonWithTitle:@"Nein"];
+   [Warnung setMessageText:[NSString stringWithFormat:@"%@",@"EEPROMUpdateDaten?"]];
+   
+   NSString* s1=@"Daten auf eepromupdatedaten.txt loeschen?";
+   NSString* s2=@"";
+   NSString* InformationString=[NSString stringWithFormat:@"%@\n%@",s1,s2];
+   [Warnung setInformativeText:InformationString];
+   [Warnung setAlertStyle:NSWarningAlertStyle];
+   
+   int antwort=0;
+   //antwort=[Warnung runModal];
+   
+   // antwort = 0;
+   NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+   NSLog(@"Warnung EEPROMDaten Antwort: %d",antwort);
+   
+   if (antwort == NSAlertFirstButtonReturn)
+   {
+      NSLog(@"Daten auf eepromupdatedaten.txt loeschen");
+      [NotificationDic setObject:[NSNumber numberWithInt:13] forKey:@"perm"];
+      
+      
+      
+   }
+   else if (antwort == NSAlertAlternateReturn)
+   {
+      NSLog(@"Daten auf eepromupdatedaten.txt behalten");
+      [NotificationDic setObject:[NSNumber numberWithInt:12] forKey:@"perm"];
+      
+   }
+   
+   NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
+   [nc postNotificationName:@"EEPROMUpdateClear" object:self userInfo:NotificationDic]; // -> HomeClient
+
    [Ablauffeld setStringValue:AblaufString];
+   
+   
 }
 
 
@@ -938,7 +991,7 @@ if (Webserver_busy)
 		NSBeep();
 		return;
 	}
-    
+   
    if ([TWIStatusTaste state])
     {
     //NSLog(@"TWIStatustaste: %d",[TWIStatusTaste state]);
@@ -1162,6 +1215,7 @@ if (Webserver_busy)
             [[NSSound soundNamed:@"Glass"] play];
             [writeEEPROMcounterfeld setStringValue:@"OK"];
              // Aufraeumen
+            [UpdateWaitrad stopAnimation:NULL];
              NSMutableArray *viewsToRemove = [[NSMutableArray alloc] init];
              for(NSView* thisPage in [EEPROMPlan subviews])
              {
@@ -1180,6 +1234,7 @@ if (Webserver_busy)
              [EEPROMPlan setNeedsDisplay:YES];
              //[HomeServerFixArray removeAllObjects];
             
+            
             // Daten auf eepromupdatedaten.txt loeschen
             NSAlert *Warnung = [[[NSAlert alloc] init] autorelease];
             [Warnung addButtonWithTitle:@"Ja"];
@@ -1192,10 +1247,13 @@ if (Webserver_busy)
             [Warnung setInformativeText:InformationString];
             [Warnung setAlertStyle:NSWarningAlertStyle];
             
-            int antwort=[Warnung runModal];
+            int antwort=0;
+            //antwort=[Warnung runModal];
             
+            // antwort = 0;
             NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
-
+            NSLog(@"Warnung EEPROMDaten Antwort: %d",antwort);
+            
             if (antwort == NSAlertFirstButtonReturn)
             {
                NSLog(@"Daten auf eepromupdatedaten.txt loeschen");
@@ -1210,9 +1268,9 @@ if (Webserver_busy)
                [NotificationDic setObject:[NSNumber numberWithInt:12] forKey:@"perm"];
 
             }
-            
-               NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
-               [nc postNotificationName:@"EEPROMUpdateClear" object:self userInfo:NotificationDic];
+         
+         NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
+         [nc postNotificationName:@"EEPROMUpdateClear" object:self userInfo:NotificationDic]; // -> HomeClient
 
              
             
@@ -1713,7 +1771,7 @@ if (Webserver_busy)
       //[KontrollzeilenFeld setEditable:NO];
       //[EEPROMPlan addSubview:KontrollzeilenFeld];
       //[KontrollzeilenFeld setStringValue:@"Keine Daten für Update"];
-      [Errorfeld setStringValue:@"Keine Daten für Update"];
+      [Ablauffeld setStringValue:@"Keine Daten für Update"];
    }
 }
 
@@ -1860,6 +1918,8 @@ if (Webserver_busy)
       if ([PListFixArray count])
       {
          NSLog(@"PListFixArray count: %u",(unsigned int)[PListFixArray count]);
+         
+         // PList synch mit Daten im EEPROM und auf HomeServer, Anzeige updaten
          [self updatePListMitDicArray:PListFixArray];
          [Ablauffeld setStringValue:AblaufString];
          // Aufraeumen
@@ -1910,6 +1970,8 @@ if (Webserver_busy)
          
          
          //
+         
+         [UpdateWaitrad startAnimation:YES];
          [self updateEEPROMMitDicArray:HomeServerFixArray];
          
          /*
@@ -2037,7 +2099,7 @@ if (Webserver_busy)
 
 - (void)FinishLoadAktion:(NSNotification*)note
 {
-	//NSLog(@"FinishLoadAktion: %@",[[note userInfo]description]);
+	NSLog(@"FinishLoadAktion: %@",[[note userInfo]description]);
 	//NSString* Status_String= @"status";
 	
 	//NSString* Status0_String= @"status0";
@@ -2073,7 +2135,7 @@ if (Webserver_busy)
 			[WriteFeld setStringValue:@""];
 			[ReadFeld setStringValue:@""];
 			[WriteWocheFeld setStringValue:@""];
-			//NSLog(@"FinishLoadAktion  twistatus ist da: %d",TWI_Status);
+			NSLog(@"FinishLoadAktion  twistatus ist da: %d",TWI_Status);
 			
 			if (TWI_Status==0)// TWI deaktiviert
 			{	
@@ -2087,7 +2149,11 @@ if (Webserver_busy)
 			{
             NSLog(@"FinishLoadAktion Kontakt beendet beep");
 				
+            
            [[NSSound soundNamed:@"Ping"] play];
+            [Waitrad stopAnimation:NULL];
+            [UpdateWaitrad stopAnimation:NULL];
+            
             WebTask=idle; // nichts tun
 				[StatusFeld setStringValue:@"Kontakt mit HomeCentral beendet"]; // TWI wieder aktiviert
 				[readTagTaste setEnabled:0];// TWI-Status ON, EEPROM gesperrt

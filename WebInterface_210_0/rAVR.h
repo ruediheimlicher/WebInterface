@@ -69,6 +69,8 @@ IBOutlet	id		writeWocheTaste;
 IBOutlet	id		UpdateTaste;
    
 IBOutlet	id		Waitrad;
+   
+IBOutlet	id		UpdateWaitrad;
 
 IBOutlet	id					VersionFeld;
 IBOutlet	id					DatumFeld;

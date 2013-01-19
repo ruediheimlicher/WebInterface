@@ -596,7 +596,7 @@
 												<string key="NSFrame">{{441, 47}, {120, 32}}</string>
 												<reference key="NSSuperview" ref="250590119"/>
 												<reference key="NSWindow"/>
-												<reference key="NSNextKeyView" ref="941901951"/>
+												<reference key="NSNextKeyView" ref="325421120"/>
 												<bool key="NSEnabled">YES</bool>
 												<object class="NSButtonCell" key="NSCell" id="432710049">
 													<int key="NSCellFlags">67108864</int>
@@ -672,7 +672,7 @@
 												<string key="NSFrame">{{18, 73}, {409, 13}}</string>
 												<reference key="NSSuperview" ref="250590119"/>
 												<reference key="NSWindow"/>
-												<reference key="NSNextKeyView" ref="497834889"/>
+												<reference key="NSNextKeyView" ref="809413166"/>
 												<string key="NSAntiCompressionPriority">{250, 750}</string>
 												<bool key="NSEnabled">YES</bool>
 												<object class="NSTextFieldCell" key="NSCell" id="287160871">
@@ -697,6 +697,7 @@
 												<string key="NSFrame">{{18, 30}, {409, 13}}</string>
 												<reference key="NSSuperview" ref="250590119"/>
 												<reference key="NSWindow"/>
+												<reference key="NSNextKeyView" ref="514550608"/>
 												<string key="NSAntiCompressionPriority">{250, 750}</string>
 												<bool key="NSEnabled">YES</bool>
 												<object class="NSTextFieldCell" key="NSCell" id="1042244466">
@@ -717,6 +718,7 @@
 												<string key="NSFrame">{{40, 52}, {347, 19}}</string>
 												<reference key="NSSuperview" ref="250590119"/>
 												<reference key="NSWindow"/>
+												<reference key="NSNextKeyView" ref="497834889"/>
 												<string key="NSAntiCompressionPriority">{250, 750}</string>
 												<bool key="NSEnabled">YES</bool>
 												<object class="NSTextFieldCell" key="NSCell" id="58410909">
@@ -740,6 +742,7 @@
 												<string key="NSFrame">{{40, 2}, {334, 26}}</string>
 												<reference key="NSSuperview" ref="250590119"/>
 												<reference key="NSWindow"/>
+												<reference key="NSNextKeyView" ref="816705528"/>
 												<string key="NSAntiCompressionPriority">{250, 750}</string>
 												<bool key="NSEnabled">YES</bool>
 												<object class="NSTextFieldCell" key="NSCell" id="262597798">
@@ -756,6 +759,15 @@
 												</object>
 												<bool key="NSAllowsLogicalLayoutDirection">NO</bool>
 												<bool key="NSControlAutosetMaxLayoutWidth">YES</bool>
+											</object>
+											<object class="NSProgressIndicator" id="816705528">
+												<reference key="NSNextResponder" ref="250590119"/>
+												<int key="NSvFlags">268</int>
+												<string key="NSFrame">{{485, 11}, {32, 32}}</string>
+												<reference key="NSSuperview" ref="250590119"/>
+												<reference key="NSWindow"/>
+												<int key="NSpiFlags">28682</int>
+												<double key="NSMaxValue">100</double>
 											</object>
 										</array>
 										<string key="NSFrame">{{10, 33}, {572, 432}}</string>
@@ -2173,6 +2185,14 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
+						<string key="label">UpdateWaitrad</string>
+						<reference key="source" ref="721671640"/>
+						<reference key="destination" ref="816705528"/>
+					</object>
+					<int key="connectionID">1738</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
 						<string key="label">delegate</string>
 						<reference key="source" ref="317814298"/>
 						<reference key="destination" ref="721671640"/>
@@ -3011,6 +3031,7 @@
 							<reference ref="833444866"/>
 							<reference ref="514550608"/>
 							<reference ref="809413166"/>
+							<reference ref="816705528"/>
 						</array>
 						<reference key="parent" ref="321934412"/>
 					</object>
@@ -3314,6 +3335,11 @@
 						<reference key="object" ref="262597798"/>
 						<reference key="parent" ref="514550608"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">1737</int>
+						<reference key="object" ref="816705528"/>
+						<reference key="parent" ref="250590119"/>
+					</object>
 				</array>
 			</object>
 			<dictionary class="NSMutableDictionary" key="flattenedProperties">
@@ -3423,6 +3449,7 @@
 				<string key="1734.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="1735.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="1736.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<string key="1737.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="303.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="309.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="328.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -3485,7 +3512,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">1736</int>
+			<int key="maxID">1738</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -3601,6 +3628,7 @@
 						<string key="TWIStatusTaste">id</string>
 						<string key="TagPop">id</string>
 						<string key="UpdateTaste">id</string>
+						<string key="UpdateWaitrad">id</string>
 						<string key="VersionFeld">id</string>
 						<string key="WEBDATATable">NSTableView</string>
 						<string key="Waitrad">id</string>
@@ -3731,6 +3759,10 @@
 						</object>
 						<object class="IBToOneOutletInfo" key="UpdateTaste">
 							<string key="name">UpdateTaste</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="UpdateWaitrad">
+							<string key="name">UpdateWaitrad</string>
 							<string key="candidateClassName">id</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="VersionFeld">

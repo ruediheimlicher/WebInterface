@@ -17,6 +17,7 @@ int                        wochentag;
 int                        raum;
 int                        Hoehe, Breite, Balkenbreite;
 int                        Elementbreite,  Elementhoehe, RandL, RandR, RandU;
+
 NSPoint                    Nullpunkt;
 NSPoint                    Tagpunkt;
 NSMutableArray*				StundenArray;

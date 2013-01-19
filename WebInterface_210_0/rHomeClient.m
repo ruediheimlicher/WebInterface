@@ -1227,7 +1227,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
                           13
                           ];
    
-   //NSString* URLString = @"http://www.ruediheimlicher.ch/cgi-bin/hello.pl";
+   //NSString* URLString = @"http://www.ruediheimlicher.ch/cgi-bin/eepromupdate.pl";
    NSURL *URL = [NSURL URLWithString:URLString];
    NSLog(@"EEPROMUpdateClearAktion URL: %@",URL );
    NSURLRequest *HCRequest = [ [NSURLRequest alloc] initWithURL: URL cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:4.0];
@@ -1254,7 +1254,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 {
    NSLog(@"updateEEPROMAktion ");
    NSMutableDictionary* updateDic=(NSMutableDictionary*) [note userInfo];
-   NSLog(@"updateEEPROMAktion updateDic: %@",[updateDic description]);
+   //NSLog(@"updateEEPROMAktion updateDic: %@",[updateDic description]);
    //NSLog(@"updateEEPROMAktion updatearray: %@",[[updateDic objectForKey:@"updatearray"]objectAtIndex:0]);
    //NSDictionary* sendDic = [[updateDic objectForKey:@"updatearray"]objectAtIndex:0];
    NSMutableDictionary* sendDic = [[NSMutableDictionary alloc]initWithDictionary:updateDic];
@@ -1269,7 +1269,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
    // Anzahl Pakete
    [sendDic setObject:[NSNumber numberWithInt:[[updateDic objectForKey:@"updatearray"]count]] forKey:@"updatecounter"];
    
-   NSLog(@"updateEEPROMAktion sendDic: %@",[sendDic description]);
+   //NSLog(@"updateEEPROMAktion sendDic: %@",[sendDic description]);
    
    //NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
    
@@ -1320,9 +1320,15 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
       [timer invalidate];
       [timer release];
       NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
-      NSDictionary* tempDataDic=[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:1],@"fertig", nil];
-      [nc postNotificationName:@"EEPROMWriteFertig" object:self userInfo:tempDataDic];
-
+      NSDictionary* tempDataDic=[NSDictionary dictionaryWithObjectsAndKeys:
+                                 [NSNumber numberWithInt:1],@"fertig",
+                                 nil];
+      
+      
+      [nc postNotificationName:@"EEPROMUpdateFertig" object:self userInfo:tempDataDic];
+      
+      
+      return;
    }
 
 	//NSLog(@"EEPROMUpdateTimerfunktion Webserver_busy: %d",Webserver_busy);
@@ -1490,7 +1496,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 	//NSLog(@"sender: %@",[sender description]);
 	// Only report feedback for the main frame.
 	NSString* HTML_Inhalt=[self dataRepresentationOfType:HTMLDocumentType];
-	//NSLog(@"didFinishLoadForFrame Antwort: \nHTML_Inhalt: \t\t\t\t%@",HTML_Inhalt);
+	NSLog(@"didFinishLoadForFrame Antwort: \nHTML_Inhalt: \t%@\n",HTML_Inhalt);
 	
 	NSRange CheckRange;
 	NSString* Code_String= @"okcode=";
@@ -1786,12 +1792,19 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
    
    
 	//NSString* EEPROMUpdate_String= @"eepromupdate";
-   CheckRange = [HTML_Inhalt rangeOfString:EEPROMUpdate_String];
+   //CheckRange = [HTML_Inhalt rangeOfString:EEPROMUpdate_String];
+   CheckRange = [HTML_Inhalt rangeOfString:@"eepromclearok"];
    if (CheckRange.location < NSNotFound)
    {
-      NSLog(@"didFinishLoadForFrame: eepromupdate ist da");
+      NSLog(@"didFinishLoadForFrame: eepromupdate oder eepromclearok ist da");
       [tempDataDic setObject:@"eepromupdate ist geleert" forKey:@"eepromupdate"];
-      
+      [tempDataDic setObject:[NSNumber numberWithInt:1] forKey:@"writeok"];
+      //okcode=status1
+      [tempDataDic setObject:[NSNumber numberWithInt:1] forKey:@"okcode"];
+      [tempDataDic setObject:[NSNumber numberWithInt:1] forKey:@"twistatus"];
+      [confirmTimer invalidate];
+      Webserver_busy=0;
+
    }
    
 	[nc postNotificationName:@"FinishLoad" object:self userInfo:tempDataDic];

@@ -326,8 +326,9 @@ extern NSMutableArray* DatenplanTabelle;
 	[TemperaturMKDiagramm setTag:100];
 	[TemperaturMKDiagramm setGraphFarbe:[NSColor redColor] forKanal:0];
 	[TemperaturMKDiagramm setGraphFarbe:[NSColor blueColor] forKanal:1];
-	[TemperaturMKDiagramm setGraphFarbe:[NSColor blackColor] forKanal:2];
+	[TemperaturMKDiagramm setGraphFarbe:[NSColor greenColor] forKanal:2];
 	[TemperaturMKDiagramm setGraphFarbe:[NSColor grayColor] forKanal:3];
+   [TemperaturMKDiagramm setGraphFarbe:[NSColor orangeColor] forKanal:7];
 	[[TemperaturDiagrammScroller documentView]addSubview:TemperaturMKDiagramm];
 	[TemperaturDiagrammScroller  setPostsFrameChangedNotifications:YES];
 /*
@@ -544,7 +545,7 @@ extern NSMutableArray* DatenplanTabelle;
 	TemperaturOrdinatenFeld.size.height=[TemperaturMKDiagramm frame].size.height;
 	
 	TemperaturOrdinatenFeld.origin.x-=30;
-	TemperaturOrdinatenFeld.origin.y+=Scrollermass;
+	TemperaturOrdinatenFeld.origin.y+=Scrollermass+1;
 	TemperaturOrdinate=[[rOrdinate alloc]initWithFrame:TemperaturOrdinatenFeld];
 	[TemperaturOrdinate setTag:101];
 	[TemperaturOrdinate setGrundlinienOffset:4.1];
@@ -557,7 +558,7 @@ extern NSMutableArray* DatenplanTabelle;
 	BrennerLegendeFeld.size.width=60;
 	BrennerLegendeFeld.size.height=[BrennerDiagramm frame].size.height;
 	BrennerLegendeFeld.origin.x-=60;
-	BrennerLegendeFeld.origin.y+=Brennerlage;
+	BrennerLegendeFeld.origin.y+=Brennerlage+2;
 	BrennerLegendeFeld.origin.y+=Scrollermass;
 	//[self logRect:BrennerLegendeFeld];
 	
@@ -571,9 +572,9 @@ extern NSMutableArray* DatenplanTabelle;
 	
 	NSMutableDictionary* TemperaturEinheitenDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
 	[TemperaturEinheitenDic setObject:[NSNumber numberWithInt:2]forKey:@"minorteile"];
-	[TemperaturEinheitenDic setObject:[NSNumber numberWithInt:6]forKey:@"majorteile"];
+	[TemperaturEinheitenDic setObject:[NSNumber numberWithInt:7]forKey:@"majorteile"];
 	[TemperaturEinheitenDic setObject:[NSNumber numberWithInt:10]forKey:@"nullpunkt"];
-	[TemperaturEinheitenDic setObject:[NSNumber numberWithInt:50]forKey:@"maxy"];
+	[TemperaturEinheitenDic setObject:[NSNumber numberWithInt:60]forKey:@"maxy"];
 	[TemperaturEinheitenDic setObject:[NSNumber numberWithInt:-10]forKey:@"miny"];
 	[TemperaturEinheitenDic setObject:[NSNumber numberWithFloat:[[ZeitKompressionTaste titleOfSelectedItem]floatValue]]forKey:@"zeitkompression"];
 	[TemperaturEinheitenDic setObject:@" C"forKey:@"einheit"];
@@ -905,7 +906,7 @@ extern NSMutableArray* DatenplanTabelle;
 	SolarGitterlinien =[[rDiagrammGitterlinien alloc] initWithFrame: SolarGitterlinienFeld];
 	[SolarGitterlinien setZeitKompression:[[SolarZeitKompressionTaste titleOfSelectedItem]floatValue]];
 	
-	[SolarGitterlinien setEinheitenDicY:[NSDictionary dictionaryWithObject:[NSNumber numberWithInt:20] forKey:@"intervall"]];
+	[SolarGitterlinien setEinheitenDicY:[NSDictionary dictionaryWithObject:[NSNumber numberWithInt:30] forKey:@"intervall"]];
 	[SolarGitterlinien setNeedsDisplay:YES];
 
 	[[SolarDiagrammScroller documentView]addSubview:SolarGitterlinien positioned:NSWindowBelow relativeTo:SolarDiagramm];
@@ -1367,7 +1368,7 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
 		{
 			//NSLog(@"tempFrame.size.width < lastZeit width: %2.2f lastZeit: %5d",tempFrame.size.width,lastZeit);
 			//float delta=[[TemperaturDiagrammScroller contentView]frame].size.width-150;
-			int PlatzRechts = 50;
+			int PlatzRechts = 80;
 			float delta=lastZeit- [[TemperaturDiagrammScroller documentView]bounds].size.width+PlatzRechts; // Abstand vom rechten Rand, Platz fuer Datentitel und Wert
 			NSPoint scrollPoint=[[TemperaturDiagrammScroller documentView]bounds].origin;
 			//NSLog(@"delta: %2.2f",delta);
@@ -2420,7 +2421,7 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
 		{
 			//NSLog(@"Anzeige hat nicht Platz:  width: %2.2f lastZeit: %d",tempFrame.size.width,lastZeit);
 			//float delta=[[TemperaturDiagrammScroller contentView]frame].size.width-150;
-			int PlatzRechts = 50;
+			int PlatzRechts = 80;
 			float delta=lastZeit- [[SolarDiagrammScroller documentView]bounds].size.width+PlatzRechts; // Abstand vom rechten Rand, Platz fuer Datentitel und Wert
 			NSPoint scrollPoint=[[SolarDiagrammScroller documentView]bounds].origin;
 			//NSLog(@"delta: %2.2f",delta);
@@ -2810,7 +2811,7 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
 			//NSLog(@"SolarDatenAktion rest: %2.2f",rest);
 			
 			//if ((rest<120)&& (!IOW_busy))
-			if ((rest<120)) // Platz wird knapp oder neue tempZeit ist groesser als bestehender tempFrame
+			if ((rest<160)) // Platz wird knapp oder neue tempZeit ist groesser als bestehender tempFrame
 			{
 				//NSLog(@"Solar rest zu klein: %2.2f",rest);
 				//NSLog(@"tempOrigin alt  x: %2.2f y: %2.2f",tempOrigin.x,tempOrigin.y);
@@ -2819,13 +2820,13 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
 				//						Verschiebedistanz des angezeigten Fensters
 				
 				float delta=0;
-				if (rest && (rest<120))
+				if (rest && (rest<160))
 				{
-					delta=[[SolarDiagrammScroller contentView]frame].size.width-150;
+					delta=[[SolarDiagrammScroller contentView]frame].size.width-120;
 				}
 				else 
 				{
-					delta=[[SolarDiagrammScroller contentView]frame].size.width-rest-150;
+					delta=[[SolarDiagrammScroller contentView]frame].size.width-rest-120;
 				}
 
 				//NSLog(@"SolarDatenAktion rest zu klein    rest: %2.2f  delta: %2.2f",rest, delta);
@@ -4669,7 +4670,7 @@ if ([[note userInfo]objectForKey:@"err"])
    
    float stretch=[[sender titleOfSelectedItem]floatValue]/SolarZeitKompression;
 	
-	NSLog(@"reportSolarZeitKompression: %2.2F stretch: %2.2f",[[sender titleOfSelectedItem]floatValue],stretch);
+	//NSLog(@"reportSolarZeitKompression: %2.2F stretch: %2.2f",[[sender titleOfSelectedItem]floatValue],stretch);
 	
 	SolarZeitKompression=[[sender titleOfSelectedItem]floatValue];
    
@@ -4711,6 +4712,7 @@ if ([[note userInfo]objectForKey:@"err"])
 			break;
          
 	} // switch tag
+   
    
    [SolarGitterlinien setEinheitenDicY:[NSDictionary dictionaryWithObject:[NSNumber numberWithInt:tempIntervall] forKey:@"intervall"]];
    

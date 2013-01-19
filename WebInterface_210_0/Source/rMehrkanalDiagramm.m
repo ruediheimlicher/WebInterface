@@ -89,7 +89,7 @@ void r_itoa(int32_t zahl, char* string)
 			//[GraphKanalArray addObject:[NSMutableDictionary alloc]initWithCapacity:0]];
 			[GraphKanalArray addObject:[NSNumber numberWithInt:0]];
 			[DatenArray addObject:[[NSMutableArray alloc]initWithCapacity:0]];
-			NSRect tempRect=NSMakeRect(0,0,55,18);
+			NSRect tempRect=NSMakeRect(0,0,45,16);
 			NSTextField* tempDatenFeld=[[NSTextField alloc]initWithFrame:tempRect];
 			NSFont* DatenFont=[NSFont fontWithName:@"Helvetica" size: 9];
 
@@ -179,6 +179,8 @@ DatenserieStartZeit = dasDatum;
 	{
 		Einheit=[derEinheitenDic objectForKey:@"einheit"];
 	}
+   
+
 	
 	if ([derEinheitenDic objectForKey:@"majorteile"])
 	{

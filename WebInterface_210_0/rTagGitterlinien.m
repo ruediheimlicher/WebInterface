@@ -113,7 +113,7 @@
 	{
 		Intervall=[[derEinheitenDic objectForKey:@"intervall"]intValue];
 	}
-	
+NSLog(@"TagGitterlinien setEinheitenDicY: Intervall: %d  ",Intervall );
 }
 
 
@@ -311,7 +311,6 @@
 	
 	for (i=0;i<[derArray count];i++)
 	{
-		
 		
 		//NSLog(@"***			Gitterlinien setWerteArray:	x: %d",[[derArray objectAtIndex:i]intValue]);
 		NSPoint neuerPunkt=DiagrammEcke;

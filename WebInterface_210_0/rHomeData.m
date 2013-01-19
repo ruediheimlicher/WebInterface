@@ -1279,8 +1279,8 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
       NSString* tempZeile = [UpdateArrayRaw objectAtIndex:i-1];
       if ([tempZeile length] && ![ZeilenIndex containsIndex:[[[tempZeile componentsSeparatedByString:@"\t"]objectAtIndex:0]intValue]])
       {
-         //$dataadresse\t$raum\t$objekt\t$wochentag\t$hbyte\t$lbyte\t$data                         \t$typ\t$permanent\t$zeitstempel\n";
-         // 115          2       0        3           04       24    204	0	3	0	2	2	255	255	0        3           130103
+         //$dataadresse\t$raum\t$objekt\t$wochentag\t$hbyte\t$lbyte\t$data                \t$typ\t$permanent\t$zeitstempel\n";
+         // 115          2       0        3           04       24    204 0	3 0 2 2 255 255	0        3           130103
          
          NSArray* tempZeilenArray = [tempZeile componentsSeparatedByString:@"\t"];
          int zeilennummer = [[tempZeilenArray objectAtIndex:0]intValue];
@@ -1321,7 +1321,7 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
    NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
 	[NotificationDic setObject:UpdateArray forKey:@"updatearray"];
 	NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
-	[nc postNotificationName:@"HomeDataUpdate" object:self userInfo:NotificationDic];
+	[nc postNotificationName:@"HomeDataUpdate" object:self userInfo:NotificationDic]; // -> AVRClient
 
 }
 

@@ -38,6 +38,7 @@
 {
    //NSLog(@"SolarDiagramm setEinheitenDicY: %@",[derEinheitenDic description]);
 	[super setEinheitenDicY:derEinheitenDic];
+   
 }
 
 - (void)setWertMitX:(float)x mitY:(float)y forKanal:(int)derKanal
@@ -290,10 +291,6 @@
    rDatenlegende* DatenLegende = [[[rDatenlegende alloc]init]autorelease];
    
    
-	NSMutableIndexSet* OrdinateSet = [NSMutableIndexSet indexSet];
-	NSMutableIndexSet* DatenlegendeSet = [NSMutableIndexSet indexSet];
-  
-   
    // Datenanschrift ordnen
    
    int schriftgroesse = 9;
@@ -312,12 +309,11 @@
    
    // Abstaende bestimmen
    int abstandy = schriftgroesse+2;
-   int minh = [OrdinateSet count]*abstandy;
    int grundabstand=schriftgroesse;
    int deltay=0;
    
    NSMutableArray* LegendeArray = [[[NSMutableArray alloc]initWithCapacity:0]autorelease];
-   // Ordinaten nach Wert sortiert in IndexSet setzen
+   // Ordinaten nach Wert sortiert in Array setzen
    for (int i=0;i<8;i++)
    {
       
@@ -335,7 +331,7 @@
          maxy = fmax(maxy,cP.y);
       }
    }
-   NSLog(@"miny: %.2f maxy: %.2f LegendeArray: %@",miny,maxy,[[LegendeArray valueForKey:@"wert"] description]);
+   //NSLog(@"miny: %.2f maxy: %.2f LegendeArray: %@",miny,maxy,[[LegendeArray valueForKey:@"wert"] description]);
    
    NSComparator sortByNumber = ^(id dict1, id dict2)
    {
@@ -344,12 +340,12 @@
       return (NSComparisonResult)[n1 compare:n2];
    };
    [LegendeArray sortUsingComparator: sortByNumber];
-   NSLog(@"LegendeArray vor: %@",[[LegendeArray valueForKey:@"wert"]description]);
+   //NSLog(@"LegendeArray vor: %@",[[LegendeArray valueForKey:@"wert"]description]);
    [DatenLegende setLegendeArray:LegendeArray];
    
    LegendeArray = (NSMutableArray*)[DatenLegende LegendeArray];
    
-   NSLog(@"LegendeArray nach Datenlegende: %@",[LegendeArray description]);
+   //NSLog(@"LegendeArray nach Datenlegende: %@",[LegendeArray description]);
    
    NSComparator sortByIndex = ^(id dict1, id dict2)
    {
@@ -359,16 +355,16 @@
    };
 
    [LegendeArray sortUsingComparator: sortByIndex];
-   NSLog(@"LegendeArray nach sort: %@",[LegendeArray description]);
+   //NSLog(@"LegendeArray nach sort: %@",[LegendeArray description]);
    
-   NSRect Datalegenderect = NSMakeRect(legendex, miny-2, 20, maxy-miny+8);
-   NSBezierPath* DatalegendeGraph=[NSBezierPath bezierPathWithRect:Datalegenderect];
-   [DatalegendeGraph stroke];
+   //NSRect Datalegenderect = NSMakeRect(legendex, miny-2, 20, maxy-miny+8);
+   //NSBezierPath* DatalegendeGraph=[NSBezierPath bezierPathWithRect:Datalegenderect];
+   //[DatalegendeGraph stroke];
  
    
    int legendeindex=0;
    NSArray* LegendeOrdinatenArray = [LegendeArray valueForKey:@"legendeposition"];
-   NSLog(@"LegendeOrdinatenArray: %@",[LegendeOrdinatenArray description]);
+   //NSLog(@"LegendeOrdinatenArray: %@",[LegendeOrdinatenArray description]);
   
    
    // [[[GraphArray objectAtIndex:i]objectForKey:@"zeitstring"]drawAtPoint:SchriftPunkt withAttributes:ZeitAttrs];
@@ -383,16 +379,38 @@
          
   
 			NSPoint cP=[[GraphArray objectAtIndex:i]currentPoint];
-			cP.x+=2;
-         cP.y = [[LegendeOrdinatenArray objectAtIndex:legendeindex]floatValue];
-         legendeindex ++;
-			cP.y-=12;
-			[[DatenFeldArray objectAtIndex:i]setFrameOrigin:cP];
-			//NSLog(@"drawRect: %@",[[DatenArray objectAtIndex:i]description]);
-			
-			NSString* AnzeigeString=[NSString stringWithFormat:@"%@: %@",[DatenTitelArray objectAtIndex:i],[[[DatenArray objectAtIndex:i]lastObject]objectForKey:@"wert"]];
+         NSBezierPath* legendeGraph=[NSBezierPath bezierPath];
+         [legendeGraph setLineWidth:0.5];
+         [legendeGraph moveToPoint:cP];
          
-			[[DatenFeldArray objectAtIndex:i]setStringValue:AnzeigeString];
+         
+			cP.x+=16;
+         cP.y = [[LegendeOrdinatenArray objectAtIndex:legendeindex]floatValue];
+         
+         legendeindex ++;
+			
+         [legendeGraph lineToPoint:cP];
+         cP.x+=4;
+         [legendeGraph lineToPoint:cP];
+         [legendeGraph stroke];
+         cP.y-=10;
+			[[DatenFeldArray objectAtIndex:i]setFrameOrigin:cP];
+         //[NSBezierPath strokeRect:[[DatenFeldArray objectAtIndex:i] frame]];
+        
+			int wert = [[[[DatenArray objectAtIndex:i]lastObject]objectForKey:@"wert"]intValue];
+         if (wert<10)
+         {
+            NSString* AnzeigeString=[NSString stringWithFormat:@"%@:   %@",[DatenTitelArray objectAtIndex:i],[[[DatenArray objectAtIndex:i]lastObject]objectForKey:@"wert"]];
+            [[DatenFeldArray objectAtIndex:i]setStringValue:AnzeigeString];
+         }
+         else
+         {
+            NSString* AnzeigeString=[NSString stringWithFormat:@"%@: %@",[DatenTitelArray objectAtIndex:i],[[[DatenArray objectAtIndex:i]lastObject]objectForKey:@"wert"]];
+            [[DatenFeldArray objectAtIndex:i]setStringValue:AnzeigeString];
+         }
+			
+         
+			
 			//		[[DatenFeldArray objectAtIndex:i]setStringValue:[[[DatenArray objectAtIndex:i]lastObject]objectForKey:@"wert"]];
 		}
       

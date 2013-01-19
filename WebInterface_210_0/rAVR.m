@@ -221,7 +221,7 @@ return returnInt;
 
   	[nc addObserver:self
 			 selector:@selector(EEPROMWriteFertigAktion:)
-				  name:@"EEPROMWriteFertig"
+				  name:@"EEPROMUpdateFertig"
 				object:nil];
 
    

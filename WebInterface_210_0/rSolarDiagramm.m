@@ -393,11 +393,22 @@
          cP.x+=4;
          [legendeGraph lineToPoint:cP];
          [legendeGraph stroke];
+         
          cP.y-=10;
 			[[DatenFeldArray objectAtIndex:i]setFrameOrigin:cP];
+         
+         cP.x+=20;
+         [[DatenWertArray objectAtIndex:i]setFrameOrigin:cP];
+         [[DatenFeldArray objectAtIndex:i]setStringValue:[NSString stringWithFormat:@"%@:",[DatenTitelArray objectAtIndex:i]]];
+         [[DatenWertArray objectAtIndex:i]setStringValue:[NSString stringWithFormat:@"%@",[[[DatenArray objectAtIndex:i]lastObject]objectForKey:@"wert"]]];
+         
+         /*
+          
          //[NSBezierPath strokeRect:[[DatenFeldArray objectAtIndex:i] frame]];
         
-			int wert = [[[[DatenArray objectAtIndex:i]lastObject]objectForKey:@"wert"]intValue];
+			//int wert = [[[[DatenArray objectAtIndex:i]lastObject]objectForKey:@"wert"]intValue];
+         
+
          if (wert<10)
          {
             NSString* AnzeigeString=[NSString stringWithFormat:@"%@:   %@",[DatenTitelArray objectAtIndex:i],[[[DatenArray objectAtIndex:i]lastObject]objectForKey:@"wert"]];
@@ -408,7 +419,7 @@
             NSString* AnzeigeString=[NSString stringWithFormat:@"%@: %@",[DatenTitelArray objectAtIndex:i],[[[DatenArray objectAtIndex:i]lastObject]objectForKey:@"wert"]];
             [[DatenFeldArray objectAtIndex:i]setStringValue:AnzeigeString];
          }
-			
+			*/
          
 			
 			//		[[DatenFeldArray objectAtIndex:i]setStringValue:[[[DatenArray objectAtIndex:i]lastObject]objectForKey:@"wert"]];

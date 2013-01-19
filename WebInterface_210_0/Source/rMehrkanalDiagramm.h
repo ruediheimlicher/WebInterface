@@ -18,6 +18,7 @@
 	NSMutableArray*			NetzlinienY;
 	NSMutableArray*			DatenArray;
 	NSMutableArray*			DatenFeldArray;
+   NSMutableArray*			DatenWertArray;
 	
 	int							Tag;
 	int							AnzKanal;		// Anzahl darzustellender Kanäle

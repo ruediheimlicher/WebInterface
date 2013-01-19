@@ -63,6 +63,8 @@ void r_itoa(int32_t zahl, char* string)
 		// Feld fuer die Wertangabe am Ende der Datenlinie
 		DatenFeldArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
 		[DatenFeldArray retain];
+		DatenWertArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+		[DatenWertArray retain];
 		
 		// Bezeichnung der Daten des Kanals
 		DatenTitelArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
@@ -89,7 +91,7 @@ void r_itoa(int32_t zahl, char* string)
 			//[GraphKanalArray addObject:[NSMutableDictionary alloc]initWithCapacity:0]];
 			[GraphKanalArray addObject:[NSNumber numberWithInt:0]];
 			[DatenArray addObject:[[NSMutableArray alloc]initWithCapacity:0]];
-			NSRect tempRect=NSMakeRect(0,0,45,16);
+			NSRect tempRect=NSMakeRect(0,0,25,16);
 			NSTextField* tempDatenFeld=[[NSTextField alloc]initWithFrame:tempRect];
 			NSFont* DatenFont=[NSFont fontWithName:@"Helvetica" size: 9];
 
@@ -102,6 +104,24 @@ void r_itoa(int32_t zahl, char* string)
 			[tempDatenFeld setDrawsBackground:NO];
 			[self addSubview:tempDatenFeld];
 			[DatenFeldArray addObject:tempDatenFeld];
+         
+         tempRect.origin.x += 1;
+ 			NSTextField* tempWertFeld=[[NSTextField alloc]initWithFrame:tempRect];
+         
+			[tempWertFeld setEditable:NO];
+			[tempWertFeld setSelectable:NO];
+			[tempWertFeld setStringValue:@""];
+			[tempWertFeld setFont:DatenFont];
+			[tempWertFeld setAlignment:NSRightTextAlignment];
+			[tempWertFeld setBordered:NO];
+			[tempWertFeld setDrawsBackground:NO];
+			[self addSubview:tempWertFeld];
+			[DatenWertArray addObject:tempWertFeld];
+        
+         
+         
+         
+         
 			[DatenTitelArray addObject:@""];
 			// Bezeichnungen in Subklasse aendern
 		}//for i
@@ -634,6 +654,12 @@ NSLog(@"setWert Kanal: %d  x: %2.2f y: %2.2f ",derKanal, derWert.x, derWert.y);
 			[[DatenFeldArray objectAtIndex:i]setFrameOrigin:cP];
 			//NSLog(@"drawRect: %@",[[DatenArray objectAtIndex:i]description]);
 			
+         cP.x += 20;
+ 			[[DatenWertArray objectAtIndex:i]setFrameOrigin:cP];
+       
+         // in SolarDiagramm und SolarStatistikDiagramm verwendet
+         
+         
 			NSString* AnzeigeString=[NSString stringWithFormat:@"%@: %@",[DatenTitelArray objectAtIndex:i],[[[DatenArray objectAtIndex:i]lastObject]objectForKey:@"wert"]];
 			[[DatenFeldArray objectAtIndex:i]setStringValue:AnzeigeString];
 			//		[[DatenFeldArray objectAtIndex:i]setStringValue:[[[DatenArray objectAtIndex:i]lastObject]objectForKey:@"wert"]];

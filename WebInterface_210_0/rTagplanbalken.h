@@ -30,10 +30,11 @@ int					changed;
 int					TagbalkenTyp;
 //int					AnzPlaene;
 
-NSPoint						Nullpunkt;
-NSMutableArray*				StundenArray;
+NSPoint				Nullpunkt;
+NSMutableArray*	StundenArray;
 NSArray*				StundenByteArray;
-NSMutableArray*				lastONArray;
+NSMutableArray*	lastONArray;
+NSMutableIndexSet*  AktivtastenSet;
 }
 - (void)BalkenAnlegen;
 - (void)setWochenplan:(NSArray*)derStundenArray forTag:(int)derTag;

@@ -1,5 +1,5 @@
 //
-//  rServoTagplanbalken.h
+//  rDatenbalken.h
 //  SndCalcII
 //
 //  Created by Sysadmin on 13.02.08.
@@ -10,14 +10,10 @@
 #import "rTaste.h"
 #import "rTagplanbalken.h"
 
-@interface rServoTagplanbalken : rTagplanbalken
+
+@interface rDatenbalken :  rTagplanbalken <NSTextFieldDelegate>
 {
-
-int					Raum;
-int					Objekt;
-
-int					Wochentag;
-
+   BOOL edit;
 }
 - (void)BalkenAnlegen;
 - (void)setWochenplan:(NSArray*)derStundenArray forTag:(int)derTag;
@@ -32,6 +28,18 @@ int					Wochentag;
 - (void)setObjekt:(NSNumber*)dieObjektNumber;
 - (void)setRaum:(int)derRaum;
 - (void)setWochentag:(int)derWochentag;
+
+- (int)wochentag;
+- (int)raum;
+- (int)objekt;
+- (int)typ;
+
+
+- (void)setStundenByteArray:(NSArray*)derStundenArray;
+
+
+
+
 - (void)setAktiv:(int)derStatus;
 - (void)setTagbalkenTyp:(int)derTyp;
 - (void)AllTasteAktion:(id)sender;
@@ -43,5 +51,6 @@ int					Wochentag;
 - (void)setStundenArrayAusByteArray:(NSArray*)derStundenByteArray;
 
 - (int)tag;
+- (void)setTag:(NSInteger)derTag;
 - (NSString*)Titel;
 @end

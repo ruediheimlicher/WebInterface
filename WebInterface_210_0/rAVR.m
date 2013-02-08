@@ -68,7 +68,7 @@ return returnInt;
 
 - (NSArray*)StundenArrayAusByteArray:(NSArray*)derStundenByteArray
 {
-	//NSLog(@"setStundenArrayAusByteArray derStundenByteArray: %@",[derStundenByteArray description]);
+	//NSLog(@"StundenArrayAusByteArray derStundenByteArray: %@",[derStundenByteArray description]);
 	
 	NSMutableArray* tempStundenArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
 	//NSArray* bitnummerArray=[NSArray arrayWithObjects: @"null", @"eins",@"zwei",@"drei",@"vier",@"fuenf",nil];
@@ -99,7 +99,7 @@ return returnInt;
 		}
 		[tempStundenArray addObjectsFromArray:tempStundenCodeArray];
 	}//for i
-	//NSLog(@"setStundenArrayAusByteArray tempStundenArray: %@",[tempStundenArray description]);
+	//NSLog(@"StundenArrayAusByteArray tempStundenArray: %@",[tempStundenArray description]);
 	return tempStundenArray ;
 }
 
@@ -131,7 +131,7 @@ return returnInt;
 		}
 		[tempStundenArray addObjectsFromArray:tempStundenCodeArray];
 	}//for i
-	//NSLog(@"setStundenArrayAusByteArray tempStundenArray: %@",[tempStundenArray description]);
+	//NSLog(@"StundenArrayAusDezArray tempStundenArray: %@",[tempStundenArray description]);
 	return tempStundenArray ;
 }
 
@@ -230,6 +230,11 @@ return returnInt;
 				  name:@"EEPROMLadeposition"
 				object:nil];
 
+   [nc addObserver:self
+          selector:@selector(EditAktion:)
+              name:@"edit"
+            object:nil];
+
 	
 	WochenplanDic=[[[NSMutableDictionary alloc]initWithCapacity:0]retain];
 	Eingangsdaten=[[[NSMutableArray alloc]initWithCapacity:0]retain];
@@ -293,7 +298,33 @@ return returnInt;
 
 - (void)awakeFromNib
 {
-	//NSLog(@"AVR awake");
+	NSLog(@"AVR awake");
+   
+   int tg=0;
+   int rm=3;
+   int obj=0;
+   int startadr = rm*RAUMPLANBREITE + tg * TAGPLANBREITE + obj * 0x08;
+   NSLog(@"raum: %d tag: %d obj: %d startadresse: %d",rm, tg, obj, startadr);
+  
+   int newraum = startadr / 0x200;
+   //newraum ;
+   NSLog(@"newraum: %d",newraum);
+   
+   int lb= startadr & 0xFF;
+   int hb = startadr;
+   hb >>=8;
+   NSLog(@"lb: %d hb: %d ",lb,hb);
+   
+   int lbyte=startadr%0x100;
+   int hbyte=startadr/0x100;
+   NSLog(@"lbyte: %d hbyte: %d ",lbyte,hbyte);
+   newraum = hbyte/0x02;
+   NSLog(@"newraum: %d",newraum);
+   int status =0;
+   
+   status |= (1<<hbyte/2);
+   NSLog(@"status: %d",status);
+   
 	//[self setAktiv:NO forObjekt:4 forRaum:4];
 	//[self setAktiv:YES forObjekt:3 forRaum:4];
 	
@@ -330,10 +361,10 @@ return returnInt;
    */
    
    
+	// Alternative Typen setzen
+	[self setTagbalkenTyp:2 forObjekt:1 forRaum:0]; // Mode
 	
-	[self setTagbalkenTyp:1 forObjekt:1 forRaum:0];
-	
-	[self setTagbalkenTyp:0 forObjekt:2 forRaum:0];
+	[self setTagbalkenTyp:0 forObjekt:2 forRaum:0]; // Servo
 	
 	[self setTagbalkenTyp:1 forObjekt:1 forRaum:2];
 	
@@ -682,7 +713,8 @@ return returnInt;
 	[DatumFeld setStringValue:DatumString];
 	NSString* VersionString = [NSString stringWithFormat:@"Version %@",VERSION];
 	[VersionFeld setStringValue:VersionString];
-   
+   [WochenplanTab setDelegate:self];
+
    [WochenplanTab selectTabViewItemAtIndex:0];
    
 	/*
@@ -767,8 +799,8 @@ return returnInt;
 		NSRect RaumScrollerFeld=RaumViewFeld;	//	Feld fuer Scroller, in dem der RaumView liegt
 		// Feld im Scroller ist abhaengig von Anzahl Tagbalken
 		RaumViewFeld.size.height=7*(RaumTagplanAbstand +RaumKopfbereich); // Hoehe vergroessern
-		NSLog(@"RaumTagplanAbstand: %d	",RaumTagplanAbstand);
-		NSLog(@"RaumViewFeld.size.height: %2.2f	",RaumViewFeld.size.height);
+		//NSLog(@"RaumTagplanAbstand: %d	",RaumTagplanAbstand);
+		//NSLog(@"RaumViewFeld.size.height: %2.2f	",RaumViewFeld.size.height);
 		NSScrollView* RaumScroller = [[NSScrollView alloc] initWithFrame:RaumScrollerFeld];
 		
 		
@@ -1367,7 +1399,7 @@ return returnInt;
 				//NSLog(@"TagplancodeAktion tempStundenplanArray: %@",[tempStundenplanArray description]);
             if (tempStundenplanArray)
 				{
-					if (Stunde==99) // All-taste
+					if ((Stunde==99) || (Stunde==98) ) // All-taste
 					{
 						//NSLog(@"TagplancodeAktion  Stunde=99: on: %d",[[[note userInfo]objectForKey:@"on"]intValue]);
 						
@@ -1376,11 +1408,11 @@ return returnInt;
 							for (a=0;a<24;a++)
 							{
 								//NSLog(@"TagplancodeAktion Mutable"); 
-								if (ON==9)
+								if (ON==9) // Wert ersetzen
 								{
 								[tempStundenplanArray replaceObjectAtIndex:a withObject:[lastONArray objectAtIndex:a]];
 								}
-								else
+								else // alle auf ON
 								{
 								[tempStundenplanArray replaceObjectAtIndex:a withObject:[NSNumber numberWithInt:ON]];
 								}
@@ -1389,6 +1421,15 @@ return returnInt;
 							//NSLog(@"TagplancodeAktion  Stunde=99: tempStundenplanArray: %@",[tempStundenplanArray description]);
 						}
 					}
+ 					else if (Stunde==97) // Datenbalken All-taste
+					{
+                  //NSLog(@"TagplancodeAktion  Stunde=97 note: %@",[[note userInfo]description]);
+                  for (int i=0;i<24;i++)
+                  {
+                     [tempStundenplanArray replaceObjectAtIndex:i withObject:[[[note  userInfo]objectForKey:@"lastonarray"] objectAtIndex:i]];
+                  }
+                  
+               }
 					else
 					{
 						//NSLog(@"TagplancodeAktion tempStundenplanArray vor: %@",[tempStundenplanArray description]);
@@ -1399,11 +1440,19 @@ return returnInt;
 						//NSLog(@"TagplancodeAktion tempStundenplanArray nach: %@",[tempStundenplanArray description]);
 					}
 					//NSLog(@"tempStundenplanArray vor saveOK: %@",[tempStundenplanArray description]);
-					int saveOK=[self saveHomeDic];
-					//NSLog(@"tempStundenplanArray nach saveOK: %d",saveOK);
+					
+               
+               int saveOK=[self saveHomeDic];
+					
+               
+               //NSLog(@"tempStundenplanArray nach saveOK: %d",saveOK);
 				}
 				//NSLog(@"tempTagplanArray nach: %@", [tempTagplanArray description]);
 			}
+         else
+         {
+            NSLog(@"kein tempTagplanArray");
+         }
 			//NSLog(@"tempWochenplanArray nach: %@", [tempWochenplanArray description]);
 		}
 	}
@@ -1412,15 +1461,15 @@ return returnInt;
 
 - (void)ModifierAktion:(NSNotification*)note
 {
-	//NSLog(@"AVR ModifierAktion: %@",[[note userInfo]description]);
+	NSLog(@"AVR ModifierAktion: %@",[[note userInfo]description]);
 	//NSLog(@"AVR TagplancodeAktion: %@",[[note userInfo]objectForKey:@"quelle"]);
 	//NSArray* Raumnamen=[[NSArray arrayWithObjects:@"Heizung", @"Werkstatt", @"WoZi", @"Buero", @"Labor", @"OG1", @"OG2", @"Estrich", nil]retain];
 	//NSArray* Wochentage=[NSArray arrayWithObjects:@"MO",@"DI",@"MI",@"DO",@"FR",@"SA",@"SO",nil];
 	
 	int Wochentag=[[[note userInfo]objectForKey:@"wochentag"]intValue];
 	int Stunde=[[[note userInfo]objectForKey:@"stunde"]intValue];
-	int ON=[[[note userInfo]objectForKey:@"on"]intValue];
-	int feld=[[[note userInfo]objectForKey:@"feld"]intValue];
+	//int ON=[[[note userInfo]objectForKey:@"on"]intValue];
+	//int feld=[[[note userInfo]objectForKey:@"feld"]intValue];
 	int Objekt=0;
 	
 	if ([[note userInfo]objectForKey:@"objekt"])
@@ -1432,8 +1481,12 @@ return returnInt;
 	
 	int RaumIndex=[[[note userInfo]objectForKey:@"raum"]intValue];
 		
-	//NSLog(@"AVR ModifierAktion  RaumIndex: %d Wochentag: %d Objekt: %d Stunde: %d", RaumIndex, Wochentag, Objekt, Stunde);
+	NSLog(@"AVR ModifierAktion  RaumIndex: %d Wochentag: %d Objekt: %d Stunde: %d", RaumIndex, Wochentag, Objekt, Stunde);
 	//NSLog(@"HomebusArray: %@",[HomebusArray description]);
+   
+   
+   return;
+   
 	NSMutableArray* tempWochenplanArray;
 	if ([HomebusArray objectAtIndex:RaumIndex])	
 	{
@@ -1467,6 +1520,17 @@ return returnInt;
 							}
 							
 						}
+                  else if (Stunde==98) // ctrl-taste
+						{
+							if ([[note userInfo]objectForKey:@"lastonarray"])
+							{
+								
+								//[tempStundenplanArray setArray:[[note userInfo]objectForKey:@"lastonarray"]];
+								
+							}
+							
+						}
+
 						else
 						{
 							//NSLog(@"tempStundenplanArray vor: %@",[tempStundenplanArray description]);
@@ -1489,6 +1553,13 @@ return returnInt;
 
 	
 }
+- (void)EditAktion:(NSNotification*)note
+{
+   //NSLog(@"EditAktion");
+   [[self window]makeFirstResponder:WriteWocheFeld];
+   //[WriteWocheFeld performClick:NULL];
+}
+
 
 - (IBAction)ObjektSegAktion:(id)sender
 {
@@ -1498,13 +1569,13 @@ return returnInt;
 	
    int clickedSegmentTag = [[sender cell] tagForSegment:clickedSegment];
    
-   NSLog(@"clickedSegmentTag: %d Status: %d ",clickedSegmentTag,Status);
-	NSLog(@"aus superview: %@",[[sender superview]viewWithTag:clickedSegmentTag]);
+   //NSLog(@"clickedSegmentTag: %d Status: %d ",clickedSegmentTag,Status);
+	//NSLog(@"aus superview: %@",[[sender superview]viewWithTag:clickedSegmentTag]);
 	//NSLog(@"origin.x %2.2f size.width: %2.2f",[sender frame].origin.x,[sender frame].size.width);
 	int Raum=(clickedSegmentTag-RAUMOFFSET)/10;
 	int Segment=(clickedSegmentTag-RAUMOFFSET)%10;
 	
-	NSLog(@"Raum: %d Segment: %d",Raum, Segment);
+	//NSLog(@"Raum: %d Segment: %d",Raum, Segment);
 	if(([[NSApp currentEvent] modifierFlags] & NSAlternateKeyMask)  != 0)
 	{
 		NSTextField* LabelTextFeld;
@@ -1513,7 +1584,7 @@ return returnInt;
 		if ([[sender superview]viewWithTag:clickedSegmentTag]) // Es hat ein Textfeld fuer CickedSegmentTag
 		{
 			LabelTextFeld=[[sender superview]viewWithTag:clickedSegmentTag];
-			NSLog(@"LabelTextFeld ist da: %@",[LabelTextFeld stringValue]);
+			//NSLog(@"LabelTextFeld ist da: %@",[LabelTextFeld stringValue]);
 			[sender setLabel:[LabelTextFeld stringValue] forSegment:clickedSegment];
 			if ([HomebusArray objectAtIndex:Raum])
 			{
@@ -2848,6 +2919,20 @@ n=0;
 	[nc postNotificationName:@"i2cavrread" object:self userInfo:readAVRDic];	// Notification an IOWarriorWindowController abschicken
 	
 	//NSLog(@"readAVRSlave Eingangsdaten: %@ \nAnz: %d",[Eingangsdaten description],[Eingangsdaten count]);
+}
+
+
+- (void)tabView:(NSTabView *)tabView didSelectTabViewItem:(NSTabViewItem *)tabViewItem
+{
+   NSLog(@"didSelectTabViewItem index: %d",[[tabViewItem identifier]intValue] );
+   int index = [[tabViewItem identifier]intValue];
+  if (index < [RaumPop  numberOfItems])
+  {
+     [RaumPop selectItemAtIndex:[[tabViewItem identifier]intValue] ];
+     [self setObjektPopVonRaum:index];
+  }
+   
+   
 }
 
 - (BOOL) FensterSchliessenAktion:(NSNotification*)note

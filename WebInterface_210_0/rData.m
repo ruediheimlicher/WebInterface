@@ -152,6 +152,8 @@ extern NSMutableArray* DatenplanTabelle;
 			   name:@"externesolardaten"
 			 object:nil];
 	
+	
+   
 
 	
 	Raumnamen=[NSArray arrayWithObjects:@"Heizung", @"Werkstatt",@"WoZi",@"Buero",@"Labor",@"OG 1",@"OG 2",@"Estrich",NULL];
@@ -565,7 +567,7 @@ extern NSMutableArray* DatenplanTabelle;
 	BrennerLegende=[[rLegende alloc]initWithFrame:BrennerLegendeFeld];
 	[[[DatenplanTab tabViewItemAtIndex:0]view]addSubview:BrennerLegende];
 	[BrennerLegende setAnzahlBalken:5];
-	NSArray* BrennerInhaltArray=[NSArray arrayWithObjects:@"Brenner",@"Uhr",@"Mode", @"Rinne", @"",nil];
+	NSArray* BrennerInhaltArray=[NSArray arrayWithObjects:@"Brenner",@"Uhr",@"Stufe", @"Rinne", @"",nil];
 	[BrennerLegende setInhaltArray:BrennerInhaltArray];
 	[BrennerDiagramm setLegende:BrennerLegende];
 	
@@ -5608,7 +5610,7 @@ if ([[tabViewItem identifier]intValue]==3)
 
 }
 
-
+   
 
 //return YES;
 }

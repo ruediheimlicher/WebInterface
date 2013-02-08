@@ -15,7 +15,7 @@
     self = [super initWithFrame:frame];
     if (self) 
 	{
-        typ=1;
+      typ=1;
 		RandL=60;
 		RandR=20;
 		RandU=2;
@@ -33,7 +33,7 @@ return self;
 		Nullpunkt=[self convertPoint:NSMakePoint(0.0,0.0) toView:NULL];
 		//NSLog(@"Tagbalken init  Nullpunkt: x: %2.2f y: %2.2f", Nullpunkt.x,Nullpunkt.y);
 		int i=0;
-		//NSLog(@"ModeTagbalken init");
+		NSLog(@"ModeTagbalken init");
 		NSPoint Ecke=NSMakePoint(4.0,4.0);
 		//NSLog(@"Tagbalken init: frame.height: %2.2f",[self frame].size.height);
 		NSRect Titelrect=NSMakeRect(4,4,50,16);
@@ -127,7 +127,7 @@ return self;
 	//		Titel=[[NSAttributedString alloc]initWithString:@"Tagplan" attributes:TitelAttrs];
 	//		[Titelfeld setAttributedStringValue:Titel];
 	
-	Titel=@"Tagplan";
+	Titel=@"ModeTagplan";
 	Ecke.x+=RandL;
 	//Ecke.y+=RandU;
 	Ecke.y=5;
@@ -269,6 +269,102 @@ return self;
 	{
 		return -1;
 	}
+}
+
+
+- (void)StundenTasteAktion:(NSButton*)sender
+{
+	//NSLog(@"StundenTasteAktion tag: %d",[sender tag]);
+	//NSLog(@"StundenTasteAktion: %d", [(rTagplanbalken*)[sender superview]Wochentag]);
+	//NSLog(@"StundenTasteAktion: %d", [(rTagplanbalken*)[sender superview]Raum]);
+	//NSLog(@"StundenTasteAktion: %d", [(rTagplanbalken*)[sender superview]Objekt]);
+	//NSLog(@"StundenTasteAktion: %@", [(rTagplanbalken*)[sender superview]Titel]);
+	NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+	[NotificationDic setObject:[NSNumber numberWithInt:wochentag] forKey:@"wochentag"];
+	[NotificationDic setObject:lastONArray forKey:@"lastonarray"];
+	
+	[NotificationDic setObject:[NSNumber numberWithInt:raum] forKey:@"raum"];
+	[NotificationDic setObject:Titel forKey:@"titel"];
+	[NotificationDic setObject:[NSNumber numberWithInt:objekt] forKey:@"objekt"];
+	//NSLog(@"StundentastenAktion start lastONArray: %@",[lastONArray description]);
+	int modKey=0;
+	int all=-1;
+	if(([[NSApp currentEvent] modifierFlags] & NSAlternateKeyMask)  != 0)
+	{
+		NSLog(@"StundenTasteAktion Alt");
+		modKey=2;
+      [NotificationDic setObject:@"alt" forKey:@"mod"];
+		[NotificationDic setObject:[NSNumber numberWithInt:[sender tag]] forKey:@"stunde"];
+		//[NotificationDic setObject:[NSNumber numberWithInt:3] forKey:@"on"];
+		[NotificationDic setObject:[NSNumber numberWithInt:3] forKey:@"feld"];// Feld U
+      
+      NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
+      NSLog(@"StundenTasteAktion Tagplan modifier");
+      //			[nc postNotificationName:@"Modifier" object:self userInfo:NotificationDic];
+      //			modKey=0;
+		
+		
+	}
+   //	else
+	{
+		//NSLog(@"StundenTasteAktion Standard");
+		
+		int ON=[[[StundenArray objectAtIndex:[sender tag]]objectForKey:@"code"]intValue];
+		
+		//NSLog(@"mouse in Stundentaste:	in Stunde: %d 		ON: %d",[sender tag], ON);
+		switch (ON)
+		{
+			case 0://	ganze Stunde ON setzen
+//			case 1://	Kessel in der ersten halben Stunde schon ON
+//			case 2://	Kessel in der zweiten halben Stunde schon ON
+				ON=3;//ganze Stunde ON
+				break;
+            
+// 19.1.2013: nur noch zwei Werte 
+            
+			case 1://	Kessel in der ersten halben Stunde schon ON
+			case 2://	Kessel in der zweiten halben Stunde schon ON
+
+			case 3:// Kessel in der ganzen Stunde schon ON
+				ON=0;//ganze Stunde OFF
+				break;
+				
+		}
+		[NotificationDic setObject:[NSNumber numberWithInt:[sender tag]] forKey:@"stunde"];
+		[NotificationDic setObject:[NSNumber numberWithInt:ON] forKey:@"on"];
+		[NotificationDic setObject:[NSNumber numberWithInt:3] forKey:@"feld"];// Feld U
+		
+		if (modKey==2)//alt
+		{
+			[NotificationDic setObject:@"alt" forKey:@"mod"];
+			NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
+			//NSLog(@"Tagplan mofdifier StdFeldU");
+			[nc postNotificationName:@"Modifier" object:self userInfo:NotificationDic];
+			modKey=0;
+			
+			//return;
+		}
+		
+		//NSLog(@"Tagplanbalken mouseDow: Stunde: %d code: %d",i,ON);
+		[[StundenArray objectAtIndex:[sender tag]]setObject:[NSNumber numberWithInt:ON]forKey:@"code"];
+		//NSLog(@"StundenArray: %@",[StundenArray description]);
+		//[self setNeedsDisplay:YES];
+		
+		//NSLog(@"all: %d code: %@",all, [[StundenArray valueForKey:@"code"]description]);
+		NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
+		[nc postNotificationName:@"Tagplancode" object:self userInfo:NotificationDic];
+		
+		
+		if (all<0)//kein Klick auf ALL-Taste, IST-Zustand speichern
+		{
+			lastONArray=[[StundenArray valueForKey:@"code"]copy];
+		}
+		//NSLog(@"StundentastenAktion end  lastONArray: %@",[lastONArray description]);
+		
+		[self setNeedsDisplay:YES];
+		
+	}//kein Alt
+	
 }
 
 - (void)setStundenarraywert:(int)derWert vonStunde:(int)dieStunde forKey:(NSString*)derKey
@@ -470,10 +566,6 @@ NSMutableDictionary* tempDic=(NSMutableDictionary*)[StundenArray objectAtIndex:d
 	int i;
 	for (i=0;i<24;i++)
 	{
-
-
-
-
 		//NSLog(@"drawRect: %2.2f",[[[ModeStundenArray objectAtIndex:i]objectForKey:@"modeelementrahmen"]frame].origin.x);
 		//		NSRect StdFeld=[[[ModeStundenArray objectAtIndex:i]objectForKey:@"modeelementrahmen"]frame];
 		NSRect StdFeld=[[[StundenArray objectAtIndex:i]objectForKey:@"elementrahmen"]frame];
@@ -641,7 +733,7 @@ key "modenacht"	Einschaltzeiten Mode Nacht		0: off						1: reduziert				2: voll
 			[NotificationDic setObject:[NSNumber numberWithInt:99] forKey:@"stunde"];
 			
 			NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
-			NSLog(@"ModeTagplanbalken mofdifier AllFeld");
+			NSLog(@"ModeTagplanbalken modifier AllFeld");
 			[nc postNotificationName:@"Modifier" object:self userInfo:NotificationDic];
 			
 			return;
@@ -706,9 +798,9 @@ key "modenacht"	Einschaltzeiten Mode Nacht		0: off						1: reduziert				2: voll
 		StdFeld.size.height-=12;
 		StdFeld.origin.y+=1;
 		
-			NSRect StdFeldT=StdFeld;//Mode Tag
-			StdFeldT.size.height-=2;
-			StdFeldT.origin.y+=1;
+      NSRect StdFeldT=StdFeld;//Mode Tag
+      StdFeldT.size.height-=2;
+      StdFeldT.origin.y+=1;
 		
 		int ON=[[[StundenArray objectAtIndex:i]objectForKey:@"code"]intValue];
 		if (ON==3)

@@ -641,9 +641,10 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 		{
 			//NSLog(@"SolarDataVonHeute WebFehler: :%@",[[WebFehler userInfo]description]);
 			
-			NSLog(@"SolarDataVonHeute WebFehler: :%@",[[WebFehler userInfo]objectForKey:@"NSUnderlyingError"]);
+         //NSLog(@"SolarDataVonHeute WebFehler: :%@",[[WebFehler userInfo]objectForKey:@"NSUnderlyingError"]);
+//NSLog(@"SolarDataVonHeute WebFehler: :%@",[[WebFehler userInfo]objectForKey:@"NSUnderlyingError"]);
 			//ERROR: 503
-			NSArray* ErrorArray=[[[[WebFehler userInfo]objectForKey:@"NSUnderlyingError"]description]componentsSeparatedByString:@" "];
+			NSArray* ErrorArray=[[[[WebFehler userInfo]objectForKey:@"NSUnderlyingError"]description]componentsSeparatedByString:@","];
 			NSLog(@"ErrorArray: %@",[ErrorArray description]);
 			NSAlert *Warnung = [[[NSAlert alloc] init] autorelease];
 			[Warnung addButtonWithTitle:@"OK"];

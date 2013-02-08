@@ -98,6 +98,14 @@
 	[nc postNotificationName:@"localstatus" object:self userInfo:localStatusDic];
 }
 
+- (IBAction)reportTestTaste:(id)sender;
+{
+   NSLog(@"AVRClient reportTestTaste: state: %d",[sender state]);
+   NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
+	NSMutableDictionary* localStatusDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+	[localStatusDic setObject:[NSNumber numberWithInt:[sender state]]forKey:@"test"];
+	[nc postNotificationName:@"teststatus" object:self userInfo:localStatusDic];
+}
 
 
 
@@ -813,12 +821,6 @@ if (Webserver_busy)
 		int antwort=[Warnung runModal];
 		
 	}
-	/*
-	else if (Webserver_busy)
-	{
-		NSBeep();
-	}
-	*/
 	else
 	{
 		Webserver_busy=1;// Wird jeweils in der Finishloadaktion zurueckgestellt, sobald das writeok angekommen ist.
@@ -2099,7 +2101,7 @@ if (Webserver_busy)
 
 - (void)FinishLoadAktion:(NSNotification*)note
 {
-	NSLog(@"FinishLoadAktion: %@",[[note userInfo]description]);
+	//NSLog(@"FinishLoadAktion: %@",[[note userInfo]description]);
 	//NSString* Status_String= @"status";
 	
 	//NSString* Status0_String= @"status0";
@@ -2147,7 +2149,7 @@ if (Webserver_busy)
 			}
 			else 
 			{
-            NSLog(@"FinishLoadAktion Kontakt beendet beep");
+            NSLog(@"FinishLoadAktion Kontakt beendet");
 				
             
            [[NSSound soundNamed:@"Ping"] play];

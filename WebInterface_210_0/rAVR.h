@@ -18,6 +18,7 @@
 #import "rTagplanbalken.h"
 #import "rServoTagplanbalken.h"
 #import "rEEPROMbalken.h"
+#import "rDatenbalken.h"
 #import "rWochenplan.h"
 #import "datum.c"
 #import "version.c"
@@ -36,7 +37,7 @@
 //enum webtaskflag{idle, eepromread, eepromwrite,eepromreadwoche,eepromwritewoche}webtaskflag;
 
 
-@interface rAVR : NSWindowController 
+@interface rAVR : NSWindowController <NSTabViewDelegate>
 {
 IBOutlet	id		WochenplanTab;
 IBOutlet	id		HeizungFeld;
@@ -55,6 +56,8 @@ IBOutlet	id		Cmd;
 IBOutlet	id		EEPROMReadTaste;
 IBOutlet	id		TWIStatusTaste;
 IBOutlet	id		LocalTaste;
+IBOutlet	id		TestTaste;
+   
 
 // Web
 IBOutlet	id		readTagTaste;
@@ -209,6 +212,7 @@ NSTimer*                EEPROMUpdateTimer;
 - (int)TWIStatus;
 - (IBAction)reportLocalTaste:(id)sender;
 - (IBAction)reportUpdateTaste:(id)sender;
+- (IBAction)reportTestTaste:(id)sender;
 - (IBAction)reportFixTaste:(id)sender;
 - (void)updateEEPROMMitDicArray:(NSArray*)updateArry;
 - (void)updatePListMitDicArray:(NSArray*)updateArry;

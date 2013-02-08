@@ -576,7 +576,7 @@ return TagbalkenTyp;
 
 -(NSString*)Titel
 {
-return Titel;
+   return Titel;
 }
 
 - (NSArray*)StundenArray

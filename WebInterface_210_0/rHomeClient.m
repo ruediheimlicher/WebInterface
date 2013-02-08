@@ -86,6 +86,11 @@ unsigned char h2int(char c)
 				  name:@"localstatus"
 				object:nil];
 	
+	[nc addObserver:self
+			 selector:@selector(TestStatusAktion:)
+				  name:@"teststatus"
+				object:nil];
+	
 		[nc addObserver:self
 			 selector:@selector(HomeClientWriteStandardAktion:)
 				  name:@"HomeClientWriteStandard"
@@ -495,6 +500,23 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
    NSLog(@"LocalStatusAktion HomeCentralURL: %@",HomeCentralURL);
 }
 
+- (void)TestStatusAktion:(NSNotification*)note
+{
+   NSLog(@"TestStatusAktion note: %@",[[note userInfo]description]);
+   
+   if ([[note userInfo]objectForKey:@"test"] && [[[note userInfo]objectForKey:@"test"]intValue]==1) // URL umschalten
+   {
+      HomeCentralURL = @"http://192.168.1.213";
+      //NSLog(@"TestStatusAktion local: HomeCentralURL: %@",HomeCentralURL);
+   }
+   else
+   {
+      HomeCentralURL = @"http://ruediheimlicher.dyndns.org";
+      //NSLog(@"TestStatusAktion global: HomeCentralURL: %@",HomeCentralURL);
+   }
+   NSLog(@"TestStatusAktion HomeCentralURL: %@",HomeCentralURL);
+}
+
 
 - (void)TWIStatusAktion:(NSNotification*)note
 {
@@ -865,8 +887,12 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
    
    [self loadURL:URL];
    
+   //NSLog(@"HomeClientWriteStandardAktion DatenByteArray count: %d",[DatenByteArray count]);
    NSString* EEPROM_DataString=[DatenByteArray componentsJoinedByString:@"+"];
-   EEPROM_DataString= [EEPROM_DataString stringByAppendingString:@"+255+255"];
+   if ([DatenByteArray count]<8)// Tagplanbalken geben nur 6 Bytes
+   {
+      EEPROM_DataString= [EEPROM_DataString stringByAppendingString:@"+255+255"];
+   }
    //NSLog(@"HomeClientWriteStandardAktion EEPROM_DataString: %@",EEPROM_DataString);
    //NSLog(@"EEPROM_DataString: l=%d",[EEPROM_DataString length]);
    
@@ -998,7 +1024,10 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
       [self loadURL:URL];
       
       NSString* EEPROM_DataString=[DatenByteArray componentsJoinedByString:@"+"];
-      EEPROM_DataString= [EEPROM_DataString stringByAppendingString:@"+255+255"];
+      if ([DatenByteArray count]<8) // Tagplanbalken geben nur 6 Bytes
+      {
+         EEPROM_DataString= [EEPROM_DataString stringByAppendingString:@"+255+255"];
+      }
       //NSLog(@"HomeClientWriteStandardAktion EEPROM_DataString: %@",EEPROM_DataString);
       //NSLog(@"EEPROM_DataString: l=%d",[EEPROM_DataString length]);
       
@@ -1496,7 +1525,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 	//NSLog(@"sender: %@",[sender description]);
 	// Only report feedback for the main frame.
 	NSString* HTML_Inhalt=[self dataRepresentationOfType:HTMLDocumentType];
-	NSLog(@"didFinishLoadForFrame Antwort: \nHTML_Inhalt: \t%@\n",HTML_Inhalt);
+	//NSLog(@"didFinishLoadForFrame Antwort: \nHTML_Inhalt: \t%@\n",HTML_Inhalt);
 	
 	NSRange CheckRange;
 	NSString* Code_String= @"okcode=";

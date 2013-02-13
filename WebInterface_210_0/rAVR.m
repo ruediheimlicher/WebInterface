@@ -234,6 +234,13 @@ return returnInt;
           selector:@selector(EditAktion:)
               name:@"edit"
             object:nil];
+   
+   [nc addObserver:self
+          selector:@selector(saveSettingsAktion:)
+              name:@"saveSettings"
+            object:nil];
+   
+
 
 	
 	WochenplanDic=[[[NSMutableDictionary alloc]initWithCapacity:0]retain];
@@ -367,6 +374,7 @@ return returnInt;
 	[self setTagbalkenTyp:0 forObjekt:2 forRaum:0]; // Servo
 	
 	[self setTagbalkenTyp:1 forObjekt:1 forRaum:2];
+   [self setTagbalkenTyp:1 forObjekt:1 forRaum:4]; // Labor
 	
 	NSArray* Wochentage=[[NSArray arrayWithObjects:@"MO",@"DI", @"MI", @"DO", @"FR", @"SA", @"SO",nil]retain];
 	NSArray* Raumnamen=[[NSArray arrayWithObjects:@"Heizung", @"Werkstatt", @"WoZi", @"Buero", @"Labor", @"OG1", @"OG2", @"Estrich", nil]retain];
@@ -647,7 +655,7 @@ return returnInt;
 	
 	
 	
-	//NSLog(@"Beginn SavePList: PListPfad: %@ HomebusArray: %@",HomePListPfad,[HomebusArray description]);
+	//NSLog(@"awake: PListPfad: %@ HomebusArray: %@",HomePListPfad,[HomebusArray description]);
 	NSFileManager *Filemanager=[NSFileManager defaultManager];
 	
 	NSMutableDictionary* tempHomeDic;
@@ -1075,8 +1083,14 @@ return returnInt;
 }
 
 
-
-
+- (void)saveSettingsAktion:(NSNotification*)note
+{
+   NSLog(@"saveSettingsAktion note: %@",[[note userInfo]description]);
+   [HomebusArray setArray:[NSMutableArray arrayWithArray:[[note userInfo]objectForKey:@"homebusarray"]]];
+   NSMutableDictionary* tempHomeDic = [NSMutableDictionary dictionaryWithObjectsAndKeys:HomebusArray,@"homebusarray", nil];
+   BOOL writeOK=[tempHomeDic writeToFile:HomePListPfad atomically:YES];
+	//NSLog(@"save PList: writeOK: %d",writeOK);
+}
 
 
 - (NSArray*)neuerWochenplanForRaum:(int)derRaum

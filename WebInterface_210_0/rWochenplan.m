@@ -87,7 +87,7 @@
 	{
 		//Tagplanarray fuer den Tag wd:
 		NSArray* tempTagplanArray=[[derWochenplanArray objectAtIndex:wd]objectForKey:@"tagplanarray"];
-      if ((wd == 0))
+      if (wd == 0)
       {
          //NSLog(@"Tag: %d tempTagplanArray: %@",wd, [tempTagplanArray  description]);
       }

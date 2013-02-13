@@ -9,19 +9,20 @@
 #import <Cocoa/Cocoa.h>
 
 
-@interface rEinstellungen : NSWindowController
+@interface rEinstellungen : NSWindowController <NSControlTextEditingDelegate>
 {
    IBOutlet id RaumPop;
    
    NSMutableArray* HomebusArray;
+   NSMutableIndexSet* updateIndexSet;
 }
 - (void)setEinstellungen:(NSArray*)homebusarray;
 - (IBAction)reportRaumPop:(id)sender;
-
 
 - (IBAction)reportSave:(id)sender;
 - (IBAction)reportCancel:(id)sender;
 - (IBAction)reportClose:(id)sender;
 
 - (void)setObjektnamenVonArray:(NSArray*)objektnamen;
+- (void)saveObjektnamen;
 @end

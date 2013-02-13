@@ -231,7 +231,7 @@ return self;
 			int tempCode=[[[derStundenArray objectAtIndex:i]objectForKey:@"code"]intValue];
 			if (tempCode >2)
 			{
-			NSLog(@"setTagplan: code: %d  red",tempCode);
+			//NSLog(@"setTagplan: code: %d  red",tempCode);
 
 			tempCode--;
 			}

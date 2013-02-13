@@ -2137,7 +2137,7 @@ if (Webserver_busy)
 			[WriteFeld setStringValue:@""];
 			[ReadFeld setStringValue:@""];
 			[WriteWocheFeld setStringValue:@""];
-			NSLog(@"FinishLoadAktion  twistatus ist da: %d",TWI_Status);
+			//NSLog(@"FinishLoadAktion  twistatus ist da: %d",TWI_Status);
 			
 			if (TWI_Status==0)// TWI deaktiviert
 			{	

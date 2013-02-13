@@ -889,7 +889,7 @@ return tag;
 	//NSPoint Ecke=[self bounds].origin;
 	NSPoint localMaus;
 	localMaus=[self convertPoint:globMaus fromView:NULL];
-	NSLog(@"rTagplanbalken mouseDown: local: x: %2.2f y: %2.2f",localMaus.x,localMaus.y);
+	//NSLog(@"rTagplanbalken mouseDown: local: x: %2.2f y: %2.2f",localMaus.x,localMaus.y);
 	
 	//NSLog(@"lastONArray: %@",[lastONArray description]);
 	int i;

@@ -667,7 +667,6 @@ return returnInt;
 		{
 			[tempHomeDic setObject:HomebusArray forKey:@"homebusarray"];
 		}
-		
 	}
 	else
 	{
@@ -794,7 +793,7 @@ return returnInt;
 		//	Dic mit den Daten von Raum:
 		//	NSMutableDictionary* RaumDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
 		int	AnzRaumObjekte= [self anzAktivForRaum:derRaum];
-		NSLog(@"Raum AnzObjekte: %d",AnzRaumObjekte);
+		//NSLog(@"Raum AnzObjekte: %d",AnzRaumObjekte);
 		//		NSArray* RaumAktivArray=[self aktivObjekteArrayForRaum:raum];
 		
 		
@@ -1085,8 +1084,14 @@ return returnInt;
 
 - (void)saveSettingsAktion:(NSNotification*)note
 {
-   NSLog(@"saveSettingsAktion note: %@",[[note userInfo]description]);
+   //NSLog(@"saveSettingsAktion note: %@",[[note userInfo]description]);
+   
    [HomebusArray setArray:[NSMutableArray arrayWithArray:[[note userInfo]objectForKey:@"homebusarray"]]];
+   
+   for (int raumindex=0;raumindex<8;raumindex++)
+   {
+      [self setRaum:raumindex];
+   }
    NSMutableDictionary* tempHomeDic = [NSMutableDictionary dictionaryWithObjectsAndKeys:HomebusArray,@"homebusarray", nil];
    BOOL writeOK=[tempHomeDic writeToFile:HomePListPfad atomically:YES];
 	//NSLog(@"save PList: writeOK: %d",writeOK);

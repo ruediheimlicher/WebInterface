@@ -41,7 +41,7 @@
 
 - (void)windowDidLoad 
 {
-	NSLog(@"Einstellungen did load");
+	//NSLog(@"Einstellungen did load");
    int startraumnummer = 0;
    int startobjektnummer = 0;
    [RaumPop removeAllItems];
@@ -49,7 +49,7 @@
    for (int raumnummer=0;raumnummer < [HomebusArray count];raumnummer++)
    {
       NSDictionary* tempRaumDic = [HomebusArray objectAtIndex:raumnummer];
-      NSLog(@"raumnummer: %d raumname: %@",raumnummer, [tempRaumDic objectForKey:@"raumname"]);
+      //NSLog(@"raumnummer: %d raumname: %@",raumnummer, [tempRaumDic objectForKey:@"raumname"]);
       [RaumPop addItemWithTitle:[tempRaumDic objectForKey:@"raumname"]];
       
       
@@ -128,7 +128,7 @@
    for (int objekt=0;objekt<6;objekt++)
    {
       NSString* ObjektTitel = [[[RaumPop superview]viewWithTag:(100+ objekt)]stringValue];
-      NSLog(@"saveObjektnamen raum: %d objekttitel: %@",raum,ObjektTitel);
+      //NSLog(@"saveObjektnamen raum: %d objekttitel: %@",raum,ObjektTitel);
       
       for (int wochentag = 0;wochentag < 7;wochentag++)
       {
@@ -150,7 +150,7 @@
 - (void)saveObjektnamenForRaum:(int)raum forObjekt:(int)objekt
 {
       NSString* ObjektTitel = [[[RaumPop superview]viewWithTag:(100+ objekt)]stringValue];
-      NSLog(@"saveObjektnamen raum: %d objekttitel: %@",raum,ObjektTitel);
+      //NSLog(@"saveObjektnamen raum: %d objekttitel: %@",raum,ObjektTitel);
       
       for (int wochentag = 0;wochentag < 7;wochentag++)
       {
@@ -200,7 +200,7 @@ NSLog(@"showWindow");
    int raum = [RaumPop indexOfSelectedItem];
    int tag = [[aNotification object]tag];
    int updateindex = 1000*raum + tag;
-   NSLog(@"controlTextDidEndEditingraum: %d titel: %@ tag: %d updateindex: %d",raum,[[aNotification object]stringValue],tag,updateindex);
+   //NSLog(@"controlTextDidEndEditing raum: %d titel: %@ tag: %d updateindex: %d",raum,[[aNotification object]stringValue],tag,updateindex);
    [self saveObjektnamenForRaum:raum forObjekt:tag%100]; // tag ist 100+index des objekts
    [updateIndexSet addIndex:updateindex];
 }

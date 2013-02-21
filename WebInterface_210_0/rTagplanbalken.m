@@ -345,6 +345,8 @@ NSMutableDictionary* tempDic=(NSMutableDictionary*)[StundenArray objectAtIndex:d
 	[NotificationDic setObject:[NSNumber numberWithInt:wochentag] forKey:@"wochentag"];
 	[NotificationDic setObject:lastONArray forKey:@"lastonarray"];
 	[NotificationDic setObject:[NSNumber numberWithInt:raum] forKey:@"raum"];
+   [NotificationDic setObject:[NSNumber numberWithInt:TagbalkenTyp] forKey:@"tagbalkentyp"];
+
 	[NotificationDic setObject:Titel forKey:@"titel"];
 	[NotificationDic setObject:[NSNumber numberWithInt:objekt] forKey:@"objekt"];
 	int modKey=0;
@@ -448,7 +450,7 @@ NSMutableDictionary* tempDic=(NSMutableDictionary*)[StundenArray objectAtIndex:d
 
 - (void)StundenTasteAktion:(NSButton*)sender
 {
-	//NSLog(@"StundenTasteAktion tag: %d",[sender tag]);
+	NSLog(@"StundenTasteAktion tag: %d",[sender tag]);
 	//NSLog(@"StundenTasteAktion: %d", [(rTagplanbalken*)[sender superview]Wochentag]);
 	//NSLog(@"StundenTasteAktion: %d", [(rTagplanbalken*)[sender superview]Raum]);
 	//NSLog(@"StundenTasteAktion: %d", [(rTagplanbalken*)[sender superview]Objekt]);
@@ -581,7 +583,8 @@ NSMutableDictionary* tempDic=(NSMutableDictionary*)[StundenArray objectAtIndex:d
 		[NotificationDic setObject:[StundenArray valueForKey:@"code"] forKey:@"stundenarray"];
 		[NotificationDic setObject:[self StundenByteArray] forKey:@"stundenbytearray"];
 		
-		//NSLog(@"WriteTasteAktion  Standard: %@",[NotificationDic description]);
+		NSLog(@"WriteTasteAktion  Standard: %@",[NotificationDic description]);
+      //NSLog(@"WriteTasteAktion  Standard: %@",[[self StundenByteArray] description]);
 			
 		// Notific an Wochenplan  und von dort an WriteStandardaktion in AVRClient schicken
 		[nc postNotificationName:@"WriteStandard" object:self userInfo:NotificationDic];
@@ -712,7 +715,7 @@ return StundenArray;
 		if (k==0) // vier Tasten abgearbeitet, Zahl erzeugen
 		{
 			
-			NSString* ByteString=[NSString stringWithFormat:@"%02X ",Stundenbyte];
+			NSString* ByteString=[NSString stringWithFormat:@"%02x ",Stundenbyte];
 			//NSLog(@"      Stundenbyte: %02X ByteString: %@",Stundenbyte , ByteString);
 			StundenbyteString=[StundenbyteString stringByAppendingString:ByteString] ;
 			[tempByteArray addObject:[NSNumber numberWithInt:Stundenbyte]];
@@ -726,6 +729,8 @@ return StundenArray;
 		
 	}// for i
 	//NSLog(@"raum: %d Tag: %d objekt: %d StundenbyteString: %@ tempByteArray: %@",Raum,Wochentag, Objekt,StundenbyteString,[tempByteArray description]);
+   
+   NSLog(@"StundenbyteString: %@ tempByteArray: %@",StundenbyteString,[tempByteArray componentsJoinedByString:@"\t "]);
 	return tempByteArray;
 }
 
@@ -1006,10 +1011,10 @@ return tag;
       
       if (i==0)
       {
-         NSLog(@" ");
-         NSLog(@"Std y: %.2f h: %.2f h orig: %.2f",StdFeld.origin.y,StdFeld.size.height,StdFeldorig.size.height);
+         //NSLog(@" ");
+         //NSLog(@"Std y: %.2f h: %.2f h orig: %.2f",StdFeld.origin.y,StdFeld.size.height,StdFeldorig.size.height);
          
-         NSLog(@"yu: %.2f hu: %.2f yo: %.2f ho: %.2f mausy: %.2f",StdFeldL.origin.y,StdFeldL.size.height,StdFeldR.origin.y,StdFeldR.size.height,localMaus.y);
+         //NSLog(@"yu: %.2f hu: %.2f yo: %.2f ho: %.2f mausy: %.2f",StdFeldL.origin.y,StdFeldL.size.height,StdFeldR.origin.y,StdFeldR.size.height,localMaus.y);
       }
 
 		

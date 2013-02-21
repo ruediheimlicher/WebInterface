@@ -115,9 +115,11 @@
 				[tempaktivObjektDic setObject:[[tempTagplanArray objectAtIndex:obj]objectForKey:@"stundenplanarray"] forKey:@"stundenplanarray"];
 				[tempaktivObjektDic setObject:[[tempTagplanArray objectAtIndex:obj]objectForKey:@"objektname"] forKey:@"objektname"];
 				[tempaktivObjektDic setObject:[[tempTagplanArray objectAtIndex:obj]objectForKey:@"objekt"] forKey:@"objekt"];
+				[tempaktivObjektDic setObject:[[tempTagplanArray objectAtIndex:obj]objectForKey:@"tagbalkentyp"] forKey:@"tagbalkentyp"];
 				[tempaktivObjektDic setObject:[NSNumber numberWithInt:derRaum] forKey:@"raum"];
-				if (obj==0)
+				if (obj==1)
 				{
+               NSLog(@"tempTagplanArray: %@",[[tempTagplanArray objectAtIndex:obj]  description]);
 					//NSLog(@"tempaktivObjektDic: %@",[tempaktivObjektDic  description]);
 				}
 				[aktivStundenplanDicArray addObject:tempaktivObjektDic];

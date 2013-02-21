@@ -706,7 +706,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
     
     */
    //NSLog(@"HomeClientWriteStandardAktion note stundenbytearray %@",[[note userInfo]description]);
-	//NSLog(@"HomeClientWriteStandardAktion note stundenbytearray %@",[[[note userInfo]objectForKey:@"stundenbytearray"]description]);
+	//NSLog(@"HomeClientWriteStandardAktion note stundenbytearray %@",[[[note userInfo]objectForKey:@"stundenbytearray"]componentsJoinedByString:@" \t "]);
    //	int Raum=[[[note userInfo]objectForKey:@"raum"]intValue];
    //	int Wochentag=[[[note userInfo]objectForKey:@"wochentag"]intValue];
    //	int Objekt=[[[note userInfo]objectForKey:@"objekt"]intValue];
@@ -882,7 +882,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 		//NSLog(@"HomeClientWriteStandardAktion WriteDataSuffix ganz: %@",WriteDataSuffix);
 	}
    NSString* HomeClientURLString =[NSString stringWithFormat:@"%@/twi?%@",HomeCentralURL, WriteDataSuffix];
-   //NSLog(@"HomeClientWriteStandardAktion HomeClientURLString: %@",HomeClientURLString);
+   NSLog(@"HomeClientWriteStandardAktion HomeClientURLString: %@",HomeClientURLString);
    NSURL *URL = [NSURL URLWithString:HomeClientURLString];
    
    [self loadURL:URL];

@@ -1068,7 +1068,7 @@ return mark;
 		
       if (i==0)
       {
-         NSLog(@"i: %d",i);
+         //NSLog(@"i: %d",i);
          //NSLog(@"Std y: %.2f h: %.2f",StdFeld.origin.y,StdFeld.size.height);
 
          //NSLog(@"yu: %.2f hu: %.2f yo: %.2f ho: %.2f mausy: %.2f",StdFeldU.origin.y,StdFeldU.size.height,StdFeldO.origin.y,StdFeldO.size.height,localMaus.y);

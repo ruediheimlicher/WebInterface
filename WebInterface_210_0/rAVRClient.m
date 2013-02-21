@@ -866,6 +866,7 @@ if (Webserver_busy)
 		
 		[HomeClientDic setObject:[NSNumber numberWithInt:hb] forKey:@"hbyte"];
 		[HomeClientDic setObject:DatenArray forKey:@"stundenbytearray"];
+      [Cmd setStringValue:[DatenArray componentsJoinedByString:@"\t"]];
 		//NSLog(@"WriteStandardAktion Raum: %d wochentag: %d Objekt: %d EEPROM: %02X lb: 0x%02X hb: 0x%02X ",Raum, Wochentag, Objekt,EEPROM_i2cAdresse,lb, hb);
 		
 		// Information an HomeClient schicken
@@ -1917,6 +1918,9 @@ if (Webserver_busy)
          }
       }
       //[self updateEEPROMMitDicArray:PListFixArray];
+      NSLog(@"PListFixArray count: %u",(unsigned int)[PListFixArray count]);
+      NSLog(@"HomeServerFixArray count: %u",(unsigned int)[HomeServerFixArray count]);
+      
       if ([PListFixArray count])
       {
          NSLog(@"PListFixArray count: %u",(unsigned int)[PListFixArray count]);

@@ -317,7 +317,7 @@ return self;
 			case 0://	ganze Stunde ON setzen
 //			case 1://	Kessel in der ersten halben Stunde schon ON
 //			case 2://	Kessel in der zweiten halben Stunde schon ON
-				ON=3;//ganze Stunde ON
+				ON=2;//ganze Stunde ON
 				break;
             
 // 19.1.2013: nur noch zwei Werte 
@@ -417,6 +417,7 @@ NSMutableDictionary* tempDic=(NSMutableDictionary*)[StundenArray objectAtIndex:d
 	[NotificationDic setObject:[NSNumber numberWithInt:wochentag] forKey:@"wochentag"];
 	[NotificationDic setObject:lastONArray forKey:@"lastonarray"];
 	[NotificationDic setObject:[NSNumber numberWithInt:raum] forKey:@"raum"];
+   [NotificationDic setObject:[NSNumber numberWithInt:TagbalkenTyp] forKey:@"tagbalkentyp"];
 	[NotificationDic setObject:Titel forKey:@"titel"];
 	[NotificationDic setObject:[NSNumber numberWithInt:objekt] forKey:@"objekt"];
 	int modKey=0;
@@ -806,7 +807,7 @@ key "modenacht"	Einschaltzeiten Mode Nacht		0: off						1: reduziert				2: voll
 		if (ON==3)
 		{
 		NSLog(@"ON reduzieren");
-		ON=0;
+		//ON=0;
 		}
 		
 		if ([self mouse:localMaus inRect:StdFeldT])
@@ -815,15 +816,15 @@ key "modenacht"	Einschaltzeiten Mode Nacht		0: off						1: reduziert				2: voll
 			switch (ON)
 			{
 				case 0:// Mode auf red stellen
-					//ON=1;//
-					//break;
-					
-				case 1:// Mode auf Voll stellen
-					ON=2;
+					ON=1;//
 					break;
 					
-				case 2:// Mode auf OFF stellen
-				case 3:// Rest aus Typ 0: Mode auf OFF stellen
+				case 1:// Mode auf Voll stellen
+					ON=0;
+					break;
+					
+				case 2:// zuruecksetzen
+				case 3:// 
 					ON=0;
 					break;
 					
@@ -864,7 +865,7 @@ key "modenacht"	Einschaltzeiten Mode Nacht		0: off						1: reduziert				2: voll
 				   //NSLog(@"all: ISTwiederherstellen: lastModeTagArray: %@",[lastONArray description]);
 				
 				ON=[[lastONArray objectAtIndex:i]intValue];
-				if (ON==3)
+				if (ON>=2)
 				{
 					NSLog(@"All: ON reduzieren");
 					ON=0;

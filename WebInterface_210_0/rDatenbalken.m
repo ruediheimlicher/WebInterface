@@ -989,10 +989,10 @@ return tag;
       
       if (i==0)
       {
-         NSLog(@" ");
-         NSLog(@"Std y: %.2f h: %.2f h orig: %.2f",StdFeld.origin.y,StdFeld.size.height,StdFeldorig.size.height);
+         //NSLog(@" ");
+         //NSLog(@"Std y: %.2f h: %.2f h orig: %.2f",StdFeld.origin.y,StdFeld.size.height,StdFeldorig.size.height);
          
-         NSLog(@"yu: %.2f hu: %.2f yo: %.2f ho: %.2f mausy: %.2f",StdFeldL.origin.y,StdFeldL.size.height,StdFeldR.origin.y,StdFeldR.size.height,localMaus.y);
+         //NSLog(@"yu: %.2f hu: %.2f yo: %.2f ho: %.2f mausy: %.2f",StdFeldL.origin.y,StdFeldL.size.height,StdFeldR.origin.y,StdFeldR.size.height,localMaus.y);
       }
 
 		

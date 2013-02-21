@@ -311,26 +311,26 @@ return returnInt;
    int rm=3;
    int obj=0;
    int startadr = rm*RAUMPLANBREITE + tg * TAGPLANBREITE + obj * 0x08;
-   NSLog(@"raum: %d tag: %d obj: %d startadresse: %d",rm, tg, obj, startadr);
+   //NSLog(@"raum: %d tag: %d obj: %d startadresse: %d",rm, tg, obj, startadr);
   
    int newraum = startadr / 0x200;
    //newraum ;
-   NSLog(@"newraum: %d",newraum);
+   //NSLog(@"newraum: %d",newraum);
    
    int lb= startadr & 0xFF;
    int hb = startadr;
    hb >>=8;
-   NSLog(@"lb: %d hb: %d ",lb,hb);
+   //NSLog(@"lb: %d hb: %d ",lb,hb);
    
    int lbyte=startadr%0x100;
    int hbyte=startadr/0x100;
-   NSLog(@"lbyte: %d hbyte: %d ",lbyte,hbyte);
+   //NSLog(@"lbyte: %d hbyte: %d ",lbyte,hbyte);
    newraum = hbyte/0x02;
-   NSLog(@"newraum: %d",newraum);
+   //NSLog(@"newraum: %d",newraum);
    int status =0;
    
    status |= (1<<hbyte/2);
-   NSLog(@"status: %d",status);
+   //NSLog(@"status: %d",status);
    
 	//[self setAktiv:NO forObjekt:4 forRaum:4];
 	//[self setAktiv:YES forObjekt:3 forRaum:4];
@@ -2943,7 +2943,7 @@ n=0;
 
 - (void)tabView:(NSTabView *)tabView didSelectTabViewItem:(NSTabViewItem *)tabViewItem
 {
-   NSLog(@"didSelectTabViewItem index: %d",[[tabViewItem identifier]intValue] );
+   //NSLog(@"didSelectTabViewItem index: %d",[[tabViewItem identifier]intValue] );
    int index = [[tabViewItem identifier]intValue];
   if (index < [RaumPop  numberOfItems])
   {

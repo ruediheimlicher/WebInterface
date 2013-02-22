@@ -156,7 +156,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 	NSString* lByte = [NSString string];
 	NSString* EEPROMAdresseZusatz= [NSString string];
 	NSString* titel = [NSString string];
-   int typ=0; // tagbalkentyp
+   int tagbalkentyp=0; // tagbalkentyp
    
    WebTask = eepromread;
    if ([[note userInfo]objectForKey:@"webtask"])
@@ -204,9 +204,9 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 		
 	}
    
-   if ([[note userInfo]objectForKey:@"typ"])
+   if ([[note userInfo]objectForKey:@"tagbalkentyp"])
 	{
-		typ= [[[note userInfo]objectForKey:@"typ"]intValue];
+		tagbalkentyp= [[[note userInfo]objectForKey:@"tagbalkentyp"]intValue];
 		
 	}
    
@@ -217,7 +217,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
    [SendEEPROMDataDic setObject:[NSNumber numberWithInt:0] forKey:@"dataload"];
    [SendEEPROMDataDic setObject:[NSNumber numberWithInt:1] forKey:@"permanent"];
    [SendEEPROMDataDic setObject:titel forKey:@"titel"];
-   [SendEEPROMDataDic setObject:[NSNumber numberWithInt:typ] forKey:@"typ"];
+   [SendEEPROMDataDic setObject:[NSNumber numberWithInt:tagbalkentyp] forKey:@"tagbalkentyp"];
    
 	
    //	NSString* TWIReadStartURLSuffix = [NSString stringWithFormat:@"pw=%@&radr=%@&hb=%@&lb=%@",pw,EEPROMAdresse,hByte, lByte];
@@ -240,7 +240,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 	NSString* lByte = [NSString string];
 	NSString* EEPROMAdresseZusatz= [NSString string];
 	NSString* titel = [NSString string];
-   int typ=0; // tagbalkentyp
+   int tagbalkentyp=0; // tagbalkentyp
    
    WebTask = eepromreadwoche;
    
@@ -276,9 +276,9 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 		
 	}
 
-   if ([[note userInfo]objectForKey:@"typ"])
+   if ([[note userInfo]objectForKey:@"tagbalkentyp"])
 	{
-		typ= [[[note userInfo]objectForKey:@"typ"]intValue];
+		tagbalkentyp= [[[note userInfo]objectForKey:@"tagbalkentyp"]intValue];
 		
 	}
 
@@ -290,7 +290,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
    [SendEEPROMDataDic setObject:[NSNumber numberWithInt:0] forKey:@"dataload"];
    [SendEEPROMDataDic setObject:[NSNumber numberWithInt:1] forKey:@"permanent"];
    [SendEEPROMDataDic setObject:titel forKey:@"titel"];
-   [SendEEPROMDataDic setObject:[NSNumber numberWithInt:typ] forKey:@"typ"];
+   [SendEEPROMDataDic setObject:[NSNumber numberWithInt:tagbalkentyp] forKey:@"tagbalkentyp"];
     */
 	
 //	NSString* TWIReadStartURLSuffix = [NSString stringWithFormat:@"pw=%@&radr=%@&hb=%@&lb=%@",pw,EEPROMAdresse,hByte, lByte]; 
@@ -715,7 +715,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
    WebTask = idle;
    
    [SendEEPROMDataDic setObject:[[note userInfo]objectForKey:@"titel"] forKey:@"titel"];
-   [SendEEPROMDataDic setObject:[[note userInfo]objectForKey:@"typ"] forKey:@"typ"];
+   [SendEEPROMDataDic setObject:[[note userInfo]objectForKey:@"tagbalkentyp"] forKey:@"tagbalkentyp"];
 	
    NSArray* DatenByteArray=[[note userInfo]objectForKey:@"stundenbytearray"];
    
@@ -943,7 +943,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
       WebTask = idle;
       
       [SendEEPROMDataDic setObject:[sendDic objectForKey:@"titel"] forKey:@"titel"];
-      [SendEEPROMDataDic setObject:[sendDic objectForKey:@"typ"] forKey:@"typ"];
+      [SendEEPROMDataDic setObject:[sendDic objectForKey:@"tagbalkentyp"] forKey:@"tagbalkentyp"];
       
       NSArray* DatenByteArray=[sendDic objectForKey:@"stundenbytearray"];
       
@@ -1206,7 +1206,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
       {
          if ([[SendEEPROMDataDic objectForKey:@"eepromdatastring" ] length])
          {
-            NSString* URLString = [NSString stringWithFormat:@"http://%s/%s?pw=%s&perm=%@&hbyte=%@&lbyte=%@&data=%@&titel=%@&typ=%@",
+            NSString* URLString = [NSString stringWithFormat:@"http://%s/%s?pw=%s&perm=%@&hbyte=%@&lbyte=%@&data=%@&titel=%@&tagbalkentyp=%@",
                                    WEBSERVER_VHOST,
                                    CGI,
                                    PW,
@@ -1215,7 +1215,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
                                    [EEPROMDataDic objectForKey:@"lbyte"],
                                    [EEPROMDataDic objectForKey:@"eepromdatastring"],
                                    [EEPROMDataDic objectForKey:@"titel"],
-                                   [EEPROMDataDic objectForKey:@"typ"]
+                                   [EEPROMDataDic objectForKey:@"tagbalkentyp"]
                                    
                                    ];
             //NSLog(@"URLString: %@",URLString );

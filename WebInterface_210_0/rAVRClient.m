@@ -251,7 +251,7 @@
 	[NotificationDic setObject:[NSNumber numberWithInt:lbyte] forKey:@"lbyte"];
    
    [NotificationDic setObject:[[ObjektPop selectedItem]title] forKey:@"titel"];
-   [NotificationDic setObject:[NSNumber numberWithInt:tagbalkentyp] forKey:@"typ"];
+   [NotificationDic setObject:[NSNumber numberWithInt:tagbalkentyp] forKey:@"tagbalkentyp"];
    [NotificationDic setObject:[NSNumber numberWithInt:WebTask] forKey:@"webtask"];
    
 	
@@ -389,7 +389,7 @@
 	[NotificationDic setObject:[NSNumber numberWithInt:lbyte] forKey:@"lbyte"];
    
    [NotificationDic setObject:[[ObjektPop selectedItem]title] forKey:@"titel"];
-   [NotificationDic setObject:[NSNumber numberWithInt:tagbalkentyp] forKey:@"typ"];
+   [NotificationDic setObject:[NSNumber numberWithInt:tagbalkentyp] forKey:@"tagbalkentyp"];
    [NotificationDic setObject:[NSNumber numberWithInt:WebTask] forKey:@"webtask"];
    [NotificationDic setObject:[NSNumber numberWithInt:wochentagindex] forKey:@"wochentagindex"];
 
@@ -516,7 +516,7 @@
    [NotificationDic setObject:[NSNumber numberWithInt:lbyte] forKey:@"lbyte"];
    
    [NotificationDic setObject:[[ObjektPop selectedItem]title] forKey:@"titel"];
-   [NotificationDic setObject:[NSNumber numberWithInt:tagbalkentyp] forKey:@"typ"];
+   [NotificationDic setObject:[NSNumber numberWithInt:tagbalkentyp] forKey:@"tagbalkentyp"];
    [NotificationDic setObject:[NSNumber numberWithInt:WebTask] forKey:@"webtask"];
    [NotificationDic setObject:[NSNumber numberWithInt:wochentagindex] forKey:@"wochentagindex"];
    
@@ -646,7 +646,7 @@
       [NotificationDic setObject:[NSNumber numberWithInt:lbyte] forKey:@"lbyte"];
       
       [NotificationDic setObject:[[ObjektPop selectedItem]title] forKey:@"titel"];
-      [NotificationDic setObject:[NSNumber numberWithInt:tagbalkentyp] forKey:@"typ"];
+      [NotificationDic setObject:[NSNumber numberWithInt:tagbalkentyp] forKey:@"tagbalkentyp"];
       [NotificationDic setObject:[NSNumber numberWithInt:WebTask] forKey:@"webtask"];
       [NotificationDic setObject:[NSNumber numberWithInt:wochentagindex] forKey:@"wochentagindex"];
       
@@ -1060,7 +1060,7 @@ if (Webserver_busy)
                        int tempobjekt = temptag%10;
                        if (tempobjekt == objekt) // Objekt stimmt
                        {
-                          int temptyp = [[TagplanListe  objectAtIndex:k]typ];
+                          int temptyp = [[TagplanListe  objectAtIndex:k]tagbalkentyp];
                           //NSLog(@"raum: %d objekt: %d wochentag: %d",raum, objekt, tempwochentag);
                           NSArray* tempstundenbytearray = [[TagplanListe  objectAtIndex:k]StundenByteArray];
                           //NSLog(@"k: %d tempstundenplanarray: %@",k,[tempstundenbytearray description]);
@@ -1086,7 +1086,7 @@ if (Webserver_busy)
                           [writeDic setObject:[NSNumber numberWithInt:lbyte] forKey:@"lbyte"];
                           [writeDic setObject:[NSNumber numberWithInt:hbyte] forKey:@"hbyte"];
                           
-                          [writeDic setObject:[NSNumber numberWithInt:temptyp] forKey:@"typ"];
+                          [writeDic setObject:[NSNumber numberWithInt:temptyp] forKey:@"tagbalkentyp"];
                           
                           [writeDic setObject:@"A0" forKey:@"eepromadressestring"];
                           [writeDic setObject:@"160" forKey:@"eepromadresse"];
@@ -1641,7 +1641,7 @@ if (Webserver_busy)
          int wochentag = [[tempZeilenArray objectAtIndex:3]intValue];
          //int hbyte = [[tempZeilenArray objectAtIndex:4]intValue];
          //int lbyte = [[tempZeilenArray objectAtIndex:5]intValue];
-         int typ = [[tempZeilenArray objectAtIndex:14]intValue];
+         int tagbalkentyp = [[tempZeilenArray objectAtIndex:14]intValue];
          //int permanent = [[tempZeilenArray objectAtIndex:15]intValue];
          //int zeitstempel = [[tempZeilenArray objectAtIndex:16]intValue];
          NSArray* tempObjektnamenArray = [[[[[HomebusArray objectAtIndex:raumnummer]objectForKey:@"wochenplanarray"]objectAtIndex:0]objectForKey:@"tagplanarray"]valueForKey:@"objektname"];
@@ -1680,7 +1680,7 @@ if (Webserver_busy)
          [newEEPROMbalken setObjekt:[NSNumber numberWithInt:objektnummer]];
          [newEEPROMbalken setWochentagString:[Wochentag objectAtIndex:wochentag]];
          [newEEPROMbalken setWochentag:wochentag];
-         [newEEPROMbalken setTagbalkenTyp:typ];
+         [newEEPROMbalken setTagbalkenTyp:tagbalkentyp];
          [newEEPROMbalken setTag:2000+zeilennummer];
          
          //NSLog(@"i: %d, zeilennummer: %d",i,zeilennummer);
@@ -1717,7 +1717,7 @@ if (Webserver_busy)
          [oldEEPROMbalken setWochentagString:[Wochentag objectAtIndex:wochentag]];
          [oldEEPROMbalken setWochentag:wochentag];
 
-         [oldEEPROMbalken setTagbalkenTyp:typ];
+         [oldEEPROMbalken setTagbalkenTyp:tagbalkentyp];
          [oldEEPROMbalken setStundenArray:[oldStundenplanDic objectForKey:@"stundenplanarray"]forKey:@"code"];
          [oldEEPROMbalken setTag:4000+zeilennummer];
          
@@ -1875,7 +1875,7 @@ if (Webserver_busy)
                            [UpdateDic setObject:[NSNumber numberWithInt:lbyte] forKey:@"lbyte"];
                            [UpdateDic setObject:[NSNumber numberWithInt:hbyte] forKey:@"hbyte"];
                            
-                           [UpdateDic setObject:[NSNumber numberWithInt:[tempBalken typ]] forKey:@"typ"];
+                           [UpdateDic setObject:[NSNumber numberWithInt:[tempBalken tagbalkentyp]] forKey:@"tagbalkentyp"];
                            [UpdateDic setObject:@"A0" forKey:@"eepromadressestring"];
                            [UpdateDic setObject:@"160" forKey:@"eepromadresse"];
                            [UpdateDic setObject:[NSNumber numberWithInt:0] forKey:@"eepromadressezusatz"];

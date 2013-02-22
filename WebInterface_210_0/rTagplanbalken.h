@@ -19,7 +19,7 @@ NSString*			WochentagString;
 
 int					raum;
 int					objekt;
-int					typ;
+int					tagbalkentyp;
 int					wochentag;
 int               tag;
 int					mark;
@@ -27,6 +27,8 @@ int					Hoehe, Breite, Balkenbreite;
 int					Elementbreite,  Elementhoehe, RandL, RandR, RandU;
 int					aktiv;
 int					changed;
+int					typ;
+
 int					TagbalkenTyp;
 //int					AnzPlaene;
 
@@ -40,6 +42,7 @@ NSMutableIndexSet*  AktivtastenSet;
 - (void)setWochenplan:(NSArray*)derStundenArray forTag:(int)derTag;
 - (void)setNullpunkt:(NSPoint)derPunkt;
 - (void)setTagplan:(NSArray*)derStundenArray forTag:(int)derTag;
+- (void)stundenplanzeigen;
 - (void)setStundenarraywert:(int)derWert vonStunde:(int)dieStunde forKey:(NSString*)derKey;
 - (int)StundenarraywertVonStunde:(int)dieStunde forKey:(NSString*)derKey;
 - (NSArray*)StundenByteArray;
@@ -53,7 +56,7 @@ NSMutableIndexSet*  AktivtastenSet;
 - (int)wochentag;
 - (int)raum;
 - (int)objekt;
-- (int)typ;
+- (int)tagbalkentyp;
 
 
 - (void)setStundenByteArray:(NSArray*)derStundenArray;

@@ -21,6 +21,7 @@ NSMutableArray*		TagplanArray;
 }
 - (void)setTagplanVonObjekt:(int)dasObjekt;
 - (NSArray*)setWochenplanForRaum:(int)derRaum mitWochenplanArray:(NSArray*)derWochenplanArray;
+- (void)stundenplanzeigen:(NSArray*)stundenplan;
 - (NSArray*)aktivArray;
 
 @end

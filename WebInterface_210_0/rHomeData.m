@@ -1280,7 +1280,7 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
       NSString* tempZeile = [UpdateArrayRaw objectAtIndex:i-1];
       if ([tempZeile length] && ![ZeilenIndex containsIndex:[[[tempZeile componentsSeparatedByString:@"\t"]objectAtIndex:0]intValue]])
       {
-         //$dataadresse\t$raum\t$objekt\t$wochentag\t$hbyte\t$lbyte\t$data                \t$typ\t$permanent\t$zeitstempel\n";
+         //$dataadresse\t$raum\t$objekt\t$wochentag\t$hbyte\t$lbyte\t$data                \t$tagbalkentyp\t$permanent\t$zeitstempel\n";
          // 115          2       0        3           04       24    204 0	3 0 2 2 255 255	0        3           130103
          
          NSArray* tempZeilenArray = [tempZeile componentsSeparatedByString:@"\t"];
@@ -1297,7 +1297,7 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
                                       [NSNumber numberWithInt:[[tempZeilenArray objectAtIndex:3]intValue]],@"wochentag",
                                       [NSNumber numberWithInt:[[tempZeilenArray objectAtIndex:4]intValue]],@"hbyte",
                                       [NSNumber numberWithInt:[[tempZeilenArray objectAtIndex:5]intValue]],@"lbyte",
-                                      [NSNumber numberWithInt:[[tempZeilenArray objectAtIndex:14]intValue]],@"typ",
+                                      [NSNumber numberWithInt:[[tempZeilenArray objectAtIndex:14]intValue]],@"tagbalkentyp",
                                       [NSNumber numberWithInt:[[tempZeilenArray objectAtIndex:15]intValue]],@"perm",
                                       [NSNumber numberWithInt:[[tempZeilenArray objectAtIndex:16]intValue]],@"zeitstempel",
                                        */

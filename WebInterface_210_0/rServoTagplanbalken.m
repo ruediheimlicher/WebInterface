@@ -15,7 +15,7 @@
     self = [super initWithFrame:frame];
     if (self) 
 	{
-      typ=2;
+      tagbalkentyp=2;
 		RandL=60;
 		RandR=20;
 		RandU=2;
@@ -632,8 +632,8 @@ NSMutableDictionary* tempDic=(NSMutableDictionary*)[StundenArray objectAtIndex:d
 	[NotificationDic setObject:[NSNumber numberWithInt:Objekt] forKey:@"objekt"];// 
 	[NotificationDic setObject:[(rServoTagplanbalken*)[sender superview]Titel] forKey:@"titel"];//
 	[NotificationDic setObject:[NSNumber numberWithInt:1] forKey:@"permanent"];//
-   [NotificationDic setObject:[NSNumber numberWithInt:typ] forKey:@"typ"];//
-	//NSLog(@"rServoTagplanbalken WriteTasteAktion Typ: %d",typ);
+   [NotificationDic setObject:[NSNumber numberWithInt:tagbalkentyp] forKey:@"tagbalkentyp"];//
+	//NSLog(@"rServoTagplanbalken WriteTasteAktion Typ: %d",tagbalkentyp);
 	int modKey=0;
 	//int all=-1;
 	if(([[NSApp currentEvent] modifierFlags] & NSAlternateKeyMask)  != 0)

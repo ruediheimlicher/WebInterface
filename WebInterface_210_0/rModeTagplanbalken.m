@@ -20,6 +20,7 @@
 		RandR=20;
 		RandU=2;
 		aktiv=1;
+      TagbalkenTyp=1;
 		if (StundenArray==NULL)
 		{
 			StundenArray=[[NSMutableArray alloc]initWithCapacity:0];
@@ -426,16 +427,16 @@ NSMutableDictionary* tempDic=(NSMutableDictionary*)[StundenArray objectAtIndex:d
 	{
 		//NSLog(@"AllTasteAktion Alt");
 		modKey=2;
-			[NotificationDic setObject:@"alt" forKey:@"mod"];
-			[NotificationDic setObject:lastONArray forKey:@"lastonarray"];
-			[NotificationDic setObject:[NSNumber numberWithInt:-1] forKey:@"tag"];
-			[NotificationDic setObject:[NSNumber numberWithInt:4] forKey:@"feld"];
-			[NotificationDic setObject:[NSNumber numberWithInt:99] forKey:@"stunde"];
-			
-			NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
-			//NSLog(@"Tagplanbalken AllTasteAktion modifier AllFeld");
-			[nc postNotificationName:@"Modifier" object:self userInfo:NotificationDic];
-
+      [NotificationDic setObject:@"alt" forKey:@"mod"];
+      [NotificationDic setObject:lastONArray forKey:@"lastonarray"];
+      [NotificationDic setObject:[NSNumber numberWithInt:-1] forKey:@"tag"];
+      [NotificationDic setObject:[NSNumber numberWithInt:4] forKey:@"feld"];
+      [NotificationDic setObject:[NSNumber numberWithInt:99] forKey:@"stunde"];
+      
+      NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
+      //NSLog(@"Tagplanbalken AllTasteAktion modifier AllFeld");
+      [nc postNotificationName:@"Modifier" object:self userInfo:NotificationDic];
+      
 	}
 	else
 	{
@@ -462,7 +463,8 @@ NSMutableDictionary* tempDic=(NSMutableDictionary*)[StundenArray objectAtIndex:d
 			{
 				// lastOnArray enthält noch keinen code
 				NSLog(@"lastOnArray enthält noch keinen code: alle auf red");
-				all=1; 
+            // neu: alle auf ON
+				all=2;
 			}
 			
 		}
@@ -486,7 +488,7 @@ NSMutableDictionary* tempDic=(NSMutableDictionary*)[StundenArray objectAtIndex:d
 			all=2;
 		}
 		
-		NSLog(@"ModeTagplanbalken All-Taste: sum: %d lastsum: %d all: %d",sum, lastsum,all);
+		//NSLog(@"ModeTagplanbalken All-Taste: sum: %d lastsum: %d all: %d",sum, lastsum,all);
 		int ON=0;
 		
 		//	StundenArray anpassen, abhaengig von all
@@ -496,22 +498,36 @@ NSMutableDictionary* tempDic=(NSMutableDictionary*)[StundenArray objectAtIndex:d
 			switch (all)
 			{
 				case 0://alle OFF schalten
+               ON=0;
+               break;
+               
 				case 1://alle red schalten
 				case 2://alle voll schalten
-					ON=all;
+					ON=2;
+               
 					break;
 				case 9://Wiederherstellen
 				{
 					ON=[[lastONArray objectAtIndex:i]intValue];
-					
+               //NSLog(@"h: %d ON: %d",i,ON);
+					if (ON==1)
+               {
+                  ON=2;
+               }
+               //NSLog(@"nach korr: h: %d ON: %d",i,ON);
 				}break;
-			}//switch all		
-			[[StundenArray objectAtIndex:i]setObject:[NSNumber numberWithInt:ON]forKey:@"code"];
-			
-		}
+			}//switch all
+         
+         [[StundenArray objectAtIndex:i]setObject:[NSNumber numberWithInt:ON]forKey:@"code"];
 		
+      }
 		
-		[NotificationDic setObject:[NSNumber numberWithInt:99] forKey:@"stunde"];// All-Feld
+      if ((all==9)||(all<0))
+      {
+         //NSLog(@"lastONArray speichern");
+         lastONArray=[[StundenArray valueForKey:@"code"]copy];
+      }
+ 		[NotificationDic setObject:[NSNumber numberWithInt:99] forKey:@"stunde"];// All-Feld
 		[NotificationDic setObject:[NSNumber numberWithInt:all] forKey:@"on"];	// code fuer All
 		[NotificationDic setObject:[NSNumber numberWithInt:4] forKey:@"feld"]; // All-Feld
 		[NotificationDic setObject:lastONArray forKey:@"lastonarray"]; //lastONArray uebergeben
@@ -519,10 +535,6 @@ NSMutableDictionary* tempDic=(NSMutableDictionary*)[StundenArray objectAtIndex:d
 		[nc postNotificationName:@"Tagplancode" object:self userInfo:NotificationDic];
 		//NSLog(@"all: %d code: %@",all, [[StundenArray valueForKey:@"code"]description]);
 		
-		if (all<0)//kein Klick auf ALL-Taste, IST-Zustand speichern
-		{
-			lastONArray=[[StundenArray valueForKey:@"code"]copy];
-		}
 		[self setNeedsDisplay:YES];
 		
 	}// Standard
@@ -816,7 +828,7 @@ key "modenacht"	Einschaltzeiten Mode Nacht		0: off						1: reduziert				2: voll
 			switch (ON)
 			{
 				case 0:// Mode auf red stellen
-					ON=1;//
+					ON=2;//
 					break;
 					
 				case 1:// Mode auf Voll stellen
@@ -882,6 +894,7 @@ key "modenacht"	Einschaltzeiten Mode Nacht		0: off						1: reduziert				2: voll
 	}//for i
 	if (MausIN)
 	{
+      NSLog(@"m.down h: %d ON: %d",[[NotificationDic objectForKey:@"stunde" ] intValue], [[NotificationDic objectForKey:@"on" ] intValue]);
 	NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
 	[nc postNotificationName:@"Tagplancode" object:self userInfo:NotificationDic];
 	}

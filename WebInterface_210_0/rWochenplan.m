@@ -67,7 +67,8 @@
 	//	NSMutableArray* aktivObjektArray=[[NSMutableArray alloc]initWithCapacity:0];
 	// Tagplanarray vom Montag, zum Auffinden der aktiven Tagplaene
 	NSArray* tempMontagplanArray=[[derWochenplanArray objectAtIndex:0]objectForKey:@"tagplanarray"];
-	for (obj=0;obj<8;obj++)
+	printf("raum: %d\n",Raum);
+   for (obj=0;obj<8;obj++)
 	{
 		if ([[[tempMontagplanArray objectAtIndex:obj]objectForKey:@"aktiv"]intValue]) // Tagplan am ersten Wochentag ist aktiv
 		{
@@ -85,6 +86,7 @@
 	NSMutableArray* aktivTagplanDicArray=[[NSMutableArray alloc]initWithCapacity:0]; 	
 	for (wd=0;wd<7;wd++)
 	{
+      
 		//Tagplanarray fuer den Tag wd:
 		NSArray* tempTagplanArray=[[derWochenplanArray objectAtIndex:wd]objectForKey:@"tagplanarray"];
       if (wd == 0)
@@ -99,6 +101,7 @@
 		// aktive Tagplaene durchgehen
 		for (obj=0;obj<8;obj++)
 		{
+         
 			NSMutableDictionary* tempaktivObjektDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
 			if ((derRaum == 0)&&(wd==0))
 			{
@@ -117,9 +120,11 @@
 				[tempaktivObjektDic setObject:[[tempTagplanArray objectAtIndex:obj]objectForKey:@"objekt"] forKey:@"objekt"];
 				[tempaktivObjektDic setObject:[[tempTagplanArray objectAtIndex:obj]objectForKey:@"tagbalkentyp"] forKey:@"tagbalkentyp"];
 				[tempaktivObjektDic setObject:[NSNumber numberWithInt:derRaum] forKey:@"raum"];
-				if (obj==1)
+				if (obj==1 )
 				{
-               NSLog(@"tempTagplanArray: %@",[[tempTagplanArray objectAtIndex:obj]  description]);
+               //NSLog(@"tempTagplanArray: %@",[[tempTagplanArray objectAtIndex:obj]  description]);
+               printf("wd: %d\t",wd);
+               [self stundenplanzeigen:[[tempTagplanArray objectAtIndex:obj]objectForKey:@"stundenplanarray"]];
 					//NSLog(@"tempaktivObjektDic: %@",[tempaktivObjektDic  description]);
 				}
 				[aktivStundenplanDicArray addObject:tempaktivObjektDic];
@@ -403,6 +408,16 @@
 	
 }
 
+- (void)stundenplanzeigen:(NSArray*)stundenplan
+{
+   printf("wert: \t");
+   for (int k=0;k<24;k++)
+   {
+      printf(" %d\t",[[stundenplan objectAtIndex:k]intValue]);
+   }
+   printf("\n");
+
+}
 
 - (void)ModifierAktion:(NSNotification*)note
 {

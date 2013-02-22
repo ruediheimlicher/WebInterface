@@ -244,7 +244,16 @@ aktiv=derStatus;
 	[self setNeedsDisplay:YES];
 }
 
+- (void)stundenplanzeigen
+{
+   printf("wert:\t");
+   for (int k=0;k<24;k++)
+   {
+      printf(" %d\t",[[lastONArray objectAtIndex:k]intValue]);
+   }
+   printf("\n");
 
+}
 
 
 - (int)StundenarraywertVonStunde:(int)dieStunde forKey:(NSString*)derKey
@@ -555,8 +564,8 @@ NSMutableDictionary* tempDic=(NSMutableDictionary*)[StundenArray objectAtIndex:d
 	[NotificationDic setObject:[NSNumber numberWithInt:objekt] forKey:@"objekt"];//
 	[NotificationDic setObject:[(rTagplanbalken*)[sender superview]Titel] forKey:@"titel"];//
 	[NotificationDic setObject:[NSNumber numberWithInt:1] forKey:@"permanent"];//
-   [NotificationDic setObject:[NSNumber numberWithInt:typ] forKey:@"typ"];//
-	//NSLog(@"Tagplanbalken WriteTasteAktion Typ: %d",typ);
+   [NotificationDic setObject:[NSNumber numberWithInt:tagbalkentyp] forKey:@"tagbalkentyp"];//
+	//NSLog(@"Tagplanbalken WriteTasteAktion Typ: %d",tagbalkentyp);
 	int modKey=0;
 	//int all=-1;
 	if(([[NSApp currentEvent] modifierFlags] & NSAlternateKeyMask)  != 0)
@@ -677,7 +686,7 @@ return TagbalkenTyp;
    return objekt;
 }
 
-- (int)typ
+- (int)tagbalkentyp
 {
    return TagbalkenTyp;
 }
@@ -699,7 +708,7 @@ return StundenArray;
 
 - (NSArray*)StundenByteArray
 {
-   //NSLog(@"TagplanBalken typ: %d StundenArray: %@",TagbalkenTyp,[StundenArray description]);
+   //NSLog(@"TagplanBalken tagbalkentyp: %d StundenArray: %@",TagbalkenTyp,[StundenArray description]);
 	NSMutableArray* tempByteArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
 	int i, k=3;
 	uint8_t Stundenbyte=0;
@@ -981,7 +990,6 @@ return tag;
 		[NotificationDic setObject:[NSNumber numberWithInt:all] forKey:@"on"];	// code fuer All
 		[NotificationDic setObject:[NSNumber numberWithInt:4] forKey:@"feld"]; // All-Feld
 		
-	
 	}
 	
 	
@@ -1156,6 +1164,8 @@ return tag;
 	
 	if (MausIN)
 	{
+      NSLog(@"m.down h: %d ON: %d",[[NotificationDic objectForKey:@"stunde" ] intValue], [[NotificationDic objectForKey:@"on" ] intValue]);
+
       NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
       [nc postNotificationName:@"Tagplancode" object:self userInfo:NotificationDic];
 	

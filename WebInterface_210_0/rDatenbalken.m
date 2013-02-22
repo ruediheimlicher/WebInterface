@@ -21,7 +21,7 @@
 		RandU=2;
 		aktiv=1;
 		changed=0;
-		TagbalkenTyp=0;
+		TagbalkenTyp=9;
 		if (StundenArray==NULL)
 		{
 			StundenArray=[[NSMutableArray alloc]initWithCapacity:0];
@@ -386,7 +386,7 @@ NSMutableDictionary* tempDic=(NSMutableDictionary*)[StundenArray objectAtIndex:d
       //Textfeld verlassen
       NSDictionary* EditNotificationDic = [NSDictionary dictionaryWithObject:[NSNumber numberWithInt:edit] forKey:@"edit"];
       NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
-      //NSLog(@"Tagplanbalken AllTasteAktion edit: %d",edit);
+      NSLog(@"Tagplanbalken AllTasteAktion edit: %d",edit);
       [nc postNotificationName:@"edit" object:self userInfo:EditNotificationDic];
       
       
@@ -404,7 +404,8 @@ NSMutableDictionary* tempDic=(NSMutableDictionary*)[StundenArray objectAtIndex:d
       [NotificationDic setObject:[NSNumber numberWithInt:raum] forKey:@"raum"];
       [NotificationDic setObject:Titel forKey:@"titel"];
       [NotificationDic setObject:[NSNumber numberWithInt:objekt] forKey:@"objekt"];
-      
+      [NotificationDic setObject:[NSNumber numberWithInt:TagbalkenTyp] forKey:@"tagbalkentyp"];
+
       int modKey=0;
       int all=-1;
       if(([[NSApp currentEvent] modifierFlags] & NSAlternateKeyMask)  != 0)

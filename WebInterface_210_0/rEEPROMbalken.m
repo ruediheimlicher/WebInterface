@@ -15,7 +15,7 @@
     self = [super initWithFrame:frame];
     if (self) 
 	{
-        typ=0;
+      //  typ=0;
 		RandL=100;
 		RandR=20;
 		RandU=2;

@@ -15,7 +15,7 @@
     self = [super initWithFrame:frame];
     if (self) 
 	{
-      typ=0;
+      //typ=0;
 		RandL=60;
 		RandR=20;
 		RandU=2;
@@ -186,7 +186,7 @@ mark=tagwert;
 - (void)setTagbalkenTyp:(int)derTyp
 {
 	TagbalkenTyp=derTyp;
-	typ = derTyp;
+	//typ = derTyp;
 }
 
 
@@ -564,8 +564,8 @@ NSMutableDictionary* tempDic=(NSMutableDictionary*)[StundenArray objectAtIndex:d
 	[NotificationDic setObject:[NSNumber numberWithInt:objekt] forKey:@"objekt"];//
 	[NotificationDic setObject:[(rTagplanbalken*)[sender superview]Titel] forKey:@"titel"];//
 	[NotificationDic setObject:[NSNumber numberWithInt:1] forKey:@"permanent"];//
-   [NotificationDic setObject:[NSNumber numberWithInt:tagbalkentyp] forKey:@"tagbalkentyp"];//
-	NSLog(@"Tagplanbalken WriteTasteAktion tagbalkentyp: %d typ: %d",tagbalkentyp,typ);
+   [NotificationDic setObject:[NSNumber numberWithInt:TagbalkenTyp] forKey:@"tagbalkentyp"];//
+	//NSLog(@"Tagplanbalken WriteTasteAktion tagbalkentyp: %d typ: %d",tagbalkentyp,typ);
 	int modKey=0;
 	//int all=-1;
 	if(([[NSApp currentEvent] modifierFlags] & NSAlternateKeyMask)  != 0)
@@ -592,7 +592,7 @@ NSMutableDictionary* tempDic=(NSMutableDictionary*)[StundenArray objectAtIndex:d
 		[NotificationDic setObject:[StundenArray valueForKey:@"code"] forKey:@"stundenarray"];
 		[NotificationDic setObject:[self StundenByteArray] forKey:@"stundenbytearray"];
 		
-		NSLog(@"WriteTasteAktion  Standard: %@",[NotificationDic description]);
+		//NSLog(@"WriteTasteAktion  Standard Notific: %@",[NotificationDic description]);
       //NSLog(@"WriteTasteAktion  Standard: %@",[[self StundenByteArray] description]);
 			
 		// Notific an Wochenplan  und von dort an WriteStandardaktion in AVRClient schicken
@@ -1164,7 +1164,7 @@ return tag;
 	
 	if (MausIN)
 	{
-      NSLog(@"m.down h: %d ON: %d",[[NotificationDic objectForKey:@"stunde" ] intValue], [[NotificationDic objectForKey:@"on" ] intValue]);
+      //NSLog(@"TagplanBalken m.down h: %d ON: %d",[[NotificationDic objectForKey:@"stunde" ] intValue], [[NotificationDic objectForKey:@"on" ] intValue]);
 
       NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
       [nc postNotificationName:@"Tagplancode" object:self userInfo:NotificationDic];

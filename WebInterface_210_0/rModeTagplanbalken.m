@@ -15,7 +15,7 @@
     self = [super initWithFrame:frame];
     if (self) 
 	{
-      typ=1;
+      //typ=1;
 		RandL=60;
 		RandR=20;
 		RandU=2;
@@ -894,7 +894,7 @@ key "modenacht"	Einschaltzeiten Mode Nacht		0: off						1: reduziert				2: voll
 	}//for i
 	if (MausIN)
 	{
-      NSLog(@"m.down h: %d ON: %d",[[NotificationDic objectForKey:@"stunde" ] intValue], [[NotificationDic objectForKey:@"on" ] intValue]);
+      //NSLog(@"ModeTagplanBalken m.down h: %d ON: %d",[[NotificationDic objectForKey:@"stunde" ] intValue], [[NotificationDic objectForKey:@"on" ] intValue]);
 	NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
 	[nc postNotificationName:@"Tagplancode" object:self userInfo:NotificationDic];
 	}

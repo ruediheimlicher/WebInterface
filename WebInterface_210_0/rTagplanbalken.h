@@ -19,7 +19,7 @@ NSString*			WochentagString;
 
 int					raum;
 int					objekt;
-int					tagbalkentyp;
+//int					tagbalkentyp;
 int					wochentag;
 int               tag;
 int					mark;
@@ -27,7 +27,7 @@ int					Hoehe, Breite, Balkenbreite;
 int					Elementbreite,  Elementhoehe, RandL, RandR, RandU;
 int					aktiv;
 int					changed;
-int					typ;
+//int					typ;
 
 int					TagbalkenTyp;
 //int					AnzPlaene;

@@ -1095,7 +1095,7 @@ if (Webserver_busy)
                           [writeDic setObject:[NSNumber numberWithInt:0] forKey:@"mod"];
                           
                           
-                          //NSLog(@"k: %d writeDic: %@ ",k,[writeDic description]);
+                          NSLog(@"k: %d writeDic: %@ ",k,[writeDic description]);
                           
                           [EEPROMWriteArray addObject:writeDic];
                        }
@@ -1518,8 +1518,6 @@ if (Webserver_busy)
    
    NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
    [nc postNotificationName:@"EEPROMUpdate" object:self userInfo:NotificationDic];
-
-
 }
 
 - (void)HomeDataUpdateAktion:(NSNotification*)note

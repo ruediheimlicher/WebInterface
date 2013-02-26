@@ -15,7 +15,7 @@
     self = [super initWithFrame:frame];
     if (self) 
 	{
-      typ=9;
+      //typ=9;
 		RandL=60;
 		RandR=20;
 		RandU=2;
@@ -199,7 +199,7 @@ mark=tagwert;
 - (void)setTagbalkenTyp:(int)derTyp
 {
 	TagbalkenTyp=derTyp;
-	typ = derTyp;
+	//typ = derTyp;
 }
 
 
@@ -545,11 +545,12 @@ NSMutableDictionary* tempDic=(NSMutableDictionary*)[StundenArray objectAtIndex:d
 	[NotificationDic setObject:[NSNumber numberWithInt:objekt] forKey:@"objekt"];//
 	[NotificationDic setObject:[(rDatenbalken*)[sender superview]Titel] forKey:@"titel"];//
 	[NotificationDic setObject:[NSNumber numberWithInt:1] forKey:@"permanent"];//
-   [NotificationDic setObject:[NSNumber numberWithInt:typ] forKey:@"typ"];//
+   //[NotificationDic setObject:[NSNumber numberWithInt:typ] forKey:@"typ"];//
    [NotificationDic setObject:[NSNumber numberWithInt:TagbalkenTyp] forKey:@"tagbalkentyp"];//
 	//NSLog(@"Tagplanbalken WriteTasteAktion Typ: %d",typ);
 	int modKey=0;
 	//int all=-1;
+   
 	if(([[NSApp currentEvent] modifierFlags] & NSAlternateKeyMask)  != 0)
 	{
 		//NSLog(@"WriteTasteAktion Alt-Taste");

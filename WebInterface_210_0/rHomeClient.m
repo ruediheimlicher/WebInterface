@@ -714,6 +714,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
    
    WebTask = idle;
    
+   //NSLog(@"HomeClientWriteStandardAktion tagbalkentyp aus userinfo: %@", [[note userInfo]objectForKey:@"tagbalkentyp"]);
    [SendEEPROMDataDic setObject:[[note userInfo]objectForKey:@"titel"] forKey:@"titel"];
    [SendEEPROMDataDic setObject:[[note userInfo]objectForKey:@"tagbalkentyp"] forKey:@"tagbalkentyp"];
 	
@@ -882,7 +883,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 		//NSLog(@"HomeClientWriteStandardAktion WriteDataSuffix ganz: %@",WriteDataSuffix);
 	}
    NSString* HomeClientURLString =[NSString stringWithFormat:@"%@/twi?%@",HomeCentralURL, WriteDataSuffix];
-   NSLog(@"HomeClientWriteStandardAktion HomeClientURLString: %@",HomeClientURLString);
+   //NSLog(@"HomeClientWriteStandardAktion HomeClientURLString: %@",HomeClientURLString);
    NSURL *URL = [NSURL URLWithString:HomeClientURLString];
    
    [self loadURL:URL];
@@ -1218,7 +1219,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
                                    [EEPROMDataDic objectForKey:@"tagbalkentyp"]
                                    
                                    ];
-            //NSLog(@"URLString: %@",URLString );
+            NSLog(@"sendEEPROMDataMitDic URLString: \n%@",URLString );
             
             NSURL *URL = [NSURL URLWithString:URLString];
             //NSLog(@"sendEEPROM URL: %@",URL );

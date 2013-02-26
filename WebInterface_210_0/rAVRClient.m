@@ -905,8 +905,8 @@ if (Webserver_busy)
       int objekt = [[[updateArray objectAtIndex:index]objectForKey:@"objekt"]intValue];
       int wochentag = [[[updateArray objectAtIndex:index]objectForKey:@"wochentag"]intValue];
       NSMutableArray* stundenplanarray  = [NSMutableArray arrayWithArray:[[updateArray objectAtIndex:index]objectForKey:@"stundenplanarray"]];
-      NSLog(@"updatePListMitDicArray index: %d stundenplanarray: %@",index,[stundenplanarray description]);
-      
+      //NSLog(@"updatePListMitDicArray index: %d stundenplanarray: %@",index,[stundenplanarray description]);
+      [self stundenplanzeigen:stundenplanarray];
       [self setStundenplanArray:stundenplanarray forWochentag:wochentag forObjekt:objekt forRaum:raum];
       NSArray* subViews = [[[self ScrollerVonRaum:raum]documentView ]subviews];
       //NSLog(@"updatePListMitDicArray index: %d subViews: %@",index,[subViews description]);
@@ -2622,4 +2622,16 @@ if (Webserver_busy)
 {
 return WriteWoche_busy;
 }
+
+- (void)stundenplanzeigen:(NSArray*)stundenplan
+{
+   printf("wert: \t");
+   for (int k=0;k<24;k++)
+   {
+      printf(" %d\t",[[stundenplan objectAtIndex:k]intValue]);
+   }
+   printf("\n");
+   
+}
+
 @end

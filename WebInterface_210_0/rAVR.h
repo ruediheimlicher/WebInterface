@@ -216,4 +216,5 @@ NSTimer*                EEPROMUpdateTimer;
 - (IBAction)reportFixTaste:(id)sender;
 - (void)updateEEPROMMitDicArray:(NSArray*)updateArry;
 - (void)updatePListMitDicArray:(NSArray*)updateArry;
+- (void)stundenplanzeigen:(NSArray*)stundenplan;
 @end

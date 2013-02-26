@@ -67,7 +67,7 @@
 	//	NSMutableArray* aktivObjektArray=[[NSMutableArray alloc]initWithCapacity:0];
 	// Tagplanarray vom Montag, zum Auffinden der aktiven Tagplaene
 	NSArray* tempMontagplanArray=[[derWochenplanArray objectAtIndex:0]objectForKey:@"tagplanarray"];
-	printf("raum: %d\n",Raum);
+	//printf("raum: %d\n",Raum);
    for (obj=0;obj<8;obj++)
 	{
 		if ([[[tempMontagplanArray objectAtIndex:obj]objectForKey:@"aktiv"]intValue]) // Tagplan am ersten Wochentag ist aktiv
@@ -123,8 +123,8 @@
 				if (obj==1 )
 				{
                //NSLog(@"tempTagplanArray: %@",[[tempTagplanArray objectAtIndex:obj]  description]);
-               printf("wd: %d\t",wd);
-               [self stundenplanzeigen:[[tempTagplanArray objectAtIndex:obj]objectForKey:@"stundenplanarray"]];
+               //printf("wd: %d\t",wd);
+               //[self stundenplanzeigen:[[tempTagplanArray objectAtIndex:obj]objectForKey:@"stundenplanarray"]];
 					//NSLog(@"tempaktivObjektDic: %@",[tempaktivObjektDic  description]);
 				}
 				[aktivStundenplanDicArray addObject:tempaktivObjektDic];
@@ -199,6 +199,7 @@
 			if ([[[aktivTagplanDicArray objectAtIndex:wochentag]objectAtIndex:objektbalken]objectForKey:@"tagbalkentyp"])
 			{
 			
+            
 			}
 			else
 			{

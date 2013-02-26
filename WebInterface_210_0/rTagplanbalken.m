@@ -565,7 +565,7 @@ NSMutableDictionary* tempDic=(NSMutableDictionary*)[StundenArray objectAtIndex:d
 	[NotificationDic setObject:[(rTagplanbalken*)[sender superview]Titel] forKey:@"titel"];//
 	[NotificationDic setObject:[NSNumber numberWithInt:1] forKey:@"permanent"];//
    [NotificationDic setObject:[NSNumber numberWithInt:tagbalkentyp] forKey:@"tagbalkentyp"];//
-	//NSLog(@"Tagplanbalken WriteTasteAktion Typ: %d",tagbalkentyp);
+	NSLog(@"Tagplanbalken WriteTasteAktion tagbalkentyp: %d typ: %d",tagbalkentyp,typ);
 	int modKey=0;
 	//int all=-1;
 	if(([[NSApp currentEvent] modifierFlags] & NSAlternateKeyMask)  != 0)

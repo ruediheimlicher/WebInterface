@@ -21,7 +21,7 @@
 		RandU=2;
 		aktiv=1;
 		changed=0;
-		TagbalkenTyp=0;
+		TagbalkenTyp=9;
 		if (StundenArray==NULL)
 		{
 			StundenArray=[[NSMutableArray alloc]initWithCapacity:0];

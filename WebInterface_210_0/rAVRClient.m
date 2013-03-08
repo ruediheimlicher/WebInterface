@@ -924,7 +924,7 @@ if (Webserver_busy)
           //NSLog(@"subViews k: %d raum: %d wochentag: %d objekt: %d",k,raum,wochentag,objekt);
          if ( [[subViews objectAtIndex:k ]isKindOfClass:[rTagplanbalken class]] && ([[subViews objectAtIndex:k ]raum]==raum ) && ([[subViews objectAtIndex:k ]wochentag]==wochentag ) && ([[subViews objectAtIndex:k ]objekt] == objekt))
          {
-            NSLog(@"**subViews k: %d subview %@",k,[[subViews objectAtIndex:k ]Titel]);
+            //NSLog(@"**subViews k: %d subview %@",k,[[subViews objectAtIndex:k ]Titel]);
             [[subViews objectAtIndex:k ]setStundenArray:stundenplanarray forKey:@"code"];
             
             [[subViews objectAtIndex:k ]setNeedsDisplay:YES];

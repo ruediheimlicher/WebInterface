@@ -1777,7 +1777,7 @@ return returnInt;
 }
 - (IBAction)reportObjektPop:(id)sender
 {
-   NSLog(@"reportObjektPop");
+   //NSLog(@"reportObjektPop");
 }
 
 

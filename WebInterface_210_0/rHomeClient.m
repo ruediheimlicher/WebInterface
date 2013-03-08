@@ -1526,7 +1526,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 	//NSLog(@"sender: %@",[sender description]);
 	// Only report feedback for the main frame.
 	NSString* HTML_Inhalt=[self dataRepresentationOfType:HTMLDocumentType];
-	//NSLog(@"didFinishLoadForFrame Antwort: \nHTML_Inhalt: \t%@\n",HTML_Inhalt);
+	NSLog(@"didFinishLoadForFrame Antwort: \nHTML_Inhalt: \t%@\n",HTML_Inhalt);
 	
 	NSRange CheckRange;
 	NSString* Code_String= @"okcode=";
@@ -1712,7 +1712,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 		
 	} // if okcode
 	
-	// 	
+	// Data lokalisieren	
 		NSString* Data_String= @"data"; 
 	
 		{

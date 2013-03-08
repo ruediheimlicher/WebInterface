@@ -105,13 +105,13 @@
 			NSMutableDictionary* tempaktivObjektDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
 			if ((derRaum == 0)&&(wd==0))
 			{
-			//NSLog(@"tempTagplanArray: %@",[tempTagplanArray description]);
+            //NSLog(@"tempTagplanArray: %@",[tempTagplanArray description]);
 			}
 			[tempaktivObjektDic setObject:[[tempTagplanArray objectAtIndex:obj]objectForKey:@"tagbalkentyp"] forKey:@"tagbalkentyp"];
 			//NSLog(@"wd: %d obj: %d tagbalkentyp: %d",wd, obj, [[[tempTagplanArray objectAtIndex:obj]objectForKey:@"tagbalkentyp"]intValue]);
 			
 			if ([aktivSet containsIndex:obj])
-			{	
+			{
 				//Dic mit Namen und Stundenplanarray eines aktiven Objekts
 				
 				// Stundenplanarray anfuegen

@@ -139,6 +139,7 @@ return self;
 	//NSLog(@"Elementbreite: %d Elementhoehe: %d ",Elementbreite, Elementhoehe);
 	for (i=0;i<24;i++)
 	{
+      /*
 		NSMutableDictionary* tempElementDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 		NSRect Elementfeld=NSMakeRect(Ecke.x+i*Elementbreite,Ecke.y,Elementbreite-3, Elementhoehe-2);
 		//NSLog(@"WS SetTagPlan i: %d Eckex: %2.2f b: %2.2f",i,Elementfeld.origin.x,Elementfeld.size.width);
@@ -154,7 +155,41 @@ return self;
 		[tempElementDic setObject:[NSNumber numberWithInt:i%4] forKey:@"code"];
 		[StundenArray addObject:tempElementDic];
 		//	NSLog(@"Tagplanbalken init i: %d ElementDic: %@",i,[tempElementDic description]);
-	}//for i
+	*/
+      NSMutableDictionary* tempElementDic=[[NSMutableDictionary alloc]initWithCapacity:0];
+		NSRect Elementfeld=NSMakeRect(Ecke.x+i*Elementbreite,Ecke.y,Elementbreite-3, Elementhoehe-2);
+		//NSLog(@"WS SetTagPlan i: %d Eckex: %2.2f b: %2.2f",i,Elementfeld.origin.x,Elementfeld.size.width);
+		//		[NSBezierPath strokeRect:Elementfeld];
+		NSView* ElementView=[[NSView alloc] initWithFrame:Elementfeld];
+		[ElementView setAutoresizesSubviews:NO];
+		[self addSubview:ElementView];
+		//		NSLog(@"ElementView: x: %2.2f y: %2.2f",[ElementView frame].origin.x,[ElementView bounds].origin.y);
+		//		[tempElementDic setObject:ElementView forKey:@"elementrahmen"];
+		[tempElementDic setObject:ElementView forKey:@"elementrahmen"];
+		[tempElementDic setObject:[NSNumber numberWithInt:i] forKey:@"elementnummer"];
+		
+      //		[tempElementDic setObject:[NSNumber numberWithInt:i%4] forKey:@"code"];
+		[StundenArray addObject:tempElementDic];
+		//	NSLog(@"Tagplanbalken init i: %d ElementDic: %@",i,[tempElementDic description]);
+		
+		NSRect StdFeldU=[[[StundenArray objectAtIndex:i]objectForKey:@"elementrahmen"]frame];
+		
+		StdFeldU.size.height = 8;
+		//StdFeldU.origin.y+=8;
+		rTaste* StundenTaste=[[[rTaste alloc]initWithFrame:StdFeldU]retain];
+		[StundenTaste setButtonType:NSMomentaryLight];
+		[StundenTaste setTag:i];
+      
+		[StundenTaste setTarget:self];
+		[StundenTaste setBordered:YES];
+		[[StundenTaste cell]setBackgroundColor:[NSColor grayColor]];
+		[[StundenTaste cell]setShowsStateBy:NSPushInCellMask];
+		[StundenTaste setTitle:@""];
+		[StundenTaste setAction:@selector(StundenTasteAktion:)];
+		[self addSubview:StundenTaste];
+
+   
+   }//for i
 	NSRect AllFeld=[[[StundenArray objectAtIndex:23]objectForKey:@"elementrahmen"]frame];
 	AllFeld.origin.x+=Elementbreite+2;
 	//AllFeld.origin.y+=8;
@@ -234,7 +269,7 @@ return self;
 			{
 			//NSLog(@"setTagplan: code: %d  red",tempCode);
 
-			tempCode--;
+			//tempCode--; // auskomm 8.3.13: Wert ist 0 oder 3
 			}
 			[tempElementDic setObject:[NSNumber numberWithInt:tempCode] forKey:@"code"];
 			
@@ -261,6 +296,7 @@ return self;
 
 - (int)StundenarraywertVonStunde:(int)dieStunde forKey:(NSString*)derKey
 {
+   NSLog(@"StundenarraywertVonStunde: %d",dieStunde);
 	NSDictionary* tempDic=[StundenArray objectAtIndex:dieStunde];
 	if (tempDic && [tempDic objectForKey:derKey])
 	{
@@ -275,6 +311,98 @@ return self;
 
 - (void)StundenTasteAktion:(NSButton*)sender
 {
+   {
+      NSLog(@"StundenTasteAktion tag: %d",[sender tag]);
+      //NSLog(@"StundenTasteAktion: %d", [(rTagplanbalken*)[sender superview]Wochentag]);
+      //NSLog(@"StundenTasteAktion: %d", [(rTagplanbalken*)[sender superview]Raum]);
+      //NSLog(@"StundenTasteAktion: %d", [(rTagplanbalken*)[sender superview]Objekt]);
+      //NSLog(@"StundenTasteAktion: %@", [(rTagplanbalken*)[sender superview]Titel]);
+      NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+      [NotificationDic setObject:[NSNumber numberWithInt:wochentag] forKey:@"wochentag"];
+      [NotificationDic setObject:lastONArray forKey:@"lastonarray"];
+      
+      [NotificationDic setObject:[NSNumber numberWithInt:raum] forKey:@"raum"];
+      [NotificationDic setObject:Titel forKey:@"titel"];
+      [NotificationDic setObject:[NSNumber numberWithInt:objekt] forKey:@"objekt"];
+      //NSLog(@"StundentastenAktion start lastONArray: %@",[lastONArray description]);
+      int modKey=0;
+      int all=-1;
+      if(([[NSApp currentEvent] modifierFlags] & NSAlternateKeyMask)  != 0)
+      {
+         NSLog(@"StundenTasteAktion Alt");
+         modKey=2;
+         [NotificationDic setObject:@"alt" forKey:@"mod"];
+         [NotificationDic setObject:[NSNumber numberWithInt:[sender tag]] forKey:@"stunde"];
+         //[NotificationDic setObject:[NSNumber numberWithInt:3] forKey:@"on"];
+         [NotificationDic setObject:[NSNumber numberWithInt:3] forKey:@"feld"];// Feld U
+         
+         NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
+         NSLog(@"StundenTasteAktion Tagplan modifier");
+         //			[nc postNotificationName:@"Modifier" object:self userInfo:NotificationDic];
+         //			modKey=0;
+         
+         
+      }
+      //	else
+      {
+         //NSLog(@"StundenTasteAktion Standard");
+         
+         int ON=[[[StundenArray objectAtIndex:[sender tag]]objectForKey:@"code"]intValue];
+         
+         NSLog(@"mouse in Stundentaste:	in Stunde: %d 		ON vor: %d",[sender tag], ON);
+         switch (ON)
+         {
+            case 0://	ganze Stunde ON setzen
+               ON=3;//ganze Stunde ON
+               break;
+               
+               
+            case 1://	Kessel in der ersten halben Stunde schon ON
+            case 2://	Kessel in der zweiten halben Stunde schon ON
+            case 3:// Kessel in der ganzen Stunde schon ON
+               ON=0;//ganze Stunde OFF
+               break;
+               
+         }
+         NSLog(@"mouse in Stundentaste:	in Stunde: %d 		ON nach: %d",[sender tag], ON);
+         [NotificationDic setObject:[NSNumber numberWithInt:[sender tag]] forKey:@"stunde"];
+         [NotificationDic setObject:[NSNumber numberWithInt:ON] forKey:@"on"];
+         [NotificationDic setObject:[NSNumber numberWithInt:3] forKey:@"feld"];// Feld U
+         
+         if (modKey==2)//alt
+         {
+            [NotificationDic setObject:@"alt" forKey:@"mod"];
+            NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
+            //NSLog(@"Tagplan mofdifier StdFeldU");
+            [nc postNotificationName:@"Modifier" object:self userInfo:NotificationDic];
+            modKey=0;
+            
+            //return;
+         }
+         
+         //NSLog(@"Tagplanbalken mouseDow: Stunde: %d code: %d",i,ON);
+         [[StundenArray objectAtIndex:[sender tag]]setObject:[NSNumber numberWithInt:ON]forKey:@"code"];
+         //NSLog(@"StundenArray: %@",[StundenArray description]);
+         //[self setNeedsDisplay:YES];
+         
+         //NSLog(@"all: %d code: %@",all, [[StundenArray valueForKey:@"code"]description]);
+         NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
+         [nc postNotificationName:@"Tagplancode" object:self userInfo:NotificationDic];
+         
+         
+         if (all<0)//kein Klick auf ALL-Taste, IST-Zustand speichern
+         {
+            
+            lastONArray=[[StundenArray valueForKey:@"code"]copy];
+         }
+         NSLog(@"StundentastenAktion end  lastONArray: %@",[lastONArray description]);
+         
+         [self setNeedsDisplay:YES];
+         
+      }//kein Alt
+      
+   }
+   /*
 	//NSLog(@"StundenTasteAktion tag: %d",[sender tag]);
 	//NSLog(@"StundenTasteAktion: %d", [(rTagplanbalken*)[sender superview]Wochentag]);
 	//NSLog(@"StundenTasteAktion: %d", [(rTagplanbalken*)[sender superview]Raum]);
@@ -365,7 +493,7 @@ return self;
 		[self setNeedsDisplay:YES];
 		
 	}//kein Alt
-	
+	*/
 }
 
 - (void)setStundenarraywert:(int)derWert vonStunde:(int)dieStunde forKey:(NSString*)derKey
@@ -380,9 +508,10 @@ NSMutableDictionary* tempDic=(NSMutableDictionary*)[StundenArray objectAtIndex:d
 
 }
 
+
 - (void)setStundenArray:(NSArray*)derStundenArray forKey:(NSString*)derKey
 {
-	//NSLog(@"Mode setStundenArray Key: %@ StundenArray: %@",derKey, [derStundenArray description]);
+	NSLog(@"Mode setStundenArray Key: %@ StundenArray: %@",derKey, [derStundenArray description]);
 	
 	int i;
 	for (i=0;i<[derStundenArray count];i++)
@@ -543,7 +672,126 @@ NSMutableDictionary* tempDic=(NSMutableDictionary*)[StundenArray objectAtIndex:d
 
 - (void)drawRect:(NSRect)dasFeld 
 {
-	
+   {
+      
+      NSArray* Wochentage=[NSArray arrayWithObjects:@"MO",@"DI",@"MI",@"DO",@"FR",@"SA",@"SO",nil];
+      [[NSColor blackColor]set];
+      //[NSBezierPath strokeRect:dasFeld];
+      
+      float vargray=0.8;
+      //NSLog(@"sinus: %2.2f",varRed);
+      NSColor* tempGrayColor=[NSColor colorWithCalibratedRed:vargray green: vargray blue: vargray alpha:0.8];
+      [tempGrayColor set];
+      [NSBezierPath fillRect:dasFeld];
+      NSFont* StundenFont=[NSFont fontWithName:@"Helvetica" size: 9];
+      NSDictionary* StundenAttrs=[NSDictionary dictionaryWithObject:StundenFont forKey:NSFontAttributeName];
+      NSFont* TagFont=[NSFont fontWithName:@"Helvetica" size: 14];
+      NSDictionary* TagAttrs=[NSDictionary dictionaryWithObject:TagFont forKey:NSFontAttributeName];
+      NSPoint TagPunkt=NSMakePoint(0.0,0.0);
+      NSFont* TitelFont=[NSFont fontWithName:@"Helvetica" size: 9];
+      NSDictionary* TitelAttrs=[NSDictionary dictionaryWithObject:TitelFont forKey:NSFontAttributeName];
+      
+      //
+      TagPunkt.x+=6;
+      TagPunkt.y+=Elementhoehe*0.72;
+      //NSLog(@"Tagplanbalken drawRect: Titel: %@",Titel);
+      [Titel drawAtPoint:TagPunkt withAttributes:TitelAttrs];
+      
+      
+      //NSLog(@"Tag: %d Tagpunkt x: %2.2f  y: %2.2f",tag, TagPunkt.x, TagPunkt.y);
+      //	[[Wochentage objectAtIndex:tag] drawAtPoint:TagPunkt withAttributes:TagAttrs];
+      
+      NSRect AllFeld=[[[StundenArray objectAtIndex:23]objectForKey:@"elementrahmen"]frame];
+      AllFeld.origin.x+=Elementbreite+2;
+      //AllFeld.origin.y+=8;
+      AllFeld.size.height-=8;
+      AllFeld.size.width/=1.8;
+      [[NSColor grayColor]set];
+      //	[NSBezierPath fillRect:AllFeld];
+      //	[NSBezierPath strokeRect:AllFeld];
+      int i;
+      for (i=0;i<24;i++)
+      {
+         //NSLog(@"WS drawRect: y %2.2f",[[[StundenArray objectAtIndex:i]objectForKey:@"elementrahmen"]frame].origin.y);
+         NSRect StdFeld=[[[StundenArray objectAtIndex:i]objectForKey:@"elementrahmen"]frame];
+         
+         NSString* Stunde=[[NSNumber numberWithInt:i]stringValue];
+         NSPoint p=StdFeld.origin;
+         StdFeld.size.height-=10;
+         p.y+=StdFeld.size.height;
+         p.x-=4;
+         if (i>9) // zweistellig
+            p.x-=4;
+         [Stunde drawAtPoint:p withAttributes:StundenAttrs];
+         if (i==23)
+         {
+            Stunde=[[NSNumber numberWithInt:24]stringValue];
+            p.x+=Elementbreite;
+            [Stunde drawAtPoint:p withAttributes:StundenAttrs];
+         }
+         [[NSColor blueColor]set];
+         StdFeld.size.height-=10;
+         StdFeld.origin.y+=10;
+         //NSLog(@"i: %d Eckex: %2.2f h: %2.2f b: %2.2f",i,StdFeld.origin.x,StdFeld.size.height,StdFeld.size.width);
+    //     [NSBezierPath fillRect:StdFeld];
+         
+         NSRect StdFeldL=StdFeld;
+         //StdFeldL.size.width/=2;
+         StdFeldL.size.width-=2;
+         StdFeldL.origin.x+=1;
+         
+         [[NSColor blueColor]set];
+         [NSBezierPath strokeRect:StdFeldL];
+         
+         NSRect StdFeldR=StdFeld;
+         StdFeldR.origin.x+=(StdFeld.size.width/2)+1;
+         StdFeldR.size.width/=2;
+         StdFeldR.size.width-=2;
+         
+         [[NSColor blueColor]set];
+         //[NSBezierPath strokeRect:StdFeldR];
+         
+         
+         NSRect StdFeldU=StdFeld;
+         StdFeldU.size.height=5;
+         StdFeldU.origin.y-=8;
+         [[NSColor grayColor]set];
+         //		[NSBezierPath fillRect:StdFeldU];
+         
+         int ON=[[[StundenArray objectAtIndex:i]objectForKey:@"code"]intValue];
+         switch (ON)
+         {
+            case 0://ganze Stunde OFF
+               [[NSColor whiteColor]set];
+               [NSBezierPath fillRect:StdFeldL];
+              // [NSBezierPath fillRect:StdFeldR];
+               
+               break;
+            case 2://erste halbe Stunde ON
+               [[NSColor redColor]set];
+               [NSBezierPath fillRect:StdFeldL];
+             //  [[NSColor whiteColor]set];
+             //  [NSBezierPath fillRect:StdFeldR];
+               
+               
+               break;
+            case 1://zweite halbe Stunde ON
+              // [[NSColor redColor]set];
+              // [NSBezierPath fillRect:StdFeldR];
+               [[NSColor whiteColor]set];
+               [NSBezierPath fillRect:StdFeldL];
+               
+               break;
+            case 3://ganze Stunde ON
+               [[NSColor redColor]set];
+               [NSBezierPath fillRect:StdFeldL];
+             //  [NSBezierPath fillRect:StdFeldR];
+               
+               break;
+         }
+      }//for i
+   }
+	/*
    // NSArray* Wochentage=[NSArray arrayWithObjects:@"MO",@"DI",@"MI",@"DO",@"FR",@"SA",@"SO",nil];
 	[[NSColor blackColor]set];
 	//[NSBezierPath strokeRect:dasFeld];
@@ -656,11 +904,12 @@ NSMutableDictionary* tempDic=(NSMutableDictionary*)[StundenArray objectAtIndex:d
 	
 	[[NSColor darkGrayColor] set];
 //	[NSBezierPath fillRect:AllFeld];
-	
+	*/
 }
 
 - (void)mouseDown:(NSEvent *)theEvent
 {
+   return;
 /*
 StundenArray:
 key "kessel"	Einschaltzeiten Kessel			2: erste halbe Stunde on	1:zweite halbe Stunde on	3:ganze Stunde on

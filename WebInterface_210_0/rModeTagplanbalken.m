@@ -265,11 +265,12 @@ return self;
 			NSMutableDictionary* tempElementDic=[StundenArray objectAtIndex:i];
 			//NSLog(@"Dic schon da fuer index: %d",i);
 			int tempCode=[[[derStundenArray objectAtIndex:i]objectForKey:@"code"]intValue];
-			if (tempCode >2)
+			if (tempCode ==1 || tempCode == 2)
 			{
 			//NSLog(@"setTagplan: code: %d  red",tempCode);
 
 			//tempCode--; // auskomm 8.3.13: Wert ist 0 oder 3
+            tempCode = 3;
 			}
 			[tempElementDic setObject:[NSNumber numberWithInt:tempCode] forKey:@"code"];
 			
@@ -395,7 +396,7 @@ return self;
             
             lastONArray=[[StundenArray valueForKey:@"code"]copy];
          }
-         NSLog(@"StundentastenAktion end  lastONArray: %@",[lastONArray description]);
+         //NSLog(@"StundentastenAktion end  lastONArray: %@",[lastONArray description]);
          
          [self setNeedsDisplay:YES];
          
@@ -598,18 +599,13 @@ NSMutableDictionary* tempDic=(NSMutableDictionary*)[StundenArray objectAtIndex:d
 			
 		}
 		
-		else if (sum==24)//alle sind red,
-		{
-			NSLog(@"Alle sind red: Alle auf voll");
-			all=2;
-		}
 		
-		else if (sum==48)//alle sind voll,
+		else if (sum==72)//alle sind voll,
 		{
 			NSLog(@"alle sind auf voll: Alle OFF");
 			all=0;
 		}
-		else if (sum && sum<48)//mehrere on: alle voll
+		else if (sum && sum<72)//mehrere on: alle voll
 		{
 			NSLog(@"mehrere on: alle red oder voll: IST speichern, alle auf voll");
 			
@@ -630,9 +626,10 @@ NSMutableDictionary* tempDic=(NSMutableDictionary*)[StundenArray objectAtIndex:d
                ON=0;
                break;
                
-				case 1://alle red schalten
+				
 				case 2://alle voll schalten
-					ON=2;
+            
+					ON=3;
                
 					break;
 				case 9://Wiederherstellen

@@ -536,9 +536,11 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
          //NSLog(@"TWIStatusAktion URL: %@",URL);
 			[self loadURL:URL];
          
+         if ([sendTimer isValid])
+         {
          [sendTimer invalidate];
          sendTimer = nil;
-         
+         }
 		
       }
 		else        // neuer Status ist 0
@@ -1662,7 +1664,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 		CheckRange = [HTML_Inhalt rangeOfString:EEPROM_Write_OK_String];
 		if (CheckRange.location < NSNotFound)
 		{
-			//NSLog(@"didFinishLoadForFrame: write+ ist da");
+			NSLog(@"didFinishLoadForFrame: write+ ist da");
 			[tempDataDic setObject:[NSNumber numberWithInt:1] forKey:@"writeok"];
 			[confirmTimer invalidate];
 			Webserver_busy=0;

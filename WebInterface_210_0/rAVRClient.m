@@ -813,7 +813,7 @@ if (Webserver_busy)
 		[Warnung setMessageText:[NSString stringWithFormat:@"%@",@"Homebus aktiv!"]];
 		
 		NSString* s1=@"Der Homebus muss deaktiviert sein, um auf das EEPROM zu schreiben.";
-		NSString* s2=@"";
+		NSString* s2=@"WriteStandardAktion";
 		NSString* InformationString=[NSString stringWithFormat:@"%@\n%@",s1,s2];
 		[Warnung setInformativeText:InformationString];
 		[Warnung setAlertStyle:NSWarningAlertStyle];
@@ -1006,7 +1006,7 @@ if (Webserver_busy)
     [Warnung setMessageText:[NSString stringWithFormat:@"%@",@"Homebus aktiv!"]];
     
     NSString* s1=@"Der Homebus muss deaktiviert sein, um auf das EEPROM zu schreiben.";
-    NSString* s2=@"";
+    NSString* s2=@"writeEEPROMWochenplan";
     NSString* InformationString=[NSString stringWithFormat:@"%@\n%@",s1,s2];
     [Warnung setInformativeText:InformationString];
     [Warnung setAlertStyle:NSWarningAlertStyle];
@@ -1127,7 +1127,7 @@ if (Webserver_busy)
 
 - (void)updateEEPROMMitDicArray:(NSArray*)updateArray
 {
-   NSLog(@"AVRClient UpdatePlan updateArray: %@",[updateArray description]);
+   //NSLog(@"AVRClient UpdatePlan updateArray: %@",[updateArray description]);
    NSString* AblaufString = @"Update für: ";
 
    
@@ -1191,8 +1191,6 @@ if (Webserver_busy)
       [writeEEPROMcounterfeld setIntValue:[[[note userInfo] objectForKey:@"ladeposition"]intValue] ];
    }
 }
-
-
 
 - (void)EEPROMWriteFertigAktion:(NSNotification*)note
 {
@@ -1304,7 +1302,7 @@ if (Webserver_busy)
 		[Warnung setMessageText:[NSString stringWithFormat:@"%@",@"Homebus aktiv!"]];
 		
 		NSString* s1=@"Der Homebus muss deaktiviert sein, um auf das EEPROM zu schreiben.";
-		NSString* s2=@"";
+		NSString* s2=@"WriteModifier";
 		NSString* InformationString=[NSString stringWithFormat:@"%@\n%@",s1,s2];
 		[Warnung setInformativeText:InformationString];
 		[Warnung setAlertStyle:NSWarningAlertStyle];
@@ -1917,7 +1915,10 @@ if (Webserver_busy)
       }
       //[self updateEEPROMMitDicArray:PListFixArray];
       NSLog(@"PListFixArray count: %u",(unsigned int)[PListFixArray count]);
+      NSLog(@"PListFixArray: %@",[PListFixArray description]);
+
       NSLog(@"HomeServerFixArray count: %u",(unsigned int)[HomeServerFixArray count]);
+      NSLog(@"HomeServerFixArray: %@",[HomeServerFixArray description]);
       
       if ([PListFixArray count])
       {
@@ -1951,6 +1952,7 @@ if (Webserver_busy)
       {
          NSLog(@"HomeServerFixArray count: %u",(unsigned int)[HomeServerFixArray count]);
          
+         
          //
          if ([TWIStatusTaste state])
           {
@@ -1963,7 +1965,7 @@ if (Webserver_busy)
           [Warnung setMessageText:[NSString stringWithFormat:@"%@",@"Homebus aktiv!"]];
           
           NSString* s1=@"Der Homebus muss deaktiviert sein, um auf das EEPROM zu schreiben.";
-          NSString* s2=@"";
+          NSString* s2=@"Fixtaste";
           NSString* InformationString=[NSString stringWithFormat:@"%@\n%@",s1,s2];
           [Warnung setInformativeText:InformationString];
           [Warnung setAlertStyle:NSWarningAlertStyle];

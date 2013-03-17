@@ -174,7 +174,7 @@ return self;
 		
 		NSRect StdFeldU=[[[StundenArray objectAtIndex:i]objectForKey:@"elementrahmen"]frame];
 		
-		StdFeldU.size.height = 8;
+		StdFeldU.size.height = 6;
 		//StdFeldU.origin.y+=8;
 		rTaste* StundenTaste=[[[rTaste alloc]initWithFrame:StdFeldU]retain];
 		[StundenTaste setButtonType:NSMomentaryLight];
@@ -727,8 +727,8 @@ NSMutableDictionary* tempDic=(NSMutableDictionary*)[StundenArray objectAtIndex:d
             [Stunde drawAtPoint:p withAttributes:StundenAttrs];
          }
          [[NSColor blueColor]set];
-         StdFeld.size.height-=10;
-         StdFeld.origin.y+=10;
+         StdFeld.size.height-=8;
+         StdFeld.origin.y+=8;
          //NSLog(@"i: %d Eckex: %2.2f h: %2.2f b: %2.2f",i,StdFeld.origin.x,StdFeld.size.height,StdFeld.size.width);
     //     [NSBezierPath fillRect:StdFeld];
          

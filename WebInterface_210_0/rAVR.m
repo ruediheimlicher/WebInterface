@@ -373,7 +373,8 @@ return returnInt;
 	
 	[self setTagbalkenTyp:0 forObjekt:2 forRaum:0]; // Servo
 	
-	[self setTagbalkenTyp:1 forObjekt:1 forRaum:2];
+   [self setTagbalkenTyp:1 forObjekt:1 forRaum:1]; // Werkstatt
+	[self setTagbalkenTyp:1 forObjekt:1 forRaum:2]; // WoZi
    [self setTagbalkenTyp:1 forObjekt:1 forRaum:4]; // Labor
 	
 	NSArray* Wochentage=[[NSArray arrayWithObjects:@"MO",@"DI", @"MI", @"DO", @"FR", @"SA", @"SO",nil]retain];

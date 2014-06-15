@@ -34,7 +34,7 @@
 	 - Index des Wertes im Werterray, der darzustellen ist
 	 
 	 */
-	//NSLog(@"BrennerDiagramm setWerteArray WerteArray: \n%@\n KanalArray: \n%@\n VorgabenDic: %@",[derWerteArray description],[derKanalArray description],[derVorgabenDic description]);
+	//NSLog(@"SolarEinschaltDiagramm setWerteArray WerteArray: \n%@\n KanalArray: \n%@\n VorgabenDic: %@",[derWerteArray description],[derKanalArray description],[derVorgabenDic description]);
 	//NSLog(@"SolarEinschaltDiagramm setWerteArray WerteArray: \n%@\n KanalArray: \n%@\n VorgabenDic: %@",[derWerteArray description],[derKanalArray description],[derVorgabenDic description]);
 
 	int DatenIndex = -1;
@@ -76,7 +76,7 @@
 			
 			
 			int aktuellerWert=0;
-			//NSLog(@"balkenindex: %d DatenIndex: %d DatenWert: %d",balkenindex,DatenIndex,DatenWert);
+			//NSLog(@"SolarEinschaltdiagramm balkenindex: %d DatenIndex: %d DatenWert: %d",balkenindex,DatenIndex,DatenWert);
 /*			
 // Experiment Bit 6,7	
 			if (DatenWert == 7)
@@ -151,7 +151,7 @@
 					NSDictionary* tempDic=[tempArray objectAtIndex:0];
 					if (tempDic)
 					{
-						NSLog(@"balkenindex: %d tempDic y: %d",balkenindex,[[tempDic objectForKey:@"y"]intValue]);
+						NSLog(@"SolarEinschaltdiagramm balkenindex: %d tempDic y: %d",balkenindex,[[tempDic objectForKey:@"y"]intValue]);
 					}
 				}
 				//NSLog(@"GraphArray: start: %d x: %d y: %d",[[tempDic objectForKey:@"start"]intValue],[[tempDic objectForKey:@"x"]intValue],[[tempDic objectForKey:@"y"]intValue]);
@@ -176,7 +176,7 @@
 						Brenndauer += ([[derWerteArray objectAtIndex:0]doubleValue]-[[lastBalkenDic objectForKey:@"zeit"]doubleValue]);
 						int Balkenwert=[[lastBalkenDic objectForKey:@"y"]intValue];
 						
-						//NSLog(@"Balken war schon ON, balkenindex: %d Balkenwert: %d ",balkenindex,Balkenwert);
+						//NSLog(@"SolarEinschaltdiagramm Balken war schon ON, balkenindex: %d Balkenwert: %d ",balkenindex,Balkenwert);
 						switch(balkenindex)	// Farbe der Balkenlage zuordnen
 						{
 							case 0: // Brennerbalken
@@ -214,7 +214,7 @@
 						
 						if (neuerPunkt.y) // Objekt ist immer noch ON, Balkenstück verlängern: aktuelle Position setzen fuer drawRect
 						{
-							//NSLog(@"Balken war schon ON, verlängern balkenindex: %d Balkenwert: %d ",balkenindex,Balkenwert);
+							//NSLog(@"SolarEinschaltdiagramm Balken war schon ON, verlängern balkenindex: %d Balkenwert: %d ",balkenindex,Balkenwert);
 							switch(balkenindex)	// 
 							{
 								case 0: // Uhrbalken

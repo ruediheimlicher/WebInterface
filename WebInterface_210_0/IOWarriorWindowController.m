@@ -1022,6 +1022,8 @@ NSLog(@"IOWarr WindowController reportPrint");
 
 -(void)openWithString:(NSString*)derDatenString
 {
+   // Daten aus HomeDaten.txt auslesen. Enthaelt beim Start die Daten des aktuellen Tages
+   
 	//NSLog(@"openWithString DatenString length; %d",[derDatenString length]);
 	NSArray* rohDatenArray = [NSArray array];
 	NSString* TagString = [NSString string];
@@ -1055,7 +1057,8 @@ NSLog(@"IOWarr WindowController reportPrint");
 		{
 			
 			// Tabellenkopf entfernen: Zeile mit Datum suchen
-			DataOffset=0;
+			
+         DataOffset=0;
 			NSEnumerator* DataEnum=[tempDatenArray objectEnumerator];
 			id eineZeile;
 			while (eineZeile=[DataEnum nextObject])
@@ -1064,9 +1067,10 @@ NSLog(@"IOWarr WindowController reportPrint");
 				//NSLog(@"eineZeile: %@",eineZeile);
 				NSRange r=[eineZeile rangeOfString:@"Startzeit:"];
 				
+            // Zeile mit "Startzeit" suchen, offset in Dataoffset speichern
 				if (!(NSEqualRanges(r,NSMakeRange(NSNotFound,0))))
 				{
-					//NSLog(@"openWithString bingo: %@",eineZeile);
+					NSLog(@"openWithString bingo: %@",eineZeile);
 					break;
 				}
 			}//while
@@ -1084,13 +1088,13 @@ NSLog(@"IOWarr WindowController reportPrint");
 				DatumString=[DatumString substringFromIndex:1];
 			}
 			
-			
+			// Datumstring nach leerschlaegen auftrennen
 			NSArray* tempDatumArray= [DatumString componentsSeparatedByString:@" "];
-			//NSLog(@"openWithString tempDatumArray: %@ count: %d",[tempDatumArray description], [tempDatumArray count]);
+			NSLog(@"openWithString tempDatumArray: %@ count: %d",[tempDatumArray description], [tempDatumArray count]);
 			
 			switch ([tempDatumArray count])
 			{
-				case 4:
+				case 4: // aktuell
 				{
 					TagString=[[tempDatumArray objectAtIndex:1]retain];
 					ZeitString=[[[tempDatumArray objectAtIndex:2]substringWithRange:NSMakeRange(0,5)]retain];
@@ -1102,7 +1106,7 @@ NSLog(@"IOWarr WindowController reportPrint");
 					Tag=[StartZeit dayOfMonth];
 					Monat=[StartZeit monthOfYear];
 					Jahr=[StartZeit yearOfCommonEra];
-					//NSLog(@"openWithString StartZeit: %@ tag: %d monat: %d Jahr: %d",[StartZeit description],Tag, Monat, Jahr);
+					NSLog(@"openWithString StartZeit case 4: %@ tag: %d monat: %d Jahr: %d",[StartZeit description],Tag, Monat, Jahr);
 					
 				}break;
 					
@@ -1118,7 +1122,7 @@ NSLog(@"IOWarr WindowController reportPrint");
 					
 					StartZeit=[NSCalendarDate dateWithString:StartDatumString calendarFormat:Kalenderformat];
 					//NSLog(@"Format: %@ StartZeit: %@",Kalenderformat,[StartZeit description]);
-					//NSLog(@"StartZeit: %@ tag: %d",[StartZeit description],[StartZeit dayOfMonth]);
+					NSLog(@"openWithString StartZeit case 5: %@ tag: %d",[StartZeit description],[StartZeit dayOfMonth]);
 					
 					
 				}break;
@@ -1139,7 +1143,6 @@ NSLog(@"IOWarr WindowController reportPrint");
 			//NSLog(@"tempDatenArray: %@",[tempDatenArray description]);
 			
 			
-//			DataOffset += 2; // Zeile mit Startzeit
 			
 			rohDatenArray = [[tempDatenArray subarrayWithRange:NSMakeRange(DataOffset,[tempDatenArray count]-DataOffset)]retain];
 			NSMutableArray* DatenArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];

@@ -623,7 +623,6 @@ NSLog(@"lastDataRead: %@",lastDataRead);
 		[StatDic setObject:BrennerDatenArray forKey:@"brennerdatenarray"];
 		[StatDic setObject:BrennerKanalArray forKey:@"brennerkanalarray"];
 		[StatDic setObject:[NSNumber numberWithInt:1] forKey:@"aktion"];
-		
 	}
 	
 	NSArray* TemperaturDatenArray=[HomeData TemperaturStatistikVonJahr:jahr Monat:monat];

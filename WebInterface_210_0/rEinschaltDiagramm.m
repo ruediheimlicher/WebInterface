@@ -616,8 +616,9 @@
 	 - Index des Wertes im Werterray, der darzustellen ist
 	 
 	 */
-	//NSLog(@"BrennerDiagramm setWerteArray WerteArray: \n%@\n KanalArray: \n%@\n VorgabenDic: %@",[derWerteArray description],[derKanalArray description],[derVorgabenDic description]);
-	//NSLog(@"BrennerDiagramm setWerteArray WerteArray: \n%@\n KanalArray: \n%@\n VorgabenDic: %@",[derWerteArray description],[derKanalArray description],[derVorgabenDic description]);
+//NSLog(@"EinschaltDiagramm setWerteArray WerteArray: \n%@",[derWerteArray description]);
+ //  NSLog(@"EinschaltDiagramm setWerteArray derKanalArray: \n%@",[derKanalArray description]);
+	//NSLog(@"EinschaltDiagramm setWerteArray WerteArray: \n%@\n KanalArray: \n%@\n VorgabenDic: %@",[derWerteArray description],[derKanalArray description],[derVorgabenDic description]);
 
 	int DatenIndex = -1;
 	
@@ -658,7 +659,7 @@
 			
 			
 			int aktuellerWert=0;
-			//NSLog(@"balkenindex: %d DatenIndex: %d DatenWert: %d",balkenindex,DatenIndex,DatenWert);
+			//NSLog(@"Einschaltdiagramm balkenindex: %d DatenIndex: %d DatenWert: %d",balkenindex,DatenIndex,DatenWert);
 /*			
 // Experiment Bit 6,7	
 			if (DatenWert == 7)
@@ -751,7 +752,7 @@
 			neuerPunkt.y= aktuellerWert;
 			if (balkenindex==RinneIndex)
 			{
-				//NSLog(@"balkenindex: %d DatenWert: %d  **  aktuellerWert: %d, neuerPunkt.y: %2.2f",balkenindex,DatenWert,aktuellerWert,neuerPunkt.y);
+				//NSLog(@"Einschaltdiagramm balkenindex: %d DatenWert: %d  **  aktuellerWert: %d, neuerPunkt.y: %2.2f",balkenindex,DatenWert,aktuellerWert,neuerPunkt.y);
 			}
 			//NSDictionary* tempWerteDic;
 			NSDictionary* lastWerteDic;
@@ -789,7 +790,7 @@
 					NSDictionary* tempDic=[tempArray objectAtIndex:0];
 					if (tempDic)
 					{
-						NSLog(@"balkenindex: %d tempDic y: %d",balkenindex,[[tempDic objectForKey:@"y"]intValue]);
+						NSLog(@"Einschaltdiagramm balkenindex: %d tempDic y: %d",balkenindex,[[tempDic objectForKey:@"y"]intValue]);
 					}
 				}
 				//NSLog(@"GraphArray: start: %d x: %d y: %d",[[tempDic objectForKey:@"start"]intValue],[[tempDic objectForKey:@"x"]intValue],[[tempDic objectForKey:@"y"]intValue]);
@@ -814,7 +815,7 @@
 						Brenndauer += ([[derWerteArray objectAtIndex:0]doubleValue]-[[lastBalkenDic objectForKey:@"zeit"]doubleValue]);
 						int Balkenwert=[[lastBalkenDic objectForKey:@"y"]intValue];
 						
-						//NSLog(@"Balken war schon ON, balkenindex: %d Balkenwert: %d ",balkenindex,Balkenwert);
+						//NSLog(@"Einschaltdiagramm Balken war schon ON, balkenindex: %d Balkenwert: %d ",balkenindex,Balkenwert);
 						switch(balkenindex)	// Farbe der Balkenlage zuordnen
 						{
 							case 0: // Brennerbalken
@@ -852,7 +853,7 @@
 						
 						if (neuerPunkt.y) // Objekt ist immer noch ON, Balkenstück verlängern: aktuelle Position setzen fuer drawRect
 						{
-							//NSLog(@"Balken war schon ON, verlängern balkenindex: %d Balkenwert: %d ",balkenindex,Balkenwert);
+							//NSLog(@"Einschaltdiagramm Balken war schon ON, verlängern balkenindex: %d Balkenwert: %d ",balkenindex,Balkenwert);
 							switch(balkenindex)	// 
 							{
 								case 0: // Uhrbalken

@@ -157,7 +157,7 @@
 			NSPoint neuerPunkt=DiagrammEcke;
 			neuerPunkt.x+=[[derWerteArray objectAtIndex:0]floatValue]*ZeitKompression;	//	Zeit, x-Wert, erster Wert im Array
 			float InputZahl=[[derWerteArray objectAtIndex:i+1]floatValue];	// Input vom IOW, 0-255
-			
+			NSLog(@"InputZahl: %2.2f",InputZahl);
 			// Korrektur bei i=2: Aussentemperatur um 20 reduzieren
 			if (i==2)
 			{

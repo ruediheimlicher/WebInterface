@@ -716,7 +716,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
    
    WebTask = idle;
    
-   //NSLog(@"HomeClientWriteStandardAktion tagbalkentyp aus userinfo: %@", [[note userInfo]objectForKey:@"tagbalkentyp"]);
+   NSLog(@"HomeClientWriteStandardAktion tagbalkentyp aus userinfo: %@", [[note userInfo]objectForKey:@"tagbalkentyp"]);
    [SendEEPROMDataDic setObject:[[note userInfo]objectForKey:@"titel"] forKey:@"titel"];
    [SendEEPROMDataDic setObject:[[note userInfo]objectForKey:@"tagbalkentyp"] forKey:@"tagbalkentyp"];
 	

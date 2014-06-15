@@ -548,7 +548,7 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 			[HomeCentralRequest release];
 			
 		}
-		NSLog(@"LastData: ");
+		//NSLog(@"LastData: ");
 		NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
 		[nc postNotificationName:@"HomeDataDownload" object:self userInfo:NotificationDic];
 		
@@ -1337,7 +1337,7 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 	//NSLog(@"BrennerStatistikVon  DownloadPfad: %@ DataSuffix: %@",DownloadPfad,DataSuffix);
 	NSURL *URL = [NSURL URLWithString:[ServerPfad stringByAppendingPathComponent:DataSuffix]];
 
-	//NSLog(@"BrennerStatistikVon URL: %@",URL);
+	NSLog(@"BrennerStatistikVon URL: %@",URL);
 	
 	NSStringEncoding *  enc=0;
 	NSCharacterSet* CharOK=[NSCharacterSet alphanumericCharacterSet];
@@ -1411,7 +1411,8 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 	NSURL *URL = [NSURL URLWithString:[ServerPfad stringByAppendingPathComponent:DataSuffix]];
 	//NSURL *URL = [NSURL URLWithString:@"http://www.schuleduernten.ch/blatt/cgi-bin/HomeDaten.txt"];
 	//www.schuleduernten.ch/blatt/cgi-bin/HomeDaten/HomeDaten090730.txt
-	
+	NSLog(@"TemperaturStatistikVon URL: %@",URL);
+   
 	NSStringEncoding *  enc=0;
 	NSCharacterSet* CharOK=[NSCharacterSet alphanumericCharacterSet];
 	NSString* DataString=[NSString stringWithContentsOfURL:URL usedEncoding: enc error:NULL];

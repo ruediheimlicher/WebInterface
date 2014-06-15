@@ -604,7 +604,7 @@ NSMutableDictionary* tempDic=(NSMutableDictionary*)[StundenArray objectAtIndex:d
 
 - (IBAction)reportHeuteTaste:(id)sender
 {
-   NSLog(@"reportHeuteTaste  Raum: %d wochentag: %d",raum, wochentag);
+   NSLog(@"Tagplanbalken reportHeuteTaste  Raum: %d wochentag: %d",raum, wochentag);
    
    NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
    NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
@@ -739,7 +739,7 @@ return StundenArray;
 	}// for i
 	//NSLog(@"raum: %d Tag: %d objekt: %d StundenbyteString: %@ tempByteArray: %@",Raum,Wochentag, Objekt,StundenbyteString,[tempByteArray description]);
    
-   NSLog(@"StundenbyteString: %@ tempByteArray: %@",StundenbyteString,[tempByteArray componentsJoinedByString:@"\t "]);
+   //NSLog(@"StundenbyteString: %@ tempByteArray: %@",StundenbyteString,[tempByteArray componentsJoinedByString:@"\t "]);
 	return tempByteArray;
 }
 

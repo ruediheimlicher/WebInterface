@@ -168,7 +168,7 @@ extern NSMutableArray* DatenplanTabelle;
 
 
 	BrennerKanalArray=[[[NSMutableArray alloc]initWithCapacity:0]retain];
-	[BrennerKanalArray setArray:[NSArray arrayWithObjects:@"1",@"1",@"0",@"0" ,@"0",@"0",@"0",@"0",nil]];
+	[BrennerKanalArray setArray:[NSArray arrayWithObjects:@"1",@"1",@"0",@"1" ,@"0",@"0",@"0",@"0",nil]];
 
 	BrennerStatistikKanalArray=[[[NSMutableArray alloc]initWithCapacity:0]retain];
 	[BrennerStatistikKanalArray setArray:[NSArray arrayWithObjects:@"1",@"0",@"0",@"0" ,@"0",@"0",@"0",@"0",nil]];
@@ -249,7 +249,14 @@ extern NSMutableArray* DatenplanTabelle;
 	[SolarKalender setDateValue: [NSDate date]];
 	
    
-   [SolarStatistikJahrPop selectItemWithTag:2013];
+   NSDateComponents *components = [[NSCalendar currentCalendar] components:NSCalendarUnitDay | NSCalendarUnitMonth | NSCalendarUnitYear fromDate:[NSDate date]];
+   
+   [SolarStatistikJahrPop selectItemWithTag:[components year]];
+   
+   
+   [StatistikJahrPop selectItemWithTag:[components year]];
+   
+
 	
 	//NSString* PickDate=[[Kalender dateValue]description];
 	//NSLog(@"PickDate: %@",PickDate);
@@ -497,12 +504,45 @@ extern NSMutableArray* DatenplanTabelle;
 	[MKTabellenKopfStil addTabStop:TabellenkopfZeitTab];
 	
 	[MKTabellenkopfString appendFormat:@"\t%@",@"Zeit"];// Zusätzlicher Tab fuer erste Zahl
-	for (i=0;i<8;i++) 
+	
+   /*
+   for (i=0;i<8;i++)
 	{
 		NSTextTab* TabellenkopfWertTab=[[[NSTextTab alloc]initWithType:NSRightTabStopType location:zeittab+(i+1)*werttab]autorelease];
 		[MKTabellenKopfStil addTabStop:TabellenkopfWertTab];
 		[MKTabellenkopfString appendFormat:@"\t%@",[[NSNumber numberWithInt:i]stringValue]];
 	}
+    */
+   NSTextTab* TabellenkopfWertTab=[[[NSTextTab alloc]initWithType:NSRightTabStopType location:zeittab+(1)*werttab]autorelease];
+   //[TabellenkopfWertTab addToolTip:@"Temperatur*2"];
+   [MKTabellenKopfStil addTabStop:TabellenkopfWertTab];
+   [MKTabellenkopfString appendFormat:@"\tVL"];
+   TabellenkopfWertTab=[[[NSTextTab alloc]initWithType:NSRightTabStopType location:zeittab+(2)*werttab]autorelease];
+   [MKTabellenKopfStil addTabStop:TabellenkopfWertTab];
+   [MKTabellenkopfString appendFormat:@"\tRL"];
+   TabellenkopfWertTab=[[[NSTextTab alloc]initWithType:NSRightTabStopType location:zeittab+(3)*werttab]autorelease];
+   [MKTabellenKopfStil addTabStop:TabellenkopfWertTab];
+   [MKTabellenkopfString appendFormat:@"\tA"];
+   TabellenkopfWertTab=[[[NSTextTab alloc]initWithType:NSRightTabStopType location:zeittab+(4)*werttab]autorelease];
+   [MKTabellenKopfStil addTabStop:TabellenkopfWertTab];
+   [MKTabellenkopfString appendFormat:@"\tCd"];
+
+   TabellenkopfWertTab=[[[NSTextTab alloc]initWithType:NSRightTabStopType location:zeittab+(5)*werttab]autorelease];
+   [MKTabellenKopfStil addTabStop:TabellenkopfWertTab];
+   [MKTabellenkopfString appendFormat:@"\tstd"];
+   TabellenkopfWertTab=[[[NSTextTab alloc]initWithType:NSRightTabStopType location:zeittab+(6)*werttab]autorelease];
+   [MKTabellenKopfStil addTabStop:TabellenkopfWertTab];
+   [MKTabellenkopfString appendFormat:@"\tmin"];
+   TabellenkopfWertTab=[[[NSTextTab alloc]initWithType:NSRightTabStopType location:zeittab+(7)*werttab]autorelease];
+   [MKTabellenKopfStil addTabStop:TabellenkopfWertTab];
+   [MKTabellenkopfString appendFormat:@"\t"];
+   TabellenkopfWertTab=[[[NSTextTab alloc]initWithType:NSRightTabStopType location:zeittab+(8)*werttab]autorelease];
+   [MKTabellenKopfStil addTabStop:TabellenkopfWertTab];
+   [MKTabellenkopfString appendFormat:@"\tI"];
+
+  
+   
+   
 	NSMutableParagraphStyle* MKTabelleStil=[[[NSMutableParagraphStyle alloc]init]autorelease];
 	[MKTabelleStil setTabStops:[NSArray array]];
 	
@@ -715,7 +755,7 @@ extern NSMutableArray* DatenplanTabelle;
 	//[self logRect:TemperaturStatistikOrdinatenFeld];
 	TemperaturStatistikOrdinate=[[rOrdinate alloc]initWithFrame:TemperaturStatistikOrdinatenFeld];
 	
-	[TemperaturStatistikOrdinate setOrdinatenlageY:StatistikDiagrammLage];
+	[TemperaturStatistikOrdinate setOrdinatenlageY:StatistikDiagrammLage+16];
 	[TemperaturStatistikOrdinate setGrundlinienOffset:10.0];
 	[TemperaturStatistikOrdinate setMaxOrdinate:200];
 	[TemperaturStatistikOrdinate setTag:201];
@@ -790,7 +830,10 @@ extern NSMutableArray* DatenplanTabelle;
 	BrennerStatistikOrdinatenFeld.size.height=[BrennerStatistikDiagramm frame].size.height;	// Hoehe gleich wie StatisikDiagramm
 	//BrennerStatistikOrdinatenFeld.size.height=240;
 	BrennerStatistikOrdinatenFeld.origin.x-=42;													// Verschiebung nach links
-	BrennerStatistikOrdinatenFeld.origin.y += Scrollermass;									// Ecke um Scrollerbreite nach oben verschieben
+	BrennerStatistikOrdinatenFeld.origin.y += Scrollermass;
+   
+   BrennerStatistikOrdinatenFeld.origin.y += 16;
+   // Ecke um Scrollerbreite nach oben verschieben
 	//NSLog(@"Data TemperaturStatistikOrdinatenFeld");
 	//[self logRect:TemperaturStatistikOrdinatenFeld];
 	BrennerStatistikOrdinate=[[rOrdinate alloc]initWithFrame:BrennerStatistikOrdinatenFeld];
@@ -1300,6 +1343,24 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
 
 - (void)ExterneDatenAktion:(NSNotification*)note
 {
+   /* In TWI_Master:
+    outbuffer[0] = (HEIZUNG << 5);					// Bit 5-7: Raumnummer
+    outbuffer[0] |= (Zeit.stunde & 0x1F);			//	Bit 0-4: Stunde, 5 bit
+    outbuffer[1] = (0x01 << 6);						// Bits 6,7: Art=1
+    outbuffer[1] |= Zeit.minute & 0x3F;				// Bits 0-5: Minute, 6 bit
+    outbuffer[2] = HeizungRXdaten[0];				//	Vorlauf
+    
+    outbuffer[3] = HeizungRXdaten[1];				//	Rücklauf
+    outbuffer[4] = HeizungRXdaten[2];				//	Aussen
+    
+    outbuffer[5] = 0;
+    outbuffer[5] |= HeizungRXdaten[3];				//	Brennerstatus Bit 2
+    outbuffer[5] |= HeizungStundencode;			// Bit 4, 5 gefiltert aus Tagplanwert von Brenner und Mode
+    outbuffer[5] |= RinneStundencode;				// Bit 6, 7 gefiltert aus Tagplanwert von Rinne
+    
+    uebertragen in d5
+    */
+
 	Quelle=1;
 	if ([[note userInfo]objectForKey:@"startzeit"])
 	{
@@ -1556,7 +1617,7 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
 	//NSString* crSeparator=@"\r";
 	
 	NSMutableString* tempWertString=(NSMutableString*)[TemperaturWertFeld string];//Vorhandene Daten im Wertfeld
-	//NSLog(@"TemperaturZeilenString: %@",TemperaturZeilenString);
+	NSLog(@"TemperaturZeilenString: %@",TemperaturZeilenString);
 	
 	if ([[TemperaturDaten objectForKey:@"datenarray"]count]==0 && Messbeginn==NO && [DatenpaketArray count]==0) // Messbeginn
 	{
@@ -2080,7 +2141,7 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
 			[tempVorgabenDic setObject:[NSNumber numberWithInt:5]forKey:@"anzbalken"];
 			[tempVorgabenDic setObject:[NSNumber numberWithInt:3]forKey:@"datenindex"];
 			
-			
+			//NSLog(@"LastDatenAktion HomeDatenArray: %@",[HomeDatenArray description]);
 			[BrennerDiagramm setWerteArray:HomeDatenArray mitKanalArray:BrennerKanalArray mitVorgabenDic:tempVorgabenDic];
 			
 			//			[BrennerDiagramm setWerteArray:HomeDatenArray mitKanalArray:BrennerKanalArray];

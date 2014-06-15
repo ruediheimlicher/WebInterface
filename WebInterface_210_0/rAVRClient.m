@@ -804,7 +804,7 @@ if (Webserver_busy)
 
 	if ([TWIStatusTaste state])
 	{
-		//NSLog(@"TWIStatustaste: %d",[TWIStatusTaste state]);
+		NSLog(@"TWIStatustaste: %d",[TWIStatusTaste state]);
 		NSAlert *Warnung = [[[NSAlert alloc] init] autorelease];
 		[Warnung addButtonWithTitle:@"OK"];
 		//	[Warnung addButtonWithTitle:@""];
@@ -823,6 +823,7 @@ if (Webserver_busy)
 	}
 	else
 	{
+      NSLog(@"TWIStatustaste: %d",[TWIStatusTaste state]);
 		Webserver_busy=1;// Wird jeweils in der Finishloadaktion zurueckgestellt, sobald das writeok angekommen ist.
 		[AdresseFeld setStringValue:@""];
 		[WriteFeld setStringValue:@""];
@@ -873,9 +874,10 @@ if (Webserver_busy)
 		
 		NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
 		
-      
+      NSLog(@"WriteStandardAktion: permsnent: %d",permanent);
       if (permanent) // schicken an EEPROM
       {
+         
          [nc postNotificationName:@"HomeClientWriteStandard" object:self userInfo:HomeClientDic];
       }
       else

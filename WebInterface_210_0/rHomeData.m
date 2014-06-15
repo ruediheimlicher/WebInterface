@@ -174,12 +174,13 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 		//NSLog(@"DataVonHeute URLPfad: %@",URLPfad);
 		//NSLog(@"DataVonHeute  DownloadPfad: %@ DataSuffix: %@",DownloadPfad,DataSuffix);
 		NSURL *URL = [NSURL URLWithString:[ServerPfad stringByAppendingPathComponent:DataSuffix]];
-
+      
+      NSLog(@"awake DataVonHeute URL: %@",URL);
 		NSStringEncoding *  enc=0;
 		NSCharacterSet* CharOK=[NSCharacterSet alphanumericCharacterSet];
 		NSError* WebFehler=NULL;
 		NSString* DataString=[NSString stringWithContentsOfURL:URL usedEncoding: enc error:&WebFehler];
-		//NSLog(@"DataVonHeute WebFehler: :%@",[[WebFehler userInfo]description]);
+		NSLog(@"DataVonHeute WebFehler: :%@",[[WebFehler userInfo]description]);
 		if (WebFehler)
 		{
 			//NSLog(@"WebFehler: :%@",[[WebFehler userInfo]description]);
@@ -594,7 +595,7 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 	NSStringEncoding *  enc=0;
 	NSCharacterSet* CharOK=[NSCharacterSet alphanumericCharacterSet];
 	NSString* DataString=[NSString stringWithContentsOfURL:URL usedEncoding: enc error:NULL];
-	NSLog(@"IP von Server: %@",DataString);
+	//NSLog(@"IP von Server: %@",DataString);
    NSArray* IP_Array = [DataString componentsSeparatedByString:@"\r\n"];
    //NSLog(@"IP von Server IP_Array: %@",IP_Array);
    

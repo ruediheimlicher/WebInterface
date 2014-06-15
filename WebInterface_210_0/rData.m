@@ -3795,7 +3795,7 @@ if ([[note userInfo]objectForKey:@"err"])
    
 	//NSLog(@"[StatistikDiagrammScroller documentView]: w: %2.2f",[[StatistikDiagrammScroller documentView]frame].size.width);
 	
-	//NSLog(@"Data setSolarStatistik: %@",[derDatenDic description]);
+	NSLog(@"Data setSolarStatistik: %@",[derDatenDic description]);
    
    if ([derDatenDic objectForKey:@"elektrodatenarray"])
 	{

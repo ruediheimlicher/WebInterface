@@ -379,9 +379,13 @@ void IOWarriorCallback ()
 	lastDataZeit=0;
 	//[self startHomeData];
 	//NSLog(@"awake vor AktuelleDaten");
-	NSString* AktuelleDaten=[HomeData DataVonHeute];
+	
+   // heutige Daten laden
+   
+   NSString* AktuelleDaten=[HomeData DataVonHeute];
 	//NSLog(@"awake nach AktuelleDaten");
 	//NSLog(@"awake AktuelleDaten: \n%@",AktuelleDaten);
+   
 	if (AktuelleDaten &&[AktuelleDaten length])
 	{
 		//NSLog(@"awake openWithString\n\n");
@@ -417,7 +421,7 @@ void IOWarriorCallback ()
 	{
 		NSLog(@"awake Kein Input");
 	}
-   
+   NSLog(@"end DatenVonHeute");
    
 	
 	#pragma mark awake Solar
@@ -441,7 +445,7 @@ void IOWarriorCallback ()
 		NSLog(@"awake Kein SolarInput");
 	}
 	
-   
+   NSLog(@"end SolarDatenVonHeute");
 
 
 

@@ -124,10 +124,10 @@ unsigned char h2int(char c)
    
 #pragma mark HomeCentralURL
 	
-HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
+//HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 	//LocalHomeCentralURL=@"192.168.1.210";
 
-//HomeCentralURL=@"http://192.168.1.210";
+HomeCentralURL=@"http://192.168.1.210";
 
 	
 	pw = @"ideur00";

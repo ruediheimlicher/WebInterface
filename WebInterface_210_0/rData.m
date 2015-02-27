@@ -205,7 +205,7 @@ extern NSMutableArray* DatenplanTabelle;
 	//NSLog(@"Data OK");
 	NSRect DruckViewRect=NSMakeRect(0,0,200,800);
 	DruckDatenView=[[NSTextView alloc]initWithFrame:DruckViewRect];
-	Scrollermass=0;
+	Scrollermass=15;
 	Kalenderblocker=0;
 	SolarKalenderblocker=0;
 	Heuteblocker=0;
@@ -330,6 +330,7 @@ extern NSMutableArray* DatenplanTabelle;
 	
 	//MKDiagrammFeld.origin.y +=16;
 	MKDiagrammFeld.size.height=220;
+   
 	TemperaturMKDiagramm= [[rTemperaturMKDiagramm alloc]initWithFrame:MKDiagrammFeld];
 	[TemperaturMKDiagramm  setPostsFrameChangedNotifications:YES];
 	[TemperaturMKDiagramm setTag:100];
@@ -600,7 +601,7 @@ extern NSMutableArray* DatenplanTabelle;
 	BrennerLegendeFeld.size.width=60;
 	BrennerLegendeFeld.size.height=[BrennerDiagramm frame].size.height;
 	BrennerLegendeFeld.origin.x-=60;
-	BrennerLegendeFeld.origin.y+=Brennerlage+2;
+	BrennerLegendeFeld.origin.y+=Brennerlage;
 	BrennerLegendeFeld.origin.y+=Scrollermass;
 	//[self logRect:BrennerLegendeFeld];
 	
@@ -1172,7 +1173,9 @@ extern NSMutableArray* DatenplanTabelle;
 	[BalkendatenDic setObject:[NSNumber numberWithInt:1]forKey:@"aktion"];
 	
 	//NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
-	[nc postNotificationName:@"StatistikDaten" object:NULL userInfo:BalkendatenDic];
+
+   
+//**   [nc postNotificationName:@"StatistikDaten" object:NULL userInfo:BalkendatenDic];
 
 	
 	NSString* DatumString = [NSString stringWithFormat:@"RH %@",DATUM];
@@ -1563,14 +1566,20 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
 	[NotificationDic setObject:[NSNumber numberWithInt:1] forKey:@"loaddataok"];
 	NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
 	[nc postNotificationName:@"LoadData" object:self userInfo:NotificationDic];
-	[Kalender setEnabled:YES];
+	
+   [Kalender setEnabled:YES];
 	
 	NSMutableDictionary* BalkendatenDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
 	[BalkendatenDic setObject:[NSNumber numberWithInt:1]forKey:@"aktion"];
 	
 	//NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
-	[nc postNotificationName:@"StatistikDaten" object:NULL userInfo:BalkendatenDic];
-	[TemperaturStatistikDiagramm setNeedsDisplay:YES];
+	
+   
+   
+   [nc postNotificationName:@"StatistikDaten" object:NULL userInfo:BalkendatenDic];
+
+   
+   [TemperaturStatistikDiagramm setNeedsDisplay:YES];
 	[TagGitterlinien setNeedsDisplay:YES];
 	//NSLog(@"ExterneDatenAktion end");
 	
@@ -2047,7 +2056,7 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
 		return;
 	}
 	NSString* StartDatenString=[[[TemperaturDatenFeld string]componentsSeparatedByString:@"\r"]objectAtIndex:0];
-	//NSLog(@"LastDatenAktion StartDatenString: %@",StartDatenString);
+	NSLog(@"LastDatenAktion StartDatenString: %@",StartDatenString);
 	NSString* Kalenderformat=[[NSCalendarDate calendarDate]calendarFormat];
 	//NSLog(@"LastDatenaktion note: %@",[[note userInfo]description]);
 	if ([[note userInfo]objectForKey:@"startzeit"])
@@ -3795,7 +3804,7 @@ if ([[note userInfo]objectForKey:@"err"])
    
 	//NSLog(@"[StatistikDiagrammScroller documentView]: w: %2.2f",[[StatistikDiagrammScroller documentView]frame].size.width);
 	
-	NSLog(@"Data setSolarStatistik: %@",[derDatenDic description]);
+	//NSLog(@"Data setSolarStatistik DatenDic: %@",[derDatenDic description]);
    
    if ([derDatenDic objectForKey:@"elektrodatenarray"])
 	{
@@ -3868,6 +3877,8 @@ if ([[note userInfo]objectForKey:@"err"])
    else
    {
       NSLog(@"Data setSolarStatistik: solarertragarray nicht da");
+      
+      return;
    }
    
   
@@ -3878,6 +3889,7 @@ if ([[note userInfo]objectForKey:@"err"])
 	NSArray* TemperaturtagArray=[TemperaturdatenArray valueForKey:@"tagdesjahres"];
    
    NSArray* KollektortagArray = [NSArray array];
+   
    if ([KollektortemperaturArray count])
    {
       KollektortagArray=[KollektortemperaturArray valueForKey:@"tagdesjahres"];

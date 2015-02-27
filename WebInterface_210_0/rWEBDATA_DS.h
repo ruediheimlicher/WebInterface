@@ -9,7 +9,7 @@
 #import <Cocoa/Cocoa.h>
 
 
-@interface rWEBDATA_DS : NSObject 
+@interface rWEBDATA_DS : NSObject <NSTableViewDataSource, NSTableViewDelegate>
 {
 NSMutableArray* ValueKeyTabelle;
 //NSMutableArray* DumpTabelle;

@@ -282,8 +282,8 @@ aktiv=derStatus;
 
 - (void)setStundenarraywert:(int)derWert vonStunde:(int)dieStunde forKey:(NSString*)derKey
 {
-//NSLog(@"setStundenarraywert: %d Stunde: %d Key: %@",derWert, dieStunde, derKey);
-//NSLog(@"Stundenarray vor : %@",[StundenArray description]);
+NSLog(@"setStundenarraywert: %d Stunde: %d Key: %@",derWert, dieStunde, derKey);
+NSLog(@"Stundenarray vor : %@",[StundenArray description]);
 NSMutableDictionary* tempDic=(NSMutableDictionary*)[StundenArray objectAtIndex:dieStunde];
 [tempDic setObject:[NSNumber numberWithInt:derWert] forKey:derKey];
 //NSLog(@"Stundenarray nach : %@",[StundenArray description]);
@@ -1084,12 +1084,12 @@ return mark;
       
 		if ([self mouse:localMaus inRect:StdFeldU])
 		{
-			NSLog(@"mouse in Stunde: %d in Feld unten ON: %d",i, ON);
+			//NSLog(@"Servo mouse in Stunde: %d in Feld unten ON vor: %d",i, ON);
 			if (ON)
          {
             ON --;
          }
-         
+         NSLog(@"Servo mouse in Stunde: %d in Feld unten ON nach: %d",i, ON);
 			[NotificationDic setObject:[NSNumber numberWithInt:i] forKey:@"stunde"];
 			[NotificationDic setObject:[NSNumber numberWithInt:ON] forKey:@"on"];
 			[NotificationDic setObject:[NSNumber numberWithInt:1] forKey:@"feld"];
@@ -1108,11 +1108,12 @@ return mark;
 		}
 		else if ([self mouse:localMaus inRect:StdFeldO])
 		{
-			NSLog(@"mouse in Stunde: %d in Feld oben ON: %d",i,ON);
+			//NSLog(@"Servo mouse in Stunde: %d in Feld oben ON vor: %d",i,ON);
          if (ON<3)
          {
             ON++;
          }
+         NSLog(@"Servo mouse in Stunde: %d in Feld oben ON nach: %d",i,ON);
 			[NotificationDic setObject:[NSNumber numberWithInt:i] forKey:@"stunde"];
 			[NotificationDic setObject:[NSNumber numberWithInt:ON] forKey:@"on"];
 			[NotificationDic setObject:[NSNumber numberWithInt:2] forKey:@"feld"];

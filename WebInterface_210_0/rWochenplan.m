@@ -338,12 +338,14 @@
 				NSArray* tempStundenByteArray=[ObjektTagplanbalken StundenByteArray];
 				//NSLog(@"Raum: %d Tag: %d objekt: %d StundenByteArray: %@",derRaum, wochentag, objektbalken, [tempStundenByteArray componentsJoinedByString:@" "]);
 				int k;
+            
+            // Kontrolle
 				NSString* StundenbyteString=[NSString string];
 				for (k=0;k<[tempStundenByteArray count];k++)
 				{
 					
 					NSString* ByteString=[NSString stringWithFormat:@"%02X ",[[tempStundenByteArray objectAtIndex:k]intValue]];
-					//NSLog(@"      Stundenbyte: %02X ByteString: %@",Stundenbyte , ByteString);
+					//NSLog(@"ByteString: %@\t %d", ByteString, [[tempStundenByteArray objectAtIndex:k]intValue]);
 					StundenbyteString=[StundenbyteString stringByAppendingString:ByteString] ;
 				}
 				//NSLog(@" Objekt: %d,  ByteString: %@ Titel: %@",objektbalken,  StundenbyteString,[ObjektTagplanbalken Titel]);

@@ -69,7 +69,7 @@
 	[[HeuteTaste cell]setBackgroundColor:[NSColor lightGrayColor]];
 	[[HeuteTaste cell]setShowsStateBy:NSPushInCellMask];
    [HeuteTaste setFont:[NSFont fontWithName:@"Helvetica" size:8]];
-	[HeuteTaste setTitle:@"H"];
+	[HeuteTaste setTitle:@"ed"];
 	[HeuteTaste setTag:objekt];
 	[HeuteTaste setAction:@selector(reportHeuteTaste:)]; // Auszufuehrende Funktion
 	[self addSubview:HeuteTaste];
@@ -95,39 +95,40 @@
 	Elementhoehe=[self frame].size.height-5;
 	//Elementhoehe=35;
 	//NSLog(@"Tag Elementbreite: %d Elementhoehe: %d ",Elementbreite, Elementhoehe);
+   //NSLog(@"Balkenanlegen superview: %d",(long)[[self superview]tagbalkentyp]);
 	for (i=0;i<24;i++)
-	{
+   {
       if (i<8)
       {
-      NSRect Nummerfeld=NSMakeRect(Ecke.x+i*Elementbreite,Ecke.y+Elementhoehe-2,8, 10);
-		NSTextField* NummerTextFeld=[[NSTextField alloc] initWithFrame:Nummerfeld];
-      [NummerTextFeld setBordered:NO];
-      [NummerTextFeld setEditable:NO];
-      [NummerTextFeld setDrawsBackground:NO];
-      //[NummerTextFeld setAlignment:NSCenterTextAlignment];
-      [NummerTextFeld setFont:[NSFont fontWithName:@"Helvetica" size:8]];
-
-      [NummerTextFeld setStringValue:[NSString stringWithFormat:@"%d",i]];
-		//	NSLog(@"Datenbalken init i: %d ElementDic: %@",i,[tempElementDic description]);
-		[self addSubview:NummerTextFeld];
-
-		NSMutableDictionary* tempElementDic=[[NSMutableDictionary alloc]initWithCapacity:0];
-      
-		NSRect Elementfeld=NSMakeRect(Ecke.x+i*Elementbreite,Ecke.y,Elementbreite-3, Elementhoehe-4);
-		NSTextField* ElementTextFeld=[[NSTextField alloc] initWithFrame:Elementfeld];
-      [ElementTextFeld setDelegate:self];
-      [ElementTextFeld setTag:i];
-      [ElementTextFeld setEditable:0];
-      [tempElementDic setObject:ElementTextFeld forKey:@"elementrahmen"];
-      [tempElementDic setObject:[NSNumber numberWithInt:i] forKey:@"elementnummer"];
-      [tempElementDic setObject:[NSNumber numberWithInt:0] forKey:@"code"];
-      [ElementTextFeld setAlignment:NSCenterTextAlignment];
-      [StundenArray addObject:tempElementDic];
-
-		//[StundenArray addObject:tempElementDic];
-		//	NSLog(@"Datenbalken init i: %d ElementDic: %@",i,[tempElementDic description]);
-		[self addSubview:ElementTextFeld];
-		}
+         NSRect Nummerfeld=NSMakeRect(Ecke.x+i*Elementbreite,Ecke.y+Elementhoehe-2,8, 10);
+         NSTextField* NummerTextFeld=[[NSTextField alloc] initWithFrame:Nummerfeld];
+         [NummerTextFeld setBordered:NO];
+         [NummerTextFeld setEditable:NO];
+         [NummerTextFeld setDrawsBackground:NO];
+         //[NummerTextFeld setAlignment:NSCenterTextAlignment];
+         [NummerTextFeld setFont:[NSFont fontWithName:@"Helvetica" size:8]];
+         
+         [NummerTextFeld setStringValue:[NSString stringWithFormat:@"%d",i]];
+         //	NSLog(@"Datenbalken init i: %d ElementDic: %@",i,[tempElementDic description]);
+         [self addSubview:NummerTextFeld];
+         
+         NSMutableDictionary* tempElementDic=[[NSMutableDictionary alloc]initWithCapacity:0];
+         
+         NSRect Elementfeld=NSMakeRect(Ecke.x+i*Elementbreite,Ecke.y,Elementbreite-3, Elementhoehe-4);
+         NSTextField* ElementTextFeld=[[NSTextField alloc] initWithFrame:Elementfeld];
+         [ElementTextFeld setDelegate:self];
+         [ElementTextFeld setTag:100+i];
+         [ElementTextFeld setEditable:NO];
+         [tempElementDic setObject:ElementTextFeld forKey:@"elementrahmen"];
+         [tempElementDic setObject:[NSNumber numberWithInt:i] forKey:@"elementnummer"];
+         [tempElementDic setObject:[NSNumber numberWithInt:0] forKey:@"code"];
+         [ElementTextFeld setAlignment:NSCenterTextAlignment];
+         [StundenArray addObject:tempElementDic];
+         
+         //[StundenArray addObject:tempElementDic];
+         //	NSLog(@"Datenbalken init i: %d ElementDic: %@",i,[tempElementDic description]);
+         [self addSubview:ElementTextFeld];
+      }
       else
       {
          NSView* ElementView=[[NSView alloc] initWithFrame:NSMakeRect(0, 0, 0, 0)];
@@ -137,10 +138,10 @@
                                          [NSNumber numberWithInt:0],@"code",
                                          nil];
          [StundenArray addObject:tempElementDic];
-
+         
          [self addSubview:ElementView];
       }
-	}//for i
+   }//for i
 	
    NSRect AllFeld=[[[StundenArray objectAtIndex:7]objectForKey:@"elementrahmen"]frame];
 	AllFeld.origin.x+=Elementbreite+1;
@@ -156,6 +157,7 @@
 	[[AllTaste cell]setShowsStateBy:NSPushInCellMask];
 	[AllTaste setTitle:@"e"];
 	[AllTaste setAction:@selector(AllTasteAktion:)];
+   [AllTaste setTag:99];
 	[self addSubview:AllTaste];
 //NSLog(@"Tagplanbalken StundenArray: %@", [StundenArray description]);
 	//NSLog(@"Datenbalken end init");
@@ -359,9 +361,10 @@ NSMutableDictionary* tempDic=(NSMutableDictionary*)[StundenArray objectAtIndex:d
 
 - (void)AllTasteAktion:(id)sender
 {
-   //NSLog(@"AllTasteAktion edit: %d %d",edit,!edit);
-   edit = !edit;
-   
+   NSLog(@"AllTasteAktion edit: %d %d",edit,!edit);
+  // edit = !edit; // editable toggeln
+   NSLog(@"Balkenanlegen superview: %ld",(long)[self viewWithTag:99]);
+
    for (int i=0;i<[StundenArray count];i++)
    {
       //NSLog(@"AllTasteAktion i: %d",i);
@@ -386,12 +389,15 @@ NSMutableDictionary* tempDic=(NSMutableDictionary*)[StundenArray objectAtIndex:d
       //Textfeld verlassen
       NSDictionary* EditNotificationDic = [NSDictionary dictionaryWithObject:[NSNumber numberWithInt:edit] forKey:@"edit"];
       NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
-      NSLog(@"Tagplanbalken AllTasteAktion edit: %d",edit);
+      NSLog(@"Datenbalken AllTasteAktion edit: %d",edit);
+      
+      
+      
       [nc postNotificationName:@"edit" object:self userInfo:EditNotificationDic];
       
       
       
-      lastONArray = [NSArray arrayWithArray:[StundenArray valueForKey:@"code"]];
+      lastONArray = [NSMutableArray arrayWithArray:[StundenArray valueForKey:@"code"]];
       
       //NSLog(@"AllTasteAktion");
       //NSLog(@"AllTasteAktion: %d", [(rTagplanbalken*)[sender superview]Wochentag]);
@@ -405,6 +411,7 @@ NSMutableDictionary* tempDic=(NSMutableDictionary*)[StundenArray objectAtIndex:d
       [NotificationDic setObject:Titel forKey:@"titel"];
       [NotificationDic setObject:[NSNumber numberWithInt:objekt] forKey:@"objekt"];
       [NotificationDic setObject:[NSNumber numberWithInt:TagbalkenTyp] forKey:@"tagbalkentyp"];
+      //NSLog(@"lastONArray: %@",[lastONArray description]);
 
       int modKey=0;
       int all=-1;
@@ -587,7 +594,62 @@ NSMutableDictionary* tempDic=(NSMutableDictionary*)[StundenArray objectAtIndex:d
 - (IBAction)reportHeuteTaste:(id)sender
 {
    NSLog(@"reportHeuteTaste  Raum: %d wochentag: %d",raum, wochentag);
+   NSLog(@"reportHeuteTaste views: %@",[self subviews]);
    
+    edit = !edit; // editable toggeln
+   int index=0;
+   for (int i=0;i<[[self subviews]count];i++)
+   {
+      int tempTag = [[[self subviews]objectAtIndex:i]tag];
+      //NSLog(@"i: %d view: %@ tag: %d",i,[[self subviews]objectAtIndex:i],tempTag);
+      
+      if ((tempTag >=100) && (tempTag < 108))
+      {
+         NSLog(@"i: %d wert: %@ tag: %d edit: %d index: %d",i,[[[self subviews]objectAtIndex:i]stringValue],tempTag,edit,index);
+
+         //NSLog(@"i: %d tag: %d edit: %d index: %d",i,tempTag,edit,index);
+         
+         [[self viewWithTag:100+index]setEditable:edit];
+         
+         [[self viewWithTag:100+index]setSelectable:edit];
+         if (edit == 0)
+         {
+           //[[self viewWithTag:100+index]deselectAll:nil];
+         }
+
+         index++;
+         
+      }
+      
+   
+   }
+   /*
+   if (edit)
+   {
+      NSLog(@"reportHeuteTaste edit = 1");
+      [sender setTitle:@"fix"];
+      [[self viewWithTag:99]setTitle:@"AA"];
+      for (int i=0;i<8;i++)
+      {
+         [[self viewWithTag:100+i]setEditable:NO];
+      }
+
+   }
+   else
+   {
+      [sender setTitle:@"ed"];
+      [[self viewWithTag:99]setTitle:@"BB"];
+      for (int i=0;i<8;i++)
+      {
+         if ([self viewWithTag:100+i])
+         {
+            [[self viewWithTag:100+i]setEditable:YES];
+         }
+      }
+         
+   }
+   */
+   return;
    NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
    NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
 	[NotificationDic setObject:[NSNumber numberWithInt:raum] forKey:@"raum"];
@@ -1154,7 +1216,9 @@ return tag;
    //NSLog(@"Datenbalken: controlTextDidEndEditing raum: %d objekt: %d wochentag: %d",raum,objekt,wochentag);
   // NSLog(@"Datenbalken: controlTextDidEndEditing aNotification tag: %d Inhalt: %@",[[aNotification object]tag],[[aNotification object]stringValue]);
    
-   int temptag = [(NSTextField*)[aNotification object]tag];
+   int temptag = [(NSTextField*)[aNotification object]tag]-100;
+   
+   NSLog(@"Datenbalken: controlTextDidEndEditing raum: %d objekt: %d wochentag: %d temptag: %d",raum,objekt,wochentag,temptag);
    NSString* errString = [[aNotification object]stringValue];
    //NSLog(@"errString: %@",errString);
    int tempwert = [[aNotification object]intValue];
@@ -1176,7 +1240,7 @@ return tag;
    //NSLog(@"tempDic nach: %@",[tempDic description]);
    [StundenArray replaceObjectAtIndex:temptag withObject:tempDic];
 
-   //NSLog(@"controlTextDidEndEditing StundenArray neu: %@",[StundenArray description]);
+   NSLog(@"controlTextDidEndEditing StundenArray neu: %@",[StundenArray description]);
    
 }
 

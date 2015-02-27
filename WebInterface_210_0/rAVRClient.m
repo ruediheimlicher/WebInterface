@@ -804,7 +804,7 @@ if (Webserver_busy)
 
 	if ([TWIStatusTaste state])
 	{
-		NSLog(@"TWIStatustaste: %d",[TWIStatusTaste state]);
+		NSLog(@"TWIStatustaste ok: %d",[TWIStatusTaste state]);
 		NSAlert *Warnung = [[[NSAlert alloc] init] autorelease];
 		[Warnung addButtonWithTitle:@"OK"];
 		//	[Warnung addButtonWithTitle:@""];
@@ -823,7 +823,7 @@ if (Webserver_busy)
 	}
 	else
 	{
-      NSLog(@"TWIStatustaste: %d",[TWIStatusTaste state]);
+      NSLog(@"TWIStatustaste nicht ok: %d",[TWIStatusTaste state]);
 		Webserver_busy=1;// Wird jeweils in der Finishloadaktion zurueckgestellt, sobald das writeok angekommen ist.
 		[AdresseFeld setStringValue:@""];
 		[WriteFeld setStringValue:@""];
@@ -874,7 +874,7 @@ if (Webserver_busy)
 		
 		NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
 		
-      NSLog(@"WriteStandardAktion: permsnent: %d",permanent);
+      NSLog(@"WriteStandardAktion: permanent: %d",permanent);
       if (permanent) // schicken an EEPROM
       {
          
@@ -1664,7 +1664,7 @@ if (Webserver_busy)
                                                  numberOfColumns:1];
          [UpdateRadio setCellSize:NSMakeSize(20, distanzBalken + offsetKontrollzeile)];
          [UpdateRadio setTag:1000+zeilennummer];
-         [UpdateRadio selectCellAtRow:1 column:0];
+         [UpdateRadio selectCellAtRow:0 column:0];
          
          
          //NSLog(@"EEPROMFeld i: %d origin.y: %.2f ",i,EEPROMFeld.origin.y);
@@ -2071,6 +2071,7 @@ if (Webserver_busy)
 	{
 	//NSLog(@"LoadDataAktion TWIStatusTaste OK");
 	}
+   
 	if ([[note userInfo]objectForKey:@"loaddataok"])
 	{
 		if ([[[note userInfo]objectForKey:@"loaddataok"]intValue])

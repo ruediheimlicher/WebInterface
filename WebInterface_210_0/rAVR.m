@@ -434,9 +434,7 @@ return returnInt;
 	//	NSLog(@"AVR awake WochenplanTabRect: x: %2.2f y: %2.2f",[WochenplanTab bounds].origin.x,[WochenplanTab bounds].origin.y);
 	//	NSLog(@"AVR awake WochenplanTabRect: h: %2.2f w: %2.2f",[WochenplanTab bounds].size.height,[WochenplanTab bounds].size.width);
 	
-   
-	
-	
+  	
 	NSRect TagplanFeld=WochenplanTabRect;
 	//TagplanFeld.origin.x+=10;
 	
@@ -878,7 +876,7 @@ return returnInt;
 			[ObjektSeg setWidth:SegFeld.size.width/8-1.5 forSegment:i];
 			[[ObjektSeg cell] setTag:(10*derRaum)+i+RAUMOFFSET forSegment:i];
 			NSString* tempTitel=[[[[tempWochenplanArray objectAtIndex:0]objectForKey:@"tagplanarray"]objectAtIndex:i]objectForKey:@"objektname"];
-			//NSLog(@"ObjektSeg segment: %d Titel: %@",i,tempTitel);
+			NSLog(@"ObjektSeg segment: %d Titel: %@",i,tempTitel);
 			[ObjektSeg setLabel:tempTitel forSegment:i];
 			int tempAktiv=[[[[[tempWochenplanArray objectAtIndex:0]objectForKey:@"tagplanarray"]objectAtIndex:i]objectForKey:@"aktiv"]intValue];
 			[ObjektSeg setSelected:tempAktiv forSegment:i];
@@ -1398,8 +1396,8 @@ return returnInt;
 	//NSString* Raumname=[[note userInfo]objectForKey:@"raumname"];
 	
 	int RaumIndex=[[[note userInfo]objectForKey:@"raum"]intValue];
-	//NSLog(@"AVR TagplancodeAktion Raum: %@ RaumIndex: %d Wochentag: %d Objekt: %d Stunde: %d",Raum, RaumIndex, Wochentag, Objekt, Stunde);
-	//NSLog(@"HomebusArray: %@",[HomebusArray description]);
+	NSLog(@"AVR TagplancodeAktion  RaumIndex: %d Wochentag: %d Objekt: %d Stunde: %d", RaumIndex, Wochentag, Objekt, Stunde);
+	NSLog(@"lastONArray: %@",[lastONArray description]);
 	NSMutableArray* tempWochenplanArray;
 	
 	if ([HomebusArray objectAtIndex:RaumIndex])	// Daten aus PList: Element von HomeDic

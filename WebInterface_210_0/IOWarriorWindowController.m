@@ -2254,7 +2254,7 @@ return;
 	if (PListPfad)
 		
 	{
-		//NSLog(@"savePListAktion: PListPfad: %@ ",PListPfad);
+		NSLog(@"savePListAktion: PListPfad: %@ ",PListPfad);
 		
 		NSMutableDictionary* tempPListDic;//=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
 		NSFileManager *Filemanager=[NSFileManager defaultManager];

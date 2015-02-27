@@ -27,8 +27,12 @@ enum downloadflag{downloadpause, heute, last, datum}downloadFlag;
  	self = [super initWithWindowNibName:@"HomeData"];
 	//NSLog(@"HomeData init");
 	DownloadPfad = [[NSHomeDirectory() stringByAppendingPathComponent:@"Documents/TempDaten"]retain];
-	ServerPfad =@"http://www.ruediheimlicher.ch/Data";
-	[ServerPfad retain];
+	
+   ServerPfad =@"http://www.ruediheimlicher.ch/Data";
+	
+   
+   
+   [ServerPfad retain];
 	DataSuffix=[[NSString string]retain];
 	prevDataString=[[NSString string]retain];
 	downloadFlag=downloadpause;
@@ -79,7 +83,6 @@ enum downloadflag{downloadpause, heute, last, datum}downloadFlag;
 {
 //NSLog(@"HomeData awake");
 //DownloadPfad = [[NSHomeDirectory() stringByAppendingPathComponent:@"Desktop/TempDaten"]retain];
-//ServerPfad =@"http://www.schuleduernten.ch/blatt/cgi-bin";
 //[ServerPfad retain];
 //NSLog(@"DownloadPfad: %@",DownloadPfad);
 

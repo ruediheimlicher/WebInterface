@@ -37,7 +37,7 @@
 //enum webtaskflag{idle, eepromread, eepromwrite,eepromreadwoche,eepromwritewoche}webtaskflag;
 
 
-@interface rAVR : NSWindowController <NSTabViewDelegate>
+@interface rAVR : NSWindowController <NSTabViewDelegate, NSFileManagerDelegate>
 {
 IBOutlet	id		WochenplanTab;
 IBOutlet	id		HeizungFeld;

@@ -485,7 +485,7 @@ HomeCentralURL=@"http://192.168.1.210";
 
 - (void)LocalStatusAktion:(NSNotification*)note
 {
-   //NSLog(@"LocalStatusAktion note: %@",[[note userInfo]description]);
+   //NSLog(@"HomeClient LocalStatusAktion note: %@",[[note userInfo]description]);
 
    if ([[note userInfo]objectForKey:@"status"] && [[[note userInfo]objectForKey:@"status"]intValue]==1) // URL umschalten
    {
@@ -497,7 +497,7 @@ HomeCentralURL=@"http://192.168.1.210";
       HomeCentralURL = @"http://ruediheimlicher.dyndns.org";
    //NSLog(@"LocalStatusAktion global: HomeCentralURL: %@",HomeCentralURL);
    }
-   NSLog(@"LocalStatusAktion HomeCentralURL: %@",HomeCentralURL);
+   NSLog(@"HomeClient LocalStatusAktion HomeCentralURL: %@",HomeCentralURL);
 }
 
 - (void)TestStatusAktion:(NSNotification*)note
@@ -1855,7 +1855,7 @@ HomeCentralURL=@"http://192.168.1.210";
     if (frame == [sender mainFrame])
 	 {
         NSString *provurl = [[[[frame provisionalDataSource] request] URL] absoluteString];
-		  //NSLog(@"didStartProvisionalLoadForFrame: URL: %@",provurl);
+		  NSLog(@"didStartProvisionalLoadForFrame: URL: %@",provurl);
        
        // URL: http://ruediheimlicher.dyndns.org/twi?pw=ideur00&rdata=10
        

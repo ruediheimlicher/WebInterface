@@ -1,6 +1,8 @@
 #import "IOWarriorWindowController.h"
 #import "IOWarriorLib.h"
 #import "MacroNamePanelController.h"
+#import <SystemConfiguration/SCPreferences.h>
+#import <SystemConfiguration/SCNetworkConfiguration.h>
 
 enum downloadflag{downloadpause, heute, last, datum}downloadFlag;
 
@@ -38,7 +40,7 @@ char* itoa(int val, int base){
 	return &buf[i+1];
 	
 }
-	
+
 
 
 @implementation IOWarriorWindowController
@@ -81,6 +83,33 @@ void IOWarriorCallback ()
 /*" Invoked when the nib file including the window has been loaded. "*/
 - (void) awakeFromNib
 {
+   
+   NSString* ASString = @"return do shell script \"curl http://checkip.dyndns.org/\"";
+   NSAppleScript* IP_appleScript = [[NSAppleScript alloc] initWithSource: ASString];
+   //NSLog(@"IP_appleScript: %@ ",[IP_appleScript description]);
+   NSDictionary* IPErr=nil;
+   NSAppleEventDescriptor * IP_Descriptor = [IP_appleScript executeAndReturnError:&IPErr];
+   
+   //NSLog(@"IPdescriptor: %@ IPErr: %@",[IP_Descriptor stringValue],IPErr);
+   NSString* IP_AddressString = [IP_Descriptor stringValue];
+   NSArray* IP_DescriptorArray = [IP_AddressString componentsSeparatedByString:@"Current IP Address:"];
+   //NSLog(@"IP_AddressArray: %@ ",[IP_DescriptorArray description]);
+
+   NSArray* IP_AddressArray = [[IP_DescriptorArray objectAtIndex:1] componentsSeparatedByString:@"</body></html>"];
+   
+   NSString* IP_Address = [IP_AddressArray objectAtIndex:0];
+   
+   NSCharacterSet* CharOK=[NSCharacterSet alphanumericCharacterSet];
+   
+   char first=[IP_Address characterAtIndex:0];
+   if (![CharOK characterIsMember:first])
+			{
+            //NSLog(@"DataVonHeute: String korrigieren");
+            IP_Address=[IP_Address substringFromIndex:1];
+         }
+
+   NSLog(@"IP_Address: %@ ",IP_Address);
+
 	oldHour=[[NSCalendarDate date]hourOfDay];
 	daySaved=NO;
 	int adresse=0xABCD;
@@ -370,19 +399,15 @@ void IOWarriorCallback ()
 	
 	HomeClient = [[rHomeClient alloc]init];
 	
-	
-   
-   
-   
-   
+	  
    
 	lastDataZeit=0;
 	//[self startHomeData];
 	//NSLog(@"awake vor AktuelleDaten");
 	
    // heutige Daten laden
-   
-   NSString* AktuelleDaten=[HomeData DataVonHeute];
+   NSString* AktuelleDaten = [NSString string];
+   AktuelleDaten=[HomeData DataVonHeute];
 	//NSLog(@"awake nach AktuelleDaten");
 	//NSLog(@"awake AktuelleDaten: \n%@",AktuelleDaten);
    
@@ -395,7 +420,7 @@ void IOWarriorCallback ()
 		[self setStatistikDaten];
       
       NSArray* IP_Array = [HomeData Router_IP];
-      //NSLog(@"IP_Array: %@",[IP_Array description]);
+      NSLog(@"IP_Array: %@",[IP_Array description]);
       if ([IP_Array count] >1)
       {
          if ([[IP_Array objectAtIndex:0] isEqualToString:[IP_Array objectAtIndex:1]]) // gleiche IP
@@ -429,7 +454,9 @@ void IOWarriorCallback ()
    [HomeData setPumpeLeistungsfaktor:0.0138];  // W/s
    [HomeData setElektroLeistungsfaktor:0.833]; // W/s
    [HomeData setFluidLeistungsfaktor:0.0625]; // Leistungsuebertragung in kJ/s*K
+ 
    
+   /*
 	NSString* AktuelleSolarDaten=[HomeData SolarDataVonHeute];
 	//NSLog(@"awake nach AktuelleSolarDaten");
 	//NSLog(@"awake AktuelleSolarDaten: \n%@",AktuelleSolarDaten);
@@ -446,7 +473,7 @@ void IOWarriorCallback ()
 	}
 	
    NSLog(@"end SolarDatenVonHeute");
-
+*/
 
 
 	//[Data showWindow:self];
@@ -784,7 +811,7 @@ HomeDataDownload
 
 
 */
-	//NSLog(@"HomeDataDownloadAktion: %@",[note userInfo]);
+   NSLog(@"HomeDataDownloadAktion userInfo: *%@*",[[note userInfo] objectForKey:@"lastdatazeit" ]);
 	
 	
 	if ([AVR WriteWoche_busy]) // Woche wird noch geschrieben
@@ -806,18 +833,22 @@ HomeDataDownload
 		
 	//NSLog(@"HomeDataDownloadAktion flag: %d\n DataString: \n%@",flag, DataString);
 	//NSLog(@"HomeDataDownloadAktion flag: %d length: %d",flag,[DataString length]);
-
-	switch (flag)
+   
+   // enum downloadflag{downloadpause, heute, last, datum}downloadFlag;
+	
+   switch (flag)
 	{
-		case heute:
+		case heute: // 1
 		{
 			if ([[note userInfo] objectForKey:@"lastdatazeit"])
 			{
 				lastDataZeit=[[[note userInfo] objectForKey:@"lastdatazeit"]intValue];
+            NSLog(@"IOW HomeDataDownloadAktion case heute: lastDataZeit: %d", lastDataZeit);
 			}
 			else
 			{
 				lastDataZeit=0;
+            NSLog(@"IOW HomeDataDownloadAktion case heute: lastDataZeit ist 0");
 			}
 			
 			if ([DataString length])
@@ -852,14 +883,16 @@ HomeDataDownload
 			NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
 			[NotificationDic setObject:[NSNumber numberWithInt:lastDataZeit] forKey:@"previouslastdatazeit"];
 			int tempLastDataZeit=0;
+         
+         
 			if ([[note userInfo] objectForKey:@"lastdatazeit"])
 			{
 				tempLastDataZeit=[[[note userInfo] objectForKey:@"lastdatazeit"]intValue];
 			}
-			//NSLog(@"HomeDataDownloadAktion lastDataZeit: %d tempLastDataZeit: %d",lastDataZeit,tempLastDataZeit);
+			NSLog(@"IOW HomeDataDownloadAktion case last:  lastDataZeit: %d tempLastDataZeit: %d",lastDataZeit,tempLastDataZeit);
 			if (!(tempLastDataZeit==lastDataZeit))
 			{
-				//NSLog(@"Neue Daten: neuer DataString: %@",DataString);
+				NSLog(@"IOW Neue Daten: neuer DataString: %@",DataString);
 				lastDataZeit=tempLastDataZeit;
 				
 				if ([DataString length])
@@ -869,7 +902,7 @@ HomeDataDownload
 					{
 						//NSLog(@"tempDataArray: %@",[[tempDataArray objectAtIndex:0]description]);
 						NSArray* tempZeilenArray=[[tempDataArray objectAtIndex:0]componentsSeparatedByString:@"\t"];
-						//NSLog(@"tempZeilenArray: %@",[tempZeilenArray description]);
+						NSLog(@"IOW tempZeilenArray: %@",[tempZeilenArray description]);
 						
 						[NotificationDic setObject:tempZeilenArray forKey:@"lastdatenarray"];
 						NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
@@ -920,7 +953,7 @@ HomeDataDownload
 
 - (void)DownloadFunktion:(NSTimer*)derTimer
 {
-	//NSLog(@"DownloadTimer DownloadFunktion");
+	NSLog(@"DownloadTimer DownloadFunktion");
 	
 	NSString* AktuelleDaten=[HomeData LastData];
 	if (AktuelleDaten == NULL)

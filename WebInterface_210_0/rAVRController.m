@@ -624,6 +624,10 @@ NSLog(@"lastDataRead: %@",lastDataRead);
 		[StatDic setObject:BrennerKanalArray forKey:@"brennerkanalarray"];
 		[StatDic setObject:[NSNumber numberWithInt:1] forKey:@"aktion"];
 	}
+   else
+   {
+      NSLog(@"AVRController setStatistikDaten: BrennerDaten nicht da");
+   }
 	
 	NSArray* TemperaturDatenArray=[HomeData TemperaturStatistikVonJahr:jahr Monat:monat];
 	if (TemperaturDatenArray && [TemperaturDatenArray count])

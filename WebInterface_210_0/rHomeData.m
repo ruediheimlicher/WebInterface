@@ -57,6 +57,16 @@ enum downloadflag{downloadpause, heute, last, datum}downloadFlag;
 				  name:@"EEPROMUpdate"
 				object:nil];
 	
+   [nc addObserver:self
+          selector:@selector(LocalStatusAktion:)
+              name:@"localstatus"
+            object:nil];
+   
+   [nc addObserver:self
+          selector:@selector(TestStatusAktion:)
+              name:@"teststatus"
+            object:nil];
+
 	
 	return self;
 }
@@ -177,13 +187,12 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 		//NSLog(@"DataVonHeute URLPfad: %@",URLPfad);
 		//NSLog(@"DataVonHeute  DownloadPfad: %@ DataSuffix: %@",DownloadPfad,DataSuffix);
 		NSURL *URL = [NSURL URLWithString:[ServerPfad stringByAppendingPathComponent:DataSuffix]];
-      
       NSLog(@"awake DataVonHeute URL: %@",URL);
 		NSStringEncoding *  enc=0;
 		NSCharacterSet* CharOK=[NSCharacterSet alphanumericCharacterSet];
 		NSError* WebFehler=NULL;
 		NSString* DataString=[NSString stringWithContentsOfURL:URL usedEncoding: enc error:&WebFehler];
-		NSLog(@"DataVonHeute WebFehler: :%@",[[WebFehler userInfo]description]);
+		//NSLog(@"DataVonHeute WebFehler: :%@",[[WebFehler userInfo]description]);
 		if (WebFehler)
 		{
 			//NSLog(@"WebFehler: :%@",[[WebFehler userInfo]description]);
@@ -225,7 +234,7 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 			}
 			//NSLog(@"DataVonHeute DataString: \n%@",DataString);
 			lastDataZeit=[self lastDataZeitVon:DataString];
-			//NSLog(@"DataVonHeute lastDataZeit: %d",lastDataZeit);
+			NSLog(@"DataVonHeute lastDataZeit: %d",lastDataZeit);
 			
 			// Auf WindowController Timer auslösen
 			downloadFlag=heute;
@@ -407,6 +416,7 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 		
 		
 		//ruediheimlicher
+      
 		NSURL *lastTimeURL = [NSURL URLWithString:@"http://www.ruediheimlicher.ch/Data/HomeCentralPrefs.txt"];
 		//NSURLRequest* lastTimeRequest=[ [NSURLRequest alloc] initWithURL: lastTimeURL cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:30.0];
 		NSURLRequest* lastTimeRequest=[ [NSURLRequest alloc] initWithURL: lastTimeURL cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData timeoutInterval:5.0];
@@ -583,6 +593,28 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
    
 }
 
+- (void)LocalStatusAktion:(NSNotification*)note
+{
+   NSLog(@"HomeData LocalStatusAktion note: %@",[[note userInfo]description]);
+
+}
+
+- (void)TestStatusAktion:(NSNotification*)note
+{
+   NSLog(@"HomeData TestStatusAktion note: %@",[[note userInfo]description]);
+   
+   if ([[note userInfo]objectForKey:@"test"] && [[[note userInfo]objectForKey:@"test"]intValue]==1) // URL umschalten
+   {
+  //    HomeCentralURL = @"http://192.168.1.213";
+      //NSLog(@"TestStatusAktion local: HomeCentralURL: %@",HomeCentralURL);
+   }
+   else
+   {
+ //     HomeCentralURL = @"http://ruediheimlicher.dyndns.org";
+      //NSLog(@"TestStatusAktion global: HomeCentralURL: %@",HomeCentralURL);
+   }
+ //  NSLog(@"TestStatusAktion HomeCentralURL: %@",HomeCentralURL);
+}
 
 
 - (NSArray*)Router_IP
@@ -590,17 +622,24 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 	NSMutableArray* ErtragdatenArray=[[NSMutableArray alloc]initWithCapacity:0];
 	//NSLog(@"Router_IP");
 	NSString*IP_DataSuffix=@"ip.txt";
-	NSString* URLPfad=[NSURL URLWithString:[ServerPfad stringByAppendingPathComponent:IP_DataSuffix]];
-	//NSLog(@"Router_IP URLPfad: %@",URLPfad);
-	//NSLog(@"SolarErtragVonJahr  DownloadPfad: %@ IP_DataSuffix: %@",DownloadPfad,IP_DataSuffix);
-	NSURL *URL = [NSURL URLWithString:[ServerPfad stringByAppendingPathComponent:IP_DataSuffix]];
+   NSString* URLString=[ServerPfad stringByAppendingPathComponent:IP_DataSuffix];
+
+	NSURL* URLPfad=[NSURL URLWithString:[ServerPfad stringByAppendingPathComponent:IP_DataSuffix]];
+                        
+	NSLog(@"Router_IP URLPfad: %@",URLPfad);
+
+   NSURL *URL = [NSURL URLWithString:[ServerPfad stringByAppendingPathComponent:IP_DataSuffix]];
 	
 	NSStringEncoding *  enc=0;
 	NSCharacterSet* CharOK=[NSCharacterSet alphanumericCharacterSet];
+   
+   NSLog(@")
+   
+   
 	NSString* DataString=[NSString stringWithContentsOfURL:URL usedEncoding: enc error:NULL];
-	//NSLog(@"IP von Server: %@",DataString);
+	NSLog(@"IP von Server: %@",DataString);
    NSArray* IP_Array = [DataString componentsSeparatedByString:@"\r\n"];
-   //NSLog(@"IP von Server IP_Array: %@",IP_Array);
+   NSLog(@"IP von Server IP_Array: %@",IP_Array);
    
    NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
    [NotificationDic setObject:DataString forKey:@"routerip"];

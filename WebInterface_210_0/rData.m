@@ -1251,7 +1251,7 @@ Aufgerufen von rHomeData.
 Setzt Feldwerte im Fenster Data.
 
 */
-	//NSLog(@"rData HomeDataDownloadAktion");
+	//NSLog(@"rData HomeDataDownloadAktion note: %@",note);
 	[LoadMark performClick:NULL];
 	
 	if ([[note userInfo]objectForKey:@"err"])
@@ -1281,7 +1281,7 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
 		[self reload:NULL];
 	}
 
-	//NSLog(@"anzLoads: %d",anzLoads);
+	//NSLog(@"rData HomeDataDownloadAktion anzLoads: %d",anzLoads);
 	[LastDataFeld setStringValue:@"***"];
 
 	if ([[note userInfo]objectForKey:@"datastring"])
@@ -2056,7 +2056,8 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
 		return;
 	}
 	NSString* StartDatenString=[[[TemperaturDatenFeld string]componentsSeparatedByString:@"\r"]objectAtIndex:0];
-	NSLog(@"LastDatenAktion StartDatenString: %@",StartDatenString);
+	
+   NSLog(@"LastDatenAktion StartDatenString: *%@*",StartDatenString);
 	NSString* Kalenderformat=[[NSCalendarDate calendarDate]calendarFormat];
 	//NSLog(@"LastDatenaktion note: %@",[[note userInfo]description]);
 	if ([[note userInfo]objectForKey:@"startzeit"])
@@ -2671,7 +2672,8 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
 
 - (void)LastSolarDatenAktion:(NSNotification*)note
 {
-	
+	int firstZeit=0;
+   
 	if (Kalenderblocker)
 	{
 		//NSLog(@"LastSolarDatenAktion	Kalenderblocker");
@@ -2679,28 +2681,31 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
 	}
 	
 	NSMutableArray* StartDatenArray=(NSMutableArray*)[[SolarDatenFeld string]componentsSeparatedByString:@"\r"];
-	if ([[StartDatenArray objectAtIndex:0]length]==0)
-	{
-	[StartDatenArray removeObjectAtIndex:0];
-	}
-	//NSString* StartDatenString=[[[SolarDatenFeld string]componentsSeparatedByString:@"\r"]objectAtIndex:1];
-	NSString* StartDatenString=[StartDatenArray objectAtIndex:0];
-//	NSLog(@"LastSolarDatenAktion StartDatenString: %@",StartDatenString);
-	NSString* Kalenderformat=[[NSCalendarDate calendarDate]calendarFormat];
-	//NSLog(@"LastSolarDatenaktion note: %@",[[note userInfo]description]);
-	if ([[note userInfo]objectForKey:@"startzeit"])
-	{
-		SolarDatenserieStartZeit=[[NSCalendarDate dateWithString:[[note userInfo]objectForKey:@"startzeit"] calendarFormat:Kalenderformat]retain];
-	}
-	//int firsttag=[SolarDatenserieStartZeit dayOfMonth];
-	int firstZeit=0;
-	if (StartDatenString && [StartDatenString length])
-	{
-		// Zeit des ersten Datensatzes
-		
-		firstZeit = [[[StartDatenString componentsSeparatedByString:@"\t"]objectAtIndex:0]intValue];
-//		NSLog(@"LastSolarDatenAktion firstZeit: %d",firstZeit);
-	}
+	if ([StartDatenArray count])
+   {
+      if (([[StartDatenArray objectAtIndex:0]length]==0))
+      {
+         //[StartDatenArray removeObjectAtIndex:0];
+      }
+      //NSString* StartDatenString=[[[SolarDatenFeld string]componentsSeparatedByString:@"\r"]objectAtIndex:1];
+      NSString* StartDatenString=[StartDatenArray objectAtIndex:0];
+      //	NSLog(@"LastSolarDatenAktion StartDatenString: %@",StartDatenString);
+      NSString* Kalenderformat=[[NSCalendarDate calendarDate]calendarFormat];
+      //NSLog(@"LastSolarDatenaktion note: %@",[[note userInfo]description]);
+      if ([[note userInfo]objectForKey:@"startzeit"])
+      {
+         SolarDatenserieStartZeit=[[NSCalendarDate dateWithString:[[note userInfo]objectForKey:@"startzeit"] calendarFormat:Kalenderformat]retain];
+      }
+      //int firsttag=[SolarDatenserieStartZeit dayOfMonth];
+      
+      if (StartDatenString && [StartDatenString length])
+      {
+         // Zeit des ersten Datensatzes
+         
+         firstZeit = [[[StartDatenString componentsSeparatedByString:@"\t"]objectAtIndex:0]intValue];
+         //		NSLog(@"LastSolarDatenAktion firstZeit: %d",firstZeit);
+      }
+   }
 	
 	if ([[note userInfo]objectForKey:@"lastdatazeit"])
 	{

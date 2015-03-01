@@ -739,6 +739,16 @@ return returnInt;
     */
    //	[self setSegmentLabel:@"Ofen" forSegment:1 forRaum:4];
 	//[self setObjektTitel:@"Ofen" forObjekt:1 forRaum:4];
+
+   NSString *host = @"http://www.ruediheimlicher.ch/Data/EEE.txt?myvar=%@";
+   NSString *urlString = [NSString stringWithFormat:host, @"texttowritetofile"];
+   NSLog(@"urlString: %@",urlString);
+   NSURL *url = [NSURL URLWithString:urlString];
+   NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+   //[request setHTTPMethod:@"POST"];
+   
+   NSData *returnData = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:nil];
+   NSLog(@"returnData: %@",returnData);
 }
 
 - (void)setRaum:(int)derRaum

@@ -456,7 +456,7 @@ void IOWarriorCallback ()
    [HomeData setFluidLeistungsfaktor:0.0625]; // Leistungsuebertragung in kJ/s*K
  
    
-   /*
+   
 	NSString* AktuelleSolarDaten=[HomeData SolarDataVonHeute];
 	//NSLog(@"awake nach AktuelleSolarDaten");
 	//NSLog(@"awake AktuelleSolarDaten: \n%@",AktuelleSolarDaten);
@@ -473,7 +473,7 @@ void IOWarriorCallback ()
 	}
 	
    NSLog(@"end SolarDatenVonHeute");
-*/
+
 
 
 	//[Data showWindow:self];
@@ -1430,7 +1430,7 @@ return;
 
 -(void)openWithSolarString:(NSString*)derDatenString
 {
-	//NSLog(@"openWithSolarString DatenString length: %d", [derDatenString length]);
+	NSLog(@"openWithSolarString DatenString length: %d", [derDatenString length]);
 	NSArray* rohDatenArray = [NSArray array];
 	NSString* TagString = [NSString string];
 	int Tag=0;

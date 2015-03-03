@@ -2410,11 +2410,13 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
 	Quelle=1;
 	if ([[note userInfo]objectForKey:@"startzeit"])
 	{
-		//NSString* StartzeitString = [[note userInfo]objectForKey:@"startzeit"];
-		//NSLog(@"ExterneSolarDatenAktion: Startzeit: *%@* StartzeitString: *%@*",[[note userInfo]objectForKey:@"startzeit"],StartzeitString);
+		NSString* StartzeitString = [[note userInfo]objectForKey:@"startzeit"];
+		NSLog(@"ExterneSolarDatenAktion: Startzeit: *%@* StartzeitString: *%@*",[[note userInfo]objectForKey:@"startzeit"],StartzeitString);
 		
 		NSString* Kalenderformat=[[NSCalendarDate calendarDate]calendarFormat];
 		SolarDatenserieStartZeit=[[NSCalendarDate dateWithString:[[note userInfo]objectForKey:@"startzeit"] calendarFormat:Kalenderformat]retain];
+      
+      
 		int tag=[SolarDatenserieStartZeit dayOfMonth];
 		
 		NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];

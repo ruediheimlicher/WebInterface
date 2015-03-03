@@ -197,10 +197,19 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 		{
 			//NSLog(@"WebFehler: :%@",[[WebFehler userInfo]description]);
 			
-			NSLog(@"WebFehler in DataForHeute: :%@",[[WebFehler userInfo]objectForKey:@"NSUnderlyingError"]);
+			//NSLog(@"WebFehler in DataForHeute: :%@",[[WebFehler userInfo]objectForKey:@"NSUnderlyingError"]);
 			//ERROR: 503
 			NSArray* ErrorArray=[[[[WebFehler userInfo]objectForKey:@"NSUnderlyingError"]description]componentsSeparatedByString:@" "];
-			NSLog(@"ErrorArray: %@",[ErrorArray description]);
+         NSString* ErrString =[ErrorArray componentsJoinedByString:@" "];
+         NSLog(@"ErrString: %@",ErrString);
+         NSRange  ErrRange = [ErrString rangeOfString:@"offline" options:NSCaseInsensitiveSearch];
+         
+			NSLog(@"ErrorArray: %lu",(unsigned long)ErrRange.location);
+        // if ([ErrorArray containsObject:@"offline.\""])
+         if (ErrRange.location < NSNotFound)
+         {
+            NSLog(@"offline");
+         }
 			NSAlert *Warnung = [[[NSAlert alloc] init] autorelease];
 			[Warnung addButtonWithTitle:@"OK"];
 			//	[Warnung addButtonWithTitle:@""];
@@ -213,7 +222,8 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
          
 			NSString* s2=[ErrorArray objectAtIndex:2];
 			int AnfIndex=[[[[WebFehler userInfo]objectForKey:@"NSUnderlyingError"]description]rangeOfString:@"\""].location;
-			NSString* s3=@"";//[[[[WebFehler userInfo]objectForKey:@"NSUnderlyingError"]description]substringFromIndex:AnfIndex];
+			NSString* s3=@"Offline";//[[[[WebFehler userInfo]objectForKey:@"NSUnderlyingError"]description]substringFromIndex:AnfIndex];
+         //NSString* InformationString=[NSString stringWithFormat:@"%@\n%@\nFehler: %@",s1,s2,s3];
 			NSString* InformationString=[NSString stringWithFormat:@"%@\n%@\nFehler: %@",s1,s2,s3];
 			[Warnung setInformativeText:InformationString];
 			[Warnung setAlertStyle:NSWarningAlertStyle];
@@ -221,6 +231,7 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 			int antwort=[Warnung runModal];
 			return returnString;
 		}
+      
 		if ([DataString length])
 		{
 			char first=[DataString characterAtIndex:0];
@@ -633,8 +644,7 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 	NSStringEncoding *  enc=0;
 	NSCharacterSet* CharOK=[NSCharacterSet alphanumericCharacterSet];
    
-   NSLog(@")
-   
+      
    
 	NSString* DataString=[NSString stringWithContentsOfURL:URL usedEncoding: enc error:NULL];
 	NSLog(@"IP von Server: %@",DataString);
@@ -1712,7 +1722,7 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 		}
 		//NSLog(@"SolarErtragVonJahr DataString: \n%@",DataString);
 		NSArray* tempZeilenArray = [DataString componentsSeparatedByString:@"\n"];
-		//NSLog(@"SolarErtragVonJahr tempZeilenArray: \n%@",[tempZeilenArray description]);
+		NSLog(@"SolarErtragVonJahr tempZeilenArray: \n%@",[tempZeilenArray description]);
 		NSEnumerator* ZeilenEnum =[tempZeilenArray objectEnumerator];
 		id eineZeile;
 		while (eineZeile=[ZeilenEnum nextObject])

@@ -127,7 +127,8 @@ unsigned char h2int(char c)
 //HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 	//LocalHomeCentralURL=@"192.168.1.210";
 
-HomeCentralURL=@"http://192.168.1.210";
+   HomeCentralURL=@"http://192.168.1.210";
+   //HomeCentralURL=@"http://ruediheimlicher.ch";
 
 	
 	pw = @"ideur00";
@@ -141,7 +142,7 @@ HomeCentralURL=@"http://192.168.1.210";
 	//[prefs setUsesPageCache:NO]; 
 	//[prefs setCacheModel:WebCacheModelDocumentViewer];
 	// Maximale Anzahl Versuche um die EEPROM-Daten zu vom Webserver zu lesen
-	maxAnzahl = 10;
+	maxAnzahl = 25;
    
    
    
@@ -405,23 +406,15 @@ HomeCentralURL=@"http://192.168.1.210";
                
 				}break;
 					
-				case NSAlertSecondButtonReturn://
-				{
-					NSLog(@"NSAlertSecondButtonReturn");
-					
-				}break;
-				case NSAlertThirdButtonReturn://		
-				{
-					NSLog(@"NSAlertThirdButtonReturn");
-					
-				}break;
 					
 			}//switch
 			//
          
-         
+         if ([derTimer isValid])
+         {
 			[derTimer invalidate];
 			[derTimer release];
+         }
 		}
 		
 		
@@ -530,16 +523,16 @@ HomeCentralURL=@"http://192.168.1.210";
 			TWIStatusSuffix = [NSString stringWithFormat:@"pw=%@&status=%@",pw,@"1"];
 			NSString* TWIStatusURLString =[NSString stringWithFormat:@"%@/twi?%@",HomeCentralURL, TWIStatusSuffix];
 			
-          //NSLog(@"TWIStatusAktion TWIStatusURL: %@",TWIStatusURLString);
+          NSLog(@"TWIStatusAktion TWIStatusURL: %@",TWIStatusURLString);
 			
          NSURL *URL = [NSURL URLWithString:TWIStatusURLString];
          //NSLog(@"TWIStatusAktion URL: %@",URL);
 			[self loadURL:URL];
          
-         if ([sendTimer isValid])
+         if (sendTimer && [sendTimer isValid])
          {
-         [sendTimer invalidate];
-         sendTimer = nil;
+            [sendTimer invalidate];
+            sendTimer = nil;
          }
 		
       }
@@ -716,7 +709,7 @@ HomeCentralURL=@"http://192.168.1.210";
    
    WebTask = idle;
    
-   NSLog(@"HomeClientWriteStandardAktion tagbalkentyp aus userinfo: %@", [[note userInfo]objectForKey:@"tagbalkentyp"]);
+   //NSLog(@"HomeClientWriteStandardAktion tagbalkentyp aus userinfo: %@", [[note userInfo]objectForKey:@"tagbalkentyp"]);
    [SendEEPROMDataDic setObject:[[note userInfo]objectForKey:@"titel"] forKey:@"titel"];
    [SendEEPROMDataDic setObject:[[note userInfo]objectForKey:@"tagbalkentyp"] forKey:@"tagbalkentyp"];
 	
@@ -885,7 +878,7 @@ HomeCentralURL=@"http://192.168.1.210";
 		//NSLog(@"HomeClientWriteStandardAktion WriteDataSuffix ganz: %@",WriteDataSuffix);
 	}
    NSString* HomeClientURLString =[NSString stringWithFormat:@"%@/twi?%@",HomeCentralURL, WriteDataSuffix];
-   //NSLog(@"HomeClientWriteStandardAktion HomeClientURLString: %@",HomeClientURLString);
+   NSLog(@"HomeClientWriteStandardAktion HomeClientURLString: %@",HomeClientURLString);
    NSURL *URL = [NSURL URLWithString:HomeClientURLString];
    
    [self loadURL:URL];
@@ -1855,7 +1848,7 @@ HomeCentralURL=@"http://192.168.1.210";
     if (frame == [sender mainFrame])
 	 {
         NSString *provurl = [[[[frame provisionalDataSource] request] URL] absoluteString];
-		  NSLog(@"didStartProvisionalLoadForFrame: URL: %@",provurl);
+		  NSLog(@"HomeClient didStartProvisionalLoadForFrame: URL: %@",provurl);
        
        // URL: http://ruediheimlicher.dyndns.org/twi?pw=ideur00&rdata=10
        

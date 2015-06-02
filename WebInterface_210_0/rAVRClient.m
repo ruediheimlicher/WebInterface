@@ -582,9 +582,7 @@
       uint16_t startadresse=raum*RAUMPLANBREITE + objekt*TAGPLANBREITE + tempTag*0x08;
       
       //NSLog(@"tempRaum: %X tempObjekt: %X tempTag: %X startadresse hex: %X dez: %d",tempRaum, tempObjekt, tempTag,startadresse,startadresse);
-      
-      
-      
+   
       NSString* AdresseKontrollString = [NSString string];
       int hbyte=startadresse/0x100;
       if (hbyte < 0x0F)
@@ -823,7 +821,7 @@ if (Webserver_busy)
 	}
 	else
 	{
-      NSLog(@"TWIStatustaste nicht ok: %d",[TWIStatusTaste state]);
+      //NSLog(@"TWIStatustaste nicht ok: %d",[TWIStatusTaste state]);
 		Webserver_busy=1;// Wird jeweils in der Finishloadaktion zurueckgestellt, sobald das writeok angekommen ist.
 		[AdresseFeld setStringValue:@""];
 		[WriteFeld setStringValue:@""];
@@ -1207,7 +1205,9 @@ if (Webserver_busy)
             NSLog(@"AVRClient EEPROMWriteFertigAktion timeout");
             [[NSSound soundNamed:@"Basso"] play];
             [writeEEPROMcounterfeld setStringValue:@"X"];
-            
+            [UpdateWaitrad stopAnimation:NULL];
+            [Waitrad stopAnimation:NULL];
+
             
          }break;
          
@@ -1219,6 +1219,8 @@ if (Webserver_busy)
             [writeEEPROMcounterfeld setStringValue:@"OK"];
              // Aufraeumen
             [UpdateWaitrad stopAnimation:NULL];
+            [Waitrad stopAnimation:NULL];
+
              NSMutableArray *viewsToRemove = [[NSMutableArray alloc] init];
              for(NSView* thisPage in [EEPROMPlan subviews])
              {
@@ -2121,6 +2123,7 @@ if (Webserver_busy)
 	int Adresse_OK=0;
 	int Data_OK=0;
 	int Write_OK=0;
+    //[Waitrad  stopAnimation:NULL];
 	if ([[note userInfo]objectForKey:@"okcode"]) 
 	{
 		OK_Code_Status=[[[note userInfo]objectForKey:@"okcode"]intValue]; // 

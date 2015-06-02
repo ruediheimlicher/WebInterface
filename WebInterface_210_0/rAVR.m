@@ -65,6 +65,36 @@ return BinString;
 return returnInt;
 }
 
+void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSString *freig)
+{
+   
+   // http://www.osxentwicklerforum.de/index.php?page=Thread&threadID=24276
+   // http://stackoverflow.com/questions/6804541/getting-applescript-return-value-in-obj-c
+   //NSString *mountString = [NSString localizedStringWithFormat:@"if not (exists disk freig)\n display dialog \"mounted\" \nend if\n",freig];
+   
+   //  NSString *mountString = [NSString localizedStringWithFormat:@"tell application \"Finder\"\n if (exists disk \"WD_TV\") then\nbeep\nelse\nmount volume \"smb://%@:%@@%@/%@\"\nend if\nend tell\n",usr,pwd,serv,freig];
+   
+   // Pfad aus Informationsfenster
+   NSString *mountString = [NSString localizedStringWithFormat:@"tell application \"Finder\"\n if (exists disk \"WD_TV\") then\nbeep\nelse\nmount volume \"smb://WDTVLIVE._smb._tcp.local/WD_TV\"\nend if\nend tell\n"];
+   
+   //NSLog(@"mountString: %@",mountString);
+   NSAppleScript *script = [[NSAppleScript alloc] initWithSource:mountString];
+   
+   NSDictionary *errorMessage = nil;
+   NSAppleEventDescriptor *result = [script executeAndReturnError:&errorMessage];
+   NSLog(@"mount: %@",result);
+
+   NSString *ipString = [NSString localizedStringWithFormat:@"do shell script \"curl ifconfig.me/ip\""];
+   NSAppleScript *ipscript = [[NSAppleScript alloc] initWithSource:ipString];
+   NSDictionary *iperrorMessage = nil;
+   NSAppleEventDescriptor *ipresult = [ipscript executeAndReturnError:&iperrorMessage];
+   NSLog(@"mount: %@",ipresult);
+
+   
+}
+
+
+
 
 - (NSArray*)StundenArrayAusByteArray:(NSArray*)derStundenByteArray
 {
@@ -303,10 +333,23 @@ return returnInt;
 	return self;
 }	//init
 
+
+
 - (void)awakeFromNib
 {
 	NSLog(@"AVR awake");
    
+   
+   //NSString *ipString = [NSString localizedStringWithFormat:@"do shell script \"curl ifconfig.me/ip\""];
+   NSString *ipString = [NSString localizedStringWithFormat:@"do shell script \"curl ident.me\""];
+
+   NSAppleScript *ipscript = [[NSAppleScript alloc] initWithSource:ipString];
+   NSDictionary *iperrorMessage = nil;
+   NSAppleEventDescriptor *ipresult = [ipscript executeAndReturnError:&iperrorMessage];
+   NSLog(@"mount: %@",ipresult);
+   NSString *scriptReturn = [ipresult stringValue];
+   NSLog(@"Found utxt string: %@",scriptReturn);
+
    int tg=0;
    int rm=3;
    int obj=0;
@@ -742,13 +785,13 @@ return returnInt;
 
    NSString *host = @"http://www.ruediheimlicher.ch/Data/EEE.txt?myvar=%@";
    NSString *urlString = [NSString stringWithFormat:host, @"texttowritetofile"];
-   NSLog(@"urlString: %@",urlString);
+   //NSLog(@"urlString: %@",urlString);
    NSURL *url = [NSURL URLWithString:urlString];
    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
    //[request setHTTPMethod:@"POST"];
    
    NSData *returnData = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:nil];
-   NSLog(@"returnData: %@",returnData);
+   //NSLog(@"returnData: %@",returnData);
 }
 
 - (void)setRaum:(int)derRaum
@@ -1406,8 +1449,8 @@ return returnInt;
 	//NSString* Raumname=[[note userInfo]objectForKey:@"raumname"];
 	
 	int RaumIndex=[[[note userInfo]objectForKey:@"raum"]intValue];
-	NSLog(@"AVR TagplancodeAktion  RaumIndex: %d Wochentag: %d Objekt: %d Stunde: %d", RaumIndex, Wochentag, Objekt, Stunde);
-	NSLog(@"lastONArray: %@",[lastONArray description]);
+	//NSLog(@"AVR TagplancodeAktion  RaumIndex: %d Wochentag: %d Objekt: %d Stunde: %d", RaumIndex, Wochentag, Objekt, Stunde);
+	//NSLog(@"lastONArray: %@",[lastONArray description]);
 	NSMutableArray* tempWochenplanArray;
 	
 	if ([HomebusArray objectAtIndex:RaumIndex])	// Daten aus PList: Element von HomeDic

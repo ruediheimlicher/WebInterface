@@ -206,7 +206,7 @@ void IOWarriorCallback ()
 	NSString* SysVersion=SystemVersion();
 	NSArray* VersionArray=[SysVersion componentsSeparatedByString:@"."];
 	SystemNummer=[[VersionArray objectAtIndex:1]intValue];
-	NSLog(@"SystemVersion aus Funktion: %@ Nummer: %d ",SysVersion,SystemNummer);
+	//NSLog(@"SystemVersion aus Funktion: %@ Nummer: %d ",SysVersion,SystemNummer);
 	IOWarriorInit ();
 	IOWarriorIsPresent (); // builds the list of available IOWarrior interface, speeds up library operations
 	IOWarriorSetDeviceCallback (IOWarriorCallback, nil);
@@ -419,8 +419,10 @@ void IOWarriorCallback ()
       
 		[self setStatistikDaten];
       
-      NSArray* IP_Array = [HomeData Router_IP];
+      //NSArray* IP_Array = [HomeData Router_IP];
+      /*
       NSLog(@"IP_Array: %@",[IP_Array description]);
+     
       if ([IP_Array count] >1)
       {
          if ([[IP_Array objectAtIndex:0] isEqualToString:[IP_Array objectAtIndex:1]]) // gleiche IP
@@ -439,8 +441,9 @@ void IOWarriorCallback ()
          [Data setRouter_IP:[IP_Array objectAtIndex:0]];
          
       }
-      
-
+      */
+      NSString* IP_String = [HomeData Router_IP];
+      [Data setRouter_IP:IP_String];
 	}
 	else
 	{
@@ -811,7 +814,7 @@ HomeDataDownload
 
 
 */
-   NSLog(@"HomeDataDownloadAktion userInfo: *%@*",[[note userInfo] objectForKey:@"lastdatazeit" ]);
+   //NSLog(@"HomeDataDownloadAktion userInfo: *%@*",[[note userInfo] objectForKey:@"lastdatazeit" ]);
 	
 	
 	if ([AVR WriteWoche_busy]) // Woche wird noch geschrieben
@@ -843,12 +846,12 @@ HomeDataDownload
 			if ([[note userInfo] objectForKey:@"lastdatazeit"])
 			{
 				lastDataZeit=[[[note userInfo] objectForKey:@"lastdatazeit"]intValue];
-            NSLog(@"IOW HomeDataDownloadAktion case heute: lastDataZeit: %d", lastDataZeit);
+            //NSLog(@"IOW HomeDataDownloadAktion case heute: lastDataZeit: %d", lastDataZeit);
 			}
 			else
 			{
 				lastDataZeit=0;
-            NSLog(@"IOW HomeDataDownloadAktion case heute: lastDataZeit ist 0");
+            //NSLog(@"IOW HomeDataDownloadAktion case heute: lastDataZeit ist 0");
 			}
 			
 			if ([DataString length])
@@ -889,10 +892,10 @@ HomeDataDownload
 			{
 				tempLastDataZeit=[[[note userInfo] objectForKey:@"lastdatazeit"]intValue];
 			}
-			NSLog(@"IOW HomeDataDownloadAktion case last:  lastDataZeit: %d tempLastDataZeit: %d",lastDataZeit,tempLastDataZeit);
+			//NSLog(@"IOW HomeDataDownloadAktion case last:  lastDataZeit: %d tempLastDataZeit: %d",lastDataZeit,tempLastDataZeit);
 			if (!(tempLastDataZeit==lastDataZeit))
 			{
-				NSLog(@"IOW Neue Daten: neuer DataString: %@",DataString);
+				//NSLog(@"IOW Neue Daten: neuer DataString: %@",DataString);
 				lastDataZeit=tempLastDataZeit;
 				
 				if ([DataString length])
@@ -902,7 +905,7 @@ HomeDataDownload
 					{
 						//NSLog(@"tempDataArray: %@",[[tempDataArray objectAtIndex:0]description]);
 						NSArray* tempZeilenArray=[[tempDataArray objectAtIndex:0]componentsSeparatedByString:@"\t"];
-						NSLog(@"IOW tempZeilenArray: %@",[tempZeilenArray description]);
+						//NSLog(@"IOW tempZeilenArray: %@",[tempZeilenArray description]);
 						
 						[NotificationDic setObject:tempZeilenArray forKey:@"lastdatenarray"];
 						NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
@@ -953,12 +956,12 @@ HomeDataDownload
 
 - (void)DownloadFunktion:(NSTimer*)derTimer
 {
-	NSLog(@"DownloadTimer DownloadFunktion");
+	//NSLog(@"DownloadTimer DownloadFunktion");
 	
 	NSString* AktuelleDaten=[HomeData LastData];
 	if (AktuelleDaten == NULL)
 	{
-		NSLog(@"DownloadFunktion: AktuelleDaten von HomeData ist NULL");
+		//NSLog(@"DownloadFunktion: AktuelleDaten von HomeData ist NULL");
 	}
 		NSString* AktuelleSolarDaten=[HomeData LastSolarData];
 	if (AktuelleSolarDaten == NULL)
@@ -1107,7 +1110,7 @@ NSLog(@"IOWarr WindowController reportPrint");
             // Zeile mit "Startzeit" suchen, offset in Dataoffset speichern
 				if (!(NSEqualRanges(r,NSMakeRange(NSNotFound,0))))
 				{
-					NSLog(@"openWithString bingo: %@",eineZeile);
+					//NSLog(@"openWithString bingo: %@",eineZeile);
 					break;
 				}
 			}//while
@@ -1127,7 +1130,7 @@ NSLog(@"IOWarr WindowController reportPrint");
 			
 			// Datumstring nach leerschlaegen auftrennen
 			NSArray* tempDatumArray= [DatumString componentsSeparatedByString:@" "];
-			NSLog(@"openWithString tempDatumArray: %@ count: %d",[tempDatumArray description], [tempDatumArray count]);
+			//NSLog(@"openWithString tempDatumArray: %@ count: %d",[tempDatumArray description], [tempDatumArray count]);
 			
 			switch ([tempDatumArray count])
 			{
@@ -1143,7 +1146,7 @@ NSLog(@"IOWarr WindowController reportPrint");
 					Tag=[StartZeit dayOfMonth];
 					Monat=[StartZeit monthOfYear];
 					Jahr=[StartZeit yearOfCommonEra];
-					NSLog(@"openWithString StartZeit case 4: %@ tag: %d monat: %d Jahr: %d",[StartZeit description],Tag, Monat, Jahr);
+					//NSLog(@"openWithString StartZeit case 4: %@ tag: %d monat: %d Jahr: %d",[StartZeit description],Tag, Monat, Jahr);
 					
 				}break;
 					
@@ -1159,7 +1162,7 @@ NSLog(@"IOWarr WindowController reportPrint");
 					
 					StartZeit=[NSCalendarDate dateWithString:StartDatumString calendarFormat:Kalenderformat];
 					//NSLog(@"Format: %@ StartZeit: %@",Kalenderformat,[StartZeit description]);
-					NSLog(@"openWithString StartZeit case 5: %@ tag: %d",[StartZeit description],[StartZeit dayOfMonth]);
+					//NSLog(@"openWithString StartZeit case 5: %@ tag: %d",[StartZeit description],[StartZeit dayOfMonth]);
 					
 					
 				}break;
@@ -1183,14 +1186,15 @@ NSLog(@"IOWarr WindowController reportPrint");
 			
 			rohDatenArray = [[tempDatenArray subarrayWithRange:NSMakeRange(DataOffset,[tempDatenArray count]-DataOffset)]retain];
 			NSMutableArray* DatenArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
-			//NSLog(@"openWithString rohDatenArray count: %d",[rohDatenArray count]);
+			//NSLog(@"openWithString rohDatenArray count: %lu",(unsigned long)[rohDatenArray count]);
 			int i=0;
 			for (i=0;i<[rohDatenArray count];i++)
 			//for (i=0;i<1;i++)
 
 			{
+            
 				NSMutableArray* tempDatenArray=[[NSMutableArray alloc]initWithCapacity:0];
-				tempDatenArray = (NSMutableArray*) [[rohDatenArray objectAtIndex:i]componentsSeparatedByString:@"\t"];
+				tempDatenArray = [NSMutableArray arrayWithArray: [[rohDatenArray objectAtIndex:i] componentsSeparatedByString:@"\t"]];
 				while ([tempDatenArray count]<9)
 				{
 					[tempDatenArray addObject: [NSNumber numberWithInt:0]];
@@ -1430,7 +1434,7 @@ return;
 
 -(void)openWithSolarString:(NSString*)derDatenString
 {
-	NSLog(@"openWithSolarString DatenString length: %d", [derDatenString length]);
+	//NSLog(@"openWithSolarString DatenString length: %d", [derDatenString length]);
 	NSArray* rohDatenArray = [NSArray array];
 	NSString* TagString = [NSString string];
 	int Tag=0;
@@ -1521,7 +1525,7 @@ return;
 					StartDatumString= [[tempDatenArray objectAtIndex:10]substringFromIndex:11];
 					int l=[StartDatumString length];
 					StartDatumString= [StartDatumString substringToIndex:l-1];
-					NSLog(@"openWithString case 5 StartDatumString 5: *%@*",StartDatumString);
+					//NSLog(@"openWithString case 5 StartDatumString 5: *%@*",StartDatumString);
 					NSString* Kalenderformat=[[NSCalendarDate date]calendarFormat];
 					
 					StartZeit=[NSCalendarDate dateWithString:StartDatumString calendarFormat:Kalenderformat];

@@ -693,7 +693,7 @@ NSLog(@"lastDataRead: %@",lastDataRead);
    NSArray* SolarertragArray=[HomeData SolarErtragVonJahr:jahr vonMonat:0];
 	if (SolarertragArray && [SolarertragArray count])
 	{
-      //NSLog(@"AVRController setSolarStatistikDaten SolarertragArray count: %d",[SolarertragArray count]);
+      NSLog(@"AVRController setSolarStatistikDaten SolarertragArray count: %d",[SolarertragArray count]);
       
 		//NSLog(@"AVRController setStatistikDaten SolarertragArray: %@",[SolarertragArray description]);
 		//NSArray* TemperaturKanalArray=[NSArray arrayWithObjects:@"1",@"1",@"1",@"1" ,@"0",@"0",@"0",@"0",nil]; // angezeigte Kanaele

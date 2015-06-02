@@ -2057,7 +2057,7 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
 	}
 	NSString* StartDatenString=[[[TemperaturDatenFeld string]componentsSeparatedByString:@"\r"]objectAtIndex:0];
 	
-   NSLog(@"LastDatenAktion StartDatenString: *%@*",StartDatenString);
+   //NSLog(@"LastDatenAktion StartDatenString: *%@*",StartDatenString);
 	NSString* Kalenderformat=[[NSCalendarDate calendarDate]calendarFormat];
 	//NSLog(@"LastDatenaktion note: %@",[[note userInfo]description]);
 	if ([[note userInfo]objectForKey:@"startzeit"])
@@ -2070,7 +2070,7 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
 	{
 		// Zeit des ersten Datensatzes
 		firstZeit = [[[StartDatenString componentsSeparatedByString:@"\t"]objectAtIndex:0]intValue];
-		NSLog(@"LastDatenAktion firstZeit: %d",firstZeit);
+		//NSLog(@"LastDatenAktion firstZeit: %d",firstZeit);
 	}
 	
 	if ([[note userInfo]objectForKey:@"lastdatazeit"])

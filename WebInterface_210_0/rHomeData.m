@@ -187,7 +187,7 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 		//NSLog(@"DataVonHeute URLPfad: %@",URLPfad);
 		//NSLog(@"DataVonHeute  DownloadPfad: %@ DataSuffix: %@",DownloadPfad,DataSuffix);
 		NSURL *URL = [NSURL URLWithString:[ServerPfad stringByAppendingPathComponent:DataSuffix]];
-      NSLog(@"awake DataVonHeute URL: %@",URL);
+      //NSLog(@"awake DataVonHeute URL: %@",URL);
 		NSStringEncoding *  enc=0;
 		NSCharacterSet* CharOK=[NSCharacterSet alphanumericCharacterSet];
 		NSError* WebFehler=NULL;
@@ -245,7 +245,7 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 			}
 			//NSLog(@"DataVonHeute DataString: \n%@",DataString);
 			lastDataZeit=[self lastDataZeitVon:DataString];
-			NSLog(@"DataVonHeute lastDataZeit: %d",lastDataZeit);
+			//NSLog(@"DataVonHeute lastDataZeit: %d",lastDataZeit);
 			
 			// Auf WindowController Timer auslösen
 			downloadFlag=heute;
@@ -628,8 +628,10 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 }
 
 
-- (NSArray*)Router_IP
+- (NSString*)Router_IP
 {
+   
+//   NSString* extip = curl ifconfig.me/ip
 	NSMutableArray* ErtragdatenArray=[[NSMutableArray alloc]initWithCapacity:0];
 	//NSLog(@"Router_IP");
 	NSString*IP_DataSuffix=@"ip.txt";
@@ -637,7 +639,7 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 
 	NSURL* URLPfad=[NSURL URLWithString:[ServerPfad stringByAppendingPathComponent:IP_DataSuffix]];
                         
-	NSLog(@"Router_IP URLPfad: %@",URLPfad);
+	//NSLog(@"Router_IP URLPfad: %@",URLPfad);
 
    NSURL *URL = [NSURL URLWithString:[ServerPfad stringByAppendingPathComponent:IP_DataSuffix]];
 	
@@ -647,16 +649,29 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
       
    
 	NSString* DataString=[NSString stringWithContentsOfURL:URL usedEncoding: enc error:NULL];
-	NSLog(@"IP von Server: %@",DataString);
+	//NSLog(@"IP von Server: %@",DataString);
    NSArray* IP_Array = [DataString componentsSeparatedByString:@"\r\n"];
-   NSLog(@"IP von Server IP_Array: %@",IP_Array);
+   //NSLog(@"IP von Server IP_Array: %@",IP_Array);
+   
+   //NSString *ipString = [NSString localizedStringWithFormat:@"do shell script \"curl ifconfig.me/ip\""];
+   NSString *ipString = [NSString localizedStringWithFormat:@"do shell script \"curl ident.me\""];
+   
+   NSAppleScript *ipscript = [[NSAppleScript alloc] initWithSource:ipString];
+   NSDictionary *iperrorMessage = nil;
+   NSAppleEventDescriptor *ipresult = [ipscript executeAndReturnError:&iperrorMessage];
+   NSLog(@"mount: %@",ipresult);
+   NSString *scriptReturn = [ipresult stringValue];
+   NSLog(@"HomeData Found utxt string: %@",scriptReturn);
+
    
    NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
-   [NotificationDic setObject:DataString forKey:@"routerip"];
+   //[NotificationDic setObject:DataString forKey:@"routerip"];
+   [NotificationDic setObject:scriptReturn forKey:@"routerip"];
+
    NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
    [nc postNotificationName:@"Router_IP" object:self userInfo:NotificationDic];
    
-   return IP_Array;
+   return scriptReturn;
 }
 
 
@@ -1390,7 +1405,7 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 	//NSLog(@"BrennerStatistikVon  DownloadPfad: %@ DataSuffix: %@",DownloadPfad,DataSuffix);
 	NSURL *URL = [NSURL URLWithString:[ServerPfad stringByAppendingPathComponent:DataSuffix]];
 
-	NSLog(@"BrennerStatistikVon URL: %@",URL);
+	//NSLog(@"BrennerStatistikVon URL: %@",URL);
 	
 	NSStringEncoding *  enc=0;
 	NSCharacterSet* CharOK=[NSCharacterSet alphanumericCharacterSet];
@@ -1448,7 +1463,9 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 		}//while
 		
 	}
-	
+   else{
+      NSLog(@"Brennersatitsikdaten nicht da");
+   }
 	return BrennerdatenArray;
 }
 
@@ -1464,7 +1481,7 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 	NSURL *URL = [NSURL URLWithString:[ServerPfad stringByAppendingPathComponent:DataSuffix]];
 	//NSURL *URL = [NSURL URLWithString:@"http://www.schuleduernten.ch/blatt/cgi-bin/HomeDaten.txt"];
 	//www.schuleduernten.ch/blatt/cgi-bin/HomeDaten/HomeDaten090730.txt
-	NSLog(@"TemperaturStatistikVon URL: %@",URL);
+	//NSLog(@"TemperaturStatistikVon URL: %@",URL);
    
 	NSStringEncoding *  enc=0;
 	NSCharacterSet* CharOK=[NSCharacterSet alphanumericCharacterSet];
@@ -1610,7 +1627,7 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 - (NSArray*)SolarErtragVonJahr:(int)dasJahr Monat:(int)derMonat Tag:(int)derTag
 {
 	NSMutableArray* ErtragdatenArray=[[NSMutableArray alloc]initWithCapacity:0];
-	//NSLog(@"SolarErtragVonJahr: %d",dasJahr);
+	NSLog(@"SolarErtragVonJahr: %d",dasJahr);
 	DataSuffix=@"SolarTagErtrag.txt";
 	NSString* URLPfad=[NSURL URLWithString:[ServerPfad stringByAppendingPathComponent:DataSuffix]];
 	//NSLog(@"SolarErtragVonJahr URLPfad: %@",URLPfad);
@@ -1697,13 +1714,13 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 - (NSArray*)SolarErtragVonJahr:(int)dasJahr vonMonat:(int)monat
 {
 	NSMutableArray* ErtragdatenArray=[[NSMutableArray alloc]initWithCapacity:0];
-	//NSLog(@"SolarErtragVonJahr: %d",dasJahr);
+	NSLog(@"SolarErtragVonJahr von Monat: %d",dasJahr);
 	DataSuffix=@"SolarTagErtrag.txt";
 	NSString* URLPfad=[NSURL URLWithString:[ServerPfad stringByAppendingPathComponent:DataSuffix]];
 	//NSLog(@"SolarErtragVonJahr URLPfad: %@",URLPfad);
 	//NSLog(@"SolarErtragVonJahr  DownloadPfad: %@ DataSuffix: %@",DownloadPfad,DataSuffix);
 	NSURL *URL = [NSURL URLWithString:[ServerPfad stringByAppendingPathComponent:DataSuffix]];
-	
+	NSLog(@"SolarErtragVonJahr URL: %@",URL);
 	NSStringEncoding *  enc=0;
 	NSCharacterSet* CharOK=[NSCharacterSet alphanumericCharacterSet];
 	NSString* DataString=[NSString stringWithContentsOfURL:URL usedEncoding: enc error:NULL];
@@ -1722,13 +1739,15 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 		}
 		//NSLog(@"SolarErtragVonJahr DataString: \n%@",DataString);
 		NSArray* tempZeilenArray = [DataString componentsSeparatedByString:@"\n"];
-		NSLog(@"SolarErtragVonJahr tempZeilenArray: \n%@",[tempZeilenArray description]);
+		//NSLog(@"SolarErtragVonJahr tempZeilenArray: \n%@",[tempZeilenArray description]);
 		NSEnumerator* ZeilenEnum =[tempZeilenArray objectEnumerator];
 		id eineZeile;
+      int index=0;
 		while (eineZeile=[ZeilenEnum nextObject])
 		{
+         //NSLog(@"index: %d",index++);
 			NSMutableDictionary* tempDic=[[NSMutableDictionary alloc]initWithCapacity:0];
-			
+			//NSLog(@"eineZeile: %@",eineZeile);
 			tempDatenArray = [eineZeile componentsSeparatedByString:@"\t"];
 			int n=[tempDatenArray count];
 			if (n>1) // keine Leerzeile

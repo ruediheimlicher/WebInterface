@@ -52,7 +52,7 @@
 }
 - (IBAction)downloadOrCancel:(id)sender;
 - (void)cancel;
-- (NSArray*)Router_IP;
+- (NSString*)Router_IP;
 
 - (NSString*)DatumSuffixVonDate:(NSDate*)dasDatum;
 - (NSString*)DataVon:(NSDate*)dasDatum;

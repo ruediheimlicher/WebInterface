@@ -82,13 +82,13 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
    
    NSDictionary *errorMessage = nil;
    NSAppleEventDescriptor *result = [script executeAndReturnError:&errorMessage];
-   NSLog(@"mount: %@",result);
+   //NSLog(@"mountVolumeAppleScript mount result: %@",result);
 
    NSString *ipString = [NSString localizedStringWithFormat:@"do shell script \"curl ifconfig.me/ip\""];
    NSAppleScript *ipscript = [[NSAppleScript alloc] initWithSource:ipString];
    NSDictionary *iperrorMessage = nil;
    NSAppleEventDescriptor *ipresult = [ipscript executeAndReturnError:&iperrorMessage];
-   NSLog(@"mount: %@",ipresult);
+   //NSLog(@"mountVolumeAppleScript ifconfig result: %@",ipresult);
 
    
 }
@@ -346,9 +346,9 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
    NSAppleScript *ipscript = [[NSAppleScript alloc] initWithSource:ipString];
    NSDictionary *iperrorMessage = nil;
    NSAppleEventDescriptor *ipresult = [ipscript executeAndReturnError:&iperrorMessage];
-   NSLog(@"mount: %@",ipresult);
+   //NSLog(@"mount: %@",ipresult);
    NSString *scriptReturn = [ipresult stringValue];
-   NSLog(@"Found utxt string: %@",scriptReturn);
+   NSLog(@"IP: %@",scriptReturn);
 
    int tg=0;
    int rm=3;
@@ -412,6 +412,7 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
    
    
 	// Alternative Typen setzen
+  // NSLog(@"1");
 	[self setTagbalkenTyp:2 forObjekt:1 forRaum:0]; // Mode
 	
 	[self setTagbalkenTyp:0 forObjekt:2 forRaum:0]; // Servo
@@ -419,7 +420,7 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
    [self setTagbalkenTyp:1 forObjekt:1 forRaum:1]; // Werkstatt
 	[self setTagbalkenTyp:1 forObjekt:1 forRaum:2]; // WoZi
    [self setTagbalkenTyp:1 forObjekt:1 forRaum:4]; // Labor
-	
+	//NSLog(@"2");
 	NSArray* Wochentage=[[NSArray arrayWithObjects:@"MO",@"DI", @"MI", @"DO", @"FR", @"SA", @"SO",nil]retain];
 	NSArray* Raumnamen=[[NSArray arrayWithObjects:@"Heizung", @"Werkstatt", @"WoZi", @"Buero", @"Labor", @"OG1", @"OG2", @"Estrich", nil]retain];
 	AVR_DS=[[rAVR_DS alloc]init];
@@ -459,9 +460,10 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
 		[tempDic setObject:hexString forKey:[bitnummerArray objectAtIndex:i%6]];
 	}
 	[tempArray addObject:tempDic];
-	
+	//NSLog(@"3");
 	
 	[AVR_DS setWochenplan:tempArray];
+   //NSLog(@"4");
 	//	[[[self window]contentView] addSubview:WochenplanTable];
 	//NSSegmentedCell* StdCell=[[NSSegmentedCell alloc]init];
 	
@@ -486,6 +488,7 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
 	NSRect RaumViewFeld = NSMakeRect(0,0,0,0);
 	for (raum=0;raum<8;raum++)
 	{
+      //NSLog(@"5 raum: %d",raum);
 		switch (raum)
 		{
 			case 0:
@@ -568,7 +571,7 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
 //			NSLog(@"AVR awake: Wochenplanarray Raum: %@",[[[HomebusArray objectAtIndex:raum]objectForKey:@"wochenplanarray"]description]);
 			
 		}
-		
+		//NSLog(@"7 HomebusArray count: %d ",[HomebusArray count]);
 		NSArray*  tempGeometrieArray=[RaumView setWochenplanForRaum:raum mitWochenplanArray:[[HomebusArray objectAtIndex:raum]objectForKey:@"wochenplanarray"]];
       
 		[RaumScroller setDocumentView:RaumView];
@@ -632,7 +635,6 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
       }
 		
 	}//	End for Raum
-	
    //
    NSRect EEPROMScrollerFeld=[EEPROMUpdatefeld frame];
    if (!EEPROMScroller)

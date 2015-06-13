@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="6254" systemVersion="14B25" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="7706" systemVersion="14C109" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
         <deployment version="1050" identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="6254"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="7706"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="rData">
@@ -149,7 +149,7 @@
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <textView editable="NO" selectable="NO" importsGraphics="NO" findStyle="panel" continuousSpellChecking="YES" usesRuler="YES" usesFontPanel="YES" verticallyResizable="YES" spellingCorrection="YES" smartInsertDelete="YES" id="279">
-                                                        <rect key="frame" x="0.0" y="0.0" width="347" height="20"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="341" height="20"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <color key="backgroundColor" red="0.87843143940000001" green="0.87843143940000001" blue="0.87843143940000001" alpha="1" colorSpace="deviceRGB"/>
                                                         <size key="minSize" width="341" height="20"/>
@@ -696,7 +696,7 @@ zALQAt0C6QL7Av4DAwAAAAAAAAIBAAAAAAAAAGQAAAAAAAAAAAAAAAAAAAMFA
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <textView editable="NO" selectable="NO" importsGraphics="NO" findStyle="panel" continuousSpellChecking="YES" usesRuler="YES" usesFontPanel="YES" verticallyResizable="YES" spellingCorrection="YES" smartInsertDelete="YES" id="1220">
-                                                        <rect key="frame" x="0.0" y="0.0" width="347" height="18"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="332" height="18"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <color key="backgroundColor" red="0.87843143940000001" green="0.87843143940000001" blue="0.87843143940000001" alpha="1" colorSpace="deviceRGB"/>
                                                         <size key="minSize" width="332" height="18"/>
@@ -896,7 +896,7 @@ zALQAt0C6QL7Av4DAwAAAAAAAAIBAAAAAAAAAGQAAAAAAAAAAAAAAAAAAAMFA
                                         <popUpButton verticalHuggingPriority="750" id="1345">
                                             <rect key="frame" x="217" y="141" width="142" height="26"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                            <popUpButtonCell key="cell" type="push" title="2015" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" tag="2014" imageScaling="proportionallyDown" inset="2" selectedItem="BVA-e6-ghT" id="1346">
+                                            <popUpButtonCell key="cell" type="push" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" id="1346">
                                                 <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                                 <font key="font" metaFont="menu"/>
                                                 <menu key="menu" title="OtherViews" id="1347">
@@ -906,9 +906,11 @@ zALQAt0C6QL7Av4DAwAAAAAAAAIBAAAAAAAAAGQAAAAAAAAAAAAAAAAAAAMFA
                                                         <menuItem title="2012" tag="2012" id="1350"/>
                                                         <menuItem title="2013" tag="2013" id="1367"/>
                                                         <menuItem title="2014" tag="2014" id="1368"/>
-                                                        <menuItem title="2015" state="on" tag="2014" id="BVA-e6-ghT"/>
-                                                        <menuItem title="2016" tag="2014" id="rKq-k8-nGc"/>
-                                                        <menuItem title="2017" tag="2014" id="xa5-5X-Gft"/>
+                                                        <menuItem title="2015" tag="2015" id="BVA-e6-ghT">
+                                                            <modifierMask key="keyEquivalentModifierMask" option="YES"/>
+                                                        </menuItem>
+                                                        <menuItem title="2016" tag="2016" id="rKq-k8-nGc"/>
+                                                        <menuItem title="2017" tag="2017" id="xa5-5X-Gft"/>
                                                     </items>
                                                 </menu>
                                                 <connections>
@@ -963,19 +965,18 @@ zALQAt0C6QL7Av4DAwAAAAAAAAIBAAAAAAAAAGQAAAAAAAAAAAAAAAAAAAMFA
                                                 <font key="font" metaFont="menu"/>
                                                 <menu key="menu" title="OtherViews" id="1372">
                                                     <items>
-                                                        <menuItem title="alle" state="on" id="1373"/>
+                                                        <menuItem title="alle" state="on" keyEquivalent="w" id="1373"/>
                                                         <menuItem title="Jan" tag="1" id="1374"/>
                                                         <menuItem title="Feb" tag="2" id="1375"/>
                                                         <menuItem title="März" tag="3" id="1376"/>
                                                         <menuItem title="April" tag="4" id="1377"/>
                                                         <menuItem title="Mai" tag="5" id="1378"/>
                                                         <menuItem title="Juni" tag="6" id="1379"/>
-                                                        <menuItem title="Juli" tag="6" id="1380"/>
                                                         <menuItem title="Juli" tag="7" id="1381"/>
                                                         <menuItem title="Aug" tag="8" id="1382"/>
-                                                        <menuItem title="Sept" state="on" tag="9" id="1383"/>
-                                                        <menuItem title="Okt" state="on" tag="10" id="1384"/>
-                                                        <menuItem title="Nov" state="on" tag="11" id="1385"/>
+                                                        <menuItem title="Sept" tag="9" id="1383"/>
+                                                        <menuItem title="Okt" tag="10" id="1384"/>
+                                                        <menuItem title="Nov" tag="11" id="1385"/>
                                                         <menuItem title="Dez" tag="12" id="1386"/>
                                                     </items>
                                                 </menu>

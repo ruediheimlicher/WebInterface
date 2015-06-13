@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="6254" systemVersion="14B25" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="7706" systemVersion="14C109" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
         <deployment version="1050" identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="6254"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="7706"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="rAVR">
@@ -21,7 +21,8 @@
                 <outlet property="HeizungFeld" destination="328" id="329"/>
                 <outlet property="I2CPop" destination="438" id="443"/>
                 <outlet property="LaborFeld" destination="115" id="291"/>
-                <outlet property="LocalTaste" destination="1661" id="1666"/>
+                <outlet property="LoadTestTaste" destination="itx-eG-BvG" id="mLb-1S-HAT"/>
+                <outlet property="LocalTaste" destination="1662" id="PVj-nb-pgI"/>
                 <outlet property="OG1Feld" destination="131" id="307"/>
                 <outlet property="OG2Feld" destination="114" id="308"/>
                 <outlet property="ObjektPop" destination="1584" id="1595"/>
@@ -602,8 +603,8 @@
                     <button verticalHuggingPriority="750" id="1661">
                         <rect key="frame" x="61" y="628" width="50" height="25"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="squareTextured" title="Local" bezelStyle="texturedSquare" imagePosition="left" alignment="center" borderStyle="border" inset="2" id="1662">
-                            <behavior key="behavior" lightByBackground="YES" lightByGray="YES" changeBackground="YES" changeGray="YES"/>
+                        <buttonCell key="cell" type="squareTextured" title="Local" bezelStyle="texturedSquare" imagePosition="left" alignment="center" refusesFirstResponder="YES" borderStyle="border" inset="2" id="1662">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES" changeBackground="YES" changeGray="YES"/>
                             <font key="font" metaFont="system" size="15"/>
                         </buttonCell>
                         <connections>
@@ -665,6 +666,17 @@
                         </buttonCell>
                         <connections>
                             <action selector="reportTestTaste:" target="-2" id="1742"/>
+                        </connections>
+                    </button>
+                    <button verticalHuggingPriority="750" id="itx-eG-BvG">
+                        <rect key="frame" x="421" y="546" width="96" height="32"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <buttonCell key="cell" type="push" title="LoadTest" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="rvv-mK-Duj">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="reportLoadTestTaste:" target="-2" id="Lca-KQ-0aW"/>
                         </connections>
                     </button>
                 </subviews>

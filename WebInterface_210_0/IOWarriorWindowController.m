@@ -442,6 +442,7 @@ void IOWarriorCallback ()
          
       }
       */
+      
       NSString* IP_String = [HomeData Router_IP];
       [Data setRouter_IP:IP_String];
 	}
@@ -449,7 +450,7 @@ void IOWarriorCallback ()
 	{
 		NSLog(@"awake Kein Input");
 	}
-   NSLog(@"end DatenVonHeute");
+   //NSLog(@"end DatenVonHeute");
    
 	
 	#pragma mark awake Solar
@@ -475,7 +476,7 @@ void IOWarriorCallback ()
 		NSLog(@"awake Kein SolarInput");
 	}
 	
-   NSLog(@"end SolarDatenVonHeute");
+   //NSLog(@"end SolarDatenVonHeute");
 
 
 

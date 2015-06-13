@@ -57,6 +57,7 @@ IBOutlet	id		EEPROMReadTaste;
 IBOutlet	id		TWIStatusTaste;
 IBOutlet	id		LocalTaste;
 IBOutlet	id		TestTaste;
+IBOutlet	id		LoadTestTaste;
    
 
 // Web
@@ -139,7 +140,7 @@ NSTimer*                EEPROMUpdateTimer;
    int                     TWI_ON_Flag;
    IBOutlet id             writeEEPROMcounterfeld;
    int                     writeEEPROMcounter;
-
+   int                     loadstatus;
 
 }
 - (NSArray*)StundenArrayAusByteArray:(NSArray*)derStundenByteArray;
@@ -213,6 +214,7 @@ NSTimer*                EEPROMUpdateTimer;
 - (IBAction)reportLocalTaste:(id)sender;
 - (IBAction)reportUpdateTaste:(id)sender;
 - (IBAction)reportTestTaste:(id)sender;
+- (IBAction)reportLoadTestTaste:(id)sender;
 - (IBAction)reportFixTaste:(id)sender;
 - (void)updateEEPROMMitDicArray:(NSArray*)updateArry;
 - (void)updatePListMitDicArray:(NSArray*)updateArry;

@@ -30,8 +30,11 @@ enum webtaskflag{idle, eepromread, eepromwrite,eepromreadwoche,eepromwritewoche}
 	NSTimer*                sendTimer;
 	NSTimer*                confirmTimer;
 	NSTimer*                confirmStatusTimer;
-	int                     maxAnzahl;
-  
+   int                     maxAnzahl;
+   int                     loadAlertOK;
+   int                     loadTestStatus;
+   NSString*               lastEEPROMData;
+   int testdataok;
    // Dic fuer Senden von EEPROMDaten an HomeServer
    NSMutableDictionary*    SendEEPROMDataDic;
    NSTimer*                EEPROMUpdateTimer;
@@ -54,5 +57,5 @@ enum webtaskflag{idle, eepromread, eepromwrite,eepromreadwoche,eepromwritewoche}
 
 // Data an Homeserver schicken
 - (int)sendEEPROMDataMitDic:(NSDictionary*)EEPROMDataDic;
-- (void)Kollektormittelwerteberechnen;
+- (void)KollektormittelwerteberechnenMitJahr:(int)jahr;
 @end

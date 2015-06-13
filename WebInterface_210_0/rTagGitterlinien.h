@@ -27,4 +27,5 @@
 
 - (void)setZeitKompression:(float)dieKompression mitAbszissenArray:(NSArray*)derArray;
 - (void)senkrechteLinienZeichnen;
+- (void)clean;
 @end

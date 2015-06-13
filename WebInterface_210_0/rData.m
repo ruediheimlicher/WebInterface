@@ -2316,7 +2316,7 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
 
 	anzSolarLoads++;
 	[SolarZaehlerFeld setIntValue:anzSolarLoads];
-	if (anzSolarLoads > 8)
+	if (anzSolarLoads > 12)
 	{
 		NSBeep();
 		[self reload:NULL];
@@ -2411,7 +2411,7 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
 	if ([[note userInfo]objectForKey:@"startzeit"])
 	{
 		NSString* StartzeitString = [[note userInfo]objectForKey:@"startzeit"];
-		NSLog(@"ExterneSolarDatenAktion: Startzeit: *%@* StartzeitString: *%@*",[[note userInfo]objectForKey:@"startzeit"],StartzeitString);
+		//NSLog(@"ExterneSolarDatenAktion: Startzeit: *%@* StartzeitString: *%@*",[[note userInfo]objectForKey:@"startzeit"],StartzeitString);
 		
 		NSString* Kalenderformat=[[NSCalendarDate calendarDate]calendarFormat];
 		SolarDatenserieStartZeit=[[NSCalendarDate dateWithString:[[note userInfo]objectForKey:@"startzeit"] calendarFormat:Kalenderformat]retain];
@@ -3799,7 +3799,7 @@ if ([[note userInfo]objectForKey:@"err"])
 	[SolarStatistikDiagramm setGraphFarbe:[NSColor blueColor] forKanal:1];
 	[SolarStatistikDiagramm setGraphFarbe:[NSColor redColor] forKanal:2];
 	[SolarStatistikDiagramm setGraphFarbe:[NSColor grayColor] forKanal:3];
-
+   
    
 	NSArray* ElektrodatenArray =[NSArray array];
    
@@ -4207,15 +4207,12 @@ if ([[note userInfo]objectForKey:@"err"])
 	NSString* StundenString;
 	if (Zeitstunden<10)
 	{
-		
 		StundenString=[NSString stringWithFormat:@" %d",Zeitstunden];
 	}
 	else
 	{
 		StundenString=[NSString stringWithFormat:@"%d",Zeitstunden];
 	}
-	
-	
 	NSString* ZeitdauerString=[NSString stringWithFormat:@"%@:%@:%@",StundenString,MinutenString,SekundenString];
 	//NSLog(@"Zeitdauer: %d ZeitdauerString:%@",(int)dieZeit, ZeitdauerString);
 	return ZeitdauerString;
@@ -4244,8 +4241,6 @@ if ([[note userInfo]objectForKey:@"err"])
 {
     [webView reload:self];
  }
-
-
 
 - (void)SimReadAktion:(NSTimer*) derTimer;
 {

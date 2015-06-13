@@ -67,6 +67,8 @@ enum downloadflag{downloadpause, heute, last, datum}downloadFlag;
               name:@"teststatus"
             object:nil];
 
+   
+
 	
 	return self;
 }
@@ -430,7 +432,7 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
       
 		NSURL *lastTimeURL = [NSURL URLWithString:@"http://www.ruediheimlicher.ch/Data/HomeCentralPrefs.txt"];
 		//NSURLRequest* lastTimeRequest=[ [NSURLRequest alloc] initWithURL: lastTimeURL cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:30.0];
-		NSURLRequest* lastTimeRequest=[ [NSURLRequest alloc] initWithURL: lastTimeURL cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData timeoutInterval:5.0];
+		NSURLRequest* lastTimeRequest=[ [NSURLRequest alloc] initWithURL: lastTimeURL cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData timeoutInterval:10.0];
 		//NSLog(@"Cache mem: %d",[[NSURLCache sharedURLCache]memoryCapacity]);
 		
 	
@@ -659,9 +661,9 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
    NSAppleScript *ipscript = [[NSAppleScript alloc] initWithSource:ipString];
    NSDictionary *iperrorMessage = nil;
    NSAppleEventDescriptor *ipresult = [ipscript executeAndReturnError:&iperrorMessage];
-   NSLog(@"mount: %@",ipresult);
+   //NSLog(@"mount: %@",ipresult);
    NSString *scriptReturn = [ipresult stringValue];
-   NSLog(@"HomeData Found utxt string: %@",scriptReturn);
+   //NSLog(@"HomeData Found utxt string: %@",scriptReturn);
 
    
    NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
@@ -1262,7 +1264,7 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 	else
 	{
       
-      //NSLog(@"KollektorMittelwerteVonJahr: %d",jahr);
+      //NSLog(@"HomeData KollektorMittelwerteVonJahr: %d",jahr);
       NSString* jahrString = [NSString stringWithFormat:@"kollektordaten/%d",jahr];
       
       
@@ -1273,9 +1275,10 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
       //NSString* tagsuffix = [NSString stringWithFormat:@"/SolarDaten%d%.2d%.2d.txt",jahrkurz,monat,tag];
       //NSLog(@"tagsuffix: %@",tagsuffix);
       NSString* tagPfad =[jahrPfad stringByAppendingPathComponent:@"kollektormittelwerte.txt"];
-      //NSLog(@"tagPfad: %@",tagPfad);
+      NSLog(@"tagPfad: %@",tagPfad);
       
       NSURL *tagURL = [NSURL URLWithString:tagPfad];
+      
       NSString* DataString=[NSString stringWithContentsOfURL:tagURL encoding:NSUTF8StringEncoding error:NULL];
       
       
@@ -1285,7 +1288,7 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
          //NSArray* jahrArray =[DataString componentsSeparatedByString:@"\n"];
          // NSLog(@"DataString: %@",DataString);
          //NSLog(@"jahrArray: %@",[jahrArray description]);
-         
+         //NSLog(@"HomeData KollektorMittelwerteVonJahr: %d: length von kollektormittelwerte.txt: %d ",jahr,[DataString length]);
          NSCharacterSet* CharOK=[NSCharacterSet alphanumericCharacterSet];
          
          
@@ -1313,8 +1316,16 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
                }
                
             }// if length
+            else
+            {
+               
+            }
             
          }// for i
+      }
+      else
+      {
+         NSLog(@"HomeData KollektorMittelwerteVonJahr: %d: kein Inhalt von kollektormittelwerte.txt",jahr);
       }
       
       //NSLog(@"KollektorTemperaturArray: %@",[[KollektorTemperaturArray valueForKey:@"mittelwert" ]description]);
@@ -1714,13 +1725,13 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 - (NSArray*)SolarErtragVonJahr:(int)dasJahr vonMonat:(int)monat
 {
 	NSMutableArray* ErtragdatenArray=[[NSMutableArray alloc]initWithCapacity:0];
-	NSLog(@"SolarErtragVonJahr von Monat: %d",dasJahr);
+	//NSLog(@"SolarErtragVonJahr von Monat: %d Jahr: %d",monat,dasJahr);
 	DataSuffix=@"SolarTagErtrag.txt";
 	NSString* URLPfad=[NSURL URLWithString:[ServerPfad stringByAppendingPathComponent:DataSuffix]];
 	//NSLog(@"SolarErtragVonJahr URLPfad: %@",URLPfad);
 	//NSLog(@"SolarErtragVonJahr  DownloadPfad: %@ DataSuffix: %@",DownloadPfad,DataSuffix);
 	NSURL *URL = [NSURL URLWithString:[ServerPfad stringByAppendingPathComponent:DataSuffix]];
-	NSLog(@"SolarErtragVonJahr URL: %@",URL);
+	//NSLog(@"SolarErtragVonJahr URL: %@",URL);
 	NSStringEncoding *  enc=0;
 	NSCharacterSet* CharOK=[NSCharacterSet alphanumericCharacterSet];
 	NSString* DataString=[NSString stringWithContentsOfURL:URL usedEncoding: enc error:NULL];

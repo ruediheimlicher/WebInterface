@@ -322,7 +322,6 @@ return StundenArray;
    
    	int all=-1;
    
-   NSLog(@"A");       
    
 	NSRect AllFeld=[[[StundenArray objectAtIndex:23]objectForKey:@"elementrahmen"]frame];
 	AllFeld.origin.x+=Elementbreite+2;
@@ -334,7 +333,6 @@ return StundenArray;
 	//NSLog(@"lastONArray: %@",[lastONArray description]);
 	int i;
 
-	NSLog(@"B");
 	
 	
 	if ([self mouse:localMaus inRect:AllFeld])
@@ -361,7 +359,7 @@ return StundenArray;
 		{
 			sum+=[[[StundenArray valueForKey:@"kessel"] objectAtIndex:i]intValue];
 		}
-      NSLog(@"C");
+      //NSLog(@"C");
 		if (sum==0)//alle sind off: IST wiederherstellen
 		{
 			NSLog(@"IST wiederherstellen");

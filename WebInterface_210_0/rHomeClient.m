@@ -16,6 +16,18 @@
 #define CGI "cgi-bin/eeprom.pl"
 #define CGI_UPDATE_CLEAR "cgi-bin/eepromupdate.pl"
 
+#define START_STATUS0   10
+#define END_STATUS0   11
+
+#define START_STATUS1   20
+#define END_STATUS1   21
+#define START_WRITE   30
+#define END_WRITE   31
+#define START_READ   40
+#define END_READ   41
+
+
+#define ERR_WRITE   99
 
 
 // convert a single hex digit character to its integer value
@@ -90,6 +102,12 @@ unsigned char h2int(char c)
 			 selector:@selector(TestStatusAktion:)
 				  name:@"teststatus"
 				object:nil];
+   
+   [nc addObserver:self
+          selector:@selector(LoadTestAktion:)
+              name:@"loadtest"
+            object:nil];
+
 	
 		[nc addObserver:self
 			 selector:@selector(HomeClientWriteStandardAktion:)
@@ -124,12 +142,11 @@ unsigned char h2int(char c)
    
 #pragma mark HomeCentralURL
 	
-//HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
-	//LocalHomeCentralURL=@"192.168.1.210";
-
-   HomeCentralURL=@"http://192.168.1.210";
+HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
+	
+   //LocalHomeCentralURL=@"192.168.1.210";
+   //HomeCentralURL=@"http://192.168.1.210";
    //HomeCentralURL=@"http://ruediheimlicher.ch";
-
 	
 	pw = @"ideur00";
 	[pw retain];
@@ -143,9 +160,9 @@ unsigned char h2int(char c)
 	//[prefs setCacheModel:WebCacheModelDocumentViewer];
 	// Maximale Anzahl Versuche um die EEPROM-Daten zu vom Webserver zu lesen
 	maxAnzahl = 25;
-   
-   
-   
+   loadAlertOK = 0;
+   loadTestStatus=0;
+   //lastEEPROMData = [[NSString string]retain];
 	return self;
 }
 
@@ -493,6 +510,287 @@ unsigned char h2int(char c)
    NSLog(@"HomeClient LocalStatusAktion HomeCentralURL: %@",HomeCentralURL);
 }
 
+- (void)LoadTestAktion:(NSNotification*)note
+{
+   NSLog(@"LoadTestAktion note: %@",[[note userInfo]description]);
+   
+   // Zaehler fuer Anzahl Versuche einsetzen
+			NSMutableDictionary* loadTimerDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+			[loadTimerDic setObject:[NSNumber numberWithInt:0]forKey:@"anzahl"];
+   
+   loadTestStatus = START_STATUS0;
+   [loadTimerDic setObject:[NSNumber numberWithInt:3]forKey:@"delay"];
+   
+   NSURL* loadURL = [NSURL URLWithString:@"http://192.168.1.210/twi?pw=ideur00&status=0"];
+   [self loadURL:loadURL];
+   int sendResetDelay=3.0;
+   
+   
+			//NSLog(@"EEPROMReadDataAktion  confirmTimerDic: %@",[confirmTimerDic description]);
+   
+			NSTimer* loadTimer=[[NSTimer scheduledTimerWithTimeInterval:sendResetDelay
+                                                              target:self
+                                                            selector:@selector(loadTimerFunktion:)
+                                                            userInfo:loadTimerDic
+                                                             repeats:YES]retain];
+   
+   
+   //				NSRunLoop *runLoop = [NSRunLoop currentRunLoop];
+   //				[runLoop addTimer:TWITimer forMode:NSDefaultRunLoopMode];
+   
+   [loadTimer release];
+   
+}
+
+- (void)loadTimerFunktion:(NSTimer*) derTimer
+{
+   NSMutableDictionary* statusTimerDic=(NSMutableDictionary*) [derTimer userInfo];
+   NSLog(@"loadTimerFunktion  statusTimerDic: %@",[statusTimerDic description]);
+   
+   if ([statusTimerDic objectForKey:@"anzahl"])
+   {
+      int anz=[[statusTimerDic objectForKey:@"anzahl"] intValue];
+      NSLog(@"loadTimerFunktion anzahl: %d loadTestStatus: %d",(int)[[statusTimerDic objectForKey:@"anzahl"] integerValue],loadTestStatus);
+      
+      //if (anz < maxAnzahl)
+      if (anz < 10)
+      {
+         anz++;
+         if (anz>1)
+         {
+            switch (loadTestStatus)
+            {
+               case START_STATUS0:
+               {
+                  int loaddelay = [[statusTimerDic objectForKey:@"delay"] intValue];
+                  NSLog(@"loadTimerFunktion  START_STATUS0 loaddelay: %d",loaddelay);
+
+               }break;
+                  
+                  
+               case START_READ:
+               {
+                  int loaddelay = [[statusTimerDic objectForKey:@"delay"] intValue];
+                  NSLog(@"loadTimerFunktion  START_READ loaddelay: %d",loaddelay);
+
+               }break;
+                  
+               case END_READ:
+               {
+                  int loaddelay = [[statusTimerDic objectForKey:@"delay"] intValue];
+                  NSLog(@"loadTimerFunktion  END_READ loaddelay: %d",loaddelay);
+                  if (loaddelay)
+                  {
+                     loaddelay--;
+                  }
+                  else
+                  {
+                     NSLog(@"loadtimeFunktion testdataok: %d",testdataok);
+                     if (testdataok)
+                     {
+                        NSURL* dataURL = [NSURL URLWithString:@"http://192.168.1.210/twi?pw=ideur00&wadr=0&lbyte=40&hbyte=10&data=0+0+0+0+0+0+0+0"];
+                        [self loadURL:dataURL];
+                        
+                        loadTestStatus = START_WRITE;
+                        anz=0;
+                        loaddelay = 1;
+                        
+                        
+                     }
+                     else
+                     {
+                        NSURL* dataURL = [NSURL URLWithString:@"http://192.168.1.210/twi?pw=ideur00&wadr=0&lbyte=40&hbyte=10&data=ff+ff+ff+ff+ff+ff+ff+ff"];
+                        [self loadURL:dataURL];
+                        
+                        loadTestStatus = START_WRITE;
+                        anz=0;
+                        loaddelay = 1;
+
+                     }
+
+                     
+                     
+                     // Status 1 setzen
+                     // NSURL* statusURL = [NSURL URLWithString:@"http://192.168.1.210/twi?pw=ideur00&status=1"];
+                     // [self loadURL:statusURL];
+                     // anz = 0;
+                  }
+                  [statusTimerDic setObject:[NSNumber numberWithInt:loaddelay] forKey:@"delay"];
+
+                  
+                  
+               }break;
+                  
+                  
+               case END_STATUS0:
+               {
+                 
+                  int loaddelay = [[statusTimerDic objectForKey:@"delay"] intValue];
+                   NSLog(@"loadTimerFunktion  END_STATUS0 loaddelay: %d",loaddelay);
+                  if (loaddelay)
+                  {
+                     loaddelay--;
+                  }
+                  else
+                  {
+                     NSURL* dataURL = [NSURL URLWithString:@"http://192.168.1.210/twi?pw=ideur00&radr=0&hb=10&lb=40"];
+                     [self loadURL:dataURL];
+                     
+                     loadTestStatus = START_READ;
+                     anz=0;
+                     loaddelay = 1;
+
+                     /*
+                     NSURL* dataURL = [NSURL URLWithString:@"http://192.168.1.210/twi?pw=ideur00&wadr=0&lbyte=40&hbyte=10&data=ff+ff+ff+ff+ff+ff+ff+ff"];
+                     [self loadURL:dataURL];
+                     
+                     loadTestStatus = START_WRITE;
+                     anz=0;
+                     loaddelay = 1;
+                     */
+                  }
+                   [statusTimerDic setObject:[NSNumber numberWithInt:loaddelay] forKey:@"delay"];
+               }break;
+                  
+               case START_WRITE:
+               {
+                  int loaddelay = [[statusTimerDic objectForKey:@"delay"] intValue];
+                  NSLog(@"loadTimerFunktion  START_WRITE loaddelay: %d",loaddelay);
+                  if (loaddelay)
+                  {
+                     //loaddelay--;
+                  }
+                  else
+                  {
+
+                  }
+                  
+               }break;
+ 
+               case END_WRITE:
+               {
+                  int loaddelay = [[statusTimerDic objectForKey:@"delay"] intValue];
+                  NSLog(@"loadTimerFunktion  END_WRITE loaddelay: %d",loaddelay);
+                  anz=0;
+                  if (loaddelay)
+                  {
+                     loaddelay--;
+                  }
+                  else
+                  {
+                      //Status 1 setzen
+                      NSURL* statusURL = [NSURL URLWithString:@"http://192.168.1.210/twi?pw=ideur00&status=1"];
+                      [self loadURL:statusURL];
+                     NSAlert * LoadAlert=[NSAlert alertWithMessageText:@"Load OK"
+                                                          defaultButton:NULL
+                                                        alternateButton:NULL
+                                                            otherButton:NULL 
+                                              informativeTextWithFormat:@"Mitteilung:\n%@",@"alles OK"];
+                     [LoadAlert runModal];
+
+                     anz=10;
+                  }
+                  [statusTimerDic setObject:[NSNumber numberWithInt:loaddelay] forKey:@"delay"];
+                  
+               }break;
+                 
+               case ERR_WRITE:
+               {
+                  NSURL* statusURL = [NSURL URLWithString:@"http://192.168.1.210/twi?pw=ideur00&status=1"];
+                  [self loadURL:statusURL];
+                  NSAlert * LoadAlert=[NSAlert alertWithMessageText:@"Load Fehler"
+                                                      defaultButton:NULL
+                                                    alternateButton:NULL
+                                                        otherButton:NULL
+                                          informativeTextWithFormat:@"Mitteilung:\n%@",@"Fehler beim Laden"];
+                  [LoadAlert runModal];
+
+               }
+                  
+                  
+            }// switch
+            if (loadTestStatus == START_STATUS0)
+            {
+               //NSURL* loadURL = [NSURL URLWithString:@"http://192.168.1.210/twi?pw=ideur00&status=1"];
+              // [self loadURL:loadURL];
+
+            }
+            
+            
+            /*
+            NSString* TWIStatus0URLSuffix = [NSString stringWithFormat:@"pw=%@&isstat0ok=1",pw];
+            
+            TWIStatus0URL =[NSString stringWithFormat:@"%@/twi?%@",HomeCentralURL, TWIStatus0URLSuffix];
+            [statusTimerDic setObject:[NSNumber numberWithInt:0] forKey:@"local"];
+            
+            
+            NSURL *URL = [NSURL URLWithString:TWIStatus0URL];
+            //NSLog(@"statusTimerFunktion  URL: %@",URL);
+            [self loadURL:URL];
+             */
+         }
+         
+         [statusTimerDic setObject:[NSNumber numberWithInt:anz] forKey:@"anzahl"];
+         
+         
+         // Blinkanzeige im PW-Feld
+         NSMutableDictionary* tempDataDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+         if (anz%2==0)// gerade
+         {
+            //[self loadURL:URL];
+            
+            //[tempDataDic setObject:@"*" forKey:@"wait"];
+         }
+         else
+         {
+            //[tempDataDic setObject:@" " forKey:@"wait"];
+         }
+         
+         NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
+    //     [nc postNotificationName:@"StatusWait" object:self userInfo:tempDataDic];
+         
+      }
+      
+      else
+      {
+         
+         NSLog(@"loadTimerFunktion statusTimer invalidate");
+         //Status 1 setzen
+         NSURL* statusURL = [NSURL URLWithString:@"http://192.168.1.210/twi?pw=ideur00&status=1"];
+         [self loadURL:statusURL];
+
+         // Misserfolg an AVRClient senden
+         NSMutableDictionary* tempDataDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+         [tempDataDic setObject:[NSNumber numberWithInt:0] forKey:@"isstatusok"];
+         if ([statusTimerDic objectForKey:@"local"] && [[statusTimerDic objectForKey:@"local"]intValue]==1 )
+         {
+            [tempDataDic setObject:[NSNumber numberWithInt:1] forKey:@"local"];
+         }
+         else
+         {
+            [tempDataDic setObject:[NSNumber numberWithInt:0] forKey:@"local"];
+            
+         }
+         
+         
+         
+         
+         NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
+         
+         
+         
+  //       [nc postNotificationName:@"FinishLoad" object:self userInfo:tempDataDic];
+         
+         [derTimer invalidate];
+ //        [derTimer release];
+         
+      }
+      
+   }
+}
+
+
+
 - (void)TestStatusAktion:(NSNotification*)note
 {
    NSLog(@"TestStatusAktion note: %@",[[note userInfo]description]);
@@ -513,7 +811,7 @@ unsigned char h2int(char c)
 
 - (void)TWIStatusAktion:(NSNotification*)note
 {
-	//NSLog(@"HomeClient TWIStatusAktion note: %@",[[note userInfo]description]);
+	NSLog(@"HomeClient TWIStatusAktion note: %@",[[note userInfo]description]);
 	
 	if ([[note userInfo]objectForKey:@"status"])
 	{
@@ -1218,7 +1516,7 @@ unsigned char h2int(char c)
             
             NSURL *URL = [NSURL URLWithString:URLString];
             //NSLog(@"sendEEPROM URL: %@",URL );
-            NSURLRequest *HCRequest = [ [NSURLRequest alloc] initWithURL: URL cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:4.0];
+            NSURLRequest *HCRequest = [ [NSURLRequest alloc] initWithURL: URL cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:10.0];
             //	[[NSURLCache sharedURLCache] removeAllCachedResponses];
             //	NSLog(@"Cache mem: %d",[[NSURLCache sharedURLCache]memoryCapacity]);
             //	[[NSURLCache sharedURLCache] removeCachedResponseForRequest:HCRequest];
@@ -1255,7 +1553,7 @@ unsigned char h2int(char c)
    //NSString* URLString = @"http://www.ruediheimlicher.ch/cgi-bin/eepromupdate.pl";
    NSURL *URL = [NSURL URLWithString:URLString];
    NSLog(@"EEPROMUpdateClearAktion URL: %@",URL );
-   NSURLRequest *HCRequest = [ [NSURLRequest alloc] initWithURL: URL cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:4.0];
+   NSURLRequest *HCRequest = [ [NSURLRequest alloc] initWithURL: URL cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:10.0];
    if (HCRequest)
    {
       //NSLog(@"loadURL:Request OK");
@@ -1424,10 +1722,9 @@ unsigned char h2int(char c)
 
 #pragma mark Statistik pl
 
-- (void)Kollektormittelwerteberechnen
+- (void)KollektormittelwerteberechnenMitJahr:(int)jahr
 {
-   int jahr = 2013;
-   int monat = 1;
+      int monat = 1;
    
    NSString* URLString = [NSString stringWithFormat:@"http://%s/%s?jahr=%d&monat=%d",
                           WEBSERVER_VHOST,
@@ -1440,7 +1737,7 @@ unsigned char h2int(char c)
    //NSString* URLString = @"http://www.ruediheimlicher.ch/cgi-bin/hello.pl";
    NSURL *URL = [NSURL URLWithString:URLString];
    NSLog(@"Kollektormittelwerteberechnen URL: %@",URL );
-   NSURLRequest *HCRequest = [ [NSURLRequest alloc] initWithURL: URL cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:4.0];
+   NSURLRequest *HCRequest = [ [NSURLRequest alloc] initWithURL: URL cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:10.0];
    if (HCRequest)
    {
       //NSLog(@"loadURL:Request OK");
@@ -1466,18 +1763,19 @@ unsigned char h2int(char c)
 
 - (void)loadURL:(NSURL *)URL
 {
-	//NSLog(@"loadURL: %@",URL);
-	NSURLRequest *HCRequest = [ [NSURLRequest alloc] initWithURL: URL cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:1.0];
+	NSLog(@"loadURL: %@",URL);
+	NSURLRequest *HCRequest = [ [NSURLRequest alloc] initWithURL: URL cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:10.0];
 	[[NSURLCache sharedURLCache] removeAllCachedResponses];
 //	NSLog(@"Cache mem: %d",[[NSURLCache sharedURLCache]memoryCapacity]);
 //	[[NSURLCache sharedURLCache] removeCachedResponseForRequest:HCRequest]; // > crash
 //	NSLog(@"loadURL:Vor loadRequest");
 	if (HCRequest)
 	{
-	//NSLog(@"loadURL:Request OK");
-	[[webView mainFrame] loadRequest:HCRequest];
+      //NSLog(@"loadURL:Request OK");
+      [[webView mainFrame] loadRequest:HCRequest];
+      loadAlertOK=0;
 	}
-	
+   //- [[webView mainFrame] stopLoading]
 }
 
 - (void)setURLToLoad:(NSURL *)URL
@@ -1522,7 +1820,7 @@ unsigned char h2int(char c)
 	// Only report feedback for the main frame.
 	NSString* HTML_Inhalt=[self dataRepresentationOfType:HTMLDocumentType];
 	NSLog(@"didFinishLoadForFrame Antwort: \nHTML_Inhalt: \t%@\n",HTML_Inhalt);
-	
+	loadAlertOK=1;
 	NSRange CheckRange;
 	NSString* Code_String= @"okcode=";
 	NSString* Status0_String= @"status0";
@@ -1552,6 +1850,7 @@ unsigned char h2int(char c)
 			//NSLog(@"didFinishLoadForFrame: Status = 0");
 			//[tempDataDic setObject:@"status" forKey:@"antwort"];
 			[tempDataDic setObject:[NSNumber numberWithInt:0] forKey:@"twistatus"];
+         loadTestStatus = END_STATUS0;
 		}
 		
 		CheckRange = [HTML_Inhalt rangeOfString:Status1_String];
@@ -1560,6 +1859,7 @@ unsigned char h2int(char c)
          //NSLog(@"didFinishLoadForFrame: Status = 1");
 			//[tempDataDic setObject:@"status" forKey:@"antwort"];
 			[tempDataDic setObject:[NSNumber numberWithInt:1] forKey:@"twistatus"];
+         loadTestStatus = END_STATUS1;
 		}
 
       // isstatus0ok vorhanden??
@@ -1568,9 +1868,10 @@ unsigned char h2int(char c)
 		CheckRange = [HTML_Inhalt rangeOfString:status0_String];
 		if (CheckRange.location < NSNotFound)
 		{
-			//NSLog(@"didFinishLoadForFrame: status0+ ist da");
+			NSLog(@"didFinishLoadForFrame: status0+ ist da");
 			[tempDataDic setObject:[NSNumber numberWithInt:1] forKey:@"status0"];
 			[confirmStatusTimer invalidate];
+         loadTestStatus = END_STATUS0;
 		}
 		else
 		{
@@ -1616,7 +1917,8 @@ unsigned char h2int(char c)
 		{
 			NSLog(@"didFinishLoadForFrame: eeprom+ ist da loc: %d ",CheckRange.location);
 			[tempDataDic setObject:[NSNumber numberWithInt:1] forKey:@"eeprom+"];
-		}
+         //loadTestStatus = END_WRITE;
+      }
 		else
 		{
 			//[tempDataDic setObject:[NSNumber numberWithInt:0] forKey:@"eeprom+"];
@@ -1662,7 +1964,7 @@ unsigned char h2int(char c)
 			[confirmTimer invalidate];
 			Webserver_busy=0;
          WriteWoche_busy --;
-         
+         loadTestStatus = END_WRITE;
          
          // Daten an HomeServer schicken
          if ([SendEEPROMDataDic objectForKey:@"dataload"])
@@ -1758,8 +2060,34 @@ unsigned char h2int(char c)
          // EEPROM-String extrahieren
          
 			NSString* EEPROM_DataString=[HTML_Inhalt substringWithRange:NSMakeRange(datastart,dataend-datastart)];
-			//NSLog(@"didFinishLoad EEPROM_DataString: %@ WebTask: %d",EEPROM_DataString,WebTask);
-			//NSLog(@"EEPROM_DataString: l=%d",[EEPROM_DataString length]);
+			NSLog(@"didFinishLoad EEPROM_DataString: %@ WebTask: %d",EEPROM_DataString,WebTask);
+         
+         NSString* ff_String= @"ff+ff+ff+ff"; // test-Data
+         NSRange CheckRange = [EEPROM_DataString rangeOfString:ff_String];
+         if (CheckRange.location < NSNotFound)
+         {
+            lastEEPROMData = EEPROM_DataString;
+            NSLog(@"loadTimerFunktion ff+ff+  loc: %d",CheckRange.location);
+            testdataok = 1;
+            
+            if (lastEEPROMData)
+            {
+               lastEEPROMData = EEPROM_DataString;
+            }
+            else
+            {
+               lastEEPROMData = [NSString stringWithString:EEPROM_DataString];
+            }
+         }
+         else
+         {
+            testdataok=0;
+            
+            
+         }
+         //lastEEPROMData = @"asdfghjkl";
+         loadTestStatus = END_READ;
+			NSLog(@"didFinishLoad lastEEPROMData: %@",lastEEPROMData);
 			[tempDataDic setObject:EEPROM_DataString forKey:@"eepromdatastring"];
 			
          // Datastring sichern fuer senden an HomeServer
@@ -1880,9 +2208,10 @@ unsigned char h2int(char c)
 		NSLog(@"didFailProvisionalLoadWithError: URL: %@",provurl);
 		[tempDataDic setObject:provurl forKey:@"provurl"];
 		
-		// Test, ob URL eine okcode  enthält
+		// Test, ob URL einen okcode  enthält
 		CheckRange = [provurl rangeOfString:PW_String]; // Passwortstring ist da, eigene URL
-		NSLog(@"didFailProvisionalLoadWithError: CheckRange");
+		NSLog(@"didFailProvisionalLoadWithError: CheckRange fuer pw-string?");
+      
       if (CheckRange.location < NSNotFound)
 		{
 			[tempDataDic setObject:Error_String forKey:@"error"];
@@ -1905,7 +2234,9 @@ unsigned char h2int(char c)
       CheckRange = [provurl rangeOfString:EEPROMUpdate_String]; // P
 		if (CheckRange.location < NSNotFound)
       {
-         return;
+         
+         NSLog(@"didFailProvisionalLoadWithError: EEPROM Update: %@",EEPROMUpdate_String);
+
       }
       
       NSString *errorDescription = [error localizedDescription];
@@ -1938,7 +2269,9 @@ unsigned char h2int(char c)
 		
 		int antwort=[Warnung runModal];
 		
-		NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
+      [[webView mainFrame] stopLoading];
+		
+      NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
 		[nc postNotificationName:@"FinishLoad" object:self userInfo:tempDataDic];
 		
 	}

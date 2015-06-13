@@ -49,7 +49,8 @@
    [twiStatusDic setObject:[NSNumber numberWithInt:[LocalTaste state]]forKey:@"local"];
 	//NSLog(@"AVRClient end");
 	[nc postNotificationName:@"twistatus" object:self userInfo:twiStatusDic];
-   [LocalTaste setState:![sender state]];
+//   [LocalTaste setState:![sender state]];
+   
 }
 
 - (void)setTWIState:(int)status
@@ -105,8 +106,19 @@
 	NSMutableDictionary* localStatusDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
 	[localStatusDic setObject:[NSNumber numberWithInt:[sender state]]forKey:@"test"];
 	[nc postNotificationName:@"teststatus" object:self userInfo:localStatusDic];
+
 }
 
+- (IBAction)reportLoadTestTaste:(id)sender
+{
+   NSLog(@"AVRClient reportLoadTestTaste");
+   NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
+   NSMutableDictionary* localStatusDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+   [localStatusDic setObject:[NSNumber numberWithInt:1]forKey:@"test"];
+   [nc postNotificationName:@"loadtest" object:self userInfo:localStatusDic];
+
+   
+}
 
 
 - (void)setTWITaste:(int)status
@@ -437,7 +449,7 @@
                          objectAtIndex:tempObjekt]
                         objectForKey:@"tagbalkentyp"]intValue];
    
-   NSLog(@"readEthTagplanForTag: %d  ",wochentag);
+   NSLog(@"readEthTagplanVonTag: %d  ",wochentag);
    //return;
    
    
@@ -567,7 +579,7 @@
                             objectAtIndex:objekt]
                            objectForKey:@"tagbalkentyp"]intValue];
       
-      NSLog(@"readEthTagplanForTag: %d  ",wochentag);
+      NSLog(@"readEthTagplanVonRaum: %d  ",wochentag);
       //return;
       
       
@@ -872,10 +884,10 @@ if (Webserver_busy)
 		
 		NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
 		
-      NSLog(@"WriteStandardAktion: permanent: %d",permanent);
+      //NSLog(@"WriteStandardAktion: permanent: %d",permanent);
       if (permanent) // schicken an EEPROM
       {
-         
+         NSLog(@"AVRClient WriteStandardAktion mit permanent: %d ",permanent);
          [nc postNotificationName:@"HomeClientWriteStandard" object:self userInfo:HomeClientDic];
       }
       else
@@ -2522,7 +2534,19 @@ if (Webserver_busy)
    {
       [Errorfeld setStringValue:[[note userInfo]objectForKey:@"eepromupdate"]];
    }
+   
+   if ([[note userInfo]objectForKey:@"provurl"]) // fail
+   {
+      [Errorfeld setStringValue:[[note userInfo]objectForKey:@"provurl"]];
+   }
 
+}
+
+
+- (void)webView:(WebView *)sender
+didCommitLoadForFrame:(WebFrame *)frame
+{
+   NSLog(@"didCommitLoadForFrame: %@",[frame description]);
 }
 
 
@@ -2548,6 +2572,7 @@ if (Webserver_busy)
 	[Warnung setAlertStyle:NSWarningAlertStyle];
 	
 	int antwort=[Warnung runModal];
+   
 	[TWIStatusTaste setState:YES];
 	
 }

@@ -651,11 +651,14 @@ NSLog(@"lastDataRead: %@",lastDataRead);
 	int jahr=[Data SolarStatistikJahr];
 	int monat=[Data SolarStatistikMonat];
    
+   
+   
 	//NSLog(@"setSolarStatistikDaten: jahr: %d monat: %d",jahr, monat);
    
 	NSMutableDictionary* StatDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 
    NSArray* KollektorTemperaturArray = [HomeData KollektorMittelwerteVonJahr:jahr];
+   
    if (KollektorTemperaturArray && [KollektorTemperaturArray count])
    {
       //NSLog(@"AVRController setSolarStatistikDaten KollektorTemperaturArray count: %d",[KollektorTemperaturArray count]);
@@ -693,7 +696,7 @@ NSLog(@"lastDataRead: %@",lastDataRead);
    NSArray* SolarertragArray=[HomeData SolarErtragVonJahr:jahr vonMonat:0];
 	if (SolarertragArray && [SolarertragArray count])
 	{
-      NSLog(@"AVRController setSolarStatistikDaten SolarertragArray count: %d",[SolarertragArray count]);
+      //NSLog(@"AVRController setSolarStatistikDaten SolarertragArray count: %d",[SolarertragArray count]);
       
 		//NSLog(@"AVRController setStatistikDaten SolarertragArray: %@",[SolarertragArray description]);
 		//NSArray* TemperaturKanalArray=[NSArray arrayWithObjects:@"1",@"1",@"1",@"1" ,@"0",@"0",@"0",@"0",nil]; // angezeigte Kanaele
@@ -708,6 +711,8 @@ NSLog(@"lastDataRead: %@",lastDataRead);
    
    
 	[Data setSolarStatistik:StatDic];
+   
+   //NSLog(@"setSolarStatistikDaten end");
 }
 
 @end

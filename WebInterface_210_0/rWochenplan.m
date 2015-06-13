@@ -55,7 +55,7 @@
 	NSArray* Raumnamen=[[NSArray arrayWithObjects:@"Heizung", @"Werkstatt", @"WoZi", @"Buero", @"Labor", @"OG1", @"OG2", @"Estrich", nil]retain];
 	//NSLog(@"\n\nsetWochenplanForRaum: : %d    start",derRaum);
 	//NSLog(@"setWochenplanForRaum: derWochenplanArray: %@",[derWochenplanArray description]);
-	//NSLog(@"  ");
+	//NSLog(@"A0");
 	//NSLog(@"Raum: %@",[Raumnamen objectAtIndex:derRaum]);
 	//Array mit aktiven Tagbalken einrichten
 	int wd;
@@ -86,7 +86,7 @@
 	NSMutableArray* aktivTagplanDicArray=[[NSMutableArray alloc]initWithCapacity:0]; 	
 	for (wd=0;wd<7;wd++)
 	{
-      
+      //NSLog(@"A wd: %d",wd);
 		//Tagplanarray fuer den Tag wd:
 		NSArray* tempTagplanArray=[[derWochenplanArray objectAtIndex:wd]objectForKey:@"tagplanarray"];
       if (wd == 0)
@@ -107,9 +107,18 @@
 			{
             //NSLog(@"tempTagplanArray: %@",[tempTagplanArray description]);
 			}
+         //NSLog(@"B");
+         //NSLog(@"wd: %d obj: %d tempTagplanArray: %@",wd, obj, [[tempTagplanArray objectAtIndex:obj]  description]);
+         if ([[tempTagplanArray objectAtIndex:obj]objectForKey:@"tagbalkentyp"])
+         {
 			[tempaktivObjektDic setObject:[[tempTagplanArray objectAtIndex:obj]objectForKey:@"tagbalkentyp"] forKey:@"tagbalkentyp"];
+         }
+         else
+         {
+            [tempaktivObjektDic setObject:[NSNumber numberWithInt:0] forKey:@"tagbalkentyp"];
+         }
 			//NSLog(@"wd: %d obj: %d tagbalkentyp: %d",wd, obj, [[[tempTagplanArray objectAtIndex:obj]objectForKey:@"tagbalkentyp"]intValue]);
-			
+			//NSLog(@"C");
 			if ([aktivSet containsIndex:obj])
 			{
 				//Dic mit Namen und Stundenplanarray eines aktiven Objekts
@@ -131,6 +140,7 @@
 				
 			}// if
 		}// for obj
+      //NSLog(@"D");
 		//NSLog(@"Tag: %d Anzahl Stundenplaene: %d",wd, [aktivStundenplanArray count]);
 		
 		// Array der Dics mit Objektnamen und Stundenplanen aller aktiven Objekte des Tages wd anfuegen.

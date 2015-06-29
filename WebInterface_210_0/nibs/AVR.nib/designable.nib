@@ -679,6 +679,17 @@
                             <action selector="reportLoadTestTaste:" target="-2" id="Lca-KQ-0aW"/>
                         </connections>
                     </button>
+                    <button verticalHuggingPriority="750" id="7pl-LK-Zh0">
+                        <rect key="frame" x="530" y="546" width="71" height="32"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <buttonCell key="cell" type="push" title="reset" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="5lq-AP-V0t">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="system"/>
+                            <connections>
+                                <action selector="reportResetTaste:" target="-1" id="2k8-Gu-lBQ"/>
+                            </connections>
+                        </buttonCell>
+                    </button>
                 </subviews>
             </view>
             <connections>

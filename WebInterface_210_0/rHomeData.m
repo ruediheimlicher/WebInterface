@@ -1275,7 +1275,7 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
       //NSString* tagsuffix = [NSString stringWithFormat:@"/SolarDaten%d%.2d%.2d.txt",jahrkurz,monat,tag];
       //NSLog(@"tagsuffix: %@",tagsuffix);
       NSString* tagPfad =[jahrPfad stringByAppendingPathComponent:@"kollektormittelwerte.txt"];
-      NSLog(@"tagPfad: %@",tagPfad);
+      //NSLog(@"tagPfad: %@",tagPfad);
       
       NSURL *tagURL = [NSURL URLWithString:tagPfad];
       

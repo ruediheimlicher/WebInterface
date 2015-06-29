@@ -135,6 +135,12 @@ unsigned char h2int(char c)
 				  name:@"EEPROMWriteWoche"
 				object:nil];
 
+   [nc addObserver:self
+          selector:@selector(resetMasterAktion:)
+              name:@"resetmaster"
+            object:nil];
+
+   
    SendEEPROMDataDic = [[[NSMutableDictionary alloc]initWithCapacity:0]retain];
 
    
@@ -788,6 +794,40 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
       
    }
 }
+
+
+- (void)resetMasterAktion:(NSNotification*)note
+{
+   //NSLog(@"resetMasterAktion note: %@",[[note userInfo]description]);
+   if ([[note userInfo]objectForKey:@"reset"] && [[[note userInfo]objectForKey:@"reset"]intValue]==1) // Master reetten
+   {
+      //NSString* resetMasterSuffix = [NSString stringWithFormat:@"pw=%@&task=%@",pw,@"68+6f+6d+65+72"];
+      NSString* resetMasterSuffix = [NSString stringWithFormat:@"pw=%@&task=%@",pw,@"homer"];
+
+      //NSString* resetMasterSuffix = [NSString stringWithFormat:@"pw=%@&task=68+6f",pw];
+
+      //NSString* resetMasterSuffix = [NSString stringWithFormat:@"pw=%@&task=%@",pw,@"1"];
+      
+      
+      NSString* TWIStatusSuffix = [NSString stringWithFormat:@"pw=%@&status=%@",pw,@"1"];
+      NSString* TWIStatusURLString =[NSString stringWithFormat:@"%@/twi?%@",HomeCentralURL, TWIStatusSuffix];
+
+
+      NSString* resetMasterURLString =[NSString stringWithFormat:@"%@/twi?%@",HomeCentralURL, resetMasterSuffix];
+      
+      //NSLog(@"resetMasterAktion resetMasterURLString: %@ TWIStatusURLString: %@",resetMasterURLString,TWIStatusURLString);
+      
+      NSURL *URL = [NSURL URLWithString:resetMasterURLString];
+      //NSLog(@"resetMasterAktion URL: %@",URL);
+      [self loadURL:URL];
+      
+      
+
+      
+   }
+}
+
+
 
 
 
@@ -1826,6 +1866,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 	NSString* Status0_String= @"status0";
 	NSString* Status1_String= @"status1";
 	NSString* PW_String= @"ideur00";
+   NSString* taskok_String= @"taskok";
 	
 	NSString* status0_String= @"status0+"; // Status 0 ist bestaetigt
    
@@ -2003,6 +2044,18 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 			NSLog(@"didFinishLoadForFrame: write- ist da");
 			[tempDataDic setObject:[NSNumber numberWithInt:0] forKey:@"writeok"];
 		}
+
+      // taskok angekommen?
+      CheckRange = [HTML_Inhalt rangeOfString:taskok_String];
+      if (CheckRange.location < NSNotFound)
+      {
+         //NSLog(@"didFinishLoadForFrame: taskok ist da");
+         [tempDataDic setObject:[NSNumber numberWithInt:1] forKey:@"taskok"];
+      }
+      else
+      {
+         [tempDataDic setObject:[NSNumber numberWithInt:0] forKey:@"taskok"];
+      }
 
 
 

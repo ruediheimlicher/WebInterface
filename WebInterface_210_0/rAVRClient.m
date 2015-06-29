@@ -109,17 +109,70 @@
 
 }
 
+- (IBAction)reportResetTaste:(id)sender
+{
+   //NSLog(@"AVRClient reportResetTaste");
+   NSAlert *Warnung = [[[NSAlert alloc] init] autorelease];
+   [Warnung addButtonWithTitle:@"OK"];
+   //	[Warnung addButtonWithTitle:@""];
+   //	[Warnung addButtonWithTitle:@""];
+   	[Warnung addButtonWithTitle:@"Abbrechen"];
+   [Warnung setMessageText:[NSString stringWithFormat:@"%@",@"Master reset"]];
+   
+   NSString* s1=@"Soll der Master wirklich neu gestartet werden?";
+   NSString* s2=@"Das dauert ca. 3 min.";
+   NSString* InformationString=[NSString stringWithFormat:@"%@\n%@",s1,s2];
+   [Warnung setInformativeText:InformationString];
+   [Warnung setAlertStyle:NSWarningAlertStyle];
+   NSSecureTextField *input = [[NSSecureTextField alloc] initWithFrame:NSMakeRect(0, 0, 200, 24)];
+   [[input cell]setEchosBullets:YES];
+   [input setStringValue:@"passwort"];
+  // [Warnung autorelease];
+   [Warnung setAccessoryView:input];
+   int resetok=0;
+   int antwort=[Warnung runModal];
+   //NSLog(@"AVRClient antwort: %d",antwort);
+   switch (antwort)
+   {
+      case 1000:// OK
+      {
+         //NSLog(@"OK pw: %@",[input stringValue]);
+         if ([[input stringValue]  isEqual: @"homer"])
+         {
+            resetok=1; // reset ausfuehren
+
+         }
+         
+      }break;
+      case 1001: //abbrechen
+      {
+          //NSLog(@"Abbrechen");
+         return;
+      }break;
+         
+   }
+   if (resetok)
+   {
+   NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
+   NSMutableDictionary* localStatusDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+   [localStatusDic setObject:[NSNumber numberWithInt:1]forKey:@"reset"];
+   [nc postNotificationName:@"resetmaster" object:self userInfo:localStatusDic];
+   }
+   else
+   {
+      NSAlert *Warnung = [[[NSAlert alloc] init] autorelease];
+      [Warnung addButtonWithTitle:@"OK"];
+      [Warnung setMessageText:[NSString stringWithFormat:@"%@",@"Zugriff verweigert!"]];
+      int antwort=[Warnung runModal];
+   }
+}
+
 - (IBAction)reportLoadTestTaste:(id)sender
 {
    NSLog(@"AVRClient reportLoadTestTaste");
-   NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
-   NSMutableDictionary* localStatusDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
-   [localStatusDic setObject:[NSNumber numberWithInt:1]forKey:@"test"];
-   [nc postNotificationName:@"loadtest" object:self userInfo:localStatusDic];
 
-   
+
 }
-
 
 - (void)setTWITaste:(int)status
 {
@@ -2347,6 +2400,35 @@ if (Webserver_busy)
 			
 		} // writeok
 		
+      
+      // taskok
+      
+      if ([[note userInfo]objectForKey:@"taskok"])
+      {
+         
+         int task_OK=[[[note userInfo]objectForKey:@"taskok"]intValue];
+         // Anzeigen, dass der Master-Reset erfolgreich uebertragen wurde:
+         //Webserver_busy =0;
+         //NSLog(@"FinishLoadAktion  taskok ist da: %d",task_OK);
+         if (task_OK)// Passwort OK
+         {
+            //NSLog(@"FinishLoadAktion  task Passwort OK beep");
+            NSBeep();
+            //[WriteFeld setStringValue:@"OK"];
+            //[[NSSound soundNamed:@"Tink"] play];
+            [StatusFeld setStringValue:@"Master-Reset OK"];
+            
+         }
+         else
+         {
+            //[WriteFeld setStringValue:@""];
+            //[StatusFeld setStringValue:@"EEPROM-Daten nicht geschrieben"];
+            
+         }
+         
+      }
+      
+      
 	} // if okcode
 	
 	NSArray* EEPROMDataArray;

@@ -933,9 +933,9 @@ extern NSMutableArray* DatenplanTabelle;
 
 	NSMutableDictionary* SolarEinheitenDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
 	[SolarEinheitenDic setObject:[NSNumber numberWithInt:2]forKey:@"minorteile"];
-	[SolarEinheitenDic setObject:[NSNumber numberWithInt:6]forKey:@"majorteile"];
+	[SolarEinheitenDic setObject:[NSNumber numberWithInt:8]forKey:@"majorteile"];
 	[SolarEinheitenDic setObject:[NSNumber numberWithInt:0]forKey:@"nullpunkt"];
-	[SolarEinheitenDic setObject:[NSNumber numberWithInt:120]forKey:@"maxy"];
+	[SolarEinheitenDic setObject:[NSNumber numberWithInt:160]forKey:@"maxy"];
 	//[SolarEinheitenDic setObject:[NSNumber numberWithInt:0]forKey:@"miny"];
 	//[SolarEinheitenDic setObject:[NSNumber numberWithFloat:[[SolarZeitKompressionTaste titleOfSelectedItem]floatValue]]forKey:@"zeitkompression"];
 	[SolarEinheitenDic setObject:@" C"forKey:@"einheit"];

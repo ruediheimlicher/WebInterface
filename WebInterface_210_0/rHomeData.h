@@ -62,6 +62,7 @@
 - (NSString*)SolarDataVon:(NSDate*)dasDatum;
 - (NSString*)SolarDataVonHeute;
 - (NSString*)LastSolarData;
+- (NSString*)TestSolarData;
 
 - (NSArray*)BrennerStatistikVonJahr:(int)dasJahr Monat:(int)derMonat;
 - (NSArray*)TemperaturStatistikVonJahr:(int)dasJahr Monat:(int)derMonat;

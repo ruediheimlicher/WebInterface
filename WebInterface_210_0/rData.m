@@ -2441,8 +2441,11 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
 	
 	if ([[note userInfo]objectForKey:@"datenarray"])
 	{
-		
+      NSLog(@"datenarray da");
 		NSArray* SolarTemperaturKanalArray=	[NSArray arrayWithObjects:@"1",@"1",@"1",@"1" ,@"1",@"1",@"0",@"0",nil];
+      
+      //                                  [NSArray arrayWithObjects:@"0",@"1",@"1",@"1" ,@"0",@"0",@"0",@"0",nil]];
+
 		NSArray* EinschaltKanalArray=		[NSArray arrayWithObjects:@"1",@"1",@"0",@"0" ,@"0",@"0",@"0",@"0",nil];
 		
 		NSArray* tempDatenArray = [[note userInfo]objectForKey:@"datenarray"];
@@ -2465,13 +2468,25 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
 		tempWertString=[NSString stringWithFormat:@"%2.1f",[[tempZeilenArray objectAtIndex:6]intValue]/2.0];
 		[KollektorTemperaturFeld setStringValue:tempWertString];
 
+      
+      
+      int tempTemperatur = [[tempZeilenArray objectAtIndex:6]intValue];
+      if ([[tempZeilenArray objectAtIndex:7]intValue]&0x01)
+      {
+         tempTemperatur += 255;
+      }
+      
+      //      tempWertString=[NSString stringWithFormat:@"%2.1f",[[lastDatenArray objectAtIndex:6]intValue]/2.0];
+      tempWertString=[NSString stringWithFormat:@"%2.1f",tempTemperatur/2.0];
+      //NSLog(@"last tempWertString: %@",tempWertString);
+      
 		// Zeit des ersten Datensatzes
 		//int firstZeit = [[[[tempDatenArray objectAtIndex:0] componentsSeparatedByString:@"\t"]objectAtIndex:0]intValue];
 		//NSLog(@"ExterneSolarDatenAktion firstZeit: %d",firstZeit);
 		
 		// Zeit des letzten Datensatzes
 		int lastZeit = [[[[tempDatenArray lastObject] componentsSeparatedByString:@"\t"]objectAtIndex:0]intValue];
-		//NSLog(@"ExterneSolarDatenAktion lastZeit: %d",lastZeit);
+		//NSLog(@"ExterneSolarDatenAktion lastZeit: %d tempWertString: %@",lastZeit,tempWertString);
 		[SolarLaufzeitFeld setStringValue:[self stringAusZeit:lastZeit]]; 
 		
 		// Breite des DocumentViews bestimmen
@@ -2590,6 +2605,16 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
 					//tempZeit*= SolarZeitKompression;
 					//tempZeit -= firstZeit;
 					[tempZeilenArray replaceObjectAtIndex:0 withObject:[NSNumber numberWithInt:tempZeit]];
+               
+               int kollektortemperatur =[[tempZeilenArray objectAtIndex:6]intValue];
+              int kollektorcode =[[tempZeilenArray objectAtIndex:7]intValue];
+               if (kollektorcode & 0x01)
+               {
+                  kollektortemperatur += 255;
+                  [tempZeilenArray replaceObjectAtIndex:6 withObject:[NSNumber numberWithInt:kollektortemperatur]];
+               }
+               //NSLog(@"kollektortemperatur: %d kollektorcode: %d",kollektortemperatur,kollektorcode);
+               
 					
 					[SolarDiagramm setWerteArray:tempZeilenArray mitKanalArray:SolarTemperaturKanalArray ];
 					
@@ -2642,6 +2667,10 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
 		//SolarKalenderblocker=0;
 		
 	}
+   else
+   {
+      NSLog(@"kein datenarray da");
+   }
 	//NSBeep();
 	NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
 	[NotificationDic setObject:[NSNumber numberWithInt:1] forKey:@"loadsolardataok"];
@@ -2757,8 +2786,18 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
 		tempWertString=[NSString stringWithFormat:@"%2.1f",[[lastDatenArray objectAtIndex:5]intValue]/2.0];
 		[BoilerobenFeld setStringValue:tempWertString];
 		
-		tempWertString=[NSString stringWithFormat:@"%2.1f",[[lastDatenArray objectAtIndex:6]intValue]/2.0];
-		[KollektorTemperaturFeld setStringValue:tempWertString];
+      int tempTemperatur = [[lastDatenArray objectAtIndex:6]intValue];
+      if ([[lastDatenArray objectAtIndex:7]intValue]&0x01)
+      {
+         tempTemperatur += 255;
+         [lastDatenArray replaceObjectAtIndex:6 withObject: [NSNumber numberWithInt:tempTemperatur]];
+      }
+		
+//      tempWertString=[NSString stringWithFormat:@"%2.1f",[[lastDatenArray objectAtIndex:6]intValue]/2.0];
+      tempWertString=[NSString stringWithFormat:@"%2.1f",tempTemperatur/2.0];
+      NSLog(@"lastSolarDatenAktion tempWertString: %@",tempWertString);
+
+      [KollektorTemperaturFeld setStringValue:tempWertString];
 		
 		//		int Raum=0, Stunde=0,Minuten=0;
 		

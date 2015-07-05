@@ -682,6 +682,120 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 
 - (NSString*)SolarDataVonHeute
 {
+   NSString* returnString=[NSString string];
+   if (isDownloading)
+   {
+      [self cancel];
+   }
+   else
+   {
+      //NSArray* BrennerdatenArray = [self BrennerStatistikVonJahr:2010 Monat:0];
+      //NSLog(@"BrennerdatenArray: %@",[BrennerdatenArray description]);
+      
+      SolarDataSuffix=@"SolarDaten.txt";
+      //NSString* URLPfad=[NSURL URLWithString:[ServerPfad stringByAppendingPathComponent:SolarDataSuffix]];
+      //NSString* URLPfad=[NSURL URLWithString:[ServerPfad stringByAppendingPathComponent:@"SolarDaten.txt"]];
+      //NSLog(@"DataVonHeute URLPfad: %@",URLPfad);
+      //NSLog(@"SolarDataVonHeute  DownloadPfad: %@ DataSuffix: %@",ServerPfad,SolarDataSuffix);
+      NSURL *URL = [NSURL URLWithString:[ServerPfad stringByAppendingPathComponent:SolarDataSuffix]];
+      //NSLog(@"SolarDataVonHeute URL: %@",URL);
+      //NSURL *URL = [NSURL URLWithString:@"http://www.schuleduernten.ch/blatt/cgi-bin/HomeDaten.txt"];
+      //www.schuleduernten.ch/blatt/cgi-bin/HomeDaten/HomeDaten090730.txt
+      NSStringEncoding *  enc=0;
+      NSCharacterSet* CharOK=[NSCharacterSet alphanumericCharacterSet];
+      NSError* WebFehler=NULL;
+      NSString* DataString=[NSString stringWithContentsOfURL:URL usedEncoding: enc error:&WebFehler];
+      
+      //NSLog(@"DataVonHeute WebFehler: :%@",[[WebFehler userInfo]description]);
+      if (WebFehler)
+      {
+         //NSLog(@"SolarDataVonHeute WebFehler: :%@",[[WebFehler userInfo]description]);
+         
+         //NSLog(@"SolarDataVonHeute WebFehler: :%@",[[WebFehler userInfo]objectForKey:@"NSUnderlyingError"]);
+         //NSLog(@"SolarDataVonHeute WebFehler: :%@",[[WebFehler userInfo]objectForKey:@"NSUnderlyingError"]);
+         //ERROR: 503
+         NSArray* ErrorArray=[[[[WebFehler userInfo]objectForKey:@"NSUnderlyingError"]description]componentsSeparatedByString:@","];
+         NSLog(@"ErrorArray: %@",[ErrorArray description]);
+         NSAlert *Warnung = [[[NSAlert alloc] init] autorelease];
+         [Warnung addButtonWithTitle:@"OK"];
+         //	[Warnung addButtonWithTitle:@""];
+         //	[Warnung addButtonWithTitle:@""];
+         //	[Warnung addButtonWithTitle:@"Abbrechen"];
+         NSString* MessageText= NSLocalizedString(@"Error in Download",@"Download misslungen");
+         [Warnung setMessageText:[NSString stringWithFormat:@"%@",MessageText]];
+         
+         NSString* s1=[NSString stringWithFormat:@"URL: \n%@",URL];
+         NSString* s2=[ErrorArray objectAtIndex:2];
+         int AnfIndex=[[[[WebFehler userInfo]objectForKey:@"NSUnderlyingError"]description]rangeOfString:@"\""].location;
+         NSString* s3=[[[[WebFehler userInfo]objectForKey:@"NSUnderlyingError"]description]substringFromIndex:AnfIndex];
+         NSString* InformationString=[NSString stringWithFormat:@"%@\n%@\nFehler: %@",s1,s2,s3];
+         [Warnung setInformativeText:InformationString];
+         [Warnung setAlertStyle:NSWarningAlertStyle];
+         
+         int antwort=[Warnung runModal];
+         return returnString;
+      }
+      if ([DataString length])
+      {
+         
+         char first=[DataString characterAtIndex:0];
+         
+         // eventuellen Leerschlag am Anfang entfernen
+         
+         if (![CharOK characterIsMember:first])
+         {
+            //NSLog(@"DataVonHeute: String korrigieren");
+            DataString=[DataString substringFromIndex:1];
+         }
+         //NSLog(@"SolarDataVonHeute DataString: \n%@",DataString);
+         lastDataZeit=[self lastDataZeitVon:DataString];
+         //NSLog(@"SolarDataVonHeute lastDataZeit: %d",lastDataZeit);
+         
+         // Auf WindowController Timer auslösen
+         downloadFlag=heute;
+         //NSLog(@"DataVonHeute downloadFlag: %d",downloadFlag);
+         NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+         [NotificationDic setObject:[NSNumber numberWithInt:downloadFlag] forKey:@"downloadflag"];
+         [NotificationDic setObject:[NSNumber numberWithInt:lastDataZeit] forKey:@"lastdatazeit"];
+         [NotificationDic setObject:DataString forKey:@"datastring"];
+         NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
+         [nc postNotificationName:@"SolarDataDownload" object:self userInfo:NotificationDic];
+         //NSLog(@"Daten OK");
+         
+         NSArray* StatistikArray=[self SolarErtragVonHeute];
+         
+         return DataString;
+         
+      }
+      else
+      {
+         NSLog(@"Keine Daten");
+         [self setErrString:@"DataVonHeute: keine Daten"];
+      }
+      
+      /*
+       NSLog(@"DataVon URL: %@ DataString: %@",URL,DataString);
+       if (URL) 
+       {
+       download = [[WebDownload alloc] initWithRequest:[NSURLRequest requestWithURL:URL] delegate:self];
+       downloadFlag=heute;
+       
+       }
+       if (!download) 
+       {
+       
+       NSBeginAlertSheet(@"Invalid or unsupported URL", nil, nil, nil, [self window], nil, nil, nil, nil,
+       @"The entered URL is either invalid or unsupported.");
+       }
+       */
+      
+   }
+   return returnString;
+}
+
+#pragma mark testsolar
+- (NSString*)TestSolarData
+{
 	NSString* returnString=[NSString string];
 	if (isDownloading) 
 	{
@@ -692,7 +806,7 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 		//NSArray* BrennerdatenArray = [self BrennerStatistikVonJahr:2010 Monat:0];
 		//NSLog(@"BrennerdatenArray: %@",[BrennerdatenArray description]);
 		
-		SolarDataSuffix=@"SolarDaten.txt";
+		SolarDataSuffix=@"testsolardaten.txt";
 		//NSString* URLPfad=[NSURL URLWithString:[ServerPfad stringByAppendingPathComponent:SolarDataSuffix]];
 		//NSString* URLPfad=[NSURL URLWithString:[ServerPfad stringByAppendingPathComponent:@"SolarDaten.txt"]];
 		//NSLog(@"DataVonHeute URLPfad: %@",URLPfad);

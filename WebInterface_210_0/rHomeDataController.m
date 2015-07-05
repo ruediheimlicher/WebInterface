@@ -90,7 +90,7 @@
 		{
 			SolarDataString = [HomeData SolarDataVon:Datum];
 		}
-		NSLog(@"HomeDataSolarKalenderAktion: vor open");
+		//NSLog(@"HomeDataSolarKalenderAktion: vor open");
 		[self openWithSolarString: SolarDataString];
 		
 	}

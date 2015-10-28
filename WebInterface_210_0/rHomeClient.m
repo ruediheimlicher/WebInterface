@@ -152,7 +152,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 	
    //LocalHomeCentralURL=@"192.168.1.210";
    //HomeCentralURL=@"http://192.168.1.210";
-   //HomeCentralURL=@"http://ruediheimlicher.ch";
+   //HomeCentralURL=@"https://ruediheimlicher.ch";
 	
 	pw = @"ideur00";
 	[pw retain];
@@ -1583,6 +1583,14 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 - (void)EEPROMUpdateClearAktion:(NSNotification*)note
 {
    
+ /*
+   NSString* URLString = [NSString stringWithFormat:@"https://%s/%s?pw=%s&perm=%d",
+                          WEBSERVER_VHOST,
+                          CGI_UPDATE_CLEAR,
+                          PW,
+                          13
+                          ];
+  */
    NSString* URLString = [NSString stringWithFormat:@"http://%s/%s?pw=%s&perm=%d",
                           WEBSERVER_VHOST,
                           CGI_UPDATE_CLEAR,
@@ -1773,7 +1781,16 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
                           monat
                           
                           ];
-   
+/*
+ NSString* URLString = [NSString stringWithFormat:@"https://%s/%s?jahr=%d&monat=%d",
+ WEBSERVER_VHOST,
+ "cgi-bin/kollektormittelwerte.pl",
+ jahr,
+ monat
+ 
+ ];
+
+ */
    //NSString* URLString = @"http://www.ruediheimlicher.ch/cgi-bin/hello.pl";
    NSURL *URL = [NSURL URLWithString:URLString];
    NSLog(@"Kollektormittelwerteberechnen URL: %@",URL );

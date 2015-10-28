@@ -2441,7 +2441,7 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
 	
 	if ([[note userInfo]objectForKey:@"datenarray"])
 	{
-      NSLog(@"datenarray da");
+      //NSLog(@"ExterneSolarDatenAktion datenarray da");
 		NSArray* SolarTemperaturKanalArray=	[NSArray arrayWithObjects:@"1",@"1",@"1",@"1" ,@"1",@"1",@"0",@"0",nil];
       
       //                                  [NSArray arrayWithObjects:@"0",@"1",@"1",@"1" ,@"0",@"0",@"0",@"0",nil]];
@@ -2669,7 +2669,7 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
 	}
    else
    {
-      NSLog(@"kein datenarray da");
+      NSLog(@"ExterneSolarDatenAktion kein datenarray da");
    }
 	//NSBeep();
 	NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
@@ -2795,7 +2795,7 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
 		
 //      tempWertString=[NSString stringWithFormat:@"%2.1f",[[lastDatenArray objectAtIndex:6]intValue]/2.0];
       tempWertString=[NSString stringWithFormat:@"%2.1f",tempTemperatur/2.0];
-      NSLog(@"lastSolarDatenAktion tempWertString: %@",tempWertString);
+      //NSLog(@"lastSolarDatenAktion tempWertString: %@",tempWertString);
 
       [KollektorTemperaturFeld setStringValue:tempWertString];
 		
@@ -3553,7 +3553,7 @@ if ([[note userInfo]objectForKey:@"err"])
 	 derDatenDic enthaelt Arrays der Brennerstatistik und der Temperaturstatistik
 	 Jedes Objekt der Arrays enthaelt das Datum und den TagDesJahres
 	 */
-	
+   return;
 	
 	//NSLog(@"[StatistikDiagrammScroller documentView]: w: %2.2f",[[StatistikDiagrammScroller documentView]frame].size.width);
    [BrennerStatistikDiagramm setGraphFarbe:[NSColor lightGrayColor] forKanal:0];

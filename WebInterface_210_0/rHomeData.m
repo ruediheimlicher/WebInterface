@@ -29,6 +29,7 @@ enum downloadflag{downloadpause, heute, last, datum}downloadFlag;
 	DownloadPfad = [[NSHomeDirectory() stringByAppendingPathComponent:@"Documents/TempDaten"]retain];
 	
    ServerPfad =@"http://www.ruediheimlicher.ch/Data";
+//   ServerPfad =@"https://www.ruediheimlicher.ch/Data";
 	
    
    
@@ -186,7 +187,7 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 		
 		DataSuffix=@"HomeDaten.txt";
 		NSString* URLPfad=[NSURL URLWithString:[ServerPfad stringByAppendingPathComponent:DataSuffix]];
-		//NSLog(@"DataVonHeute URLPfad: %@",URLPfad);
+		NSLog(@"DataVonHeute URLPfad: %@",URLPfad);
 		//NSLog(@"DataVonHeute  DownloadPfad: %@ DataSuffix: %@",DownloadPfad,DataSuffix);
 		NSURL *URL = [NSURL URLWithString:[ServerPfad stringByAppendingPathComponent:DataSuffix]];
       //NSLog(@"awake DataVonHeute URL: %@",URL);
@@ -206,7 +207,7 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
          NSLog(@"ErrString: %@",ErrString);
          NSRange  ErrRange = [ErrString rangeOfString:@"offline" options:NSCaseInsensitiveSearch];
          
-			NSLog(@"ErrorArray: %lu",(unsigned long)ErrRange.location);
+			NSLog(@"DataVonHeute ErrorArray: %lu",(unsigned long)ErrRange.location);
         // if ([ErrorArray containsObject:@"offline.\""])
          if (ErrRange.location < NSNotFound)
          {
@@ -245,9 +246,9 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 				//NSLog(@"DataVonHeute: String korrigieren");
 				DataString=[DataString substringFromIndex:1];
 			}
-			//NSLog(@"DataVonHeute DataString: \n%@",DataString);
+			NSLog(@"DataVonHeute DataString: \n%@",DataString);
 			lastDataZeit=[self lastDataZeitVon:DataString];
-			//NSLog(@"DataVonHeute lastDataZeit: %d",lastDataZeit);
+			NSLog(@"DataVonHeute lastDataZeit: %d",lastDataZeit);
 			
 			// Auf WindowController Timer auslösen
 			downloadFlag=heute;
@@ -430,9 +431,14 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 		
 		//ruediheimlicher
       
+      
+//      NSURL *lastTimeURL = [NSURL URLWithString:@"https://www.ruediheimlicher.ch/Data/HomeCentralPrefs.txt"];
 		NSURL *lastTimeURL = [NSURL URLWithString:@"http://www.ruediheimlicher.ch/Data/HomeCentralPrefs.txt"];
+      
+      
 		//NSURLRequest* lastTimeRequest=[ [NSURLRequest alloc] initWithURL: lastTimeURL cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:30.0];
-		NSURLRequest* lastTimeRequest=[ [NSURLRequest alloc] initWithURL: lastTimeURL cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData timeoutInterval:10.0];
+		NSURLRequest* lastTimeRequest=[ [NSURLRequest alloc] initWithURL: lastTimeURL cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData timeoutInterval:5.0];
+      
 		//NSLog(@"Cache mem: %d",[[NSURLCache sharedURLCache]memoryCapacity]);
 		
 	
@@ -500,7 +506,7 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 		
 		if ([DataString length])
 		{
-			//NSLog(@"LastData: DataString: %@",DataString);
+			NSLog(@"LastData: DataString: %@",DataString);
 			char first=[DataString characterAtIndex:0];
 			
 			// eventuellen Leerschlag am Anfang entfernen
@@ -715,7 +721,7 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
          //NSLog(@"SolarDataVonHeute WebFehler: :%@",[[WebFehler userInfo]objectForKey:@"NSUnderlyingError"]);
          //ERROR: 503
          NSArray* ErrorArray=[[[[WebFehler userInfo]objectForKey:@"NSUnderlyingError"]description]componentsSeparatedByString:@","];
-         NSLog(@"ErrorArray: %@",[ErrorArray description]);
+         NSLog(@"SolarDataVonHeute ErrorArray: %@",[ErrorArray description]);
          NSAlert *Warnung = [[[NSAlert alloc] init] autorelease];
          [Warnung addButtonWithTitle:@"OK"];
          //	[Warnung addButtonWithTitle:@""];
@@ -1056,8 +1062,12 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 		
 		
 		//ruediheimlicher
+//      NSURL *lastTimeURL = [NSURL URLWithString:@"https://www.ruediheimlicher.ch/Data/HomeCentralPrefs.txt"];
 		NSURL *lastTimeURL = [NSURL URLWithString:@"http://www.ruediheimlicher.ch/Data/HomeCentralPrefs.txt"];
-		//NSURLRequest* lastTimeRequest=[ [NSURLRequest alloc] initWithURL: lastTimeURL cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:30.0];
+	
+      
+      
+      //NSURLRequest* lastTimeRequest=[ [NSURLRequest alloc] initWithURL: lastTimeURL cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:30.0];
 		NSURLRequest* lastTimeRequest=[ [NSURLRequest alloc] initWithURL: lastTimeURL cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData timeoutInterval:10.0];
 		//NSLog(@"Cache mem: %d",[[NSURLCache sharedURLCache]memoryCapacity]);
 		

@@ -207,9 +207,9 @@ void IOWarriorCallback ()
 	NSArray* VersionArray=[SysVersion componentsSeparatedByString:@"."];
 	SystemNummer=[[VersionArray objectAtIndex:1]intValue];
 	//NSLog(@"SystemVersion aus Funktion: %@ Nummer: %d ",SysVersion,SystemNummer);
-	IOWarriorInit ();
-	IOWarriorIsPresent (); // builds the list of available IOWarrior interface, speeds up library operations
-	IOWarriorSetDeviceCallback (IOWarriorCallback, nil);
+	//IOWarriorInit ();
+	//IOWarriorIsPresent (); // builds the list of available IOWarrior interface, speeds up library operations
+	//IOWarriorSetDeviceCallback (IOWarriorCallback, nil);
 	isReading = false;
 	isTracking = false;
 	ignoreDuplicates = YES;
@@ -469,7 +469,7 @@ void IOWarriorCallback ()
 	//NSLog(@"awake AktuelleSolarDaten: \n%@",AktuelleSolarDaten);
 	if (AktuelleSolarDaten &&[AktuelleSolarDaten length])
 	{
-		NSLog(@"awake openWithSolarString\n\n");
+		//NSLog(@"awake openWithSolarString\n\n");
 		[self openWithSolarString:AktuelleSolarDaten];
       
       [self setSolarStatistikDaten];
@@ -1438,7 +1438,7 @@ return;
 
 -(void)openWithSolarString:(NSString*)derDatenString
 {
-	NSLog(@"openWithSolarString DatenString length: %d", [derDatenString length]);
+	//NSLog(@"openWithSolarString DatenString length: %d", [derDatenString length]);
 	NSArray* rohDatenArray = [NSArray array];
 	NSString* TagString = [NSString string];
 	int Tag=0;
@@ -1514,7 +1514,7 @@ return;
 					NSString* Kalenderformat=[[NSCalendarDate date]calendarFormat];
 					
 					StartZeit=[NSCalendarDate dateWithString:StartDatumString calendarFormat:Kalenderformat];
-					//NSLog(@"Format: %@ StartZeit: %@",Kalenderformat,[StartZeit description]);
+					//NSLog(@"openWithSolarString Format: %@ StartZeit: %@",Kalenderformat,[StartZeit description]);
 					Tag=[StartZeit dayOfMonth];
 					Monat=[StartZeit monthOfYear];
 					Jahr=[StartZeit yearOfCommonEra];

@@ -337,7 +337,7 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
 
 - (void)awakeFromNib
 {
-	NSLog(@"AVR awake");
+	//NSLog(@"AVR awake");
    
    
    //NSString *ipString = [NSString localizedStringWithFormat:@"do shell script \"curl ifconfig.me/ip\""];
@@ -348,7 +348,7 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
    NSAppleEventDescriptor *ipresult = [ipscript executeAndReturnError:&iperrorMessage];
    //NSLog(@"mount: %@",ipresult);
    NSString *scriptReturn = [ipresult stringValue];
-   NSLog(@"IP: %@",scriptReturn);
+   //NSLog(@"IP: %@",scriptReturn);
 
    int tg=0;
    int rm=3;
@@ -785,15 +785,19 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
    //	[self setSegmentLabel:@"Ofen" forSegment:1 forRaum:4];
 	//[self setObjektTitel:@"Ofen" forObjekt:1 forRaum:4];
 
+//   NSString *host = @"https://www.ruediheimlicher.ch/Data/EEE.txt?myvar=%@";
+   
    NSString *host = @"http://www.ruediheimlicher.ch/Data/EEE.txt?myvar=%@";
+   
+   
    NSString *urlString = [NSString stringWithFormat:host, @"texttowritetofile"];
-   //NSLog(@"urlString: %@",urlString);
+   NSLog(@"urlString: %@",urlString);
    NSURL *url = [NSURL URLWithString:urlString];
    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
    //[request setHTTPMethod:@"POST"];
    
    NSData *returnData = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:nil];
-   //NSLog(@"returnData: %@",returnData);
+   NSLog(@"returnData: %@",returnData);
 }
 
 - (void)setRaum:(int)derRaum

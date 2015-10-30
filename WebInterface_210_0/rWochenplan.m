@@ -388,7 +388,7 @@
 		NSMutableArray* tempTagbalkenArray=(NSMutableArray*)[TagplanArray objectAtIndex:wochentag];
 		//NSLog(@"Wochenplan changeCode: tempTagbalkenArray count: %d",[tempTagbalkenArray count]);
 		//NSLog(@"[aktivObjektArray: %@",[aktivObjektArray description]);
-		int TagbalkenIndex=[aktivObjektArray indexOfObject:[NSNumber numberWithInt:dasObjekt]];
+		NSUInteger TagbalkenIndex=[aktivObjektArray indexOfObject:[NSNumber numberWithInt:dasObjekt]];
 		//NSLog(@"TagbalkenIndex: %d",TagbalkenIndex);
 		rTagplanbalken* tempTagbalken=[tempTagbalkenArray objectAtIndex:TagbalkenIndex];
 		
@@ -460,7 +460,7 @@
 			NSMutableArray* tempTagbalkenArray=(NSMutableArray*)[TagplanArray objectAtIndex:wochentag];
 			//NSLog(@"Wochenplan ModifierAktion: tempTagbalkenArray count: %d",[tempTagbalkenArray count]);
 
-			int TagbalkenIndex=[aktivObjektArray indexOfObject:[NSNumber numberWithInt:Objekt]];
+			NSUInteger TagbalkenIndex=[aktivObjektArray indexOfObject:[NSNumber numberWithInt:Objekt]];
 			//NSLog(@"TagbalkenIndex: %d",TagbalkenIndex);
 			rTagplanbalken* tempTagbalken=[tempTagbalkenArray objectAtIndex:TagbalkenIndex];
 			//NSLog(@"tempTagbalken   Raum: %d", Raum);

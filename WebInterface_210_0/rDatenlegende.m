@@ -193,7 +193,7 @@ if ([vorgabendic objectForKey:@"randunten"])
             
             // legendeposition in LegendeArray>Objekt mit index tempindex korrigieren
             // wuerde auch mit Korrektur im tempClusterArray funktionieren
-            int changeindex = [LegendeIndexArray indexOfObject:[NSNumber numberWithInt:tempindex]];
+            NSUInteger changeindex = [LegendeIndexArray indexOfObject:[NSNumber numberWithInt:tempindex]];
             //NSLog(@"changeindex: %d",changeindex);
             
             //Korrektur

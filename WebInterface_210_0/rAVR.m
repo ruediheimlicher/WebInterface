@@ -791,13 +791,13 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
    
    
    NSString *urlString = [NSString stringWithFormat:host, @"texttowritetofile"];
-   NSLog(@"urlString: %@",urlString);
+   //NSLog(@"urlString: %@",urlString);
    NSURL *url = [NSURL URLWithString:urlString];
    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
    //[request setHTTPMethod:@"POST"];
    
    NSData *returnData = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:nil];
-   NSLog(@"returnData: %@",returnData);
+   //NSLog(@"returnData: %@",returnData);
 }
 
 - (void)setRaum:(int)derRaum

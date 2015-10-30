@@ -502,12 +502,12 @@ return tempBitArray;
 
 //NSLog(@"MSB: %@",[derHexString substringToIndex:1]);
 
-int indexMSB=[HexArray indexOfObject:[[derHexString substringToIndex:1]uppercaseString]];
+NSUInteger indexMSB=[HexArray indexOfObject:[[derHexString substringToIndex:1]uppercaseString]];
 int ii=indexMSB;
 //NSLog(@"ii: %d",ii);
 
 //NSLog(@"LSB: %@",[derHexString substringFromIndex:1]);
-int indexLSB=[HexArray indexOfObject:[[derHexString substringFromIndex:1]uppercaseString]];
+NSUInteger indexLSB=[HexArray indexOfObject:[[derHexString substringFromIndex:1]uppercaseString]];
 int kk=indexLSB;
 //NSLog(@"kk: %d",kk);
 int bitIndex=7;

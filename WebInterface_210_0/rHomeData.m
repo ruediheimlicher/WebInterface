@@ -187,7 +187,7 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 		
 		DataSuffix=@"HomeDaten.txt";
 		NSString* URLPfad=[NSURL URLWithString:[ServerPfad stringByAppendingPathComponent:DataSuffix]];
-		NSLog(@"DataVonHeute URLPfad: %@",URLPfad);
+		//NSLog(@"DataVonHeute URLPfad: %@",URLPfad);
 		//NSLog(@"DataVonHeute  DownloadPfad: %@ DataSuffix: %@",DownloadPfad,DataSuffix);
 		NSURL *URL = [NSURL URLWithString:[ServerPfad stringByAppendingPathComponent:DataSuffix]];
       //NSLog(@"awake DataVonHeute URL: %@",URL);
@@ -207,7 +207,7 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
          NSLog(@"ErrString: %@",ErrString);
          NSRange  ErrRange = [ErrString rangeOfString:@"offline" options:NSCaseInsensitiveSearch];
          
-			NSLog(@"DataVonHeute ErrorArray: %lu",(unsigned long)ErrRange.location);
+			//NSLog(@"DataVonHeute ErrorArray: %lu",(unsigned long)ErrRange.location);
         // if ([ErrorArray containsObject:@"offline.\""])
          if (ErrRange.location < NSNotFound)
          {
@@ -246,9 +246,9 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 				//NSLog(@"DataVonHeute: String korrigieren");
 				DataString=[DataString substringFromIndex:1];
 			}
-			NSLog(@"DataVonHeute DataString: \n%@",DataString);
+			//NSLog(@"DataVonHeute DataString: \n%@",DataString);
 			lastDataZeit=[self lastDataZeitVon:DataString];
-			NSLog(@"DataVonHeute lastDataZeit: %d",lastDataZeit);
+			//NSLog(@"DataVonHeute lastDataZeit: %d",lastDataZeit);
 			
 			// Auf WindowController Timer auslösen
 			downloadFlag=heute;
@@ -506,7 +506,7 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 		
 		if ([DataString length])
 		{
-			NSLog(@"LastData: DataString: %@",DataString);
+			//NSLog(@"LastData: DataString: %@",DataString);
 			char first=[DataString characterAtIndex:0];
 			
 			// eventuellen Leerschlag am Anfang entfernen

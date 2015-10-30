@@ -3553,7 +3553,7 @@ if ([[note userInfo]objectForKey:@"err"])
 	 derDatenDic enthaelt Arrays der Brennerstatistik und der Temperaturstatistik
 	 Jedes Objekt der Arrays enthaelt das Datum und den TagDesJahres
 	 */
-   return;
+   //return;
 	
 	//NSLog(@"[StatistikDiagrammScroller documentView]: w: %2.2f",[[StatistikDiagrammScroller documentView]frame].size.width);
    [BrennerStatistikDiagramm setGraphFarbe:[NSColor lightGrayColor] forKanal:0];
@@ -3632,14 +3632,14 @@ if ([[note userInfo]objectForKey:@"err"])
 		int anz=0;
 		NSNumber* indexNumber = [NSNumber numberWithInt:index];
 		NSMutableDictionary* tempDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
-		int TempIndex=[TemperaturtagArray indexOfObject:indexNumber];
+		NSUInteger TempIndex=[TemperaturtagArray indexOfObject:indexNumber];
 		if (TempIndex < NSNotFound) // Es gibt einen Eintrag
 		{
 			anz++;
 			[tempDic addEntriesFromDictionary:[TemperaturdatenArray objectAtIndex:TempIndex]];
 		}
 		
-		int BrennerIndex=[BrennertagArray indexOfObject:indexNumber];
+		NSUInteger BrennerIndex=[BrennertagArray indexOfObject:indexNumber];
 		if (BrennerIndex < NSNotFound) // Es gibt einen Eintrag
 		{
 			anz++;
@@ -3767,7 +3767,6 @@ if ([[note userInfo]objectForKey:@"err"])
 		//[TagGitterlinien  setNeedsDisplay:YES];
 	}
 //NSLog(@"Data setBrennerStatstik: F");
-
 
 }
 

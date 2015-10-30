@@ -611,7 +611,7 @@ NSLog(@"lastDataRead: %@",lastDataRead);
 {
 	int jahr=[Data StatistikJahr];
 	int monat=[Data StatistikMonat];
-	NSLog(@"setStatistikDaten: jahr: %d monat: %d",jahr, monat);
+	//NSLog(@"setStatistikDaten: jahr: %d monat: %d",jahr, monat);
 	NSMutableDictionary* StatDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 	
 	NSArray* BrennerDatenArray=[HomeData BrennerStatistikVonJahr:jahr Monat:monat];

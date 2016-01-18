@@ -861,10 +861,10 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 			TWIStatusSuffix = [NSString stringWithFormat:@"pw=%@&status=%@",pw,@"1"];
 			NSString* TWIStatusURLString =[NSString stringWithFormat:@"%@/twi?%@",HomeCentralURL, TWIStatusSuffix];
 			
-          NSLog(@"TWIStatusAktion TWIStatusURL: %@",TWIStatusURLString);
+          NSLog(@"TWIStatusAktion Status > 1  TWIStatusURL: %@",TWIStatusURLString);
 			
          NSURL *URL = [NSURL URLWithString:TWIStatusURLString];
-         //NSLog(@"TWIStatusAktion URL: %@",URL);
+         NSLog(@"TWIStatusAktion URL: %@",URL);
 			[self loadURL:URL];
          
          if (sendTimer && [sendTimer isValid])
@@ -882,7 +882,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 			
 			NSString* TWIStatusURLString =[NSString stringWithFormat:@"%@/twi?%@",HomeCentralURL, TWIStatusSuffix];
 			
-           //NSLog(@"TWIStatusAktion TWIStatusURL: %@",TWIStatusURLString);
+           NSLog(@"TWIStatusAktion Status > 0 TWIStatusURL: %@",TWIStatusURLString);
          
          NSURL *URL = [NSURL URLWithString:TWIStatusURLString];
 			//NSLog(@"TWIStatusAktion URL: %@",URL);
@@ -948,7 +948,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
             
             
             NSURL *URL = [NSURL URLWithString:TWIStatus0URL];
-            //NSLog(@"statusTimerFunktion  URL: %@",URL);
+            NSLog(@"statusTimerFunktion  URL: %@",URL);
             [self loadURL:URL];
 			}
 			

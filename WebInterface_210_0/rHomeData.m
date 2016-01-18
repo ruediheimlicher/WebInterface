@@ -674,8 +674,10 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
    
    NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
    //[NotificationDic setObject:DataString forKey:@"routerip"];
-   [NotificationDic setObject:scriptReturn forKey:@"routerip"];
-
+   if (scriptReturn)
+   {
+      [NotificationDic setObject:scriptReturn forKey:@"routerip"];
+   }
    NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
    [nc postNotificationName:@"Router_IP" object:self userInfo:NotificationDic];
    
@@ -1848,6 +1850,7 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 
 - (NSArray*)SolarErtragVonJahr:(int)dasJahr vonMonat:(int)monat
 {
+   
 	NSMutableArray* ErtragdatenArray=[[NSMutableArray alloc]initWithCapacity:0];
 	//NSLog(@"SolarErtragVonJahr von Monat: %d Jahr: %d",monat,dasJahr);
 	DataSuffix=@"SolarTagErtrag.txt";
@@ -1882,10 +1885,10 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 		{
          //NSLog(@"index: %d",index++);
 			NSMutableDictionary* tempDic=[[NSMutableDictionary alloc]initWithCapacity:0];
-			//NSLog(@"eineZeile: %@",eineZeile);
+			//NSLog(@"index: %d eineZeile: %@",index++,eineZeile);
 			tempDatenArray = [eineZeile componentsSeparatedByString:@"\t"];
 			int n=[tempDatenArray count];
-			if (n>1) // keine Leerzeile
+			if (n>2) // keine Leerzeile
 			{
 				//NSLog(@"tempDatenArray: %@, n %d",[tempDatenArray description], n);
 

@@ -132,13 +132,16 @@
    int resetok=0;
    int antwort=[Warnung runModal];
    //NSLog(@"AVRClient antwort: %d",antwort);
+   
    switch (antwort)
    {
       case 1000:// OK
       {
          //NSLog(@"OK pw: %@",[input stringValue]);
+         
          if ([[input stringValue]  isEqual: @"homer"])
          {
+            [Waitrad stopAnimation:NULL];
             resetok=1; // reset ausfuehren
 
          }
@@ -146,6 +149,7 @@
       }break;
       case 1001: //abbrechen
       {
+          [Waitrad  stopAnimation:NULL];
           //NSLog(@"Abbrechen");
          return;
       }break;
@@ -940,7 +944,7 @@ if (Webserver_busy)
       //NSLog(@"WriteStandardAktion: permanent: %d",permanent);
       if (permanent) // schicken an EEPROM
       {
-         NSLog(@"AVRClient WriteStandardAktion mit permanent: %d ",permanent);
+         //NSLog(@"AVRClient WriteStandardAktion mit permanent: %d ",permanent);
          [nc postNotificationName:@"HomeClientWriteStandard" object:self userInfo:HomeClientDic];
       }
       else
@@ -2539,7 +2543,9 @@ if (Webserver_busy)
 	if ([[note userInfo]objectForKey:@"error"]) 
 	{
 		NSLog(@"FinishLoadAktion error");
-		if ([[note userInfo]objectForKey:@"twistatus"])// Fehler beim Setzen von Status. 
+      [Waitrad stopAnimation:NULL];
+      [UpdateWaitrad stopAnimation:NULL];
+		if ([[note userInfo]objectForKey:@"twistatus"])// Fehler beim Setzen von Status.
 		{
 			Error_OK=[[[note userInfo]objectForKey:@"twistatus"]intValue];
 			NSLog(@"Error_OK: %d",Error_OK);

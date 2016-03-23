@@ -2277,7 +2277,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 		NSString *provurl = [[[[frame provisionalDataSource] request] URL] absoluteString];
 		NSLog(@"didFailProvisionalLoadWithError: URL: %@",provurl);
 		[tempDataDic setObject:provurl forKey:@"provurl"];
-		
+		[tempDataDic setObject:[NSNumber numberWithInt:1] forKey:@"waitrad"];
 		// Test, ob URL einen okcode  enthält
 		CheckRange = [provurl rangeOfString:PW_String]; // Passwortstring ist da, eigene URL
 		NSLog(@"didFailProvisionalLoadWithError: CheckRange fuer pw-string?");
@@ -2317,6 +2317,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 		}	
 		
 		//NSBeginAlertSheet(@"Provisional Download misslungen", nil, nil, nil, [self window], nil, nil, nil, nil, errorDescription);
+      
 		NSAlert *Warnung = [[[NSAlert alloc] init] autorelease];
 		[Warnung addButtonWithTitle:@"OK"];
 		//	[Warnung addButtonWithTitle:@""];

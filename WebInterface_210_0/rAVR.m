@@ -345,9 +345,9 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
 
    NSAppleScript *ipscript = [[NSAppleScript alloc] initWithSource:ipString];
    NSDictionary *iperrorMessage = nil;
-   NSAppleEventDescriptor *ipresult = [ipscript executeAndReturnError:&iperrorMessage];
-   //NSLog(@"mount: %@",ipresult);
-   NSString *scriptReturn = [ipresult stringValue];
+//   NSAppleEventDescriptor *ipresult = [ipscript executeAndReturnError:&iperrorMessage];
+//    NSLog(@"mount: %@",ipresult);
+//   NSString *scriptReturn = [ipresult stringValue];
    //NSLog(@"IP: %@",scriptReturn);
 
    int tg=0;

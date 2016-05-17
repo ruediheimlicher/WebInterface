@@ -24,15 +24,17 @@
 	if ([sender state])
 	{
       [[NSSound soundNamed:@"Ping"] play];
-		Webserver_busy=0;
-       //NSLog(@"TWI wird ON: TWI_ON_Flag: %d",TWI_ON_Flag);
+      Webserver_busy=0;
+     
+       NSLog(@"TWI wird ON: TWI_ON_Flag: %d state: %ld",TWI_ON_Flag,(long)[sender state]);
 	}
    else
    {
       [[NSSound soundNamed:@"Frog"] play];
       [Waitrad  startAnimation:NULL];
-      //NSLog(@"TWI wird OFF: TWI_ON_Flag: %d",TWI_ON_Flag);
-   }
+       [LocalTaste setState:NO];
+      
+      NSLog(@"TWI wird OFF: TWI_ON_Flag: %d state: %ld",TWI_ON_Flag,(long)[sender state]);   }
    
    [LocalTaste setEnabled:[sender state]];
    

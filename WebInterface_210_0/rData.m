@@ -712,13 +712,14 @@ extern NSMutableArray* DatenplanTabelle;
 	//NSLog(@"[BalkenRahmen: w: %2.2f",BalkenRahmen.size.width);
 	//[[StatistikDiagrammScroller documentView]setFrame:BalkenRahmen];
 	
+   // Brennertab: Temperaturdiagramm einfuegen
 	NSRect StatistikFeld=StatistikScrollerRect;
 	StatistikFeld.origin.x += 0.1;
 	StatistikFeld.origin.y += 0.1;
 	StatistikFeld.size.width -= 2;
 	StatistikFeld.size.height=250;
 	TemperaturStatistikDiagramm= [[rStatistikDiagramm alloc]initWithFrame:StatistikFeld];
-	[TemperaturStatistikDiagramm setGrundlinienOffset:10.0];					// Abstand der 
+	[TemperaturStatistikDiagramm setGrundlinienOffset:10.0];					// Abstand der
 	[TemperaturStatistikDiagramm setDiagrammlageY:StatistikDiagrammLage];	// Abstand vom unteren Rand des Scrollviews
 	[TemperaturStatistikDiagramm setMaxOrdinate:200];
 	//[TemperaturStatistikDiagramm setMaxEingangswert:40];
@@ -751,7 +752,7 @@ extern NSMutableArray* DatenplanTabelle;
 	TemperaturStatistikOrdinatenFeld.size.height=[TemperaturStatistikDiagramm frame].size.height;	// Hoehe gleich wie StatisikDiagramm
 	//TemperaturStatistikOrdinatenFeld.size.height=240;
 	TemperaturStatistikOrdinatenFeld.origin.x-=42;																	// Verschiebung nach links
-	TemperaturStatistikOrdinatenFeld.origin.y += Scrollermass;													// Ecke um Scrollerbreite nach oben verschieben
+//	TemperaturStatistikOrdinatenFeld.origin.y += Scrollermass;													// Ecke um Scrollerbreite nach oben verschieben // Nicht mehr ab Xcode 7.2
 	//NSLog(@"Data TemperaturStatistikOrdinatenFeld");
 	//[self logRect:TemperaturStatistikOrdinatenFeld];
 	TemperaturStatistikOrdinate=[[rOrdinate alloc]initWithFrame:TemperaturStatistikOrdinatenFeld];
@@ -831,7 +832,7 @@ extern NSMutableArray* DatenplanTabelle;
 	BrennerStatistikOrdinatenFeld.size.height=[BrennerStatistikDiagramm frame].size.height;	// Hoehe gleich wie StatisikDiagramm
 	//BrennerStatistikOrdinatenFeld.size.height=240;
 	BrennerStatistikOrdinatenFeld.origin.x-=42;													// Verschiebung nach links
-	BrennerStatistikOrdinatenFeld.origin.y += Scrollermass;
+//	BrennerStatistikOrdinatenFeld.origin.y += Scrollermass; // Nicht mehr ab 7.2
    
    BrennerStatistikOrdinatenFeld.origin.y += 16;
    // Ecke um Scrollerbreite nach oben verschieben
@@ -1049,6 +1050,7 @@ extern NSMutableArray* DatenplanTabelle;
 	SolarStatistikFeld.size.width -= 2;
 	SolarStatistikFeld.size.height=SolarStatistikDiagrammhoehe;
 
+   // unteres Diagramm
 	SolarStatistikDiagramm= [[rSolarStatistikDiagramm alloc]initWithFrame:StatistikFeld];
 	[SolarStatistikDiagramm setGrundlinienOffset:10.0];					// Abstand der 
 	[SolarStatistikDiagramm setDiagrammlageY:StatistikDiagrammLage];	// Abstand vom unteren Rand des Scrollviews
@@ -1056,6 +1058,7 @@ extern NSMutableArray* DatenplanTabelle;
 	//[TemperaturStatistikDiagramm setMaxEingangswert:40];
 	[SolarStatistikDiagramm  setPostsFrameChangedNotifications:YES];
 	[SolarStatistikDiagramm setTag:200];
+   
 	[SolarStatistikDiagramm setGraphFarbe:[NSColor redColor] forKanal:0];
 	[SolarStatistikDiagramm setGraphFarbe:[NSColor blueColor] forKanal:1];
 	[SolarStatistikDiagramm setGraphFarbe:[NSColor redColor] forKanal:2];
@@ -1089,7 +1092,7 @@ extern NSMutableArray* DatenplanTabelle;
 	SolarStatistikOrdinate=[[rOrdinate alloc]initWithFrame:SolarStatistikOrdinatenFeld];
 	
 	[SolarStatistikOrdinate setOrdinatenlageY:StatistikDiagrammLage];
-	[SolarStatistikOrdinate setGrundlinienOffset:10.0];
+	[SolarStatistikOrdinate setGrundlinienOffset:12.0];
 	[SolarStatistikOrdinate setMaxOrdinate:SolarStatistikDiagrammhoehe];
 	[SolarStatistikOrdinate setTag:201];
 	//int MehrkanalTabIndex=[DatenplanTab indexOfTabViewItemWithIdentifier:@"mehrkanal"];
@@ -1111,7 +1114,7 @@ extern NSMutableArray* DatenplanTabelle;
 
    
    
-// ElektrostatistikDiagramm
+// ElektrostatistikDiagramm, oberes Diagramm
    
    float ElektroStatistikDiagrammhoehe = 150;
    float ElektroStatistikDiagrammlage = 220;
@@ -1122,6 +1125,7 @@ extern NSMutableArray* DatenplanTabelle;
 	ElektroStatistikDiagrammFeld.size.width -= 2;
 	ElektroStatistikDiagrammFeld.size.height=ElektroStatistikDiagrammhoehe;
    
+   //
 	ElektroStatistikDiagramm= [[rElektroStatistikDiagramm alloc]initWithFrame:ElektroStatistikDiagrammFeld];
    
 	[ElektroStatistikDiagramm setGrundlinienOffset:10.0];					// Abstand der
@@ -1133,7 +1137,7 @@ extern NSMutableArray* DatenplanTabelle;
 	[ElektroStatistikDiagramm setGraphFarbe:[NSColor redColor] forKanal:0];
 	[ElektroStatistikDiagramm setGraphFarbe:[NSColor blueColor] forKanal:1];
 	[ElektroStatistikDiagramm setGraphFarbe:[NSColor redColor] forKanal:2];
-	[ElektroStatistikDiagramm setGraphFarbe:[NSColor greenColor] forKanal:3];
+	[ElektroStatistikDiagramm setGraphFarbe:[NSColor greenColor] forKanal:3]; // Einschaltdauer ??
    
    
    
@@ -1275,6 +1279,8 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
 
 	anzLoads++;
 	[ZaehlerFeld setIntValue:anzLoads];
+   
+ 
 	if (anzLoads > 8)
 	{
 		//NSBeep();
@@ -1285,12 +1291,143 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
 	[LastDataFeld setStringValue:@"***"];
 
 	if ([[note userInfo]objectForKey:@"datastring"])
-	{
-	NSString* tempString = [[note userInfo]objectForKey:@"datastring"];
-	//tempString= [[[[NSNumber numberWithInt:anzLoads]stringValue]stringByAppendingString:@": "]stringByAppendingString:tempString];
+   {
+      NSString* tempString = [[note userInfo]objectForKey:@"datastring"];
+      //tempString= [[[[NSNumber numberWithInt:anzLoads]stringValue]stringByAppendingString:@": "]stringByAppendingString:tempString];
+      
+      [LastDataFeld setStringValue:tempString];
+      
+      // code aufschluesseln:
+      /* In TWI_Master:
+       outbuffer[0] = (HEIZUNG << 5);					// Bit 5-7: Raumnummer
+       outbuffer[0] |= (Zeit.stunde & 0x1F);			//	Bit 0-4: Stunde, 5 bit
+       outbuffer[1] = (0x01 << 6);						// Bits 6,7: Art=1
+       outbuffer[1] |= Zeit.minute & 0x3F;				// Bits 0-5: Minute, 6 bit
+       outbuffer[2] = HeizungRXdaten[0];				//	Vorlauf
+       
+       outbuffer[3] = HeizungRXdaten[1];				//	Rücklauf
+       outbuffer[4] = HeizungRXdaten[2];				//	Aussen
+       
+       outbuffer[5] = 0;
+       outbuffer[5] |= HeizungRXdaten[3];				//	Brennerstatus Bit 2
+       outbuffer[5] |= HeizungStundencode;			// Bit 4, 5 gefiltert aus Tagplanwert von Brenner und Mode
+       outbuffer[5] |= RinneStundencode;				// Bit 6, 7 gefiltert aus Tagplanwert von Rinne
+       
+       uebertragen in d5
+       */
+      
+      
+      
+      NSArray* lastDataArray = [tempString componentsSeparatedByString:@"\t"];
+ //     NSLog(@"HomeDataDownloadAktion lastDataArray: %@",lastDataArray);
+      float vorlauf = [[lastDataArray objectAtIndex:1]intValue]/2;
+      float ruecklauf = [[lastDataArray objectAtIndex:2]intValue]/2;
+      float aussen = ([[lastDataArray objectAtIndex:3]intValue]-32)/2; // Korrektur, s. TemperaturMKDiagramm l 70
+      float innen = [[[lastDataArray objectAtIndex:8]substringToIndex:2]intValue]/2.0;
+      int heizungcode = [[lastDataArray objectAtIndex:6]intValue];
+      
+      //heizungcode = 15;
+      BOOL brennerstatus = !((heizungcode & (1<<2))>>2);
+      NSString* brennerstatusString =@"OFF";
+       if ( brennerstatus)
+       {
+          brennerstatusString =@" ON";
+       }
+      BOOL        rinnestatus = (heizungcode & ((1<<6)|(1<<7)))>>6; // bit nach rechts schieben
 
-	[LastDataFeld setStringValue:tempString];
-	}
+      NSLog(@"heizungcode 15 Brenner OFF %d brenner: %d rinne: %d",heizungcode,brennerstatus,rinnestatus);
+      
+      // heizungcode = 11;
+      // brennerstatus = !((heizungcode & (1<<2))>>2);
+       rinnestatus = (heizungcode & ((1<<6)|(1<<7)))>>6;
+  //    NSLog(@"heizungcode 11 Brenner ON %d brenner: %d rinne: %d",heizungcode,brennerstatus,rinnestatus);
+      
+      
+      NSString* tempStringA = [NSString stringWithFormat:@"Vorlauf:\t%2.1f\tRuecklauf:\t%2.1f\tBrenner:\t%@",vorlauf, ruecklauf ,brennerstatusString];
+      NSString* tempStringB = [NSString stringWithFormat:@"Aussen:\t%2.1f\tInnen:\t%2.1f",aussen, innen ];
+      
+      
+      NSMutableParagraphStyle *tempMutableParagraphStyle;
+      float firstColumnInch = 0.8, otherColumnInch = 0.8, pntPerInch = 72.0;
+      NSTextTab *tempTab;
+      NSMutableArray *TabArray = [NSMutableArray arrayWithCapacity:14];
+      NSMutableAttributedString   *tempAttString;
+      tempMutableParagraphStyle = [[NSParagraphStyle defaultParagraphStyle]mutableCopy];
+      [tempMutableParagraphStyle setAlignment:NSLeftTextAlignment];
+      
+      /*
+       possible tab stop types
+       NSLeftTabStopType
+       NSRightTabStopType
+       NSCenterTabStopType
+       NSDecimalTabStopType
+       */
+      float tab0 = 50.0;
+      float tab1 = 100.0;
+      float tab2 = 120.0;
+      float tab3 = 220.0;
+      
+      float data0tab= 90;  // data fuer text 0, r
+      
+      float text1tab= 110; // text 1, l
+      float data1tab= 200; // data fuer text 1, r
+      
+      float text2tab= 220;// text 2, l
+      float data2tab= 310;// data fuer text 2, r
+      
+      // data0
+      tempTab = [[NSTextTab alloc]
+              initWithType:NSRightTabStopType
+              location:data0tab];
+      [TabArray addObject:tempTab];
+      
+      // text1, data1
+      tempTab = [[NSTextTab alloc]
+                 initWithType:NSLeftTabStopType
+                 location:text1tab];
+      [TabArray addObject:tempTab];
+      
+      tempTab = [[NSTextTab alloc]
+                 initWithType:NSRightTabStopType
+                 location:data1tab];
+      [TabArray addObject:tempTab];
+      
+      // text2, data2
+      tempTab = [[NSTextTab alloc]
+                 initWithType:NSLeftTabStopType
+                 location:text2tab];
+      [TabArray addObject:tempTab];
+      tempTab = [[NSTextTab alloc]
+                 initWithType:NSRightTabStopType
+                 location:data2tab];
+      [TabArray addObject:tempTab];
+
+      
+      for(int i=1;i<4;i++)
+      {
+         tempTab = [[NSTextTab alloc]
+                 initWithType:NSRightTabStopType
+                 location:(firstColumnInch*pntPerInch)
+                 + ((float)i * otherColumnInch * pntPerInch)];
+ //        [TabArray addObject:tempTab];
+      }
+      [tempMutableParagraphStyle setTabStops:TabArray];
+      codeString = [NSString stringWithFormat:@"%@\n%@",tempStringA,tempStringB];
+      
+      tempAttString = [[NSMutableAttributedString alloc]
+                   initWithString:codeString];
+      [tempAttString addAttribute:NSParagraphStyleAttributeName
+                        value:tempMutableParagraphStyle
+                        range:NSMakeRange(0,[codeString length])];
+      
+      [[codeFeld textStorage]
+       setAttributedString:tempAttString];
+      [codeFeld setNeedsDisplay:YES];
+      
+     // codeFeld.string = codeString;
+      NSLog(@"HomeDataDownloadAktion codeFeld: %@",[codeFeld string]);
+
+   }
 	else
 	{
 	[LastDataFeld setStringValue:@"-"];
@@ -2057,9 +2194,9 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
 	}
 	NSString* StartDatenString=[[[TemperaturDatenFeld string]componentsSeparatedByString:@"\r"]objectAtIndex:0];
 	
-   //NSLog(@"LastDatenAktion StartDatenString: *%@*",StartDatenString);
+  // NSLog(@"LastDatenAktion StartDatenString: *%@*",StartDatenString);
 	NSString* Kalenderformat=[[NSCalendarDate calendarDate]calendarFormat];
-	//NSLog(@"LastDatenaktion note: %@",[[note userInfo]description]);
+	NSLog(@"LastDatenaktion note: %@",[[note userInfo]description]);
 	if ([[note userInfo]objectForKey:@"startzeit"])
 	{
 		DatenserieStartZeit=[[NSCalendarDate dateWithString:[[note userInfo]objectForKey:@"startzeit"] calendarFormat:Kalenderformat]retain];
@@ -2079,6 +2216,10 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
 	}
 	anzLoads=0;
 	[ZaehlerFeld setIntValue:anzLoads];
+   codeString = [NSString stringWithFormat:@"anzLoads: %d",anzLoads ];
+   [codeFeld insertText: codeString];
+   NSLog(@"LastDataAktion codeFeld: %@",[codeFeld string]);
+   
 	NSNumberFormatter *numberFormatter =[[[NSNumberFormatter alloc] init] autorelease];
 	// specify just positive format
 	[numberFormatter setFormat:@"##0.00"];
@@ -3655,12 +3796,16 @@ if ([[note userInfo]objectForKey:@"err"])
 		}
 	}
    
-	//NSLog(@"Data setBrennerStatstik: D");
+	NSLog(@"Data setBrennerStatstik: D");
 	//NSLog(@"Data setBrennerStatstik: StatistikArray: %@",[StatistikArray description]);
 	int i=0;
 	[TemperaturStatistikDiagramm setOffsetX:[[[StatistikArray objectAtIndex:i]objectForKey:@"tagdesjahres"]intValue]]; // Startwert der Abszisse setzen
+   NSLog(@"Data setBrennerStatstik: offsetX: %d",[[[StatistikArray objectAtIndex:i]objectForKey:@"tagdesjahres"]intValue]);
+
 	[TagGitterlinien setOffsetX:[[[StatistikArray objectAtIndex:i]objectForKey:@"tagdesjahres"]intValue]];
-	[BrennerStatistikDiagramm setOffsetX:[[[StatistikArray objectAtIndex:i]objectForKey:@"tagdesjahres"]intValue]]; // Startwert der Abszisse setzen
+	
+   
+   [BrennerStatistikDiagramm setOffsetX:[[[StatistikArray objectAtIndex:i]objectForKey:@"tagdesjahres"]intValue]]; // Startwert der Abszisse setzen
 	int tagdesjahresMin=[[[StatistikArray objectAtIndex:0]objectForKey:@"tagdesjahres"]intValue];
 	int tagdesjahresMax=[[[StatistikArray objectAtIndex:[StatistikArray count]-1]objectForKey:@"tagdesjahres"]intValue];
 	//NSLog(@"tagdesjahresMin: %d tagdesjahresMax: %d ",tagdesjahresMin,tagdesjahresMax);
@@ -3836,7 +3981,7 @@ if ([[note userInfo]objectForKey:@"err"])
    [SolarStatistikDiagramm setGraphFarbe:[NSColor redColor] forKanal:0];
 	[SolarStatistikDiagramm setGraphFarbe:[NSColor blueColor] forKanal:1];
 	[SolarStatistikDiagramm setGraphFarbe:[NSColor redColor] forKanal:2];
-	[SolarStatistikDiagramm setGraphFarbe:[NSColor grayColor] forKanal:3];
+	[SolarStatistikDiagramm setGraphFarbe:[NSColor orangeColor] forKanal:3];
    
    
 	NSArray* ElektrodatenArray =[NSArray array];
@@ -3875,7 +4020,7 @@ if ([[note userInfo]objectForKey:@"err"])
 
    if ([derDatenDic objectForKey:@"temperaturdatenarray"])
 	{
-      //NSLog(@"Data setSolarStatistik: temperaturdatenarray da");
+      NSLog(@"Data setSolarStatistik: temperaturdatenarray da");
       NSSet* TemperaturdatenSet = [NSSet setWithArray:[derDatenDic objectForKey:@"temperaturdatenarray"]]; // entfernt doppelte Werte
       TemperaturdatenArray=[TemperaturdatenSet allObjects];
 
@@ -3894,7 +4039,7 @@ if ([[note userInfo]objectForKey:@"err"])
    
    if ([derDatenDic objectForKey:@"kollektortemperaturarray"])
 	{
-      //NSLog(@"Data setSolarStatistik: kollektortemperaturarray da");
+      NSLog(@"Data setSolarStatistik: kollektortemperaturarray da");
       KollektortemperaturArray= [derDatenDic objectForKey:@"kollektortemperaturarray"];
       for (int i=0;i<5;i++)
       {

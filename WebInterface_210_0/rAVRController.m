@@ -651,6 +651,11 @@ NSLog(@"lastDataRead: %@",lastDataRead);
 	int jahr=[Data SolarStatistikJahr];
 	int monat=[Data SolarStatistikMonat];
    
+   /*
+    
+    Kollektormittelwerte berechnen:
+    kollektormittelwerte.pl, mit Angabe des Jahres
+    */
    
    
 	//NSLog(@"setSolarStatistikDaten: jahr: %d monat: %d",jahr, monat);

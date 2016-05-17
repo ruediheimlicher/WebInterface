@@ -138,6 +138,9 @@ IBOutlet id				ZaehlerFeld;
 int						LastLoadzeit;
    
 IBOutlet id				IPFeld;
+
+IBOutlet NSTextView*				codeFeld;
+NSString*                     codeString;
    
    
 int						anzLoads;

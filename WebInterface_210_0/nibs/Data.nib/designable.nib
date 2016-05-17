@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="7706" systemVersion="14C109" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="9532" systemVersion="15D21" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
         <deployment version="1050" identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="7706"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="9532"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="rData">
@@ -54,6 +54,7 @@
                 <outlet property="VersionFeld" destination="668" id="672"/>
                 <outlet property="ZaehlerFeld" destination="772" id="775"/>
                 <outlet property="ZeitKompressionTaste" destination="83" id="310"/>
+                <outlet property="codeFeld" destination="tXi-cH-doy" id="Vly-dU-R3g"/>
                 <outlet property="window" destination="5" id="41"/>
             </connections>
         </customObject>
@@ -142,7 +143,7 @@
                                             </connections>
                                         </popUpButton>
                                         <scrollView borderType="none" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" hasVerticalScroller="NO" usesPredominantAxisScrolling="NO" id="278">
-                                            <rect key="frame" x="19" y="186" width="341" height="20"/>
+                                            <rect key="frame" x="19" y="194" width="341" height="20"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES"/>
                                             <clipView key="contentView" id="ARI-bJ-V6e">
                                                 <rect key="frame" x="0.0" y="0.0" width="341" height="20"/>
@@ -229,20 +230,20 @@
                                             </textFieldCell>
                                         </textField>
                                         <scrollView horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" id="273">
-                                            <rect key="frame" x="19" y="46" width="341" height="139"/>
+                                            <rect key="frame" x="19" y="102" width="341" height="92"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <clipView key="contentView" id="LJ9-ob-3dg">
-                                                <rect key="frame" x="1" y="1" width="324" height="137"/>
+                                                <rect key="frame" x="1" y="1" width="324" height="90"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <textView editable="NO" importsGraphics="NO" usesRuler="YES" usesFontPanel="YES" verticallyResizable="YES" spellingCorrection="YES" smartInsertDelete="YES" id="274">
-                                                        <rect key="frame" x="0.0" y="0.0" width="324" height="137"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="324" height="90"/>
                                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                        <size key="minSize" width="324" height="137"/>
+                                                        <size key="minSize" width="324" height="90"/>
                                                         <size key="maxSize" width="665" height="10000000"/>
                                                         <color key="insertionPointColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
-                                                        <size key="minSize" width="324" height="137"/>
+                                                        <size key="minSize" width="324" height="90"/>
                                                         <size key="maxSize" width="665" height="10000000"/>
                                                     </textView>
                                                 </subviews>
@@ -253,7 +254,7 @@
                                                 <autoresizingMask key="autoresizingMask"/>
                                             </scroller>
                                             <scroller key="verticalScroller" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="1151">
-                                                <rect key="frame" x="325" y="1" width="15" height="137"/>
+                                                <rect key="frame" x="325" y="1" width="15" height="90"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                             </scroller>
                                         </scrollView>
@@ -284,7 +285,7 @@
                                             </buttonCell>
                                         </button>
                                         <textField verticalHuggingPriority="750" id="712">
-                                            <rect key="frame" x="78" y="17" width="40" height="18"/>
+                                            <rect key="frame" x="78" y="9" width="40" height="18"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="1139">
                                                 <font key="font" metaFont="system" size="10"/>
@@ -293,7 +294,7 @@
                                             </textFieldCell>
                                         </textField>
                                         <textField verticalHuggingPriority="750" id="714">
-                                            <rect key="frame" x="20" y="19" width="63" height="13"/>
+                                            <rect key="frame" x="20" y="11" width="63" height="13"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <textFieldCell key="cell" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Last Data:" id="1140">
                                                 <font key="font" metaFont="system" size="10"/>
@@ -302,7 +303,7 @@
                                             </textFieldCell>
                                         </textField>
                                         <textField verticalHuggingPriority="750" id="717">
-                                            <rect key="frame" x="260" y="17" width="102" height="18"/>
+                                            <rect key="frame" x="260" y="9" width="102" height="18"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" alignment="right" drawsBackground="YES" id="1141">
                                                 <font key="font" metaFont="system" size="10"/>
@@ -311,7 +312,7 @@
                                             </textFieldCell>
                                         </textField>
                                         <textField verticalHuggingPriority="750" id="719">
-                                            <rect key="frame" x="182" y="19" width="71" height="13"/>
+                                            <rect key="frame" x="182" y="11" width="71" height="13"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <textFieldCell key="cell" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Last Datazeit:" id="1142">
                                                 <font key="font" metaFont="system" size="10"/>
@@ -320,7 +321,7 @@
                                             </textFieldCell>
                                         </textField>
                                         <textField verticalHuggingPriority="750" id="772">
-                                            <rect key="frame" x="151" y="17" width="22" height="18"/>
+                                            <rect key="frame" x="151" y="9" width="22" height="18"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="1143">
                                                 <font key="font" metaFont="system" size="10"/>
@@ -329,7 +330,7 @@
                                             </textFieldCell>
                                         </textField>
                                         <textField verticalHuggingPriority="750" id="810">
-                                            <rect key="frame" x="125" y="19" width="63" height="13"/>
+                                            <rect key="frame" x="125" y="11" width="63" height="13"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <textFieldCell key="cell" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="anz:" id="1144">
                                                 <font key="font" metaFont="system" size="10"/>
@@ -377,7 +378,7 @@
                                             </connections>
                                         </button>
                                         <textField toolTip="Vorlauftemperatur*2" horizontalHuggingPriority="251" verticalHuggingPriority="750" id="lz4-C0-g38">
-                                            <rect key="frame" x="89" y="188" width="19" height="17"/>
+                                            <rect key="frame" x="91" y="196" width="19" height="17"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title=" " id="LXg-yi-v2d">
                                                 <font key="font" metaFont="system"/>
@@ -386,7 +387,7 @@
                                             </textFieldCell>
                                         </textField>
                                         <textField toolTip="Rücklauftemperatur*2" horizontalHuggingPriority="251" verticalHuggingPriority="750" id="gBI-9O-sga">
-                                            <rect key="frame" x="125" y="188" width="19" height="17"/>
+                                            <rect key="frame" x="124" y="196" width="19" height="17"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title=" " id="qaG-KG-MPr">
                                                 <font key="font" metaFont="system"/>
@@ -395,7 +396,7 @@
                                             </textFieldCell>
                                         </textField>
                                         <textField toolTip="Aussentemperatur*2+16" horizontalHuggingPriority="251" verticalHuggingPriority="750" id="VGd-At-gk4">
-                                            <rect key="frame" x="149" y="188" width="23" height="17"/>
+                                            <rect key="frame" x="148" y="196" width="23" height="17"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title=" " id="nRR-ks-d3S">
                                                 <font key="font" metaFont="system"/>
@@ -404,7 +405,7 @@
                                             </textFieldCell>
                                         </textField>
                                         <textField toolTip="code" horizontalHuggingPriority="251" verticalHuggingPriority="750" id="lPP-XT-Bs7">
-                                            <rect key="frame" x="174" y="188" width="23" height="17"/>
+                                            <rect key="frame" x="174" y="196" width="23" height="17"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title=" " id="LL6-Iu-aZc">
                                                 <font key="font" metaFont="system"/>
@@ -413,7 +414,7 @@
                                             </textFieldCell>
                                         </textField>
                                         <textField toolTip="Stunde" horizontalHuggingPriority="251" verticalHuggingPriority="750" id="gHN-1R-CrG">
-                                            <rect key="frame" x="204" y="188" width="23" height="17"/>
+                                            <rect key="frame" x="204" y="196" width="23" height="17"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title=" " id="XZl-8w-7DN">
                                                 <font key="font" metaFont="system"/>
@@ -422,7 +423,7 @@
                                             </textFieldCell>
                                         </textField>
                                         <textField toolTip="Minute + 64" horizontalHuggingPriority="251" verticalHuggingPriority="750" id="HaJ-FE-4us">
-                                            <rect key="frame" x="232" y="188" width="23" height="17"/>
+                                            <rect key="frame" x="234" y="196" width="23" height="17"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title=" " id="Mms-ON-eBr">
                                                 <font key="font" metaFont="system"/>
@@ -431,7 +432,7 @@
                                             </textFieldCell>
                                         </textField>
                                         <textField toolTip="Innentemperatur*2" horizontalHuggingPriority="251" verticalHuggingPriority="750" id="qwT-jp-2qa">
-                                            <rect key="frame" x="303" y="188" width="19" height="17"/>
+                                            <rect key="frame" x="301" y="196" width="19" height="17"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title=" " id="adj-ag-KR8">
                                                 <font key="font" metaFont="system"/>
@@ -439,6 +440,35 @@
                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
                                         </textField>
+                                        <scrollView horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" id="m2G-rh-2Ci">
+                                            <rect key="frame" x="19" y="35" width="341" height="64"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <clipView key="contentView" id="EL0-Lh-lYc">
+                                                <rect key="frame" x="1" y="1" width="324" height="62"/>
+                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                <subviews>
+                                                    <textView importsGraphics="NO" findStyle="panel" continuousSpellChecking="YES" allowsUndo="YES" usesRuler="YES" usesFontPanel="YES" verticallyResizable="YES" allowsNonContiguousLayout="YES" quoteSubstitution="YES" dashSubstitution="YES" smartInsertDelete="YES" id="tXi-cH-doy">
+                                                        <rect key="frame" x="0.0" y="0.0" width="324" height="62"/>
+                                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                        <size key="minSize" width="324" height="62"/>
+                                                        <size key="maxSize" width="463" height="10000000"/>
+                                                        <color key="insertionPointColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                        <size key="minSize" width="324" height="62"/>
+                                                        <size key="maxSize" width="463" height="10000000"/>
+                                                    </textView>
+                                                </subviews>
+                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                            </clipView>
+                                            <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="YES" id="vcJ-Ag-6WO">
+                                                <rect key="frame" x="-100" y="-100" width="87" height="18"/>
+                                                <autoresizingMask key="autoresizingMask"/>
+                                            </scroller>
+                                            <scroller key="verticalScroller" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="eFD-mf-8uo">
+                                                <rect key="frame" x="325" y="1" width="15" height="62"/>
+                                                <autoresizingMask key="autoresizingMask"/>
+                                            </scroller>
+                                        </scrollView>
                                     </subviews>
                                 </view>
                             </tabViewItem>
@@ -529,23 +559,20 @@
                                     <animations>
                                         <caTransition key="subviews">
                                             <mutableData key="keyedArchiveRepresentation">
-YnBsaXN0MDDUAQIDBAUGYGFYJHZlcnNpb25YJG9iamVjdHNZJGFyY2hpdmVyVCR0b3ASAAGGoK8QIwcI
-KywtLi8wMTIzNDU2Nzg5Ok0XGU4UT1AKUQlSGFNUDlVbVSRudWxs3xARCQoLDA0ODxAREhMUFRYXGBka
-GxwdHh8gISIjJCUmJygpKlVzcGVlZFtyZXBlYXRDb3VudF8QE3JlbW92ZWRPbkNvbXBsZXRpb25fEBJf
-X0NBQ29kaW5nQ29udGVudHNbZW5kUHJvZ3Jlc3NUdHlwZV8QD3RyYW5zaXRpb25GbGFnc11mcmFtZUlu
-dGVydmFsWnRpbWVPZmZzZXRcYXV0b3JldmVyc2VzXnJlcGVhdER1cmF0aW9uWGZpbGxNb2RlViRjbGFz
-c11zdGFydFByb2dyZXNzWWJlZ2luVGltZVdzdWJ0eXBlWGR1cmF0aW9ugA+ADYAMgBGAAoAGgAWAC4AQ
-gAeADoAKgCKAA4AIgASACSI/gAAAIgAAAABXZnJvbVRvcBAAVGZhZGUQACMAAAAAAAAAACMAAAAAAAAA
-AFdyZW1vdmVkIwAAAAAAAAAAEAEiAAAAACMAAAAAAAAAACI/gAAAIwAAAAAAAAAA0jsVPExaTlMub2Jq
-ZWN0c68QDz0+P0BBQkNERUZHSElKS4ASgBOAFIAVgBaAF4AYgBmAGoAbgByAHYAegB+AIIAhXGF1dG9y
-ZXZlcnNlc1tlbmRQcm9ncmVzc11mcmFtZUludGVydmFsXxATcmVtb3ZlZE9uQ29tcGxldGlvbl5yZXBl
-YXREdXJhdGlvbl1zdGFydFByb2dyZXNzWnRpbWVPZmZzZXRfEA90cmFuc2l0aW9uRmxhZ3PSVldYWVok
-Y2xhc3NuYW1lWCRjbGFzc2VzV05TQXJyYXmiWFpYTlNPYmplY3TSVldcXVxDQVRyYW5zaXRpb26jXl9a
-XENBVHJhbnNpdGlvbltDQUFuaW1hdGlvbl8QD05TS2V5ZWRBcmNoaXZlctFiY1Ryb290gAEACAARABoA
-IwAtADIANwBdAGMAiACOAJoAsADFANEA1gDoAPYBAQEOAR0BJgEtATsBRQFNAVYBWAFaAVwBXgFgAWIB
-ZAFmAWgBagFsAW4BcAFyAXQBdgF4AX0BggGKAYwBkQGTAZwBpQGtAbYBuAG9AcYBywHUAdkB5AH2AfgB
-+gH8Af4CAAICAgQCBgIIAgoCDAIOAhACEgIUAhYCIwIvAj0CUwJiAnACewKNApICnQKmAq4CsQK6Ar8C
-zALQAt0C6QL7Av4DAwAAAAAAAAIBAAAAAAAAAGQAAAAAAAAAAAAAAAAAAAMFA
+YnBsaXN0MDDUAQIDBAUGUlNYJHZlcnNpb25YJG9iamVjdHNZJGFyY2hpdmVyVCR0b3ASAAGGoK8QHQcI
+KywtLi8wMTIzNBIXGQ0UEAsKEwkWGBEPDkdNVSRudWxs3xARCQoLDA0ODxAREhMUFRYXGBkaGxwdGh8g
+ISEjISUmGyEpIVVzcGVlZFtyZXBlYXRDb3VudF8QE3JlbW92ZWRPbkNvbXBsZXRpb25fEBJfX0NBQ29k
+aW5nQ29udGVudHNbZW5kUHJvZ3Jlc3NUdHlwZV8QD3RyYW5zaXRpb25GbGFnc11mcmFtZUludGVydmFs
+WnRpbWVPZmZzZXRcYXV0b3JldmVyc2VzXnJlcGVhdER1cmF0aW9uWGZpbGxNb2RlViRjbGFzc11zdGFy
+dFByb2dyZXNzWWJlZ2luVGltZVdzdWJ0eXBlWGR1cmF0aW9ugAKAA4AKgAuAAoAGgAWACIAIgAeACIAJ
+gByAA4AIgASACCI/gAAAIgAAAABXZnJvbVRvcBAAVGZhZGUQACMAAAAAAAAAAFdyZW1vdmVkEAHSNRU2
+RlpOUy5vYmplY3RzrxAPNzg5Ojs8PT4/QEFCQ0RFgAyADYAOgA+AEIARgBKAE4AUgBWAFoAXgBiAGYAa
+gBvSSElKS1okY2xhc3NuYW1lWCRjbGFzc2VzV05TQXJyYXmiSkxYTlNPYmplY3TSSElOT1xDQVRyYW5z
+aXRpb26jUFFMXENBVHJhbnNpdGlvbltDQUFuaW1hdGlvbl8QD05TS2V5ZWRBcmNoaXZlctFUVVRyb290
+gAEACAARABoAIwAtADIANwBXAF0AggCIAJQAqgC/AMsA0ADiAPAA+wEIARcBIAEnATUBPwFHAVABUgFU
+AVYBWAFaAVwBXgFgAWIBZAFmAWgBagFsAW4BcAFyAXcBfAGEAYYBiwGNAZYBngGgAaUBsAHCAcQBxgHI
+AcoBzAHOAdAB0gHUAdYB2AHaAdwB3gHgAeIB5wHyAfsCAwIGAg8CFAIhAiUCMgI+AlACUwJYAAAAAAAA
+AgEAAAAAAAAAVgAAAAAAAAAAAAAAAAAAAlo
 </mutableData>
                                         </caTransition>
                                     </animations>
@@ -826,7 +853,7 @@ zALQAt0C6QL7Av4DAwAAAAAAAAIBAAAAAAAAAGQAAAAAAAAAAAAAAAAAAAMFA
                                             <datePickerCell key="cell" controlSize="mini" enabled="NO" borderStyle="bezel" alignment="left" datePickerStyle="clockAndCalendar" id="1285">
                                                 <font key="font" metaFont="miniSystem"/>
                                                 <calendarDate key="date" timeIntervalSinceReferenceDate="-595929600" calendarFormat="%Y-%m-%d %H:%M:%S %z">
-                                                    <!--1982-02-12 16:00:00 +0000-->
+                                                    <!--1982-02-12 08:00:00 -0800-->
                                                     <timeZone key="timeZone" name="US/Pacific"/>
                                                 </calendarDate>
                                                 <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -883,7 +910,7 @@ zALQAt0C6QL7Av4DAwAAAAAAAAIBAAAAAAAAAGQAAAAAAAAAAAAAAAAAAAMFA
                                             <datePickerCell key="cell" borderStyle="bezel" alignment="left" datePickerMode="range" datePickerStyle="clockAndCalendar" id="1330">
                                                 <font key="font" metaFont="system"/>
                                                 <calendarDate key="date" timeIntervalSinceReferenceDate="-595929600" calendarFormat="%Y-%m-%d %H:%M:%S %z">
-                                                    <!--1982-02-12 16:00:00 +0000-->
+                                                    <!--1982-02-12 08:00:00 -0800-->
                                                     <timeZone key="timeZone" name="US/Pacific"/>
                                                 </calendarDate>
                                                 <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>

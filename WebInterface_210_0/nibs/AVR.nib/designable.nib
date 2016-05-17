@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="7706" systemVersion="14C109" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="9532" systemVersion="15D21" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
         <deployment version="1050" identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="7706"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="9532"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="rAVR">
@@ -22,7 +22,7 @@
                 <outlet property="I2CPop" destination="438" id="443"/>
                 <outlet property="LaborFeld" destination="115" id="291"/>
                 <outlet property="LoadTestTaste" destination="itx-eG-BvG" id="mLb-1S-HAT"/>
-                <outlet property="LocalTaste" destination="1662" id="PVj-nb-pgI"/>
+                <outlet property="LocalTaste" destination="1661" id="Mhm-Ue-F3o"/>
                 <outlet property="OG1Feld" destination="131" id="307"/>
                 <outlet property="OG2Feld" destination="114" id="308"/>
                 <outlet property="ObjektPop" destination="1584" id="1595"/>

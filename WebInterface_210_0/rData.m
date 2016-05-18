@@ -1189,6 +1189,8 @@ extern NSMutableArray* DatenplanTabelle;
 	
    [DatenplanTab selectTabViewItemAtIndex:0];
 
+   codeFeld.editable = NO;
+
 }
 
 
@@ -1241,11 +1243,166 @@ extern NSMutableArray* DatenplanTabelle;
 	//NSLog(@"FrameDidChangeAktion tempFrame width: x: %2.2f y: %2.2f",tempFrame.size.width);
 	NSLog(@"FrameDidChangeAktion  tempOrigin: x: %2.2f  *   tempFrame width: %2.2f",tempOrigin.x,tempFrame.size.width);
 
-	
 
 	//[TemperaturWertFeld setNeedsDisplay:YES];
-	
-	
+
+}
+
+- (void)setcodeFeldMit:(NSString*)datastring
+{
+   
+   
+   // code aufschluesseln:
+   /* In TWI_Master:
+    outbuffer[0] = (HEIZUNG << 5);					// Bit 5-7: Raumnummer
+    outbuffer[0] |= (Zeit.stunde & 0x1F);			//	Bit 0-4: Stunde, 5 bit
+    outbuffer[1] = (0x01 << 6);						// Bits 6,7: Art=1
+    outbuffer[1] |= Zeit.minute & 0x3F;				// Bits 0-5: Minute, 6 bit
+    outbuffer[2] = HeizungRXdaten[0];				//	Vorlauf
+    
+    outbuffer[3] = HeizungRXdaten[1];				//	Rücklauf
+    outbuffer[4] = HeizungRXdaten[2];				//	Aussen
+    
+    outbuffer[5] = 0;
+    outbuffer[5] |= HeizungRXdaten[3];				//	Brennerstatus Bit 2
+    outbuffer[5] |= HeizungStundencode;			// Bit 4, 5 gefiltert aus Tagplanwert von Brenner und Mode
+    outbuffer[5] |= RinneStundencode;				// Bit 6, 7 gefiltert aus Tagplanwert von Rinne
+    
+    uebertragen in d5
+    */
+   
+   
+   
+   NSArray* lastDataArray = [datastring componentsSeparatedByString:@"\t"];
+    NSLog(@"setcodeFeldMit lastDataArray: %@ anz: %ld",lastDataArray,[lastDataArray count]);
+   int minute = ([[lastDataArray objectAtIndex:0]intValue]/60)%60;
+   NSLog(@"minute: %d",minute);
+   float vorlauf = [[lastDataArray objectAtIndex:1]intValue]/2;
+   float ruecklauf = [[lastDataArray objectAtIndex:2]intValue]/2;
+   float aussen = ([[lastDataArray objectAtIndex:3]intValue]-32)/2; // Korrektur, s. TemperaturMKDiagramm l 70
+   float innen = [[[lastDataArray objectAtIndex:8]substringToIndex:2]intValue]/2.0; // \n abschneiden
+   int heizungcode = [[lastDataArray objectAtIndex:4]intValue];
+   
+   //heizungcode = 15;
+   BOOL brennerstatus = !((heizungcode & (1<<2))>>2);
+   int b1 = heizungcode & 0x04;
+   int b2 = b1 >>2;
+   int b3 = !b2;
+   NSLog(@"heizungcode: %d b1: %d b2: %d b3: %d brennerstatus: %d",heizungcode,b1,b2,b3,brennerstatus);
+   NSString* brennerstatusString =@"OFF";
+   if ( brennerstatus)
+   {
+      brennerstatusString =@" ON";
+   }
+   BOOL        rinnestatus = (heizungcode & ((1<<6)|(1<<7)))>>6; // bit nach rechts schieben
+   
+   
+ //  NSLog(@"heizungcode 15 Brenner OFF %d brenner: %d rinne: %d",heizungcode,brennerstatus,rinnestatus);
+   
+   // heizungcode = 11;
+   // brennerstatus = !((heizungcode & (1<<2))>>2);
+   // rinnestatus = (heizungcode & ((1<<6)|(1<<7)))>>6;
+   
+   if (minute<30) // erste halbe stunde, bit 6
+   {
+       rinnestatus = (heizungcode & ((1<<7)))>>7;
+   }
+   else
+   {
+      rinnestatus = (heizungcode & ((1<<6)))>>6;
+   }
+   NSLog(@"heizungcode  Brenner %d brenner: %d rinne: %d",heizungcode,brennerstatus,rinnestatus);
+   
+   NSString* tempStringA = [NSString stringWithFormat:@"HZ:\tVorlauf:\t%2.1f\tRuecklauf:\t%2.1f\tBrenner:\t%@",vorlauf, ruecklauf ,brennerstatusString];
+   NSString* tempStringB = [NSString stringWithFormat:@"\tAussen:\t%2.1f\tInnen:\t%2.1f",aussen, innen ];
+   
+   
+   NSMutableParagraphStyle *tempMutableParagraphStyle;
+   float firstColumnInch = 0.8, otherColumnInch = 0.8, pntPerInch = 72.0;
+   NSTextTab *tempTab;
+   NSMutableArray *TabArray = [NSMutableArray arrayWithCapacity:14];
+   NSMutableAttributedString   *tempAttString;
+   tempMutableParagraphStyle = [[NSParagraphStyle defaultParagraphStyle]mutableCopy];
+   [tempMutableParagraphStyle setAlignment:NSLeftTextAlignment];
+   
+   /*
+    possible tab stop types
+    NSLeftTabStopType
+    NSRightTabStopType
+    NSCenterTabStopType
+    NSDecimalTabStopType
+    */
+   float tab0 = 50.0;
+   float tab1 = 100.0;
+   float tab2 = 120.0;
+   float tab3 = 220.0;
+   float offset = 30.0;
+   float data0tab= 90;  // data fuer text 0, r
+   
+   float text1tab= 110; // text 1, l
+   float data1tab= 200; // data fuer text 1, r
+   
+   float text2tab= 220;// text 2, l
+   float data2tab= 310;// data fuer text 2, r
+   
+   // offset
+   tempTab = [[NSTextTab alloc]
+              initWithType:NSLeftTabStopType
+              location:offset];
+   [TabArray addObject:tempTab];
+   
+   // data0
+   tempTab = [[NSTextTab alloc]
+              initWithType:NSRightTabStopType
+              location:data0tab+offset];
+   [TabArray addObject:tempTab];
+   
+   // text1, data1
+   tempTab = [[NSTextTab alloc]
+              initWithType:NSLeftTabStopType
+              location:text1tab+offset];
+   [TabArray addObject:tempTab];
+   
+   tempTab = [[NSTextTab alloc]
+              initWithType:NSRightTabStopType
+              location:data1tab+offset];
+   [TabArray addObject:tempTab];
+   
+   // text2, data2
+   tempTab = [[NSTextTab alloc]
+              initWithType:NSLeftTabStopType
+              location:text2tab+offset];
+   [TabArray addObject:tempTab];
+   tempTab = [[NSTextTab alloc]
+              initWithType:NSRightTabStopType
+              location:data2tab+offset];
+   [TabArray addObject:tempTab];
+   
+   
+   for(int i=1;i<4;i++)
+   {
+      tempTab = [[NSTextTab alloc]
+                 initWithType:NSRightTabStopType
+                 location:(firstColumnInch*pntPerInch)
+                 + ((float)i * otherColumnInch * pntPerInch)];
+      //        [TabArray addObject:tempTab];
+   }
+   [tempMutableParagraphStyle setTabStops:TabArray];
+   codeString = [NSString stringWithFormat:@"%@\n%@",tempStringA,tempStringB];
+   
+   tempAttString = [[NSMutableAttributedString alloc]
+                    initWithString:codeString];
+   [tempAttString addAttribute:NSParagraphStyleAttributeName
+                         value:tempMutableParagraphStyle
+                         range:NSMakeRange(0,[codeString length])];
+   
+   [[codeFeld textStorage]
+    setAttributedString:tempAttString];
+   [codeFeld setNeedsDisplay:YES];
+   
+   // codeFeld.string = codeString;
+   NSLog(@"HomeDataDownloadAktion codeFeld: %@",[codeFeld string]);
+   
 }
 
 -(void)HomeDataDownloadAktion:(NSNotification*)note
@@ -1289,144 +1446,28 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
 
 	//NSLog(@"rData HomeDataDownloadAktion anzLoads: %d",anzLoads);
 	[LastDataFeld setStringValue:@"***"];
-
+   
+  
+   NSLog(@"rData HomeDataDownloadAktion quelle: %@",[[note userInfo]objectForKey:@"quelle"]);
 	if ([[note userInfo]objectForKey:@"datastring"])
    {
       NSString* tempString = [[note userInfo]objectForKey:@"datastring"];
       //tempString= [[[[NSNumber numberWithInt:anzLoads]stringValue]stringByAppendingString:@": "]stringByAppendingString:tempString];
-      
+      NSArray *dataArray =  [[[note userInfo]objectForKey:@"datastring"]componentsSeparatedByString:@"\n"];
+      int anz = [dataArray count];
+      if (anz > 2)
+      {
+      NSLog(@"dataArray last: %@ anz: %ld",[dataArray objectAtIndex:[dataArray count]-2],[dataArray count]);
+         tempString =[dataArray objectAtIndex:[dataArray count]-2];
+      }
+      if ([dataArray count]>9)
+      {
+         //dataArray = [dataArray subarrayWithRange:NSMakeRange([dataArray count]-9, 9)];
+      }
+    //  NSLog(@"dataArray korr: %@",dataArray);
       [LastDataFeld setStringValue:tempString];
       
-      // code aufschluesseln:
-      /* In TWI_Master:
-       outbuffer[0] = (HEIZUNG << 5);					// Bit 5-7: Raumnummer
-       outbuffer[0] |= (Zeit.stunde & 0x1F);			//	Bit 0-4: Stunde, 5 bit
-       outbuffer[1] = (0x01 << 6);						// Bits 6,7: Art=1
-       outbuffer[1] |= Zeit.minute & 0x3F;				// Bits 0-5: Minute, 6 bit
-       outbuffer[2] = HeizungRXdaten[0];				//	Vorlauf
-       
-       outbuffer[3] = HeizungRXdaten[1];				//	Rücklauf
-       outbuffer[4] = HeizungRXdaten[2];				//	Aussen
-       
-       outbuffer[5] = 0;
-       outbuffer[5] |= HeizungRXdaten[3];				//	Brennerstatus Bit 2
-       outbuffer[5] |= HeizungStundencode;			// Bit 4, 5 gefiltert aus Tagplanwert von Brenner und Mode
-       outbuffer[5] |= RinneStundencode;				// Bit 6, 7 gefiltert aus Tagplanwert von Rinne
-       
-       uebertragen in d5
-       */
-      
-      
-      
-      NSArray* lastDataArray = [tempString componentsSeparatedByString:@"\t"];
- //     NSLog(@"HomeDataDownloadAktion lastDataArray: %@",lastDataArray);
-      float vorlauf = [[lastDataArray objectAtIndex:1]intValue]/2;
-      float ruecklauf = [[lastDataArray objectAtIndex:2]intValue]/2;
-      float aussen = ([[lastDataArray objectAtIndex:3]intValue]-32)/2; // Korrektur, s. TemperaturMKDiagramm l 70
-      float innen = [[[lastDataArray objectAtIndex:8]substringToIndex:2]intValue]/2.0;
-      int heizungcode = [[lastDataArray objectAtIndex:6]intValue];
-      
-      //heizungcode = 15;
-      BOOL brennerstatus = !((heizungcode & (1<<2))>>2);
-      NSString* brennerstatusString =@"OFF";
-       if ( brennerstatus)
-       {
-          brennerstatusString =@" ON";
-       }
-      BOOL        rinnestatus = (heizungcode & ((1<<6)|(1<<7)))>>6; // bit nach rechts schieben
-
-      NSLog(@"heizungcode 15 Brenner OFF %d brenner: %d rinne: %d",heizungcode,brennerstatus,rinnestatus);
-      
-      // heizungcode = 11;
-      // brennerstatus = !((heizungcode & (1<<2))>>2);
-       rinnestatus = (heizungcode & ((1<<6)|(1<<7)))>>6;
-  //    NSLog(@"heizungcode 11 Brenner ON %d brenner: %d rinne: %d",heizungcode,brennerstatus,rinnestatus);
-      
-      
-      NSString* tempStringA = [NSString stringWithFormat:@"Vorlauf:\t%2.1f\tRuecklauf:\t%2.1f\tBrenner:\t%@",vorlauf, ruecklauf ,brennerstatusString];
-      NSString* tempStringB = [NSString stringWithFormat:@"Aussen:\t%2.1f\tInnen:\t%2.1f",aussen, innen ];
-      
-      
-      NSMutableParagraphStyle *tempMutableParagraphStyle;
-      float firstColumnInch = 0.8, otherColumnInch = 0.8, pntPerInch = 72.0;
-      NSTextTab *tempTab;
-      NSMutableArray *TabArray = [NSMutableArray arrayWithCapacity:14];
-      NSMutableAttributedString   *tempAttString;
-      tempMutableParagraphStyle = [[NSParagraphStyle defaultParagraphStyle]mutableCopy];
-      [tempMutableParagraphStyle setAlignment:NSLeftTextAlignment];
-      
-      /*
-       possible tab stop types
-       NSLeftTabStopType
-       NSRightTabStopType
-       NSCenterTabStopType
-       NSDecimalTabStopType
-       */
-      float tab0 = 50.0;
-      float tab1 = 100.0;
-      float tab2 = 120.0;
-      float tab3 = 220.0;
-      
-      float data0tab= 90;  // data fuer text 0, r
-      
-      float text1tab= 110; // text 1, l
-      float data1tab= 200; // data fuer text 1, r
-      
-      float text2tab= 220;// text 2, l
-      float data2tab= 310;// data fuer text 2, r
-      
-      // data0
-      tempTab = [[NSTextTab alloc]
-              initWithType:NSRightTabStopType
-              location:data0tab];
-      [TabArray addObject:tempTab];
-      
-      // text1, data1
-      tempTab = [[NSTextTab alloc]
-                 initWithType:NSLeftTabStopType
-                 location:text1tab];
-      [TabArray addObject:tempTab];
-      
-      tempTab = [[NSTextTab alloc]
-                 initWithType:NSRightTabStopType
-                 location:data1tab];
-      [TabArray addObject:tempTab];
-      
-      // text2, data2
-      tempTab = [[NSTextTab alloc]
-                 initWithType:NSLeftTabStopType
-                 location:text2tab];
-      [TabArray addObject:tempTab];
-      tempTab = [[NSTextTab alloc]
-                 initWithType:NSRightTabStopType
-                 location:data2tab];
-      [TabArray addObject:tempTab];
-
-      
-      for(int i=1;i<4;i++)
-      {
-         tempTab = [[NSTextTab alloc]
-                 initWithType:NSRightTabStopType
-                 location:(firstColumnInch*pntPerInch)
-                 + ((float)i * otherColumnInch * pntPerInch)];
- //        [TabArray addObject:tempTab];
-      }
-      [tempMutableParagraphStyle setTabStops:TabArray];
-      codeString = [NSString stringWithFormat:@"%@\n%@",tempStringA,tempStringB];
-      
-      tempAttString = [[NSMutableAttributedString alloc]
-                   initWithString:codeString];
-      [tempAttString addAttribute:NSParagraphStyleAttributeName
-                        value:tempMutableParagraphStyle
-                        range:NSMakeRange(0,[codeString length])];
-      
-      [[codeFeld textStorage]
-       setAttributedString:tempAttString];
-      [codeFeld setNeedsDisplay:YES];
-      
-     // codeFeld.string = codeString;
-      NSLog(@"HomeDataDownloadAktion codeFeld: %@",[codeFeld string]);
-
+      [self setcodeFeldMit:tempString];
    }
 	else
 	{
@@ -2194,9 +2235,16 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
 	}
 	NSString* StartDatenString=[[[TemperaturDatenFeld string]componentsSeparatedByString:@"\r"]objectAtIndex:0];
 	
-  // NSLog(@"LastDatenAktion StartDatenString: *%@*",StartDatenString);
+   //NSLog(@"LastDatenAktion StartDatenString: *%@*",StartDatenString);
 	NSString* Kalenderformat=[[NSCalendarDate calendarDate]calendarFormat];
-	NSLog(@"LastDatenaktion note: %@",[[note userInfo]description]);
+	NSLog(@"LastDatenaktion note A: %@",[[note userInfo]description]);
+   
+   if ([[note userInfo]objectForKey:@"lastdatenarray"])
+   {
+      NSArray* temparray =[[note userInfo]objectForKey:@"lastdatenarray"];
+     // NSLog(@"LastDatenAktion temparray: %@",temparray);
+     // [self setcodeFeldMit:[[[note userInfo]objectForKey:@"lastdatenarray"]componentsJoinedByString:@"\t"]];
+   }
 	if ([[note userInfo]objectForKey:@"startzeit"])
 	{
 		DatenserieStartZeit=[[NSCalendarDate dateWithString:[[note userInfo]objectForKey:@"startzeit"] calendarFormat:Kalenderformat]retain];
@@ -2216,8 +2264,9 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
 	}
 	anzLoads=0;
 	[ZaehlerFeld setIntValue:anzLoads];
-   codeString = [NSString stringWithFormat:@"anzLoads: %d",anzLoads ];
-   [codeFeld insertText: codeString];
+ //  codeString = [NSString stringWithFormat:@"anzLoads: %d",anzLoads ];
+ //  [codeFeld insertText: codeString];
+   
    NSLog(@"LastDataAktion codeFeld: %@",[codeFeld string]);
    
 	NSNumberFormatter *numberFormatter =[[[NSNumberFormatter alloc] init] autorelease];
@@ -2368,7 +2417,7 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
 				//NSLog(@"tempOrigin alt  x: %2.2f y: %2.2f",tempOrigin.x,tempOrigin.y);
 				//NSLog(@"tempFrame: alt x %2.2f y %2.2f heigt %2.2f width %2.2f",tempFrame.origin.x, tempFrame.origin.y, tempFrame.size.height, tempFrame.size.width);
 				
-				//						Verschiebedistanz des angezeigten Fensters
+				//		Verschiebedistanz des angezeigten Fensters
 				float delta=[[TemperaturDiagrammScroller contentView]frame].size.width-150;
 				NSPoint scrollPoint=[[TemperaturDiagrammScroller documentView]bounds].origin;
 				
@@ -3796,11 +3845,11 @@ if ([[note userInfo]objectForKey:@"err"])
 		}
 	}
    
-	NSLog(@"Data setBrennerStatstik: D");
+	//NSLog(@"Data setBrennerStatstik: D");
 	//NSLog(@"Data setBrennerStatstik: StatistikArray: %@",[StatistikArray description]);
 	int i=0;
 	[TemperaturStatistikDiagramm setOffsetX:[[[StatistikArray objectAtIndex:i]objectForKey:@"tagdesjahres"]intValue]]; // Startwert der Abszisse setzen
-   NSLog(@"Data setBrennerStatstik: offsetX: %d",[[[StatistikArray objectAtIndex:i]objectForKey:@"tagdesjahres"]intValue]);
+   //NSLog(@"Data setBrennerStatstik: offsetX: %d",[[[StatistikArray objectAtIndex:i]objectForKey:@"tagdesjahres"]intValue]);
 
 	[TagGitterlinien setOffsetX:[[[StatistikArray objectAtIndex:i]objectForKey:@"tagdesjahres"]intValue]];
 	
@@ -4020,7 +4069,7 @@ if ([[note userInfo]objectForKey:@"err"])
 
    if ([derDatenDic objectForKey:@"temperaturdatenarray"])
 	{
-      NSLog(@"Data setSolarStatistik: temperaturdatenarray da");
+      //NSLog(@"Data setSolarStatistik: temperaturdatenarray da");
       NSSet* TemperaturdatenSet = [NSSet setWithArray:[derDatenDic objectForKey:@"temperaturdatenarray"]]; // entfernt doppelte Werte
       TemperaturdatenArray=[TemperaturdatenSet allObjects];
 
@@ -4039,7 +4088,7 @@ if ([[note userInfo]objectForKey:@"err"])
    
    if ([derDatenDic objectForKey:@"kollektortemperaturarray"])
 	{
-      NSLog(@"Data setSolarStatistik: kollektortemperaturarray da");
+      //NSLog(@"Data setSolarStatistik: kollektortemperaturarray da");
       KollektortemperaturArray= [derDatenDic objectForKey:@"kollektortemperaturarray"];
       for (int i=0;i<5;i++)
       {

@@ -450,7 +450,7 @@ void IOWarriorCallback ()
 	{
 		NSLog(@"awake Kein Input");
 	}
-   //NSLog(@"end DatenVonHeute");
+   NSLog(@"end DatenVonHeute");
    
 	
 	#pragma mark awake Solar

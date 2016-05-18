@@ -256,6 +256,7 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 			NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
 			[NotificationDic setObject:[NSNumber numberWithInt:downloadFlag] forKey:@"downloadflag"];
 			[NotificationDic setObject:[NSNumber numberWithInt:lastDataZeit] forKey:@"lastdatazeit"];
+         [NotificationDic setObject:[NSNumber numberWithInt:0] forKey:@"quelle"];
 			[NotificationDic setObject:DataString forKey:@"datastring"];
 			NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
 			[nc postNotificationName:@"HomeDataDownload" object:self userInfo:NotificationDic];
@@ -566,7 +567,7 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 			[NotificationDic setObject:[NSNumber numberWithInt:downloadFlag] forKey:@"downloadflag"];
 			[NotificationDic setObject:[NSNumber numberWithInt:lastDataZeit] forKey:@"lastdatazeit"];
 			[NotificationDic setObject:DataString forKey:@"datastring"];
-			
+			[NotificationDic setObject:[NSNumber numberWithInt:1] forKey:@"quelle"];
 			NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
 			[nc postNotificationName:@"HomeDataDownload" object:self userInfo:NotificationDic];
 			

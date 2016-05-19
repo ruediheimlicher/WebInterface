@@ -77,7 +77,7 @@ NSLog(@"Data_DS setRaumData: DataDic: %@",[derDataDic description]);
 			row:(int)rowIndex
 {
 	//NSLog(@"objectValueForTableColumn");
-    NSDictionary *einTestDic;
+    NSDictionary *einTestDic = [NSDictionary dictionary];
 	if (rowIndex<[WochenplanTabelle count])
 	{
 			einTestDic = [WochenplanTabelle objectAtIndex: rowIndex];

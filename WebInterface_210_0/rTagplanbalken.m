@@ -48,7 +48,7 @@
 	// Taste zum Schreiben des Plans anlegen
 	NSRect WriteFeld=NSMakeRect(6,5.5,24,12);
 	rTaste* WriteTaste=[[[rTaste alloc]initWithFrame:WriteFeld]retain];
-	[WriteTaste setButtonType:NSMomentaryLight];
+	[WriteTaste setButtonType:NSMomentaryPushInButton];
 	[WriteTaste setTarget:self];
 	[WriteTaste setBordered:YES];
 	[[WriteTaste cell]setBackgroundColor:[NSColor yellowColor]];
@@ -62,7 +62,7 @@
  	// Taste zum temporaerenSchreiben des Plans anlegen
 	NSRect HeuteFeld=NSMakeRect(36,5.5,18,12);
 	rTaste* HeuteTaste=[[[rTaste alloc]initWithFrame:HeuteFeld]retain];
-	[HeuteTaste setButtonType:NSMomentaryLight];
+	[HeuteTaste setButtonType:NSMomentaryPushInButton];
 	[HeuteTaste setTarget:self];
 	[HeuteTaste setBordered:YES];
 	[[HeuteTaste cell]setBackgroundColor:[NSColor lightGrayColor]];
@@ -117,7 +117,7 @@
 		StdFeldU.size.height = 6;
 		//StdFeldU.origin.y+=8;
 		rTaste* StundenTaste=[[[rTaste alloc]initWithFrame:StdFeldU]retain];
-		[StundenTaste setButtonType:NSMomentaryLight];
+		[StundenTaste setButtonType:NSMomentaryPushInButton];
 		[StundenTaste setTag:i];
 
 		[StundenTaste setTarget:self];
@@ -137,7 +137,7 @@
 	AllFeld.size.width/=1.8;
 	rTaste* AllTaste=[[[rTaste alloc]initWithFrame:AllFeld]retain];
 	//	[AllTaste setButtonType:NSMomentaryLightButton];
-	[AllTaste setButtonType:NSMomentaryLight];
+	[AllTaste setButtonType:NSMomentaryPushInButton];
 	[AllTaste setTarget:self];
 	[AllTaste setBordered:YES];
 	[[AllTaste cell]setBackgroundColor:[NSColor lightGrayColor]];
@@ -459,7 +459,7 @@ NSMutableDictionary* tempDic=(NSMutableDictionary*)[StundenArray objectAtIndex:d
 
 - (void)StundenTasteAktion:(NSButton*)sender
 {
-	NSLog(@"StundenTasteAktion tag: %d",[sender tag]);
+	NSLog(@"StundenTasteAktion tag: %ld",(long)[sender tag]);
 	//NSLog(@"StundenTasteAktion: %d", [(rTagplanbalken*)[sender superview]Wochentag]);
 	//NSLog(@"StundenTasteAktion: %d", [(rTagplanbalken*)[sender superview]Raum]);
 	//NSLog(@"StundenTasteAktion: %d", [(rTagplanbalken*)[sender superview]Objekt]);

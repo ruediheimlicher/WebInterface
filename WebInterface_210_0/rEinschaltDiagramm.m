@@ -478,7 +478,7 @@
 					//NSLog(@"°°°					lastTagwertDic: %@",[lastTagwertDic description]);
 					
 					int altUhrWert=[[lastTagwertDic objectForKey:@"uhr"]intValue];
-					if ((altUhrWert==1)) // Uhr war ON, Balkenstück ist angelegt
+					if (altUhrWert==1) // Uhr war ON, Balkenstück ist angelegt
 					{
 						if (aktuellerUhrWert) // Uhr ist immer noch ON, Balkenstueck verlaengern, aktuelle Position setzen fuer drawRect
 						{

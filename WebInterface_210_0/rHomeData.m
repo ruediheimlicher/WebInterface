@@ -186,7 +186,7 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 		//NSLog(@"BrennerdatenArray: %@",[BrennerdatenArray description]);
 		
 		DataSuffix=@"HomeDaten.txt";
-		NSString* URLPfad=[NSURL URLWithString:[ServerPfad stringByAppendingPathComponent:DataSuffix]];
+		NSString* URLPfad=[[NSURL URLWithString:[ServerPfad stringByAppendingPathComponent:DataSuffix]]path];
 		//NSLog(@"DataVonHeute URLPfad: %@",URLPfad);
 		//NSLog(@"DataVonHeute  DownloadPfad: %@ DataSuffix: %@",DownloadPfad,DataSuffix);
 		NSURL *URL = [NSURL URLWithString:[ServerPfad stringByAppendingPathComponent:DataSuffix]];
@@ -204,7 +204,7 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 			//ERROR: 503
 			NSArray* ErrorArray=[[[[WebFehler userInfo]objectForKey:@"NSUnderlyingError"]description]componentsSeparatedByString:@" "];
          NSString* ErrString =[ErrorArray componentsJoinedByString:@" "];
-         NSLog(@"ErrString: %@",ErrString);
+      //   NSLog(@"ErrString: %@",ErrString);
          NSRange  ErrRange = [ErrString rangeOfString:@"offline" options:NSCaseInsensitiveSearch];
          
 			//NSLog(@"DataVonHeute ErrorArray: %lu",(unsigned long)ErrRange.location);
@@ -232,6 +232,8 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 			[Warnung setAlertStyle:NSWarningAlertStyle];
 			
 			int antwort=[Warnung runModal];
+         
+         
 			return returnString;
 		}
       
@@ -357,7 +359,7 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 		{
 			DataString=@"Error";
 			NSLog(@"DataVon: DataSuffix: %@",URL);
-			[self setErrString:[NSString stringWithFormat:@"%@ %@ %@ %@",[DatumArray objectAtIndex:1],[DatumArray objectAtIndex:2],@"DataVon: keine Daten"]];
+			[self setErrString:[NSString stringWithFormat:@"%@ %@ %@",[DatumArray objectAtIndex:1],[DatumArray objectAtIndex:2],@"DataVon: keine Daten"]];
 			return DataString;
 
 		}
@@ -771,7 +773,7 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
          [nc postNotificationName:@"SolarDataDownload" object:self userInfo:NotificationDic];
          //NSLog(@"Daten OK");
          
-         NSArray* StatistikArray=[self SolarErtragVonHeute];
+   //      NSArray* StatistikArray=[self SolarErtragVonHeute];
          
          return DataString;
          
@@ -1538,7 +1540,7 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 	NSMutableArray* BrennerdatenArray=[[NSMutableArray alloc]initWithCapacity:0];
 	//NSLog(@"BrennerStatistikVon: %d",dasJahr);
 	DataSuffix=@"Brennerzeit.txt";
-	NSString* URLPfad=[NSURL URLWithString:[ServerPfad stringByAppendingPathComponent:DataSuffix]];
+	//NSString* URLPfad=[NSURL URLWithString:[ServerPfad stringByAppendingPathComponent:DataSuffix]];
 	//NSLog(@"BrennerStatistikVon URLPfad: %@",URLPfad);
 	//NSLog(@"BrennerStatistikVon  DownloadPfad: %@ DataSuffix: %@",DownloadPfad,DataSuffix);
 	NSURL *URL = [NSURL URLWithString:[ServerPfad stringByAppendingPathComponent:DataSuffix]];
@@ -1613,7 +1615,7 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 	NSMutableArray* TemperaturdatenArray=[[NSMutableArray alloc]initWithCapacity:0];
 	//NSLog(@"TemperaturStatistikVon: %d",dasJahr);
 	DataSuffix=@"TemperaturMittel.txt";
-	NSString* URLPfad=[NSURL URLWithString:[ServerPfad stringByAppendingPathComponent:DataSuffix]];
+	//NSString* URLPfad=[NSURL URLWithString:[ServerPfad stringByAppendingPathComponent:DataSuffix]];
 	//NSLog(@"TemperaturStatistikVon URLPfad: %@",URLPfad);
 	//NSLog(@"TemperaturStatistikVon  DownloadPfad: %@ DataSuffix: %@",DownloadPfad,DataSuffix);
 	NSURL *URL = [NSURL URLWithString:[ServerPfad stringByAppendingPathComponent:DataSuffix]];
@@ -1685,7 +1687,7 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 	NSMutableArray* ElektrodatenArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
 	//NSLog(@"ElektroStatistikVon: %d",dasJahr);
 	DataSuffix=@"ElektroZeit.txt";
-	NSString* URLPfad=[NSURL URLWithString:[ServerPfad stringByAppendingPathComponent:DataSuffix]];
+//	NSString* URLPfad=[NSURL URLWithString:[ServerPfad stringByAppendingPathComponent:DataSuffix]];
 	//NSLog(@"ElektroStatistikVonJahr URLPfad: %@",URLPfad);
 	//NSLog(@"ElektroStatistikVonJahr  DownloadPfad: %@ DataSuffix: %@",DownloadPfad,DataSuffix);
 	NSURL *URL = [NSURL URLWithString:[ServerPfad stringByAppendingPathComponent:DataSuffix]];
@@ -1767,7 +1769,7 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 	NSMutableArray* ErtragdatenArray=[[NSMutableArray alloc]initWithCapacity:0];
 	NSLog(@"SolarErtragVonJahr: %d",dasJahr);
 	DataSuffix=@"SolarTagErtrag.txt";
-	NSString* URLPfad=[NSURL URLWithString:[ServerPfad stringByAppendingPathComponent:DataSuffix]];
+//	NSString* URLPfad=[NSURL URLWithString:[ServerPfad stringByAppendingPathComponent:DataSuffix]];
 	//NSLog(@"SolarErtragVonJahr URLPfad: %@",URLPfad);
 	//NSLog(@"SolarErtragVonJahr  DownloadPfad: %@ DataSuffix: %@",DownloadPfad,DataSuffix);
 	NSURL *URL = [NSURL URLWithString:[ServerPfad stringByAppendingPathComponent:DataSuffix]];
@@ -1855,7 +1857,7 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 	NSMutableArray* ErtragdatenArray=[[NSMutableArray alloc]initWithCapacity:0];
 	//NSLog(@"SolarErtragVonJahr von Monat: %d Jahr: %d",monat,dasJahr);
 	DataSuffix=@"SolarTagErtrag.txt";
-	NSString* URLPfad=[NSURL URLWithString:[ServerPfad stringByAppendingPathComponent:DataSuffix]];
+//	NSString* URLPfad=[NSURL URLWithString:[ServerPfad stringByAppendingPathComponent:DataSuffix]];
 	//NSLog(@"SolarErtragVonJahr URLPfad: %@",URLPfad);
 	//NSLog(@"SolarErtragVonJahr  DownloadPfad: %@ DataSuffix: %@",DownloadPfad,DataSuffix);
 	NSURL *URL = [NSURL URLWithString:[ServerPfad stringByAppendingPathComponent:DataSuffix]];
@@ -1972,7 +1974,7 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 	NSMutableArray* ErtragdatenArray=[[NSMutableArray alloc]initWithCapacity:0];
 	//NSLog(@"SolarErtragVonHeute");
 	DataSuffix=@"SolarTagErtrag.txt";
-	NSString* URLPfad=[NSURL URLWithString:[ServerPfad stringByAppendingPathComponent:DataSuffix]];
+//	NSString* URLPfad=[NSURL URLWithString:[ServerPfad stringByAppendingPathComponent:DataSuffix]];
 	//NSLog(@"SolarErtragVonHeute URLPfad: %@",URLPfad);
 	//NSLog(@"SolarErtragVonJahr  DownloadPfad: %@ DataSuffix: %@",DownloadPfad,DataSuffix);
 	NSURL *URL = [NSURL URLWithString:[ServerPfad stringByAppendingPathComponent:DataSuffix]];
@@ -2176,10 +2178,10 @@ NSLog(@"NSCachedURLResponse");
     }
 }
 
-- (void)download:(NSURLDownload *)theDownload didReceiveDataOfLength:(unsigned)length
+- (void)download:(NSURLDownload *)theDownload didReceiveDataOfLength:(unsigned long)length
 {
 
-	NSLog(@"didReceiveResponse --  expectedContentLength: %d length: %d",expectedContentLength,length);
+	NSLog(@"didReceiveResponse --  expectedContentLength: %d length: %ld",expectedContentLength,length);
     if (expectedContentLength > 0) {
         receivedContentLength += length;
         [progressIndicator setDoubleValue:(double)receivedContentLength / (double)expectedContentLength];

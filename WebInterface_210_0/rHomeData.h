@@ -4,7 +4,7 @@
 #import <WebKit/WebKit.h>
 @class WebDownload;
 
-@interface rHomeData : NSWindowController
+@interface rHomeData : NSWindowController <NSURLDownloadDelegate>
 {
 	IBOutlet NSMatrix *directoryMatrix;
 	IBOutlet NSButton *openButton;

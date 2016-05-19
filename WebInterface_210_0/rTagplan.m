@@ -116,7 +116,7 @@
    heuteTastenfeld.size.width=20;
 	heuteTastenfeld.size.height=10;
    
-   heuteTaste = [[NSButton alloc]initWithFrame:heuteTastenfeld];
+   heuteTaste = [[rTaste alloc]initWithFrame:heuteTastenfeld];
  
    //  [self addSubview:heuteTaste];
 

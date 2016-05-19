@@ -92,7 +92,7 @@ return self;
 		NSRect WriteFeld=NSMakeRect(6,5.5,24,12);
 	rTaste* WriteTaste=[[[rTaste alloc]initWithFrame:WriteFeld]retain];
 	//	[WriteTaste setButtonType:NSMomentaryLightButton];
-	[WriteTaste setButtonType:NSMomentaryLight];
+	[WriteTaste setButtonType:NSMomentaryPushInButton];
 	[WriteTaste setTarget:self];
 	[WriteTaste setBordered:YES];
 	[[WriteTaste cell]setBackgroundColor:[NSColor yellowColor]];
@@ -106,7 +106,7 @@ return self;
    // Taste zum temporaerenSchreiben des Plans anlegen
 	NSRect HeuteFeld=NSMakeRect(36,5.5,18,12);
 	rTaste* HeuteTaste=[[[rTaste alloc]initWithFrame:HeuteFeld]retain];
-	[HeuteTaste setButtonType:NSMomentaryLight];
+	[HeuteTaste setButtonType:NSMomentaryPushInButton];
 	[HeuteTaste setTarget:self];
 	[HeuteTaste setBordered:YES];
 	[[HeuteTaste cell]setBackgroundColor:[NSColor lightGrayColor]];
@@ -177,7 +177,7 @@ return self;
 		StdFeldU.size.height = 6;
 		//StdFeldU.origin.y+=8;
 		rTaste* StundenTaste=[[[rTaste alloc]initWithFrame:StdFeldU]retain];
-		[StundenTaste setButtonType:NSMomentaryLight];
+		[StundenTaste setButtonType:NSMomentaryPushInButton];
 		[StundenTaste setTag:i];
       
 		[StundenTaste setTarget:self];
@@ -197,7 +197,7 @@ return self;
 	AllFeld.size.width/=1.8;
 	rTaste* AllTaste=[[[rTaste alloc]initWithFrame:AllFeld]retain];
 	//	[AllTaste setButtonType:NSMomentaryLightButton];
-	[AllTaste setButtonType:NSMomentaryLight];
+	[AllTaste setButtonType:NSMomentaryPushInButton];
 	[AllTaste setTarget:self];
 	[AllTaste setBordered:YES];
 	[[AllTaste cell]setBackgroundColor:[NSColor lightGrayColor]];
@@ -313,7 +313,7 @@ return self;
 - (void)StundenTasteAktion:(NSButton*)sender
 {
    {
-      NSLog(@"StundenTasteAktion tag: %d",[sender tag]);
+      NSLog(@"StundenTasteAktion tag: %ld",(long)[sender tag]);
       //NSLog(@"StundenTasteAktion: %d", [(rTagplanbalken*)[sender superview]Wochentag]);
       //NSLog(@"StundenTasteAktion: %d", [(rTagplanbalken*)[sender superview]Raum]);
       //NSLog(@"StundenTasteAktion: %d", [(rTagplanbalken*)[sender superview]Objekt]);
@@ -350,7 +350,7 @@ return self;
          
          int ON=[[[StundenArray objectAtIndex:[sender tag]]objectForKey:@"code"]intValue];
          
-         NSLog(@"mouse in Stundentaste:	in Stunde: %d 		ON vor: %d",[sender tag], ON);
+         NSLog(@"mouse in Stundentaste:	in Stunde: %ld 		ON vor: %d",(long)[sender tag], ON);
          switch (ON)
          {
             case 0://	ganze Stunde ON setzen
@@ -365,7 +365,7 @@ return self;
                break;
                
          }
-         NSLog(@"mouse in Stundentaste:	in Stunde: %d 		ON nach: %d",[sender tag], ON);
+         NSLog(@"mouse in Stundentaste:	in Stunde: %ld 		ON nach: %d",(long)[sender tag], ON);
          [NotificationDic setObject:[NSNumber numberWithInt:[sender tag]] forKey:@"stunde"];
          [NotificationDic setObject:[NSNumber numberWithInt:ON] forKey:@"on"];
          [NotificationDic setObject:[NSNumber numberWithInt:3] forKey:@"feld"];// Feld U

@@ -408,7 +408,9 @@ void IOWarriorCallback ()
    // heutige Daten laden
    NSString* AktuelleDaten = [NSString string];
    AktuelleDaten=[HomeData DataVonHeute];
-	//NSLog(@"awake nach AktuelleDaten");
+   
+	NSLog(@"awake nach AktuelleDaten returnstring: %@",AktuelleDaten);
+   
 	//NSLog(@"awake AktuelleDaten: \n%@",AktuelleDaten);
    
 	if (AktuelleDaten &&[AktuelleDaten length])

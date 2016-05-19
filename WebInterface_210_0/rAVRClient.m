@@ -103,7 +103,7 @@
 
 - (IBAction)reportTestTaste:(id)sender;
 {
-   NSLog(@"AVRClient reportTestTaste: state: %d",[sender state]);
+   NSLog(@"AVRClient reportTestTaste: state: %ld",[sender state]);
    NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
 	NSMutableDictionary* localStatusDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
 	[localStatusDic setObject:[NSNumber numberWithInt:[sender state]]forKey:@"test"];
@@ -472,7 +472,7 @@
 	//	[i2cAdressArray addObject:[NSNumber numberWithInt:hbyte]];						// Hi-Bit der Adresse
 	//	[i2cAdressArray addObject:[NSNumber numberWithInt:lbyte]];						// Lo-Bit der Adresse
 	
-	NSLog(@"AVRClient readEthWochenplan EEPROMAddresse: %X startadresse: %X  hbyte: %X lbyte: %X", [I2CPop indexOfSelectedItem], startadresse, hbyte, lbyte);
+	NSLog(@"AVRClient readEthWochenplan EEPROMAddresse: %lX startadresse: %X  hbyte: %X lbyte: %X", (long)[I2CPop indexOfSelectedItem], startadresse, hbyte, lbyte);
 	
 	//	NSString* ReadURL=[self ReadURLForEEPROM: EEPROMAddresse hByte: hbyte lByte: lbyte];
 
@@ -771,7 +771,7 @@
 	NSLog(@"readEthSimTimerFunktion  sendTimerDic: %@",[sendTimerDic description]);
 		if (simTimer)
 		{
-			NSLog(@"readEthSim retainCount: %d",[simTimer retainCount]);
+			NSLog(@"readEthSim retainCount: %lu",(unsigned long)[simTimer retainCount]);
 	//		[simTimer invalidate];
 	//		NSLog(@"X");
 	//		[simTimer release];
@@ -848,14 +848,14 @@
 
 
 
-
+/*
 - (void)readTagplan:(int)i2cAdresse vonAdresse:(int)startAdresse anz:(int)anzahlDaten
 {
 	[self readEthTagplan:i2cAdresse vonAdresse:startAdresse anz: anzahlDaten];
 	
 	return;
 	}
-	
+*/	
 	
 	
 	
@@ -873,7 +873,7 @@ if (Webserver_busy)
 
 	if ([TWIStatusTaste state])
 	{
-		NSLog(@"TWIStatustaste ok: %d",[TWIStatusTaste state]);
+		NSLog(@"TWIStatustaste ok: %ld",(long)[TWIStatusTaste state]);
 		NSAlert *Warnung = [[[NSAlert alloc] init] autorelease];
 		[Warnung addButtonWithTitle:@"OK"];
 		//	[Warnung addButtonWithTitle:@""];

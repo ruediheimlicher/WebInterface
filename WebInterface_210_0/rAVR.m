@@ -53,7 +53,7 @@ return BinString;
 
 - (int)HexStringZuInt:(NSString*) derHexString
 {
-	int returnInt=-1;
+	uint returnInt=-1;
 	NSScanner* theScanner = [NSScanner scannerWithString:derHexString];
 	
 	if ([theScanner scanHexInt:&returnInt])
@@ -100,7 +100,7 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
 {
 	//NSLog(@"StundenArrayAusByteArray derStundenByteArray: %@",[derStundenByteArray description]);
 	
-	NSMutableArray* tempStundenArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+	NSMutableArray* tempStundenArray=[[NSMutableArray alloc]initWithCapacity:0];
 	//NSArray* bitnummerArray=[NSArray arrayWithObjects: @"null", @"eins",@"zwei",@"drei",@"vier",@"fuenf",nil];
    
 	int i,k;
@@ -117,7 +117,7 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
 		
 		
 		//NSLog(@"i: %d tempString: %@ tempByte hex: %2.2X dez: %d dezString: %@",i,tempString,tempByte,tempByte,dezString);
-		NSMutableArray* tempStundenCodeArray=[[[NSMutableArray alloc]initWithCapacity:4]autorelease];
+		NSMutableArray* tempStundenCodeArray=[[NSMutableArray alloc]initWithCapacity:4];
 		for (k=0;k<4;k++)
 		{
 			uint8_t tempStundencode = tempByte & 0x03;
@@ -138,7 +138,7 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
 {
 	//NSLog(@"StundenArrayAusDezArray derStundenByteArray: %@",[derStundenByteArray description]);
 	
-	NSMutableArray* tempStundenArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+	NSMutableArray* tempStundenArray=[[NSMutableArray alloc]initWithCapacity:0];
 	//NSArray* bitnummerArray=[NSArray arrayWithObjects: @"null", @"eins",@"zwei",@"drei",@"vier",@"fuenf",nil];
    
 	int i,k;
@@ -149,7 +149,7 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
 		NSString* tempString=[derStundenByteArray objectAtIndex:i];
 		unsigned int tempByte=[[derStundenByteArray objectAtIndex:i]intValue];
 		//NSLog(@"i: %d tempString: %@ tempByte hex: %2.2X dez: %d dezString: %@",i,tempString,tempByte,tempByte,dezString);
-		NSMutableArray* tempStundenCodeArray=[[[NSMutableArray alloc]initWithCapacity:4]autorelease];
+		NSMutableArray* tempStundenCodeArray=[[NSMutableArray alloc]initWithCapacity:4];
 		for (k=0;k<4;k++)
 		{
 			uint8_t tempStundencode = tempByte & 0x03;
@@ -273,10 +273,10 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
 
 
 	
-	WochenplanDic=[[[NSMutableDictionary alloc]initWithCapacity:0]retain];
-	Eingangsdaten=[[[NSMutableArray alloc]initWithCapacity:0]retain];
-	EEPROMArray=[[[NSMutableArray alloc]initWithCapacity:0]retain];
-   EEPROMReadDataArray=[[[NSMutableArray alloc]initWithCapacity:0]retain];
+	WochenplanDic=[[NSMutableDictionary alloc]initWithCapacity:0];
+	Eingangsdaten=[[NSMutableArray alloc]initWithCapacity:0];
+	EEPROMArray=[[NSMutableArray alloc]initWithCapacity:0];
+   EEPROMReadDataArray=[[NSMutableArray alloc]initWithCapacity:0];
    
    
 	NSFileManager *Filemanager=[NSFileManager defaultManager];
@@ -291,10 +291,10 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
 		if (HomedataOK==NO)
 			return 0;
 	}
-	HomePListPfad=[[HomedataPfad stringByAppendingPathComponent:@"HomePList"]retain];
+	HomePListPfad=[HomedataPfad stringByAppendingPathComponent:@"HomePList"];
 	if ([Filemanager fileExistsAtPath:HomePListPfad])
 	{
-		HomeDic=[[NSMutableDictionary dictionaryWithContentsOfFile:HomePListPfad]retain];
+		HomeDic=[NSMutableDictionary dictionaryWithContentsOfFile:HomePListPfad];
 	}
 	if (HomeDic)
 	{
@@ -321,8 +321,6 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
 		NSLog(@"Neuer Homebus ok");
 	}
 	//NSLog(@"HomebusAnlegen 1");
-	[HomeDic retain];
-	[HomebusArray retain];
 	n=0;
 	aktuellerTag=0;
 	IOW_busy=0;
@@ -421,13 +419,13 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
 	[self setTagbalkenTyp:1 forObjekt:1 forRaum:2]; // WoZi
    [self setTagbalkenTyp:1 forObjekt:1 forRaum:4]; // Labor
 	//NSLog(@"2");
-	NSArray* Wochentage=[[NSArray arrayWithObjects:@"MO",@"DI", @"MI", @"DO", @"FR", @"SA", @"SO",nil]retain];
-	NSArray* Raumnamen=[[NSArray arrayWithObjects:@"Heizung", @"Werkstatt", @"WoZi", @"Buero", @"Labor", @"OG1", @"OG2", @"Estrich", nil]retain];
+	NSArray* Wochentage=[NSArray arrayWithObjects:@"MO",@"DI", @"MI", @"DO", @"FR", @"SA", @"SO",nil];
+	NSArray* Raumnamen=[NSArray arrayWithObjects:@"Heizung", @"Werkstatt", @"WoZi", @"Buero", @"Labor", @"OG1", @"OG2", @"Estrich", nil];
 	AVR_DS=[[rAVR_DS alloc]init];
 	//	[WochenplanTable setDelegate:AVR_DS];
 	//	[WochenplanTable setDataSource:AVR_DS];
 	int i;
-	NSMutableArray* tempArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+	NSMutableArray* tempArray=[[NSMutableArray alloc]initWithCapacity:0];
 	NSArray* bitnummerArray=[NSArray arrayWithObjects: @"null", @"eins",@"zwei",@"drei",@"vier",@"fuenf",nil];
 	
 	/*
@@ -438,7 +436,7 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
 	 }
 	 */
 	
-	NSMutableDictionary* tempDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+	NSMutableDictionary* tempDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 	for (i=0;i<8;i++)
 	{
 		NSNumber* Hexint=[NSNumber numberWithInt:4*i];
@@ -472,8 +470,8 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
 	[[SC cell]setSegmentCount:2];
 	
 	//Sammlung der physischen Wochenplaene
-	WochenplanListe=[[[NSMutableArray alloc]initWithCapacity:0]retain];
-	Wochenplan=[[[NSMutableArray alloc]initWithCapacity:0]retain];
+	WochenplanListe=[[NSMutableArray alloc]initWithCapacity:0];
+	Wochenplan=[[NSMutableArray alloc]initWithCapacity:0];
 	
 	NSRect WochenplanTabRect=[WochenplanTab bounds];	// Feld des Tab
 	//	NSLog(@"AVR awake WochenplanTabRect: x: %2.2f y: %2.2f",[WochenplanTab bounds].origin.x,[WochenplanTab bounds].origin.y);
@@ -665,7 +663,7 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
 	//		[[[WochenplanTab tabViewItemAtIndex:raum]view]addSubview:EEPROMbalken];
 	[[[self window] contentView] addSubview:EEPROMbalken];
 	
-	NSMutableArray* tempByteArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+	NSMutableArray* tempByteArray=[[NSMutableArray alloc]initWithCapacity:0];
 	//NSArray* bitnummerArray=[NSArray arrayWithObjects: @"null", @"eins",@"zwei",@"drei",@"vier",@"fuenf",nil];
 	NSString* hexString;
 	for (i=0;i<8;i++)
@@ -952,7 +950,7 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
 {
    int update=0;
    //Check fuer neue Werte auf eepromupdatedaten.txt
-   NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+   NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
    [NotificationDic setObject:[NSNumber numberWithInt:1] forKey:@"update"];
    
    NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
@@ -965,8 +963,8 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
 - (void)checkHomebus
 {
 	//NSLog(@"checkHomebus");
-	NSArray* Wochentage=[[NSArray arrayWithObjects:@"MO",@"DI", @"MI", @"DO", @"FR", @"SA", @"SO",nil]retain];
-	NSArray* Raumnamen=[[NSArray arrayWithObjects:@"Heizung", @"Werkstatt", @"WoZi", @"Buero", @"Labor", @"OG1", @"OG2", @"Estrich", nil]retain];
+	NSArray* Wochentage=[NSArray arrayWithObjects:@"MO",@"DI", @"MI", @"DO", @"FR", @"SA", @"SO",nil];
+	NSArray* Raumnamen=[NSArray arrayWithObjects:@"Heizung", @"Werkstatt", @"WoZi", @"Buero", @"Labor", @"OG1", @"OG2", @"Estrich", nil];
 	int i,k,l,s;
 	for (i=0;i<[Raumnamen count];i++) // Raumdics kontrollieren
 	{
@@ -1054,7 +1052,7 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
 								else
 								{
 									NSLog(@"kein TagplanplanDic fuer Raum: %d Tag: %d objekt: %d",i,k,l);
-									NSMutableDictionary* tempTagplanDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+									NSMutableDictionary* tempTagplanDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 									[tempTagplanDic setObject:[Raumnamen objectAtIndex:i] forKey:@"raumname"];
 									[tempTagplanDic setObject:[NSNumber numberWithInt:i] forKey:@"raum"];
 									[tempTagplanDic setObject:[Wochentage objectAtIndex:k] forKey:@"wochentag"];
@@ -1093,7 +1091,7 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
 		{	
 			NSLog(@"Dic fuer fehlenden Raum anlegen");
 			// Dic fuer fehlenden Raum anlegen 
-			NSMutableDictionary* tempRaumDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+			NSMutableDictionary* tempRaumDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 			[tempRaumDic setObject:[Raumnamen objectAtIndex:i] forKey:@"raumname"];
 			[tempRaumDic setObject:[NSNumber numberWithInt:i] forKey:@"raum"];
 			// Array der Wochentage anlegen
@@ -1111,9 +1109,9 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
 - (void)HomebusAnlegen
 {
 	NSLog(@"HomebusAnlegen");
-	NSArray* Raumnamen=[[NSArray arrayWithObjects:@"Heizung", @"Werkstatt", @"WoZi", @"Buero", @"Labor", @"OG1", @"OG2", @"Estrich", nil]retain];
+	NSArray* Raumnamen=[NSArray arrayWithObjects:@"Heizung", @"Werkstatt", @"WoZi", @"Buero", @"Labor", @"OG1", @"OG2", @"Estrich", nil];
 
-	HomebusArray=[[[NSMutableArray alloc]initWithCapacity:8]retain];
+	HomebusArray=[[NSMutableArray alloc]initWithCapacity:8];
 	int i;
 	for (i=0;i<8;i++)
 	{
@@ -1158,8 +1156,8 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
 
 - (NSArray*)neuerWochenplanForRaum:(int)derRaum
 {
-	NSArray* Wochentage=[[NSArray arrayWithObjects:@"MO",@"DI", @"MI", @"DO", @"FR", @"SA", @"SO",nil]retain];
-	NSArray* Raumnamen=[[NSArray arrayWithObjects:@"Heizung", @"Werkstatt", @"WoZi", @"Buero", @"Labor", @"OG1", @"OG2", @"Estrich", nil]retain];
+	NSArray* Wochentage=[NSArray arrayWithObjects:@"MO",@"DI", @"MI", @"DO", @"FR", @"SA", @"SO",nil];
+	NSArray* Raumnamen=[NSArray arrayWithObjects:@"Heizung", @"Werkstatt", @"WoZi", @"Buero", @"Labor", @"OG1", @"OG2", @"Estrich", nil];
 	
 	// Array der Wochentage anlegen
 	NSMutableArray* tempWochenplanArray =[[NSMutableArray alloc]initWithCapacity:8];
@@ -1180,8 +1178,8 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
 
 - (NSArray*)neuerTagplanForTag:(int)derWochentag forRaum:(int) derRaum
 {
-	NSArray* Wochentage=[[NSArray arrayWithObjects:@"MO",@"DI", @"MI", @"DO", @"FR", @"SA", @"SO",nil]retain];
-	NSArray* Raumnamen=[[NSArray arrayWithObjects:@"Heizung", @"Werkstatt", @"WoZi", @"Buero", @"Labor", @"OG1", @"OG2", @"Estrich", nil]retain];
+	NSArray* Wochentage=[NSArray arrayWithObjects:@"MO",@"DI", @"MI", @"DO", @"FR", @"SA", @"SO",nil];
+	NSArray* Raumnamen=[NSArray arrayWithObjects:@"Heizung", @"Werkstatt", @"WoZi", @"Buero", @"Labor", @"OG1", @"OG2", @"Estrich", nil];
 	
 	// Array der Tagplaene anlegen
 	NSMutableArray* tempTagplanArray =[[NSMutableArray alloc]initWithCapacity:8];
@@ -1202,7 +1200,7 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
 		[tempTagplanDic setObject:[NSNumber numberWithInt:1] forKey:@"aktiv"];
 		[tempTagplanDic setObject:[NSNumber numberWithInt:0] forKey:@"tagbalkentyp"];
 		[tempTagplanArray addObject:tempTagplanDic];
-		NSMutableArray* tempStundenplanArray =[[[NSMutableArray alloc]initWithCapacity:8]autorelease];
+		NSMutableArray* tempStundenplanArray =[[NSMutableArray alloc]initWithCapacity:8];
 		[tempTagplanDic setObject:tempStundenplanArray forKey:@"stundenplanarray"];
 		for (m=0;m<24;m++) //Stundenplaene 
 		{
@@ -1255,7 +1253,7 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
 
 - (NSArray*)aktivObjekteArrayForRaum:(int)derRaum
 {
-	NSMutableArray* tempObjektArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+	NSMutableArray* tempObjektArray=[[NSMutableArray alloc]initWithCapacity:0];
 
 	int i, anzAktiv=0;
 	NSArray* tempWochenplanArray=[[HomebusArray objectAtIndex:derRaum]objectForKey:@"wochenplanarray"];
@@ -1723,7 +1721,7 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
 			LabelFeld.origin.x += clickedSegment*(LabelFeld.size.width/8);
 			LabelFeld.size.height =20;
 			LabelFeld.size.width =80;
-			LabelTextFeld=[[[NSTextField alloc]initWithFrame:LabelFeld]autorelease];
+			LabelTextFeld=[[NSTextField alloc]initWithFrame:LabelFeld];
 			[[sender superview]addSubview:LabelTextFeld];
          
 			int erfolg=[[self window]makeFirstResponder:LabelTextFeld];
@@ -1739,8 +1737,8 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
 	else
 	{
 		NSLog(@"");
-		//NSLog(@"ObjektSegAktion Standard");
-		if ((aktuelleMark<NSNotFound)&&[[sender superview]viewWithTag:aktuelleMark])
+		NSLog(@"ObjektSegAktion Standard aktuelleMark: %ld",aktuelleMark);
+		if ((aktuelleMark < NSNotFound)&&[[sender superview]viewWithTag:aktuelleMark])
       {
 			NSString* tempLabel=[[[sender superview]viewWithTag:aktuelleMark]stringValue];
 			
@@ -1775,16 +1773,18 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
 	
 }
 
-- (void)saveLabeltext:(id)sender
+/*
+- (IBAction)saveLabeltext:(id)sender
 {
-	int mark=[sender tag];
-	NSLog(@"saveLabeltext: mark:%d",mark);
+	int labelmark=(int)[sender tag];
+	NSLog(@"saveLabeltext: labelmark:%d",labelmark);
 	NSString* tempLabel=[sender stringValue];
-	int tempRaum=(mark-RAUMOFFSET)/10;
-	int tempSegment=(mark-RAUMOFFSET)%10;
+	int tempRaum=(labelmark-RAUMOFFSET)/10;
+	int tempSegment=(labelmark-RAUMOFFSET)%10;
 	[self saveLabel:tempLabel forRaum:tempRaum forSegment:tempSegment];
 	[sender removeFromSuperview];
 }
+*/
 
 - (void)saveLabel:(NSString*)dasLabel forRaum:(int)derRaum forSegment:(int)dasSegment
 {
@@ -1857,8 +1857,8 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
 	NSLog(@"ReportHandlerCallbackAktion note: %@",[[note userInfo]description]);
 	if ([[note userInfo]objectForKey:@"datenarray"]&&[[[note userInfo]objectForKey:@"datenarray"] count])
 	{
-		NSArray* Wochentage=[[NSArray arrayWithObjects:@"MO",@"DI", @"MI", @"DO", @"FR", @"SA", @"SO",nil]retain];
-		NSArray* Raumnamen=[[NSArray arrayWithObjects:@"Heizung", @"Werkstatt", @"WoZi", @"Buero", @"Labor", @"OG1", @"OG2", @"Estrich", nil]retain];
+		NSArray* Wochentage=[NSArray arrayWithObjects:@"MO",@"DI", @"MI", @"DO", @"FR", @"SA", @"SO",nil];
+		NSArray* Raumnamen=[NSArray arrayWithObjects:@"Heizung", @"Werkstatt", @"WoZi", @"Buero", @"Labor", @"OG1", @"OG2", @"Estrich", nil];
 		
 		NSArray* Datenarray=[[note userInfo]objectForKey:@"datenarray"];//Array der Reports
 		NSString* byte0=[Datenarray objectAtIndex:0]; // ReportID
@@ -1874,7 +1874,7 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
 			{
 				NSLog(@"I2C Fehler");
 				
-				NSAlert *Warnung = [[[NSAlert alloc] init] autorelease];
+				NSAlert *Warnung = [[NSAlert alloc] init];
 				[Warnung addButtonWithTitle:@"OK"];
 				//	[Warnung addButtonWithTitle:@""];
 				//	[Warnung addButtonWithTitle:@""];
@@ -1931,7 +1931,7 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
 			NSLog(@"CallBackAktion Eingangsdaten: %@ \nAnz: %d",[Eingangsdaten description],[Eingangsdaten count]);
 			
 			// EEPROMbalken der letzten Zeile anzeigen. Meist ist nur eine Zeile vorhanden.
-			NSMutableArray* tempEEPROMArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+			NSMutableArray* tempEEPROMArray=[[NSMutableArray alloc]initWithCapacity:0];
 			
 			
 			int k,bit;
@@ -1939,7 +1939,7 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
 			//		for (k=0;k<[Eingangsdaten count]/6+1;k++)
 			for (k=0;k<[Eingangsdaten count]/6;k++)
 			{
-				NSMutableDictionary* tempReportDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+				NSMutableDictionary* tempReportDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 				[tempReportDic setObject:[Datenarray objectAtIndex:0] forKey:@"report"];
 				[tempEEPROMArray removeAllObjects];
 				for (bit=0;bit<6;bit++)
@@ -2193,7 +2193,7 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
 	
 	aktuellerTag=0;
 	NSDate *now = [[NSDate alloc] init];
-	NSMutableDictionary* infoDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+	NSMutableDictionary* infoDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 	[infoDic setObject:[NSNumber numberWithInt:0] forKey:@"tag"];
 
 	IOWTimer =[[NSTimer alloc] initWithFireDate:now
@@ -2205,9 +2205,7 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
 		NSRunLoop *runLoop = [NSRunLoop currentRunLoop];
         [runLoop addTimer:IOWTimer forMode:NSDefaultRunLoopMode];
 
-        [IOWTimer release];
-        [now release];
-
+   
 	}
 
 
@@ -2218,7 +2216,7 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
 //		[IOWTimer invalidate];
 	aktuellerTag=0;
 	NSLog(@"writeWochenplan");
-	NSMutableDictionary* infoDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+	NSMutableDictionary* infoDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 	[infoDic setObject:[NSNumber numberWithInt:0] forKey:@"tag"];
 	int TabIndex=[WochenplanTab indexOfTabViewItem:[WochenplanTab selectedTabViewItem]];
 	
@@ -2236,9 +2234,7 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
 		NSRunLoop *runLoop = [NSRunLoop currentRunLoop];
         [runLoop addTimer:IOWTimer forMode:NSDefaultRunLoopMode];
 
-       [IOWTimer release];
-        [now release];
-
+   
 }
 
 
@@ -2247,7 +2243,7 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
 	
 	//NSLog(@"readWoche");
 	NSArray* Wochentage=[NSArray arrayWithObjects:@"MO",@"DI",@"MI",@"DO",@"FR",@"SA",@"SO",nil];
-	NSMutableDictionary* tempInfoDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+	NSMutableDictionary* tempInfoDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 	
 	if ([derTimer userInfo])
 	{
@@ -2316,7 +2312,7 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
 	[readTagTaste setEnabled:NO];
    [readWocheTaste setEnabled:NO];
 	NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
-	NSMutableDictionary* i2cStatusDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+	NSMutableDictionary* i2cStatusDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 	[i2cStatusDic setObject:[NSNumber numberWithInt:derStatus]forKey:@"status"];
 	NSLog(@"AVR  setI2CStatus: Status: %d",derStatus);
 	[nc postNotificationName:@"i2cstatus" object:self userInfo:i2cStatusDic];
@@ -2327,8 +2323,8 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
 - (void)readTagplan:(int)i2cAdresse vonAdresse:(int)startAdresse anz:(int)anzDaten
 {
 	NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
-	NSMutableDictionary* readEEPROMDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
-	NSMutableArray* i2cAdressArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+	NSMutableDictionary* readEEPROMDic=[[NSMutableDictionary alloc]initWithCapacity:0];
+	NSMutableArray* i2cAdressArray=[[NSMutableArray alloc]initWithCapacity:0];
 	
 	//Adressierung EEPROM
 	[i2cAdressArray addObject:[NSNumber numberWithInt:0x02]];						// write-Report
@@ -2343,7 +2339,7 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
 	[Adresse setStringValue:[i2cAdressArray componentsJoinedByString:@" "]];		// Adresse in String umwandeln
 	[readEEPROMDic setObject:i2cAdressArray forKey:@"adressarray"];					// Adress-Array in Dic setzen
 	
-	NSMutableArray* i2cCmdArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+	NSMutableArray* i2cCmdArray=[[NSMutableArray alloc]initWithCapacity:0];
 	
 	//Anforderung Daten
 	[i2cCmdArray addObject:[NSNumber numberWithInt:0x03]];							// Code fuer read-Report
@@ -2391,8 +2387,8 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
 - (void)readEEPROM:(int)i2cAdresse vonAdresse:(int)startAdresse anz:(int)anzDaten
 {
 	NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
-	NSMutableDictionary* readEEPROMDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
-	NSMutableArray* i2cAdressArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+	NSMutableDictionary* readEEPROMDic=[[NSMutableDictionary alloc]initWithCapacity:0];
+	NSMutableArray* i2cAdressArray=[[NSMutableArray alloc]initWithCapacity:0];
 	
 	//Adressierung EEPROM
 	[i2cAdressArray addObject:[NSNumber numberWithInt:0x02]];						// write-Report
@@ -2407,7 +2403,7 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
 	[Adresse setStringValue:[i2cAdressArray componentsJoinedByString:@" "]];		// Adresse in String umwandeln
 	[readEEPROMDic setObject:i2cAdressArray forKey:@"adressarray"];					// Adress-Array in Dic setzen
 	
-	NSMutableArray* i2cCmdArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+	NSMutableArray* i2cCmdArray=[[NSMutableArray alloc]initWithCapacity:0];
 	
 	//Anforderung Daten
 	[i2cCmdArray addObject:[NSNumber numberWithInt:0x03]];							// Code fuer read-Report
@@ -2440,7 +2436,7 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
 	NSLog(@"writeEEPROM: i2cAdresse:  %02X count: %d dieDaten: %@",i2cAdresse,[dieDaten count], [dieDaten description]);
 	int writeErr=0;
 	return;
-	NSMutableArray* tempEEPROMArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease]; //SammelArray der Pakete fuer IOW
+	NSMutableArray* tempEEPROMArray=[[NSMutableArray alloc]initWithCapacity:0]; //SammelArray der Pakete fuer IOW
 
 	
 	int anzDaten=[dieDaten count];
@@ -2458,8 +2454,8 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
 
 	if (anzDaten<=3) // nur ein Report mit Start/Stop
 	{
-		NSMutableArray* i2cWriteArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];//Sammelarray fuer die Arrays der Reports
-		NSMutableArray* tempWriteArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+		NSMutableArray* i2cWriteArray=[[NSMutableArray alloc]initWithCapacity:0];//Sammelarray fuer die Arrays der Reports
+		NSMutableArray* tempWriteArray=[[NSMutableArray alloc]initWithCapacity:0];
 		int lbyte=startAdresse%0x100;
 		int hbyte=startAdresse/0x100;
 
@@ -2504,8 +2500,8 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
 		
 		while (pageIndex<pages)
 		{
-			NSMutableArray* i2cWriteArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];//Sammelarray fuer die Arrays der Reports
-			NSMutableArray* tempStartWriteArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+			NSMutableArray* i2cWriteArray=[[NSMutableArray alloc]initWithCapacity:0];//Sammelarray fuer die Arrays der Reports
+			NSMutableArray* tempStartWriteArray=[[NSMutableArray alloc]initWithCapacity:0];
 			int lbyte=(pageIndex*0x20 + startAdresse)%0x100;
 			int hbyte=(pageIndex*0x20 + startAdresse)/0x100;
 
@@ -2545,9 +2541,9 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
 			{
 				
 				int zeilenlaenge=6;
-				NSMutableArray* tempDataWriteArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+				NSMutableArray* tempDataWriteArray=[[NSMutableArray alloc]initWithCapacity:0];
 				logString=[logString stringByAppendingString:@"\n   "];
-				NSMutableArray* tempWriteArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];//Array fuer einen Report
+				NSMutableArray* tempWriteArray=[[NSMutableArray alloc]initWithCapacity:0];//Array fuer einen Report
 				[tempDataWriteArray addObject:[NSNumber numberWithInt:0x02]];	//write-Report
 				logString=[logString stringByAppendingString:[NSString stringWithFormat:@"%02X ",0x02]];
 				
@@ -2582,7 +2578,7 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
 				if ((lineIndex==lines-1) && restData) // Restdaten vorhanden, Anzahl anpassen
 				{
 					//NSLog(@"RestData");
-					NSMutableArray* tempRestDataWriteArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+					NSMutableArray* tempRestDataWriteArray=[[NSMutableArray alloc]initWithCapacity:0];
 
 					// Write-Report anfuegen
 					[tempRestDataWriteArray addObject:[NSNumber numberWithInt:0x02]];	//write-Report
@@ -2641,8 +2637,7 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
 		NSRunLoop *runLoop = [NSRunLoop currentRunLoop];
 		[runLoop addTimer:WritePageTimer forMode:NSDefaultRunLoopMode];
 		
-		[WritePageTimer release];
-		[now release];
+	
 		
 		
 	}//	anz>3
@@ -2664,7 +2659,7 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
 		if (PageNummer<[pageEEPROMArray count]) // es hat noch einen Array mit Reports
 		{
 //			NSLog(@"WriteEEPROMPageFunktion PageNummer: %d",PageNummer);
-			NSMutableDictionary* writeEEPROMPageDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+			NSMutableDictionary* writeEEPROMPageDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 			
 			// Array mit Reports der Page weitergeben
 			[writeEEPROMPageDic setObject:[pageEEPROMArray objectAtIndex:PageNummer]forKey:@"reportarray"];
@@ -2714,9 +2709,7 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
 			NSRunLoop *runLoop = [NSRunLoop currentRunLoop];
 			[runLoop addTimer:WriteTimer forMode:NSDefaultRunLoopMode];
 			
-			[WriteTimer release];
-			[now release];
-			
+						
 		}// Pagenummer < count
 		
 	}
@@ -2746,7 +2739,7 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
 		if (ReportNummer<[i2cWriteArray count])
 		{
 			//NSLog(@"WriteEEPROMFunktion ReportNummer: %d",ReportNummer);
-			NSMutableDictionary* writeEEPROMDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+			NSMutableDictionary* writeEEPROMDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 			NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];		
 			[writeEEPROMDic setObject:[i2cWriteArray objectAtIndex:ReportNummer]forKey:@"i2ceepromarray"];
 			//NSLog(@"WriteEEPROMFunktion i2cWriteArray  %@",[[i2cWriteArray objectAtIndex:ReportNummer] description]);
@@ -2793,7 +2786,7 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
 - (void)writeWocheFunktion:(NSTimer*) derTimer
 {
 	NSLog(@"writeWocheFunktion");
-	NSMutableDictionary* tempInfoDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+	NSMutableDictionary* tempInfoDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 	
 	if ([derTimer userInfo])
 	{
@@ -2805,7 +2798,7 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
 	{
 		[self setI2CStatus:1];
 	}
-	NSMutableArray* tempTagplanArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+	NSMutableArray* tempTagplanArray=[[NSMutableArray alloc]initWithCapacity:0];
 	NSArray* Wochentage=[NSArray arrayWithObjects:@"MO",@"DI",@"MI",@"DO",@"FR",@"SA",@"SO",nil];
 	[TagPop selectItemAtIndex:aktuellerTag];
 	NSString* Tag=[Wochentage objectAtIndex: aktuellerTag];
@@ -2897,7 +2890,7 @@ n=0;
 	int i;
 	if (anzDaten)
 	{
-		NSMutableArray* tempHexArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+		NSMutableArray* tempHexArray=[[NSMutableArray alloc]initWithCapacity:0];
 		[tempHexArray addObject:derBefehl];
 		for (i=0;i<3;i++)
 		{
@@ -2911,7 +2904,7 @@ n=0;
 			}
 		}
 		NSLog(@"sendCmd tempHexArray: %@",[tempHexArray description]);
-		NSMutableDictionary* sendCmdDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+		NSMutableDictionary* sendCmdDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 		[sendCmdDic setObject:tempHexArray forKey:@"hexstringarray"];
 		NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
 		[nc postNotificationName:@"sendcmd" object:self userInfo:sendCmdDic];
@@ -2956,8 +2949,8 @@ n=0;
 - (void)readAVRSlave:(int)i2cAdresse vonAdresse:(int)startAdresse anz:(int)anzDaten
 {
 	NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
-	NSMutableDictionary* readAVRDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
-	NSMutableArray* i2cAdressArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+	NSMutableDictionary* readAVRDic=[[NSMutableDictionary alloc]initWithCapacity:0];
+	NSMutableArray* i2cAdressArray=[[NSMutableArray alloc]initWithCapacity:0];
 	int i;
 	//Adressierung AVR Slave
 	[i2cAdressArray addObject:[NSNumber numberWithInt:0x02]];						// write-Report
@@ -2976,7 +2969,7 @@ n=0;
 	[Adresse setStringValue:[i2cAdressArray componentsJoinedByString:@" "]];		// Adresse in String umwandeln
 	[readAVRDic setObject:i2cAdressArray forKey:@"adressarray"];					// Adress-Array in Dic setzen
 	
-	NSMutableArray* i2cCmdArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+	NSMutableArray* i2cCmdArray=[[NSMutableArray alloc]initWithCapacity:0];
 	
 	//Anforderung Daten
 	[i2cCmdArray addObject:[NSNumber numberWithInt:0x03]];							// Code fuer read-Report
@@ -3048,7 +3041,7 @@ n=0;
       
       if ([self TWIStatus] == 0) // Homebus noch deaktiviert
       {
-			NSAlert *Warnung = [[[NSAlert alloc] init] autorelease];
+			NSAlert *Warnung = [[NSAlert alloc] init];
          [Warnung addButtonWithTitle:@"OK"];
          //	[Warnung addButtonWithTitle:@""];
          //	[Warnung addButtonWithTitle:@""];

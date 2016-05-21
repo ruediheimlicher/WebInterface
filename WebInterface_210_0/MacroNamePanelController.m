@@ -25,7 +25,6 @@
         result = [theController macroName];
     }
     [theController close];
-    [theController autorelease];
     return result;
 }
 

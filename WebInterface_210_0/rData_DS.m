@@ -16,7 +16,6 @@
 {
 
 	WochenplanTabelle=[[NSMutableArray alloc]initWithCapacity:0];
-	[WochenplanTabelle retain];
 	return self;
 }
 
@@ -33,7 +32,7 @@ NSLog(@"Data_DS setRaumData: DataDic: %@",[derDataDic description]);
 	int i;
 	for (i=0;i<anzReports;i++)
 	{
-	NSMutableDictionary* tempTagDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+	NSMutableDictionary* tempTagDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 	
 	[tempTagDic setObject:[NSNumber numberWithInt:3] forKey:@"drei"];
 
@@ -53,7 +52,7 @@ NSLog(@"Data_DS setRaumData: DataDic: %@",[derDataDic description]);
 	for (i=0;i<anz;i++)
 	{
 
-	NSMutableDictionary* tempTagDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+	NSMutableDictionary* tempTagDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 	[tempTagDic setObject:[NSNumber numberWithInt:i] forKey:@"stunde"];
 
 	[WochenplanTabelle addObject:tempTagDic];

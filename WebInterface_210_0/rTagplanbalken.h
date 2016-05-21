@@ -21,7 +21,7 @@ int					raum;
 int					objekt;
 //int					tagbalkentyp;
 int					wochentag;
-int               tag;
+NSInteger          tag;
 int					mark;
 int					Hoehe, Breite, Balkenbreite;
 int					Elementbreite,  Elementhoehe, RandL, RandR, RandU;
@@ -74,7 +74,7 @@ NSMutableIndexSet*  AktivtastenSet;
 //- (NSArray*)StundenByteArray;
 - (void)setStundenArrayAusByteArray:(NSArray*)derStundenByteArray;
 
-- (int)tag;
+- (NSInteger)tag;
 - (void)setTag:(NSInteger)derTag;
 - (NSString*)Titel;
 @end

@@ -50,7 +50,7 @@
 //- (NSArray*)StundenByteArray;
 - (void)setStundenArrayAusByteArray:(NSArray*)derStundenByteArray;
 
-- (int)tag;
+//- (int)tag;
 - (void)setTag:(NSInteger)derTag;
 - (NSString*)Titel;
 @end

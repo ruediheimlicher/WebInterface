@@ -9,7 +9,7 @@
 #import <Cocoa/Cocoa.h>
 #import "rHexView.h"
 
-@interface rHexFeld: NSTextField
+@interface rHexFeld: NSTextField <NSTextViewDelegate>
 {
 
 }
@@ -17,7 +17,7 @@
 @end
 
 
-@interface rHexEingabe : NSView 
+@interface rHexEingabe : NSView <NSTextViewDelegate>
 {
 int					KolonnenRaster;
 int					ZeilenRaster;

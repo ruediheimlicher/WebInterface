@@ -9,7 +9,7 @@
 #import <Cocoa/Cocoa.h>
 
 
-@interface rAVR_DS : NSObject
+@interface rAVR_DS : NSObject <  NSTableViewDataSource,NSTableViewDelegate>
 {
 NSMutableArray* WochenplanTabelle;
 //NSMutableArray* DumpTabelle;

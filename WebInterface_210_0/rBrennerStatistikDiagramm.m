@@ -23,7 +23,6 @@
 		 [self setFrame:Diagrammfeld];
 		 DiagrammEcke=NSMakePoint(2.1,5.1);
 		 Graph=[NSBezierPath bezierPath];
-		 [Graph retain];
 		 [Graph moveToPoint:DiagrammEcke];
 		 lastPunkt=DiagrammEcke;
 		 GraphFarbe=[NSColor blueColor]; 
@@ -36,7 +35,7 @@
 		 FaktorY=MaxOrdinate/(MaxY-MinY); // Reduktion auf Feldhoehe
 		 //NSLog(@"BrennerStatistikDiagramm Diagrammfeldhoehe: %2.2f FaktorY: %2.2f",(frame.size.height-55),FaktorY);
        int i=0;
-		 NSMutableDictionary* StatistikEinheitenDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+		 NSMutableDictionary* StatistikEinheitenDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 		 [StatistikEinheitenDic setObject:[NSNumber numberWithInt:2]forKey:@"minorteile"];
 		 [StatistikEinheitenDic setObject:[NSNumber numberWithInt:5]forKey:@"majorteile"];
 		 [StatistikEinheitenDic setObject:[NSNumber numberWithInt:0]forKey:@"nullpunkt"];
@@ -99,7 +98,6 @@
 {
 NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
 int dayOfYear = [gregorian ordinalityOfUnit:NSDayCalendarUnit inUnit:NSYearCalendarUnit forDate:[NSDate date]];
-[gregorian release];
 return dayOfYear;
 }
 
@@ -266,7 +264,6 @@ return dayOfYear;
 			//NSLog(@"setWerteArray neuerPunkt: x: %2.2f y: %2.2f",neuerPunkt.x,neuerPunkt.y);
 		} // if Kanal
 		
-		[derKanalArray retain];
 		[GraphKanalArray setArray:derKanalArray];
 
 		
@@ -307,7 +304,6 @@ return dayOfYear;
 - (void)setLegende:(id)dieLegende
 {
 	Legende=dieLegende;
-	[Legende retain];
 }
 
 
@@ -461,7 +457,7 @@ return dayOfYear;
 		//NSLog(@"drawRect Farbe Kanal: %d Color: %@",i,[[GraphFarbeArray objectAtIndex:i] description]);
 		if ([[GraphKanalArray objectAtIndex:i]intValue])
 		{
-			[[GraphFarbeArray objectAtIndex:i]set];
+			[(NSColor*)[GraphFarbeArray objectAtIndex:i]set];
 			[[GraphArray objectAtIndex:i] setLineWidth:4.0];
 			[[GraphArray objectAtIndex:i]stroke];
 			//NSLog(@"linewidth: %2.2f",[[GraphArray objectAtIndex:i]lineWidth]);

@@ -11,16 +11,13 @@
 //		Diagrammfeld.size.width+=400;
 		[self setFrame:Diagrammfeld];
 		DiagrammEcke=NSMakePoint(5.5,5.5);
-		NetzlinienX=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
-		[NetzlinienX retain];
+		NetzlinienX=[[NSMutableArray alloc]initWithCapacity:0];
 		
 		
 		
-		NetzlinienY=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
-		[NetzlinienY retain];
+		NetzlinienY=[[NSMutableArray alloc]initWithCapacity:0];
 
 		Graph=[NSBezierPath bezierPath];
-		[Graph retain];
 		
 		[Graph moveToPoint:DiagrammEcke];
 		lastPunkt=DiagrammEcke;

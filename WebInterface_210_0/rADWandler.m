@@ -24,23 +24,15 @@ extern int			SystemNummer;
 	//NSLog(@"ADWandler init");
 //	[self Alert:@"ADWandler init nach super"];
 
-	KanalDatenArray=[[[NSMutableArray alloc] initWithCapacity: 0]autorelease];
-	[KanalDatenArray retain];
-	KanalTitelArray=[[[NSMutableArray alloc] initWithCapacity: 0]autorelease];
-	[KanalTitelArray retain];
-	KanalHexDatenArray=[[[NSMutableArray alloc] initWithCapacity: 0]autorelease];
-	[KanalHexDatenArray retain];
-	KanalFloatDatenArray=[[[NSMutableArray alloc] initWithCapacity: 0]autorelease];
-	[KanalFloatDatenArray retain];
-	KanalLevelArray=[[[NSMutableArray alloc] initWithCapacity: 0]autorelease];
-	[KanalLevelArray retain];
-	KanalNetzArray=[[[NSMutableArray alloc] initWithCapacity: 0]autorelease];
-	[KanalNetzArray retain];
-	KanalKolonnenArray=[[[NSMutableArray alloc] initWithCapacity: 0]autorelease];
-	[KanalKolonnenArray retain];
+	KanalDatenArray=[[NSMutableArray alloc] initWithCapacity: 0];
+	KanalTitelArray=[[NSMutableArray alloc] initWithCapacity: 0];
+	KanalHexDatenArray=[[NSMutableArray alloc] initWithCapacity: 0];
+	KanalFloatDatenArray=[[NSMutableArray alloc] initWithCapacity: 0];
+	KanalLevelArray=[[NSMutableArray alloc] initWithCapacity: 0];
+	KanalNetzArray=[[NSMutableArray alloc] initWithCapacity: 0];
+	KanalKolonnenArray=[[NSMutableArray alloc] initWithCapacity: 0];
 	
-	DatenTitelArray=[[[NSMutableArray alloc] initWithCapacity: 0]autorelease];
-	[DatenTitelArray retain];
+	DatenTitelArray=[[NSMutableArray alloc] initWithCapacity: 0];
 //	[self Alert:@"ADWandler init nach DatenTitelArray"];
 
 	sendAllDelay=0.1;
@@ -52,7 +44,6 @@ extern int			SystemNummer;
 	LaunchZeit=[NSDate date];
 	lastDir=[NSHomeDirectory() stringByAppendingPathComponent:@"Documents"];
 //	NSLog(@"lastDir: %@",lastDir);
-	[lastDir retain];
 //	[self Alert:@"ADWandler init nach lastDir"];
 
 //	[[self window]setDelegate:self];
@@ -65,7 +56,7 @@ extern int			SystemNummer;
 			   name:@"ADRead1Kanal"
 			 object:NULL];
 //	[self Alert:@"ADWandler init vor random"];
-	double rr=fabs(random());
+	double rr=labs(random());
 //	 [self Alert:@"ADWandler init nach random"];
 	//NSLog(@"\n\nrandom(): %u								fabs(Random()): %u\n",rr);
 	float y=	(float)random() / RAND_MAX * (255);
@@ -102,7 +93,6 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
 	
 	NetzBox=[[rNetzBox alloc] initWithFrame:NetzBoxFeld];
 	
-	[NetzBox retain];
 	
 	
 	
@@ -144,21 +134,16 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
 	
 	HexSet=[NSCharacterSet characterSetWithCharactersInString:HexString];
 //	[self Alert:@"ADWandler awake: nach characterSetWithCharactersInString"];
-	[HexSet retain];
-	HexArray=[[HexString componentsSeparatedByString:@" "]retain];
+	HexArray=[HexString componentsSeparatedByString:@" "];
 	
 
 	[EinkanalDiagrammScroller setLineScroll: 2.0];
 	EinkanalDaten=[[NSMutableDictionary alloc]initWithCapacity:0];
-	[EinkanalDaten retain];
 	NSMutableArray* tempArray=[[NSMutableArray alloc]initWithCapacity:0];
-	[tempArray retain];
 	[EinkanalDaten setObject:tempArray forKey:@"datenarray"];
 	
 	ZeitFormatter=[[NSNumberFormatter alloc] init];
-	[ZeitFormatter retain];
 	DatenFormatter=[[NSNumberFormatter alloc] init];;
-	[DatenFormatter retain];
 //	NSString* ADSysVersion=SystemVersion();
 //	NSLog(@"SystemVersion aus Funktion: %@",ADSysVersion);
 //	[self Alert:@"ADWandler awake: vor systemVersion"];
@@ -186,18 +171,17 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
 	NSFont* TextFont;
 	TextFont=[NSFont fontWithName:@"Helvetica" size: Textschnitt];
 	
-	NSMutableParagraphStyle* TabellenKopfStil=[[[NSMutableParagraphStyle alloc]init]autorelease];
+	NSMutableParagraphStyle* TabellenKopfStil=[[NSMutableParagraphStyle alloc]init];
 	[TabellenKopfStil setTabStops:[NSArray array]];
-	NSTextTab* TabellenkopfWert1Tab=[[[NSTextTab alloc]initWithType:NSRightTabStopType location:wert1tab]autorelease];
+	NSTextTab* TabellenkopfWert1Tab=[[NSTextTab alloc]initWithType:NSRightTabStopType location:wert1tab];
 	[TabellenKopfStil addTabStop:TabellenkopfWert1Tab];
-	NSTextTab* TabellenkopfWert2Tab=[[[NSTextTab alloc]initWithType:NSRightTabStopType location:wert2tab]autorelease];
+	NSTextTab* TabellenkopfWert2Tab=[[NSTextTab alloc]initWithType:NSRightTabStopType location:wert2tab];
 	[TabellenKopfStil addTabStop:TabellenkopfWert2Tab];
-	NSMutableParagraphStyle* TabelleStil=[[[NSMutableParagraphStyle alloc]init]autorelease];
+	NSMutableParagraphStyle* TabelleStil=[[NSMutableParagraphStyle alloc]init];
 	[TabelleStil setTabStops:[NSArray array]];
 //	[self Alert:@"ADWandler awake: nach TabelleStil setTabStops"];
 	NSMutableString* TabellenkopfString=[NSMutableString stringWithCapacity:0];
-	[TabellenkopfString retain];
-	NSArray* TabellenkopfArray=[[NSArray arrayWithObjects:@"Zeit",@"Wert",nil]retain];
+	NSArray* TabellenkopfArray=[NSArray arrayWithObjects:@"Zeit",@"Wert",nil];
 	int index;
 	for (index=0;index<[TabellenkopfArray count];index++)
 	{
@@ -210,7 +194,7 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
 	}
 //	[self Alert:@"ADWandler awake: vor TabellenkopfString appendStrin"];
 	[TabellenkopfString appendString:@"\n"];
-	NSMutableAttributedString* attrKopfString=[[[NSMutableAttributedString alloc] initWithString:TabellenkopfString] autorelease]; 
+	NSMutableAttributedString* attrKopfString=[[NSMutableAttributedString alloc] initWithString:TabellenkopfString];
 	[attrKopfString addAttribute:NSParagraphStyleAttributeName value:TabellenKopfStil range:NSMakeRange(0,[TabellenkopfString length])];
 	[attrKopfString addAttribute:NSFontAttributeName value:TextFont range:NSMakeRange(0,[TabellenkopfString length])];
 	[[EinkanalDatenFeld textStorage]appendAttributedString:attrKopfString];
@@ -231,9 +215,7 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
 
 	MehrkanalDaten=[[NSMutableDictionary alloc]initWithCapacity:8];
 	[MehrkanalDiagrammScroller setLineScroll: 2.0];
-	[MehrkanalDaten retain];
 	NSMutableArray* tempMehrkanalArray=[[NSMutableArray alloc]initWithCapacity:0];
-	[tempMehrkanalArray retain];
 	[MehrkanalDaten setObject:tempMehrkanalArray forKey:@"datenarray"];
 
 	float zeittab=40;
@@ -243,23 +225,22 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
 	NSFont* MKTextFont;
 	MKTextFont=[NSFont fontWithName:@"Helvetica" size: MKTextschnitt];
 	NSMutableString* MKTabellenkopfString=[NSMutableString stringWithCapacity:0];
-	[MKTabellenkopfString retain];
-	NSMutableParagraphStyle* MKTabellenKopfStil=[[[NSMutableParagraphStyle alloc]init]autorelease];
+	NSMutableParagraphStyle* MKTabellenKopfStil=[[NSMutableParagraphStyle alloc]init];
 	[MKTabellenKopfStil setTabStops:[NSArray array]];
-	NSTextTab* TabellenkopfZeitTab=[[[NSTextTab alloc]initWithType:NSRightTabStopType location:zeittab]autorelease];
+	NSTextTab* TabellenkopfZeitTab=[[NSTextTab alloc]initWithType:NSRightTabStopType location:zeittab];
 	[MKTabellenKopfStil addTabStop:TabellenkopfZeitTab];
 	[MKTabellenkopfString appendFormat:@"\t%@",@"Zeit"];
 	for (i=0;i<8;i++)
 	{
-	NSTextTab* TabellenkopfWertTab=[[[NSTextTab alloc]initWithType:NSRightTabStopType location:zeittab+(i+1)*werttab]autorelease];
+	NSTextTab* TabellenkopfWertTab=[[NSTextTab alloc]initWithType:NSRightTabStopType location:zeittab+(i+1)*werttab];
 	[MKTabellenKopfStil addTabStop:TabellenkopfWertTab];
 	[MKTabellenkopfString appendFormat:@"\t%@",[[NSNumber numberWithInt:i]stringValue]];
 	}
-	NSMutableParagraphStyle* MKTabelleStil=[[[NSMutableParagraphStyle alloc]init]autorelease];
+	NSMutableParagraphStyle* MKTabelleStil=[[NSMutableParagraphStyle alloc]init];
 	[MKTabelleStil setTabStops:[NSArray array]];
 	
 	[MKTabellenkopfString appendString:@"\n"];
-	NSMutableAttributedString* MKTabellenKopfString=[[[NSMutableAttributedString alloc] initWithString:MKTabellenkopfString] autorelease]; 
+	NSMutableAttributedString* MKTabellenKopfString=[[NSMutableAttributedString alloc] initWithString:MKTabellenkopfString];
 	[MKTabellenKopfString addAttribute:NSParagraphStyleAttributeName value:MKTabellenKopfStil range:NSMakeRange(0,[MKTabellenkopfString length])];
 	[MKTabellenKopfString addAttribute:NSFontAttributeName value:MKTextFont range:NSMakeRange(0,[MKTabellenkopfString length])];
 	[[MehrkanalDatenFeld textStorage]appendAttributedString:MKTabellenKopfString];
@@ -295,7 +276,7 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
 			   mitTitelArray:(NSArray*)derTitelArray
 			   mitTippTasten:(BOOL)derTyp
 {
-	NSMutableArray* tempTastenArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+	NSMutableArray* tempTastenArray=[[NSMutableArray alloc]initWithCapacity:0];
 	int i;
 	float breite=[[derKolonnenArray objectAtIndex:1]floatValue]-[[derKolonnenArray objectAtIndex:0]floatValue];
 	NSPoint tempEcke=dieEcke;
@@ -326,7 +307,6 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
 		[tempTaste setTitle:[derTitelArray objectAtIndex:i]];
 		[tempTaste setTag:i];
 		[tempTaste setAction:@selector(TastenArrayAktion:)];
-		[tempTaste retain];
 		[tempTastenArray addObject:tempTaste];
 	}//for
 	
@@ -374,7 +354,7 @@ NSLog(@"ADWandler reportCancel");
 		NSLog(@"Kein Kanal");
 		return;
 	}
-	NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+	NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 	
 		[NotificationDic setObject:[NSNumber numberWithInt:Kanal] forKey:@"kanal"];
 		[NotificationDic setObject:[NSNumber numberWithFloat:ZeitKompression] forKey:@"zeitkompression"];
@@ -404,7 +384,7 @@ NSLog(@"ADWandler reportCancel");
 	if (Kanal<0)
 	{
 	NSLog(@"Kein Kanal");
-	NSAlert *Warnung = [[[NSAlert alloc] init] autorelease];
+	NSAlert *Warnung = [[NSAlert alloc] init];
 	[Warnung addButtonWithTitle:@"OK"];
 //	[Warnung addButtonWithTitle:@""];
 //	[Warnung addButtonWithTitle:@""];
@@ -423,18 +403,18 @@ NSLog(@"ADWandler reportCancel");
 	}
 	if ([sender state])
 	{
-	NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+	NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 	[NotificationDic setObject:[NSNumber numberWithInt:Kanal] forKey:@"kanal"];
 	[NotificationDic setObject:[NSNumber numberWithFloat:ZeitKompression] forKey:@"zeitkompression"];
 	[NotificationDic setObject:[NSNumber numberWithInt:Kanal] forKey:@"tag"];
 	[NotificationDic setObject:[NSNumber numberWithInt:0] forKey:@"state"];
 	[NotificationDic setObject:[NSNumber numberWithInt:0] forKey:@"paketnummer"];//Adresse
 	
-	Track1KanalTimer=[[NSTimer scheduledTimerWithTimeInterval:Trackdauer 
+	Track1KanalTimer=[NSTimer scheduledTimerWithTimeInterval:Trackdauer
 													  target:self 
 													selector:@selector(Track1KanalTimerFunktion:) 
 													userInfo:NotificationDic 
-													 repeats:YES]retain];
+													 repeats:YES];
 	}
 	else
 	{
@@ -482,8 +462,7 @@ NSLog(@"ADWandler reportCancel");
 	[EinkanalDiagramm setFrame:[[EinkanalDiagrammScroller contentView]frame]];	
 	[[EinkanalDiagrammScroller documentView] setFrame:[[EinkanalDiagrammScroller contentView]frame]];
 	NSMutableString* TabellenkopfString=[NSMutableString stringWithCapacity:0];
-	[TabellenkopfString retain];
-	NSArray* TabellenkopfArray=[[NSArray arrayWithObjects:@"Zeit",@"Wert",nil]retain];
+	NSArray* TabellenkopfArray=[NSArray arrayWithObjects:@"Zeit",@"Wert",nil];
 	int index;
 	for (index=0;index<[TabellenkopfArray count];index++)
 	{
@@ -514,11 +493,11 @@ NSLog(@"ADWandler reportCancel");
 
 	readAllIndex=0;
 		
-	NSTimer* readAllTimer=[[NSTimer scheduledTimerWithTimeInterval:sendAllDelay 
+	NSTimer* readAllTimer=[NSTimer scheduledTimerWithTimeInterval:sendAllDelay
 													  target:self 
 													selector:@selector(readAllTimerFunktion:) 
 													userInfo:[NSNumber numberWithInt:readAllIndex] 
-													 repeats:YES]retain];
+													 repeats:YES];
 
 		
 		
@@ -534,7 +513,7 @@ NSLog(@"ADWandler reportCancel");
 {
 	if (readAllIndex<8)
 	{
-		NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+		NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 		[NotificationDic setObject:[NSNumber numberWithInt:0] forKey:@"paketnummer"];//Adresse
 		[NotificationDic setObject:[NSNumber numberWithInt:1] forKey:@"readall"];
 
@@ -546,7 +525,6 @@ NSLog(@"ADWandler reportCancel");
 			
 		[NotificationDic setObject:[NSNumber numberWithInt:readAllIndex] forKey:@"tag"];//tag
 		NSNotification* readAllNote=[NSNotification notificationWithName:@"reportReadAll" object:NULL userInfo:NotificationDic];
-		[readAllNote retain];
 			//NSLog(@"ADWandler readAllTimerFunktion:readAllIndex: %d  NotificationDic: %@ ",readAllIndex,[NotificationDic description]);
 			//NSLog(@"ADWandler readAllTimerFunktion: readAllNote: %@ ",[readAllNote description]);
 			//NSLog(@"ADWandler readAllTimerFunktion:  readAllIndex: %d",readAllIndex);
@@ -559,11 +537,11 @@ NSLog(@"ADWandler reportCancel");
 	else
 	{
 		[derTimer invalidate];
-		NSTimer* resetTimer=[[NSTimer scheduledTimerWithTimeInterval:sendResetDelay 
+		NSTimer* resetTimer=[NSTimer scheduledTimerWithTimeInterval:sendResetDelay
 															  target:self 
 															selector:@selector(resetTimerFunktion:) 
 															userInfo:[NSNumber numberWithInt:readAllIndex] 
-															 repeats:NO]retain];
+															 repeats:NO];
 		
 		
 		
@@ -581,7 +559,7 @@ NSLog(@"ADWandler reportCancel");
 
 - (NSArray*)BitArray3AusInt:(int)dieZahl
 {
-	NSMutableArray* tempAdresseArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+	NSMutableArray* tempAdresseArray=[[NSMutableArray alloc]initWithCapacity:0];
 	int tempZahl=dieZahl;
 	int i;
 	for (i=0;i<3;i++)
@@ -599,9 +577,8 @@ NSLog(@"ADWandler reportCancel");
 {
 	//NSLog(@"ADWandler Read1KanalAktion");
 	start=[NSDate date];
-	[start retain];
-	NSMutableArray* tempAdresseArray=[[[NSMutableArray alloc]initWithCapacity:8]autorelease];
-	NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+	NSMutableArray* tempAdresseArray=[[NSMutableArray alloc]initWithCapacity:8];
+	NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 	[NotificationDic setObject:[NSNumber numberWithInt:0] forKey:@"paketnummer"];//Adresse
 	[NotificationDic setObject:[derDatenDic objectForKey:@"zeitkompression"] forKey:@"zeitkompression"];//zeitkompression
 	if ([[derDatenDic objectForKey:@"readall"]intValue])
@@ -646,7 +623,7 @@ NSLog(@"ADWandler reportCancel");
 	
 	[NotificationDic setObject:tempAdresseArray forKey:@"adressearray"];//Adresse als Array
 	[NotificationDic setObject:start forKey:@"startzeit"];
-	NSString* Read1HexString=[self HexStringAusBitArray:[tempAdresseArray retain]];
+	NSString* Read1HexString=[self HexStringAusBitArray:tempAdresseArray ];
 	//NSLog(@"ADWandler Read1KanalAktion: Read1HexString: %@\n",Read1HexString);
 
 	[NotificationDic setObject:Read1HexString forKey:@"hexstring"];//Adresse
@@ -655,14 +632,13 @@ NSLog(@"ADWandler reportCancel");
 	
 	[nc postNotificationName:@"SendAktion" object:self userInfo:NotificationDic];//Kanalnummer setzen
 	start=[NSDate date];
-	[start retain];
 
 	//NSLog(@"ADWandler Read1KanalAktion:  readAllIndex: %d",readAllIndex);
-	NSTimer* sendKanalNummerTimer=[[NSTimer scheduledTimerWithTimeInterval:sendKanalDelay 
+	NSTimer* sendKanalNummerTimer=[NSTimer scheduledTimerWithTimeInterval:sendKanalDelay
 														   target:self 
 														 selector:@selector(sendKanalNummerTimerFunktion:) 
 														 userInfo:NotificationDic 
-														  repeats:NO]retain];
+														  repeats:NO];
 	
 
 
@@ -706,14 +682,14 @@ NSLog(@"reportRead8Kanal");
 	if (Kanal<0)
 	{
 	NSLog(@"Kein Kanal");
-	NSAlert *Warnung = [[[NSAlert alloc] init] autorelease];
+	NSAlert *Warnung = [[NSAlert alloc] init];
 	[Warnung addButtonWithTitle:@"OK"];
 //	[Warnung addButtonWithTitle:@""];
 //	[Warnung addButtonWithTitle:@""];
 //	[Warnung addButtonWithTitle:@"Abbrechen"];
 	[Warnung setMessageText:[NSString stringWithFormat:@"%@",@"Kein Kanal"]];
 	
-	NSString* s1=@"Mindestens ein Kanal muss ausgewählt sein.";
+	NSString* s1=@"Mindestens ein Kanal muss ausgewaehlt sein.";
 	NSString* s2=@"";
 	NSString* InformationString=[NSString stringWithFormat:@"%@\n%@",s1,s2];
 	[Warnung setInformativeText:InformationString];
@@ -725,7 +701,7 @@ NSLog(@"reportRead8Kanal");
 	}
 	if ([sender state])
 	{
-	NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+	NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 	[NotificationDic setObject:[NSNumber numberWithInt:0] forKey:@"kanalnummer"];
 	[NotificationDic setObject:[NSNumber numberWithFloat:ZeitKompression] forKey:@"zeitkompression"];
 	[NotificationDic setObject:[NSNumber numberWithInt:Kanal] forKey:@"tag"];
@@ -733,11 +709,11 @@ NSLog(@"reportRead8Kanal");
 	[NotificationDic setObject:[NSNumber numberWithInt:1] forKey:@"readall"];
 	[NotificationDic setObject:[NSNumber numberWithInt:0] forKey:@"paketnummer"];//Adresse
 	
-	Track8KanalTimer=[[NSTimer scheduledTimerWithTimeInterval:Trackdauer 
+	Track8KanalTimer=[NSTimer scheduledTimerWithTimeInterval:Trackdauer
 													  target:self 
 													selector:@selector(Track8KanalTimerFunktion:) 
 													userInfo:NotificationDic 
-													 repeats:YES]retain];
+													 repeats:YES];
 	}
 	else
 	{
@@ -760,11 +736,11 @@ NSLog(@"reportRead8Kanal");
 //			NSLog(@"Track8KanalTimerFunktion: Timer Valid");
 				readAllIndex=0;
 		
-	NSTimer* readAllTimer=[[NSTimer scheduledTimerWithTimeInterval:sendAllDelay 
+	NSTimer* readAllTimer=[NSTimer scheduledTimerWithTimeInterval:sendAllDelay
 													  target:self 
 													selector:@selector(readAllTimerFunktion:) 
 													userInfo:[NSNumber numberWithInt:readAllIndex] 
-													 repeats:YES]retain];
+													 repeats:YES];
 
 
 		}
@@ -797,7 +773,6 @@ NSLog(@"reportClear8Kanal");
 	
 	[MehrkanalDaten setObject:[NSDate date] forKey:@"datenseriestartzeit"];
 	NSMutableString* MKTabellenkopfString=[NSMutableString stringWithCapacity:0];//Tabellenkopf retten
-	[MKTabellenkopfString retain];
 	[MKTabellenkopfString appendFormat:@"\t%@",@"Zeit"];
 	int i;
 	for (i=0;i<8;i++)
@@ -820,14 +795,14 @@ NSLog(@"reportClear8Kanal");
 	
 	[MehrkanalDatenFeld setString:MKTabellenkopfString];
 	[MKWertFeld setStringValue:@""];
-	[MehrkanalDiagramm clear8Kanal];
+   [MehrkanalDiagramm clear8Kanal];
 	
 
 }
 
 - (void)reportAllChannels:(id)sender//alle Kanaele aktivieren oder deaktivieren
 {
-	NSLog(@"reportAllChannels stae: %d",[sender state]);
+	NSLog(@"reportAllChannels stae: %ld",[sender state]);
 	int i;
 	for (i=0;i<8;i++)
 	{
@@ -846,17 +821,17 @@ NSLog(@"reportClear8Kanal");
 	NSMutableDictionary* NotificationDic=(NSMutableDictionary*)[derTimer userInfo];
 	NSMutableArray* tempAdresseArray=(NSMutableArray*)[NotificationDic objectForKey:@"adressearray"];
 	[tempAdresseArray replaceObjectAtIndex:4 withObject:[NSNumber numberWithInt:1]];//Start-Bit setzen
-	NSString* Read1HexString=[self HexStringAusBitArray:[tempAdresseArray retain]];
+	NSString* Read1HexString=[self HexStringAusBitArray:tempAdresseArray];
 	//NSLog(@"ADWandler sendKanalNummerTimerFunktion: Read1HexString: %@",Read1HexString);
 	[NotificationDic setObject:Read1HexString forKey:@"hexstring"];//Adresse
 	NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
 	[nc postNotificationName:@"SendAktion" object:self userInfo:NotificationDic];//Kanalnummer setzen
 	
-	NSTimer* sendStartBitTimer=[[NSTimer scheduledTimerWithTimeInterval:sendStartBitDelay 
+	NSTimer* sendStartBitTimer=[NSTimer scheduledTimerWithTimeInterval:sendStartBitDelay
 														   target:self 
 														 selector:@selector(sendStartBitTimerFunktion:) 
 														 userInfo:NotificationDic 
-														  repeats:NO]retain];
+														  repeats:NO];
 
 	}
 
@@ -874,16 +849,16 @@ NSLog(@"reportClear8Kanal");
 	NSMutableDictionary* NotificationDic=(NSMutableDictionary*)[derTimer userInfo];
 	NSMutableArray* tempAdresseArray=(NSMutableArray*)[NotificationDic objectForKey:@"adressearray"];
 	[tempAdresseArray replaceObjectAtIndex:3 withObject:[NSNumber numberWithInt:1]];//Read-Bit setzen
-	NSString* Read1HexString=[self HexStringAusBitArray:[tempAdresseArray retain]];
+	NSString* Read1HexString=[self HexStringAusBitArray:tempAdresseArray ];
 	//NSLog(@"ADWandler sendStartBitTimerFunktion: Read1HexString: %@",Read1HexString);
 	[NotificationDic setObject:Read1HexString forKey:@"hexstring"];//Adresse
 	NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
 	[nc postNotificationName:@"SendAktion" object:self userInfo:NotificationDic];//Kanalnummer setzen
-	NSTimer* sendStartBitTimer=[[NSTimer scheduledTimerWithTimeInterval:sendReadBitDelay 
+	NSTimer* sendStartBitTimer=[NSTimer scheduledTimerWithTimeInterval:sendReadBitDelay
 														   target:self 
 														 selector:@selector(sendReadBitTimerFunktion:) 
 														 userInfo:NotificationDic 
-														  repeats:NO]retain];
+														  repeats:NO];
 
 	}
 }//sendStartBitTimerFunktion
@@ -897,7 +872,7 @@ NSLog(@"reportClear8Kanal");
 	{
 	
 	//Input-Aufforderung fuer Kanal an Interface senden
-	NSMutableDictionary* tempInputDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+	NSMutableDictionary* tempInputDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 	
 	[tempInputDic setObject:[[derTimer userInfo]objectForKey:@"kanalnummer"] forKey:@"kanalnummer"];//Kanal
 	[tempInputDic setObject:[NSNumber numberWithInt:0] forKey:@"paketnummer"];//Adresse		
@@ -907,11 +882,11 @@ NSLog(@"reportClear8Kanal");
 	[nc postNotificationName:@"InputAktion" object:self userInfo:tempInputDic];
 	
 //Timer fuer reset
-	NSTimer* sendStartBitTimer=[[NSTimer scheduledTimerWithTimeInterval:sendInputDelay 
+	NSTimer* sendStartBitTimer=[NSTimer scheduledTimerWithTimeInterval:sendInputDelay
 														   target:self 
 														 selector:@selector(sendResetTimerFunktion:) 
 														 userInfo:[derTimer userInfo] 
-														  repeats:NO]retain];
+														  repeats:NO];
 
 	}
 }//sendReadBitTimerFunktion
@@ -941,8 +916,8 @@ NSLog(@"reportClear8Kanal");
 
 - (void)Read1KanalNotificationAktion:(NSNotification*)note
 {
-	NSMutableArray* tempAdresseArray=[[[NSMutableArray alloc]initWithCapacity:8]autorelease];
-	NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+	NSMutableArray* tempAdresseArray=[[NSMutableArray alloc]initWithCapacity:8];
+	NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 	[NotificationDic setObject:[NSNumber numberWithInt:0] forKey:@"paketnummer"];//Adresse
 	int InterfaceNummer=[InterfaceNummerTaste selectedSegment];
 	if (InterfaceNummer>=0)//Bit 0-2 mit Interface-Adresse setzen
@@ -996,7 +971,7 @@ NSLog(@"reportClear8Kanal");
 				
 			}break;
 		}//switch row
-	NSString* Read1HexString=[self HexStringAusBitArray:[tempAdresseArray retain]];
+	NSString* Read1HexString=[self HexStringAusBitArray:tempAdresseArray ];
 	//NSLog(@"ADWandler Read1KanalNotificationAktion: Read1HexString: %@",Read1HexString);
 
 	[NotificationDic setObject:Read1HexString forKey:@"hexstring"];//Adresse
@@ -1012,11 +987,11 @@ NSLog(@"reportClear8Kanal");
 	//NSLog(@"Read1KanalNotificationAktion sendTimer invalidate");
 	[sendTimer invalidate];
 	}
-	sendTimer=[[NSTimer scheduledTimerWithTimeInterval:sendAllDelay 
+	sendTimer=[NSTimer scheduledTimerWithTimeInterval:sendAllDelay
 													  target:self 
 													selector:@selector(sendTimerFunktion:) 
 													userInfo:NotificationDic 
-													 repeats:NO]retain];
+													 repeats:NO];
 
 	}//tag
 }
@@ -1033,17 +1008,17 @@ NSLog(@"reportClear8Kanal");
 	}
 	
 	NSMutableArray* tempAdresseArray=(NSMutableArray*)[derKanalDic objectForKey:@"adressearray"];
-	NSString* Read1HexString=[self HexStringAusBitArray:[tempAdresseArray retain]];
+	NSString* Read1HexString=[self HexStringAusBitArray:tempAdresseArray];
 	//NSLog(@"ADWandler track1Kanal: Read1HexString: %@",Read1HexString);
 	NSMutableDictionary* NotificationDic=(NSMutableDictionary*)derKanalDic;
 	[NotificationDic setObject:Read1HexString forKey:@"hexstring"];//Adresse
 	NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
 	[nc postNotificationName:@"SendAktion" object:self userInfo:NotificationDic];
-	NSTimer* readTimer=[[NSTimer scheduledTimerWithTimeInterval:sendReadBitDelay 
+	NSTimer* readTimer=[NSTimer scheduledTimerWithTimeInterval:sendReadBitDelay
 														 target:self 
 													   selector:@selector(sendStartBitTimerFunktion:) 
 													   userInfo:NotificationDic 
-														repeats:NO]retain];
+														repeats:NO];
 }
 
 - (void)sendTimerFunktion:(NSTimer*)derTimer
@@ -1052,7 +1027,7 @@ NSLog(@"reportClear8Kanal");
 	if ([derTimer userInfo])
 	{
 		NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
-		NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+		NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 	
 		int tempKanal=[[[derTimer userInfo]objectForKey:@"kanalnummer"]intValue];
 
@@ -1110,7 +1085,7 @@ NSLog(@"reportClear8Kanal");
 - (void)setEinkanalDaten:(NSString*)dieDaten zurZeit:(NSDate*)dieZeit forKanal:(int)derKanal mitVorgaben:(NSDictionary*)derVorgabenDic
 {
 	NSScanner *scanner;
-	int tempWert;
+	uint tempWert;
 	scanner = [NSScanner scannerWithString:dieDaten];
 	[scanner scanHexInt:&tempWert];
 //	NSLog(@"setEinkanalDaten: %@ Zeit: %@ Kanal: %d",dieDaten, dieZeit, derKanal );
@@ -1133,7 +1108,6 @@ NSLog(@"reportClear8Kanal");
 	{
 		//NSLog(@"ADWandler setEinkanalDaten                    leer  tempDatenArray: %@",[tempDatenArray description]);
 		DatenserieStartZeit=[NSDate date];
-		[DatenserieStartZeit retain];
 		[EinkanalDaten setObject:[NSDate date] forKey:@"datenseriestartzeit"];
 		[EinkanalDiagramm setStartwertMitY:y];
 			
@@ -1199,7 +1173,7 @@ NSLog(@"reportClear8Kanal");
 	//NSLog(@"setMehrkanalDaten Daten: %@ Kanal: %d",dieDaten, derKanal);
 	float ZeitKompression=1.0;
 	//Dic fuer die neuen Vorgaben des Diagramms
-	NSMutableDictionary* tempVorgabenDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+	NSMutableDictionary* tempVorgabenDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 	
 	if ([derVorgabenDic objectForKey:@"zeitkompression"])
 	{
@@ -1237,22 +1211,22 @@ NSLog(@"reportClear8Kanal");
 		//		tempKanalDatenDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 		
 		//Array für die Kanaldaten einrichten
-		tempKanalDatenArray=[[[NSMutableArray alloc]initWithCapacity:9]autorelease];
-		NSMutableArray* tempKanalSelektionArray=[[[NSMutableArray alloc]initWithCapacity:8]autorelease];
+		tempKanalDatenArray=[[NSMutableArray alloc]initWithCapacity:9];
+		NSMutableArray* tempKanalSelektionArray=[[NSMutableArray alloc]initWithCapacity:8];
 		
 		float tempZeit=0.0;
 		int Kanal=[MehrkanalWahlTaste selectedSegment];
 	
 		if (Kanal<0)//kein Kanal
 		{
-			NSAlert *Warnung = [[[NSAlert alloc] init] autorelease];
+			NSAlert *Warnung = [[NSAlert alloc] init];
 			[Warnung addButtonWithTitle:@"OK"];
 	//		[Warnung addButtonWithTitle:@""];
 	//		[Warnung addButtonWithTitle:@""];
 	//		[Warnung addButtonWithTitle:@"Abbrechen"];
 			[Warnung setMessageText:[NSString stringWithFormat:@"%@",@"Kein Kanal"]];
 		
-			NSString* s1=@"Mindestens ein Kanal muss ausgewählt sein.";
+			NSString* s1=@"Mindestens ein Kanal muss ausgewaehlt sein.";
 			NSString* s2=@"";
 			NSString* InformationString=[NSString stringWithFormat:@"%@\n%@",s1,s2];
 			[Warnung setInformativeText:InformationString];
@@ -1274,7 +1248,6 @@ NSLog(@"reportClear8Kanal");
 		{
 			//NSLog(@"ADWandler setMehrkanalDaten   noch leer. Kanal: %d   tempDatenArray: %@",derKanal,[tempDatenArray description]);
 			DatenserieStartZeit=[NSDate date];
-			[DatenserieStartZeit retain];
 			[MehrkanalDaten setObject:[NSDate date] forKey:@"datenseriestartzeit"];
 			//		[MehrkanalDiagramm setStartwertMitY:y];
 			NSMutableArray* tempStartWerteArray=[[NSMutableArray alloc]initWithCapacity:8];
@@ -1419,14 +1392,14 @@ NSLog(@"reportClear8Kanal");
 	NSLog(@"reportRead1RandomKanal: %d",[KanalWahlTaste selectedSegment]);
 	if (Kanal<0)//kein Kanal
 	{
-		NSAlert *Warnung = [[[NSAlert alloc] init] autorelease];
+		NSAlert *Warnung = [[NSAlert alloc] init];
 	[Warnung addButtonWithTitle:@"OK"];
 //	[Warnung addButtonWithTitle:@""];
 //	[Warnung addButtonWithTitle:@""];
 //	[Warnung addButtonWithTitle:@"Abbrechen"];
 	[Warnung setMessageText:[NSString stringWithFormat:@"%@",@"Kein Kanal"]];
 	
-	NSString* s1=@"Mindestens ein Kanal muss ausgewählt sein.";
+	NSString* s1=@"Mindestens ein Kanal muss ausgewaehlt sein.";
 	NSString* s2=@"";
 	NSString* InformationString=[NSString stringWithFormat:@"%@\n%@",s1,s2];
 	[Warnung setInformativeText:InformationString];
@@ -1452,7 +1425,6 @@ NSLog(@"reportClear8Kanal");
 		//NSLog(@"ADWandler setEinkanalDaten                    leer  tempDatenArray: %@",[tempDatenArray description]);
 
 		DatenserieStartZeit=[NSDate date];
-		[DatenserieStartZeit retain];
 		[EinkanalDaten setObject:[NSDate date] forKey:@"datenseriestartzeit"];
 		[EinkanalDiagramm setStartwertMitY:y];
 		
@@ -1533,11 +1505,11 @@ float Trackdauer=[[TrackZeitTaste titleOfSelectedItem]floatValue];
 
 NSLog(@"ADWandler reportTrack1RandomKanal       Trackdauer: %2.2f ",Trackdauer);
 [self Track1RandomKanalTimerFunktion:NULL];
-	NSTimer* Track1KanalTimer=[[NSTimer scheduledTimerWithTimeInterval:Trackdauer 
+	NSTimer* Track1KanalTimer=[NSTimer scheduledTimerWithTimeInterval:Trackdauer
 													  target:self 
 													selector:@selector(Track1RandomKanalTimerFunktion:) 
 													userInfo:NULL 
-													 repeats:YES]retain];
+													 repeats:YES];
 }
 else
 {
@@ -1579,17 +1551,16 @@ if ([TrackRandomTaste state])
 		NSFont* TextFont;
 		TextFont=[NSFont fontWithName:@"Helvetica" size: Textschnitt];
 		
-		NSMutableParagraphStyle* TabellenKopfStil=[[[NSMutableParagraphStyle alloc]init]autorelease];
+		NSMutableParagraphStyle* TabellenKopfStil=[[NSMutableParagraphStyle alloc]init];
 		[TabellenKopfStil setTabStops:[NSArray array]];
-		NSTextTab* TabellenkopfWert1Tab=[[[NSTextTab alloc]initWithType:NSRightTabStopType location:wert1tab]autorelease];
+		NSTextTab* TabellenkopfWert1Tab=[[[NSTextTab alloc]initWithType:NSRightTabStopType location:wert1tab];
 		[TabellenKopfStil addTabStop:TabellenkopfWert1Tab];
 		NSTextTab* TabellenkopfWert2Tab=[[[NSTextTab alloc]initWithType:NSRightTabStopType location:wert2tab]autorelease];
 		[TabellenKopfStil addTabStop:TabellenkopfWert2Tab];
-		NSMutableParagraphStyle* TabelleStil=[[[NSMutableParagraphStyle alloc]init]autorelease];
+		NSMutableParagraphStyle* TabelleStil=[[NSMutableParagraphStyle alloc]init];
 		[TabelleStil setTabStops:[NSArray array]];
 */		
 		DatenserieStartZeit=[NSDate date];
-		[DatenserieStartZeit retain];
 		[EinkanalDaten setObject:[NSDate date] forKey:@"datenseriestartzeit"];
 		[EinkanalDiagramm setStartwertMitY:y];
 /*
@@ -1712,14 +1683,14 @@ if ([TrackRandomTaste state])
 	int Kanal=[MehrkanalWahlTaste selectedSegment];
 	if (Kanal<0)//kein Kanal
 	{
-		NSAlert *Warnung = [[[NSAlert alloc] init] autorelease];
+		NSAlert *Warnung = [[NSAlert alloc] init];
 	[Warnung addButtonWithTitle:@"OK"];
 //	[Warnung addButtonWithTitle:@""];
 //	[Warnung addButtonWithTitle:@""];
 //	[Warnung addButtonWithTitle:@"Abbrechen"];
 	[Warnung setMessageText:[NSString stringWithFormat:@"%@",@"Kein Kanal"]];
 	
-	NSString* s1=@"Mindestens ein Kanal muss ausgewählt sein.";
+	NSString* s1=@"Mindestens ein Kanal muss ausgewaehlt sein.";
 	NSString* s2=@"";
 	NSString* InformationString=[NSString stringWithFormat:@"%@\n%@",s1,s2];
 	[Warnung setInformativeText:InformationString];
@@ -1744,7 +1715,6 @@ if ([TrackRandomTaste state])
 		//NSLog(@"ADWandler setEinkanalDaten                    leer  tempDatenArray: %@",[tempDatenArray description]);
 
 		DatenserieStartZeit=[NSDate date];
-		[DatenserieStartZeit retain];
 		[MehrkanalDaten setObject:[NSDate date] forKey:@"datenseriestartzeit"];
 		NSMutableArray* tempStartWerteArray=[[NSMutableArray alloc]initWithCapacity:8];
 
@@ -1861,11 +1831,11 @@ float Trackdauer=[[MehrkanalTrackZeitTaste titleOfSelectedItem]floatValue];
 
 	//NSLog(@"ADWandler reportTrack8RandomKanal       Trackdauer: %2.2f ",Trackdauer);
 [self Track1RandomKanalTimerFunktion:NULL];
-	NSTimer* Track8KanalTimer=[[NSTimer scheduledTimerWithTimeInterval:Trackdauer 
+	NSTimer* Track8KanalTimer=[NSTimer scheduledTimerWithTimeInterval:Trackdauer
 													  target:self 
 													selector:@selector(Track8RandomKanalTimerFunktion:) 
 													userInfo:NULL 
-													 repeats:YES]retain];
+													 repeats:YES];
 
 }
 
@@ -1904,7 +1874,6 @@ if ([MehrkanalTrackRandTaste state])
 	{
 		//NSLog(@"ADWandler Track1RandomKanalTimerFunktion     leer  tempDatenArray: %@",[tempDatenArray description]);
 		DatenserieStartZeit=[NSDate date];
-		[DatenserieStartZeit retain];
 		[MehrkanalDaten setObject:[NSDate date] forKey:@"datenseriestartzeit"];
 		NSMutableArray* tempStartWerteArray=[[NSMutableArray alloc]initWithCapacity:8];
 
@@ -2014,8 +1983,8 @@ if ([MehrkanalTrackRandTaste state])
 
 - (void)resetADWandler:(id)sender
 {
-	NSMutableArray* tempAdresseArray=[[[NSMutableArray alloc]initWithCapacity:8]autorelease];
-	NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+	NSMutableArray* tempAdresseArray=[[NSMutableArray alloc]initWithCapacity:8];
+	NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 	[NotificationDic setObject:[NSNumber numberWithInt:0] forKey:@"paketnummer"];//Adresse
 	int InterfaceNummer=[InterfaceNummerTaste selectedSegment];
 	if (InterfaceNummer>=0)//Bit 0-2 mit Interface-Adresse setzen
@@ -2033,7 +2002,7 @@ if ([MehrkanalTrackRandTaste state])
 //	[tempAdresseArray replaceObjectAtIndex:3 withObject:[NSNumber numberWithInt:0]];//Read-Bit zuruecksetzen
 	[tempAdresseArray replaceObjectAtIndex:4 withObject:[NSNumber numberWithInt:0]];//Start-Bit zuruecksetzen
 
-	NSString* Read1HexString=[self HexStringAusBitArray:[tempAdresseArray retain]];
+	NSString* Read1HexString=[self HexStringAusBitArray:tempAdresseArray];
 	//NSLog(@"ADWandler Read1KanalNotificationAktion: Read1HexString: %@",Read1HexString);
 
 	[NotificationDic setObject:Read1HexString forKey:@"hexstring"];//Adresse
@@ -2083,15 +2052,15 @@ if ([MehrkanalTrackRandTaste state])
    
    int antwort = [SichernPanel runModal];
 	
-	if ([SichernPanel URLs] && [[SichernPanel URLs]count])
+	//if ([SichernPanel URLs] && [[SichernPanel URLs]count])
 	{
-      return;
+   //   return;
 	} // if count
 
    
-   NSLog(@"saveMehrkanalDaten: %@ Dir: %@",[SichernPanel filename],[SichernPanel directory]);
-	
-	int saveOK=[[MehrkanalDatenFeld string] writeToFile:[SichernPanel filename] atomically:YES];
+   NSLog(@"saveMehrkanalDaten: %@ Dir: %@",[[SichernPanel URL]path],[[SichernPanel directoryURL]path]);
+   NSError* err;
+   int saveOK=[[MehrkanalDatenFeld string] writeToFile:[[SichernPanel URL]path] atomically:YES encoding:NSUTF8StringEncoding error:&err];
 }
 
 - (void)printMehrkanalDaten:(id)sender
@@ -2134,7 +2103,7 @@ if ([MehrkanalTrackRandTaste state])
 	NSPrintOperation* DruckOperation;
 	DruckOperation=[NSPrintOperation printOperationWithView: MehrkanalDatenFeld
 												  printInfo:PrintInfo];
-	[DruckOperation setShowPanels:YES];
+	[DruckOperation setShowsPrintPanel:YES];
 	[DruckOperation runOperation];
 
 }
@@ -2156,7 +2125,7 @@ return [KanalWahlTaste selectedSegment];
 - (NSArray*)MehrkanalTastenArray
 {
 int i;
-NSMutableArray* tempKanalArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+NSMutableArray* tempKanalArray=[[NSMutableArray alloc]initWithCapacity:0];
 for(i=0;i<8;i++)
 {
 	int index=[MehrkanalWahlTaste isSelectedForSegment:i];
@@ -2225,7 +2194,7 @@ NSLog(@"didSelectTabViewItem: %@ index: %d",[tabViewItem identifier],lastTabInde
 {
 	NSLog(@"ADWandler windowShouldClose");
 	NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
-	NSMutableDictionary* BeendenDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+	NSMutableDictionary* BeendenDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 
 //	[nc postNotificationName:@"IOWarriorBeenden" object:self userInfo:BeendenDic];
 

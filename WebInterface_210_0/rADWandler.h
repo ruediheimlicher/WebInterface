@@ -14,7 +14,7 @@ static __inline__ int SSRandomIntBetween(int a, int b)
     return value == range ? a : a + value;
 }
 
-@interface rADWandler : NSWindowController
+@interface rADWandler : NSWindowController <NSOpenSavePanelDelegate>
 {
     IBOutlet id					ADTab;
     IBOutlet id					CancelTaste;
@@ -30,7 +30,7 @@ static __inline__ int SSRandomIntBetween(int a, int b)
 	IBOutlet id					EinkanalDatenFeld;
 	rOrdinate*					EinkanalOrdinate;
 	
-	IBOutlet id					MehrkanalDiagramm;
+	IBOutlet rMehrkanalDiagramm*					MehrkanalDiagramm;
 	IBOutlet id					MehrkanalDiagrammScroller;
 	IBOutlet id					MKWertFeld;
 	IBOutlet id					MKWertView;

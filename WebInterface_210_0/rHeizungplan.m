@@ -75,7 +75,6 @@
 	if (StundenArray==NULL)
 	{
 		StundenArray=[[NSMutableArray alloc]initWithCapacity:0];
-		[StundenArray retain];
 	}
 	
 	int i=0;
@@ -135,7 +134,7 @@
 	}//for i
 	//NSLog(@"setModeTagplan: ModeStundenArray: %@",[ModeStundenArray description]);
 //	lastModeTagArray=[[[ModeStundenArray valueForKey:@"modetag"]copy]retain];//Speicherung IST-Zustand
-	lastModeTagArray=[[[StundenArray valueForKey:@"modetag"]copy]retain];//Speicherung IST-Zustand
+	lastModeTagArray=[[StundenArray valueForKey:@"modetag"]copy];//Speicherung IST-Zustand
 	
 //	lastModeNachtArray=[[ModeStundenArray valueForKey:@"modenacht"]copy];//Speicherung IST-Zustand
 	lastModeNachtArray=[[StundenArray valueForKey:@"modenacht"]copy];//Speicherung IST-Zustand
@@ -153,7 +152,6 @@
 	if (StundenArray==NULL)
 	{
 	StundenArray=[[NSMutableArray alloc]initWithCapacity:0];
-	[StundenArray retain];
 	}
 
 	Nullpunkt=[self convertPoint:NSMakePoint(0.0,0.0) toView:NULL];
@@ -203,7 +201,7 @@
 		else
 		{
 			//NSLog(@"setBrennerTagplan neuer Dic index: %d",i);
-			NSMutableDictionary* tempElementDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+			NSMutableDictionary* tempElementDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 			[tempElementDic setObject:[[derBrennerStundenArray objectAtIndex:i]objectForKey:@"kessel"] forKey:@"kessel"];
 			[StundenArray addObject:tempElementDic];
 		
@@ -622,7 +620,7 @@ key "modenacht"	Einschaltzeiten Mode Nacht		0: off						1: reduziert				2: voll
 	//NSLog(@"lastONArray: %@",[lastONArray description]);
 	int i;
 	int all=-1;
-	NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+	NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 	
 	
 	if ([self mouse:localMaus inRect:AllFeld])
@@ -1072,7 +1070,7 @@ key "modenacht"	Einschaltzeiten Mode Nacht		0: off						1: reduziert				2: voll
 	}
 
 	
-	NSMutableDictionary* ModeNotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+	NSMutableDictionary* ModeNotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 	
 	if (modeallnacht<0)//kein Klick auf ALL-Taste, IST-Zustand speichern
 	{

@@ -115,7 +115,6 @@
 			}
 		}// if Kanal
 	} // for i
-	[derKanalArray retain];
 	[GraphKanalArray setArray:derKanalArray];
 	//[GraphKanalArray retain];
    //	[self setNeedsDisplay:YES];
@@ -203,14 +202,14 @@
 	[WaagrechteLinie lineToPoint:rechtsH];
 	//	[WaagrechteLinie stroke];
    
-   rDatenlegende* DatenLegende = [[[rDatenlegende alloc]init]autorelease];
+   rDatenlegende* DatenLegende = [[rDatenlegende alloc]init];
    
    
    // Datenanschrift ordnen
    
    int schriftgroesse = 9;
-   NSMutableDictionary* ZeitAttrs=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
-   NSMutableParagraphStyle* ZeitPar=[[[NSMutableParagraphStyle alloc]init]autorelease];
+   NSMutableDictionary* ZeitAttrs=[[NSMutableDictionary alloc]initWithCapacity:0];
+   NSMutableParagraphStyle* ZeitPar=[[NSMutableParagraphStyle alloc]init];
    
    [ZeitPar setAlignment:NSRightTextAlignment];
 	[ZeitAttrs setObject:ZeitPar forKey:NSParagraphStyleAttributeName];
@@ -227,7 +226,7 @@
    int grundabstand=schriftgroesse;
    int deltay=0;
    
-   NSMutableArray* LegendeArray = [[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+   NSMutableArray* LegendeArray = [[NSMutableArray alloc]initWithCapacity:0];
    // Ordinaten nach Wert sortiert in IndexSet setzen
    for (int i=0;i<8;i++)
    {

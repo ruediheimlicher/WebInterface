@@ -1,6 +1,7 @@
 /* rVertikalanzeige */
 
 #import <Cocoa/Cocoa.h>
+#import "defines.h"
 
 @interface rVertikalanzeige : NSView
 {
@@ -18,10 +19,12 @@
 	float fixTime;
 	int holdMax;
 	NSTimer* fixTimer;
-	int tag;
+	long tag;
 	NSString* titel;
 }
+//@property (readwrite) NSInteger tag;
 - (void)setLevel:(int) derLevel;
 - (void)drawAnzeige;
+- (void)setTag:(long)tag;
 - (void)setStringLevel:(NSString*)derLevel;
 @end

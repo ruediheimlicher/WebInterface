@@ -16,8 +16,7 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
 		AchsenEcke=NSMakePoint(0.0,0.0);
 		AchsenSpitze=AchsenEcke;
 		AchsenSpitze.y+=[self frame].size.height-0.5;
-		EinheitenArray=[[[NSMutableArray alloc] initWithCapacity: 0]autorelease];
-		[EinheitenArray retain];
+		EinheitenArray=[[NSMutableArray alloc] initWithCapacity: 0];
 		MajorTeile=4;
 		MinorTeile=2;
 		Max=40.0;

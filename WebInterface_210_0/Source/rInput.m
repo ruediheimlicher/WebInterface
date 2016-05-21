@@ -111,7 +111,6 @@ static NSString* kReportDirectionOut = @"W";
 
 NSArray* InputArray=[self ReadHexStringArray];
 
-[InputArray retain];
 NSLog(@"ReadIntf:	InputArray: %@",[InputArray description]);
 //NSLog(@"ReadIntf:	HexDatenArray: %@",[HexDatenArray description]);
 //[HexDatenArray retain];
@@ -122,7 +121,7 @@ NSLog(@"ReadIntf:	InputArray: %@",[InputArray description]);
 
 //*********** Anzeige setzen
 	//NSLog(@"ReadIntf: vor Notification");
-	NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+	NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 	[NotificationDic setObject:[NSNumber numberWithInt:2] forKey:@"reportsize"];
 	//[NotificationDic setObject:HexDatenArray forKey:@"inputarray"];
 	NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
@@ -147,7 +146,6 @@ return;
 //	NSLog(@"InputAktion Zeitkompression: %2.2f",[[[note userInfo] objectForKey:@"zeitkompression"]floatValue]);
 	NSArray* InputArray=[self ReadHexStringArray];
 	DatenleseZeit=[NSDate date];
-	[DatenleseZeit retain];
 	int tempKanalNummer=[[[note userInfo]objectForKey:@"kanalnummer"]intValue];
 //	NSLog(@"\n");
 	//NSLog(@"InputAktion: InputArray: %@  Kanal: %d",[InputArray description],tempKanalNummer);
@@ -198,7 +196,6 @@ NSLog(@"TrackIntf: isTracking: %d",isTracking);
 {
 
     [trackTimer invalidate];
-	NSLog(@"trackTimer retainCount: %ld",[trackTimer retainCount]);
 	
     isTracking = YES;
 }
@@ -227,7 +224,6 @@ NSLog(@"TrackIntf: isTracking: %d",isTracking);
 			[trackTimer invalidate];
 		}
         trackTimer = [NSTimer scheduledTimerWithTimeInterval:0.03 target:self selector:@selector(trackRead:) userInfo:nil repeats:YES];
-		[trackTimer retain];
 	}
 	
     else
@@ -237,7 +233,7 @@ NSLog(@"TrackIntf: isTracking: %d",isTracking);
 		 char* buffer;
         
         buffer = malloc(8);
-        IOWarriorSetInterruptCallback(listNode->ioWarriorHIDInterface, buffer, 8, reportHandlerCallback, self);
+        IOWarriorSetInterruptCallback(listNode->ioWarriorHIDInterface, buffer, 8, reportHandlerCallback, (void*)CFBridgingRetain(self));
     }
 }
 
@@ -251,7 +247,7 @@ NSLog(@"TrackIntf: isTracking: %d",isTracking);
     NSData*		trackDataRead;
     IOWarriorListNode* 	listNode;
     int                 reportSize;
-	NSMutableArray*	trackReadArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+	NSMutableArray*	trackReadArray=[[NSMutableArray alloc]initWithCapacity:0];
 	int i;
 	NSLog(@"trackRead: start");
 	for (i=0;i<4;i++)
@@ -306,9 +302,8 @@ NSLog(@"TrackIntf: isTracking: %d",isTracking);
 					
 				}
 			}
-			[trackReadArray retain];
 			//NSLog(@"InputArray: %@",[InputArray description]);
-			NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+			NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 			[NotificationDic setObject:[NSNumber numberWithInt:reportSize] forKey:@"reportsize"];
 			[NotificationDic setObject:trackReadArray forKey:@"inputarray"];
 			NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
@@ -325,8 +320,6 @@ NSLog(@"TrackIntf: isTracking: %d",isTracking);
 
 - (void) setLastDataRead:(NSData*) inData
 {
-    [inData retain];
-    [lastDataRead release];
     lastDataRead = inData;
 }
 

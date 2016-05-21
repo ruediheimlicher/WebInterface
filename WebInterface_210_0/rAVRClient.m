@@ -46,7 +46,7 @@
    {
       
    }
-	NSMutableDictionary* twiStatusDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+	NSMutableDictionary* twiStatusDic=[[NSMutableDictionary alloc]initWithCapacity:0];
    [twiStatusDic setObject:[NSNumber numberWithInt:[sender state]]forKey:@"status"];
    [twiStatusDic setObject:[NSNumber numberWithInt:[LocalTaste state]]forKey:@"local"];
 	//NSLog(@"AVRClient end");
@@ -81,7 +81,7 @@
       
       [Waitrad  startAnimation:NULL];
    }
-	NSMutableDictionary* twiStatusDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+	NSMutableDictionary* twiStatusDic=[[NSMutableDictionary alloc]initWithCapacity:0];
    [twiStatusDic setObject:[NSNumber numberWithInt:status]forKey:@"status"];
    [twiStatusDic setObject:[NSNumber numberWithInt:[LocalTaste state]]forKey:@"local"];
 	//NSLog(@"AVRClient end");
@@ -96,7 +96,7 @@
 {
    //NSLog(@"AVRClient reportLocalTaste: state: %d",[sender state]);
    NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
-	NSMutableDictionary* localStatusDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+	NSMutableDictionary* localStatusDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 	[localStatusDic setObject:[NSNumber numberWithInt:[sender state]]forKey:@"status"];
 	[nc postNotificationName:@"localstatus" object:self userInfo:localStatusDic];
 }
@@ -105,7 +105,7 @@
 {
    NSLog(@"AVRClient reportTestTaste: state: %ld",[sender state]);
    NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
-	NSMutableDictionary* localStatusDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+	NSMutableDictionary* localStatusDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 	[localStatusDic setObject:[NSNumber numberWithInt:[sender state]]forKey:@"test"];
 	[nc postNotificationName:@"teststatus" object:self userInfo:localStatusDic];
 
@@ -114,7 +114,7 @@
 - (IBAction)reportResetTaste:(id)sender
 {
    //NSLog(@"AVRClient reportResetTaste");
-   NSAlert *Warnung = [[[NSAlert alloc] init] autorelease];
+   NSAlert *Warnung = [[NSAlert alloc] init];
    [Warnung addButtonWithTitle:@"OK"];
    //	[Warnung addButtonWithTitle:@""];
    //	[Warnung addButtonWithTitle:@""];
@@ -160,13 +160,13 @@
    if (resetok)
    {
    NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
-   NSMutableDictionary* localStatusDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+   NSMutableDictionary* localStatusDic=[[NSMutableDictionary alloc]initWithCapacity:0];
    [localStatusDic setObject:[NSNumber numberWithInt:1]forKey:@"reset"];
    [nc postNotificationName:@"resetmaster" object:self userInfo:localStatusDic];
    }
    else
    {
-      NSAlert *Warnung = [[[NSAlert alloc] init] autorelease];
+      NSAlert *Warnung = [[NSAlert alloc] init];
       [Warnung addButtonWithTitle:@"OK"];
       [Warnung setMessageText:[NSString stringWithFormat:@"%@",@"Zugriff verweigert!"]];
       int antwort=[Warnung runModal];
@@ -190,7 +190,7 @@
 	[EEPROMReadTaste setEnabled:status];
 	[TWIStatusTaste setState:status];
 	//int twiOK=0;
-	NSMutableDictionary* twiStatusDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+	NSMutableDictionary* twiStatusDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 	[twiStatusDic setObject:[NSNumber numberWithInt:status]forKey:@"status"];
 	[nc postNotificationName:@"twistatus" object:self userInfo:twiStatusDic];
 }
@@ -316,7 +316,7 @@
    
    
    
-	NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+	NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 	[NotificationDic setObject:[NSNumber numberWithInt:[I2CPop indexOfSelectedItem]] forKey:@"eepromadressezusatz"];
 	[NotificationDic setObject:[NSNumber numberWithInt:hbyte] forKey:@"hbyte"];
 	[NotificationDic setObject:[NSNumber numberWithInt:lbyte] forKey:@"lbyte"];
@@ -454,7 +454,7 @@
    
    
    
-	NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+	NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 	[NotificationDic setObject:[NSNumber numberWithInt:[I2CPop indexOfSelectedItem]] forKey:@"eepromadressezusatz"];
 	[NotificationDic setObject:[NSNumber numberWithInt:hbyte] forKey:@"hbyte"];
 	[NotificationDic setObject:[NSNumber numberWithInt:lbyte] forKey:@"lbyte"];
@@ -581,7 +581,7 @@
    
    
    
-   NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+   NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
    [NotificationDic setObject:[NSNumber numberWithInt:[I2CPop indexOfSelectedItem]] forKey:@"eepromadressezusatz"];
    [NotificationDic setObject:[NSNumber numberWithInt:hbyte] forKey:@"hbyte"];
    [NotificationDic setObject:[NSNumber numberWithInt:lbyte] forKey:@"lbyte"];
@@ -709,7 +709,7 @@
       
       
       
-      NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+      NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
       [NotificationDic setObject:[NSNumber numberWithInt:[I2CPop indexOfSelectedItem]] forKey:@"eepromadressezusatz"];
       [NotificationDic setObject:[NSNumber numberWithInt:hbyte] forKey:@"hbyte"];
       [NotificationDic setObject:[NSNumber numberWithInt:lbyte] forKey:@"lbyte"];
@@ -755,11 +755,11 @@
 	//		NSLog(@"Y");
 			
 		}
-		simTimer=[[NSTimer scheduledTimerWithTimeInterval:sendResetDelay 
+		simTimer=[NSTimer scheduledTimerWithTimeInterval:sendResetDelay
 															  target:self 
 															selector:@selector(readEthSimTimerFunktion:) 
 															userInfo:sendTimerDic 
-															 repeats:YES]retain];
+															 repeats:YES];
 }
 
 
@@ -771,7 +771,6 @@
 	NSLog(@"readEthSimTimerFunktion  sendTimerDic: %@",[sendTimerDic description]);
 		if (simTimer)
 		{
-			NSLog(@"readEthSim retainCount: %lu",(unsigned long)[simTimer retainCount]);
 	//		[simTimer invalidate];
 	//		NSLog(@"X");
 	//		[simTimer release];
@@ -792,7 +791,6 @@
 			NSLog(@"readEthSimTimerFunktion anzReads erreicht");
 			[Adresse setStringValue:@"Simulation abgelaufen"];
 			[derTimer invalidate];
-			[derTimer release];
 			return;
 		
 		}
@@ -825,7 +823,7 @@
 			int lbyte=startadresse%0x100;
 			NSLog(@"readEthSim   startadresse: %X  hbyte: %X lbyte: %X",startadresse, hbyte, lbyte);
 			
-			NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+			NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 			[NotificationDic setObject:[NSNumber numberWithInt:[I2CPop indexOfSelectedItem]] forKey:@"eepromadressezusatz"];
 			[NotificationDic setObject:[NSNumber numberWithInt:hbyte] forKey:@"hbyte"];
 			[NotificationDic setObject:[NSNumber numberWithInt:lbyte] forKey:@"lbyte"];
@@ -839,7 +837,6 @@
 			NSLog(@"readEthSimTimerFunktion sendTimer invalidate");
 			
 			[derTimer invalidate];
-			[derTimer release];
 			
 		}
 	}
@@ -874,7 +871,7 @@ if (Webserver_busy)
 	if ([TWIStatusTaste state])
 	{
 		NSLog(@"TWIStatustaste ok: %ld",(long)[TWIStatusTaste state]);
-		NSAlert *Warnung = [[[NSAlert alloc] init] autorelease];
+		NSAlert *Warnung = [[NSAlert alloc] init];
 		[Warnung addButtonWithTitle:@"OK"];
 		//	[Warnung addButtonWithTitle:@""];
 		//	[Warnung addButtonWithTitle:@""];
@@ -909,7 +906,7 @@ if (Webserver_busy)
       //NSString* Titel = [[note userInfo]objectForKey:@"titel"];
 		NSArray* DatenArray=[[note userInfo]objectForKey:@"stundenbytearray"];
 		
-		NSMutableDictionary* HomeClientDic=[[[NSMutableDictionary alloc]initWithDictionary:[note userInfo]]autorelease];
+		NSMutableDictionary* HomeClientDic=[[NSMutableDictionary alloc]initWithDictionary:[note userInfo]];
 		[HomeClientDic setObject:[[note userInfo]objectForKey:@"titel"] forKey:@"titel"];
       
 		int I2CIndex=[I2CPop indexOfSelectedItem];
@@ -1013,7 +1010,7 @@ if (Webserver_busy)
    [self saveHomeDic];
    
    // Daten auf eepromupdatedaten.txt loeschen
-   NSAlert *Warnung = [[[NSAlert alloc] init] autorelease];
+   NSAlert *Warnung = [[NSAlert alloc] init];
    [Warnung addButtonWithTitle:@"Ja"];
    [Warnung addButtonWithTitle:@"Nein"];
    [Warnung setMessageText:[NSString stringWithFormat:@"%@",@"EEPROMUpdateDaten?"]];
@@ -1028,7 +1025,7 @@ if (Webserver_busy)
    //antwort=[Warnung runModal];
    
    // antwort = 0;
-   NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+   NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
    NSLog(@"Warnung EEPROMDaten Antwort: %d",antwort);
    
    if (antwort == NSAlertFirstButtonReturn)
@@ -1069,7 +1066,7 @@ if (Webserver_busy)
    if ([TWIStatusTaste state])
     {
     //NSLog(@"TWIStatustaste: %d",[TWIStatusTaste state]);
-    NSAlert *Warnung = [[[NSAlert alloc] init] autorelease];
+    NSAlert *Warnung = [[NSAlert alloc] init];
     [Warnung addButtonWithTitle:@"OK"];
     //	[Warnung addButtonWithTitle:@""];
     //	[Warnung addButtonWithTitle:@""];
@@ -1101,7 +1098,7 @@ if (Webserver_busy)
       
       NSMutableArray* EEPROMWriteArray = [[NSMutableArray alloc]initWithCapacity:0];
 
-      NSMutableDictionary* writeDic = [[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+      NSMutableDictionary* writeDic = [[NSMutableDictionary alloc]initWithCapacity:0];
       //AblaufString = [AblaufString stringByAppendingFormat:@"r:%d wt:%d o:%d ",raum,wochentag,objekt];
    
       int raum = [RaumPop indexOfSelectedItem];
@@ -1124,7 +1121,8 @@ if (Webserver_busy)
                  {
                     if ([[TagplanListe objectAtIndex:k] isKindOfClass:[rTagplanbalken class]])
                     {
-                       int temptag = [[TagplanListe objectAtIndex:k]tag];
+                       rTagplanbalken* tempBalken = [TagplanListe objectAtIndex:k];
+                       NSInteger temptag = tempBalken.tag;
                        //NSLog(@"k: %d Tagplan tag: %d: Titel: %@ Plan: %@",k,temptag,[[TagplanListe  objectAtIndex:k]Titel],[[TagplanListe  objectAtIndex:k]description]  );
                        int tempwochentag = temptag%100;
                        tempwochentag /= 10;
@@ -1144,7 +1142,7 @@ if (Webserver_busy)
                           int hbyte=startadresse>>8;
                           
                           NSString* tempTitel = [[TagplanListe  objectAtIndex:k]Titel];
-                          NSMutableDictionary* writeDic = [[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+                          NSMutableDictionary* writeDic = [[NSMutableDictionary alloc]initWithCapacity:0];
                        
                           [writeDic setObject:tempstundenbytearray forKey:@"stundenbytearray"];
 
@@ -1184,7 +1182,7 @@ if (Webserver_busy)
        NSString* AblaufString = @"Update für: ";
 
        
-      NSMutableDictionary* EEPROMWriteDic = [[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+      NSMutableDictionary* EEPROMWriteDic = [[NSMutableDictionary alloc]initWithCapacity:0];
       //AblaufString = [AblaufString stringByAppendingFormat:@"r:%d wt:%d o:%d ",raum,wochentag,objekt];
       [EEPROMWriteDic setObject:EEPROMWriteArray forKey:@"updatearray"];
       NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
@@ -1241,7 +1239,7 @@ if (Webserver_busy)
 		[WriteWocheFeld setStringValue:@""];
 		[StatusFeld setStringValue:@"Adresse wird übertragen"];
       
-      NSMutableDictionary* updateDic = [[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+      NSMutableDictionary* updateDic = [[NSMutableDictionary alloc]initWithCapacity:0];
       //AblaufString = [AblaufString stringByAppendingFormat:@"r:%d wt:%d o:%d ",raum,wochentag,objekt];
       [updateDic setObject:updateArray forKey:@"updatearray"];
 		[updateDic setObject:[NSNumber numberWithInt:10]forKey:@"timeoutcounter"];
@@ -1306,13 +1304,12 @@ if (Webserver_busy)
              [viewsToRemove addObject:thisPage];
              }
              [viewsToRemove makeObjectsPerformSelector:@selector(removeFromSuperview)];
-             [viewsToRemove release];
              [EEPROMPlan setNeedsDisplay:YES];
              //[HomeServerFixArray removeAllObjects];
             
             
             // Daten auf eepromupdatedaten.txt loeschen
-            NSAlert *Warnung = [[[NSAlert alloc] init] autorelease];
+            NSAlert *Warnung = [[NSAlert alloc] init];
             [Warnung addButtonWithTitle:@"Ja"];
            	[Warnung addButtonWithTitle:@"Nein"];
             [Warnung setMessageText:[NSString stringWithFormat:@"%@",@"EEPROMUpdateDaten?"]];
@@ -1327,7 +1324,7 @@ if (Webserver_busy)
             //antwort=[Warnung runModal];
             
             // antwort = 0;
-            NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+            NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
             NSLog(@"Warnung EEPROMDaten Antwort: %d",antwort);
             
             if (antwort == NSAlertFirstButtonReturn)
@@ -1369,7 +1366,7 @@ if (Webserver_busy)
 	if ([TWIStatusTaste state])
 	{
 		NSLog(@"TWIStatustaste: %l",[TWIStatusTaste state]);
-		NSAlert *Warnung = [[[NSAlert alloc] init] autorelease];
+		NSAlert *Warnung = [[NSAlert alloc] init];
 		[Warnung addButtonWithTitle:@"OK"];
 		//	[Warnung addButtonWithTitle:@""];
 		//	[Warnung addButtonWithTitle:@""];
@@ -1402,7 +1399,7 @@ if (Webserver_busy)
 		int Objekt=[[[note userInfo]objectForKey:@"objekt"]intValue];
 		NSArray* DatenArray=[[[note userInfo]objectForKey:@"modifierstundenbytearray"]copy];
 		
-		NSMutableDictionary* HomeClientDic=[[[NSMutableDictionary alloc]initWithDictionary:[note userInfo]]autorelease];
+		NSMutableDictionary* HomeClientDic=[[NSMutableDictionary alloc]initWithDictionary:[note userInfo]];
 		
 		int I2CIndex=[I2CPop indexOfSelectedItem];
 		
@@ -1475,7 +1472,6 @@ if (Webserver_busy)
 		{
 			NSLog(@"timeoutcounter ist null");
 			[derTimer invalidate];
-			[derTimer release];
 			WriteWoche_busy=0;
 			
 			[self setTWITaste:YES];
@@ -1555,7 +1551,6 @@ if (Webserver_busy)
 			[WriteWocheFeld setStringValue:WriteWocheString];
 
 			[derTimer invalidate];
-			[derTimer release];
 			[self setTWITaste:YES];
 			WriteWoche_busy=0;
 		}
@@ -1568,7 +1563,6 @@ if (Webserver_busy)
 	{
 		// Etwas ist schiefgegangen, der Timer hat keinen Zaehler fuer den Wochentag
 		[derTimer invalidate];
-		[derTimer release];
 		[self setTWITaste:YES];
 		WriteWoche_busy=0;
 		return;
@@ -1586,7 +1580,7 @@ if (Webserver_busy)
    [writeEEPROMcounterfeld setStringValue:@" "];
    
 
-   NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+   NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
    [NotificationDic setObject:[NSNumber numberWithInt:1] forKey:@"update"];
    
    NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
@@ -1803,7 +1797,7 @@ if (Webserver_busy)
       
       // Update der PList?
       //
-      NSAlert *Warnung = [[[NSAlert alloc] init] autorelease];
+      NSAlert *Warnung = [[NSAlert alloc] init];
       [Warnung addButtonWithTitle:@"PList anpassen"];
       [Warnung addButtonWithTitle:@"Ignorieren"];
       [Warnung setMessageText:[NSString stringWithFormat:@"%@",@"Neue Werte auf HomeServer"]];
@@ -1879,8 +1873,8 @@ if (Webserver_busy)
          if (([[viewListe objectAtIndex:i] isKindOfClass:[rTagplanbalken class]]) || ([[viewListe objectAtIndex:i] isKindOfClass:[NSMatrix class]]))
          {
             //NSLog(@"i: %d view: %@ tag: %d",i,[[viewListe objectAtIndex:i]description], [[viewListe objectAtIndex:i]tag]);
-            
-            int tempTag = [[viewListe objectAtIndex:i]tag];
+            rTagplanbalken* tempbalken =[viewListe objectAtIndex:i];
+            NSInteger tempTag = tempbalken.tag;
             
             if (tempTag < 2000)
                if ([EEPROMPlan  viewWithTag:tempTag]) // Radio
@@ -1897,7 +1891,7 @@ if (Webserver_busy)
                            rEEPROMbalken* tempBalken = (rEEPROMbalken* )[EEPROMPlan  viewWithTag:tempTag+newbalkenoffset];
                            //NSLog(@"Balken neu raum: %d",[tempBalken Raum]);
                            //NSLog(@"Balken neu raum: %d StundenArray: %@",[tempBalken Raum], [[[tempBalken StundenArray]valueForKey:@"code"] description]);
-                           NSMutableDictionary* UpdateDic = [[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+                           NSMutableDictionary* UpdateDic = [[NSMutableDictionary alloc]initWithCapacity:0];
                            NSMutableArray* tempstundenplanarray = (NSMutableArray*)[[tempBalken StundenArray]valueForKey:@"code"];
                            [UpdateDic setObject:tempstundenplanarray forKey:@"stundenplanarray"];
                            [UpdateDic setObject:[NSNumber numberWithInt:[tempBalken raum]] forKey:@"raum"];
@@ -1921,7 +1915,7 @@ if (Webserver_busy)
                         {
                            rEEPROMbalken* tempBalken = (rEEPROMbalken* )[EEPROMPlan  viewWithTag:tempTag+oldbalkenoffset];
                            //NSLog(@"Balken alt raum: %d StundenArray: %@",[tempBalken Raum], [[[tempBalken StundenArray]valueForKey:@"code"] description]);
-                           NSMutableDictionary* UpdateDic = [[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+                           NSMutableDictionary* UpdateDic = [[NSMutableDictionary alloc]initWithCapacity:0];
                            [UpdateDic setObject:[[tempBalken StundenArray]valueForKey:@"code"] forKey:@"stundenarray"];
                            
                            
@@ -2017,7 +2011,6 @@ if (Webserver_busy)
             [viewsToRemove addObject:thisPage];
          }
          [viewsToRemove makeObjectsPerformSelector:@selector(removeFromSuperview)];
-         [viewsToRemove release];
          [EEPROMPlan setNeedsDisplay:YES];
          [PListFixArray removeAllObjects];
          
@@ -2032,7 +2025,7 @@ if (Webserver_busy)
          if ([TWIStatusTaste state])
           {
           //NSLog(@"TWIStatustaste: %d",[TWIStatusTaste state]);
-          NSAlert *Warnung = [[[NSAlert alloc] init] autorelease];
+          NSAlert *Warnung = [[NSAlert alloc] init];
           [Warnung addButtonWithTitle:@"OK"];
           //	[Warnung addButtonWithTitle:@""];
           //	[Warnung addButtonWithTitle:@""];
@@ -2052,7 +2045,7 @@ if (Webserver_busy)
          
          //
          
-         [UpdateWaitrad startAnimation:YES];
+         [UpdateWaitrad startAnimation:NULL];
          [self updateEEPROMMitDicArray:HomeServerFixArray];
          
          /*
@@ -2088,8 +2081,7 @@ if (Webserver_busy)
 //      [nc postNotificationName:@"EEPROMUpdateClear" object:self userInfo:NotificationDic];
    }
    
-   [PListFixArray release];
-   [HomeServerFixArray release];
+   
    
    /*
    NSMutableArray *viewsToRemove = [[NSMutableArray alloc] init];
@@ -2330,7 +2322,7 @@ if (Webserver_busy)
 				
 				// Request fuer Data schicken
 				
-				NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+				NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 				[NotificationDic setObject:[NSNumber numberWithInt:1] forKey:@"rdata"];
             if ([[note userInfo]objectForKey:@"webtask"])
             {
@@ -2503,7 +2495,7 @@ if (Webserver_busy)
          
          
          }
-			NSMutableDictionary* finishLoadTimerDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+			NSMutableDictionary* finishLoadTimerDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 			[finishLoadTimerDic setObject:@"Read Data OK" forKey:@"timertext"];
          [finishLoadTimerDic setObject:[NSNumber numberWithInt:WebTask] forKey:@"webtask"];
          [finishLoadTimerDic setObject:[NSNumber numberWithInt:wochentagindex] forKey:@"wochentagindex"];
@@ -2520,11 +2512,11 @@ if (Webserver_busy)
          if (WebTask == eepromreadwoche) // Fortsetzung einleiten
          {
             // 4 sekunden notwendig, da WebServer viel Zeit braucht, um die Daten aus dem EEPROM zu laden
-			TimeoutTimer=[[NSTimer scheduledTimerWithTimeInterval:4
+			TimeoutTimer=[NSTimer scheduledTimerWithTimeInterval:4
 																		  target:self 
 																		selector:@selector(TimeoutTimerFunktion:) 
 																		userInfo:finishLoadTimerDic 
-																		 repeats:NO]retain];
+																		 repeats:NO];
 			}
          
 	//		[self sendEEPROMData:(NSString*) dataString anAdresse:(NSString*)adresseString];
@@ -2648,7 +2640,7 @@ didCommitLoadForFrame:(WebFrame *)frame
 		NSLog(@"LoadFailAktion  error: %@",[[note userInfo]objectForKey:@"error"]);
 	}
 	
-	NSAlert *Warnung = [[[NSAlert alloc] init] autorelease];
+	NSAlert *Warnung = [[NSAlert alloc] init];
 	[Warnung addButtonWithTitle:@"OK"];
 	//[Warnung addButtonWithTitle:@""];
 	//[Warnung addButtonWithTitle:@""];
@@ -2698,7 +2690,7 @@ didCommitLoadForFrame:(WebFrame *)frame
   
 	if ([[timer userInfo]objectForKey:@"timertext"])
 	{
-		NSAlert *Warnung = [[[NSAlert alloc] init] autorelease];
+		NSAlert *Warnung = [[NSAlert alloc] init];
 		[Warnung addButtonWithTitle:@"OK"];
 		//[Warnung addButtonWithTitle:@""];
 		//[Warnung addButtonWithTitle:@""];

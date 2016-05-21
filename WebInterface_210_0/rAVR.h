@@ -22,6 +22,7 @@
 #import "rWochenplan.h"
 #import "datum.c"
 #import "version.c"
+#import "defines.h"
 
 
 #define RAUMOFFSET			1000
@@ -37,7 +38,7 @@
 //enum webtaskflag{idle, eepromread, eepromwrite,eepromreadwoche,eepromwritewoche}webtaskflag;
 
 
-@interface rAVR : NSWindowController <NSTabViewDelegate, NSFileManagerDelegate>
+@interface rAVR : NSWindowController <NSTabViewDelegate, NSFileManagerDelegate,NSTableViewDataSource,NSTableViewDelegate>
 {
 IBOutlet	id		WochenplanTab;
 IBOutlet	id		HeizungFeld;
@@ -74,7 +75,7 @@ IBOutlet	id		UpdateTaste;
    
 IBOutlet	id		Waitrad;
    
-IBOutlet	id		UpdateWaitrad;
+IBOutlet	NSProgressIndicator*		UpdateWaitrad;
 
 IBOutlet	id					VersionFeld;
 IBOutlet	id					DatumFeld;
@@ -104,7 +105,7 @@ int							n;
 int							aktuellerTag;
 int							IOW_busy;
 rAVR_DS*						AVR_DS;
-int							aktuelleMark;
+long							aktuelleMark;
 
 
 IBOutlet NSPopUpButton* ObjektPop;

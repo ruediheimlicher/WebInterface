@@ -9,6 +9,7 @@
 #import <Cocoa/Cocoa.h>
 #import "rTaste.h"
 #import "rTagplanbalken.h"
+#import "defines.h"
 
 @interface rServoTagplanbalken : rTagplanbalken
 {

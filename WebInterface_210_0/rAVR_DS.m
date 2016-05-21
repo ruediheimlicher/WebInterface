@@ -16,7 +16,6 @@
 {
 
 	WochenplanTabelle=[[NSMutableArray alloc]initWithCapacity:0];
-	[WochenplanTabelle retain];
 	return self;
 }
 
@@ -53,7 +52,7 @@
 	for (i=0;i<anz;i++)
 	{
 
-	NSMutableDictionary* tempTagDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+	NSMutableDictionary* tempTagDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 	[tempTagDic setObject:[NSNumber numberWithInt:i] forKey:@"stunde"];
 
 	[WochenplanTabelle addObject:tempTagDic];
@@ -77,7 +76,7 @@
 			row:(int)rowIndex
 {
 	//NSLog(@"objectValueForTableColumn");
-    NSDictionary *einTestDic;
+    NSDictionary *einTestDic = [NSDictionary dictionary];
 	if (rowIndex<[WochenplanTabelle count])
 	{
 			einTestDic = [WochenplanTabelle objectAtIndex: rowIndex];

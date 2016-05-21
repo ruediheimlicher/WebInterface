@@ -20,9 +20,7 @@
 		RandU=2;
 		
 		aktivArray=[[NSMutableArray alloc]initWithCapacity:0];
-		[aktivArray retain];
 		StundenArray=[[NSMutableArray alloc]initWithCapacity:0];
-		[StundenArray retain];
 			Nullpunkt=[self convertPoint:NSMakePoint(0.0,0.0) toView:NULL];
 	Tagpunkt.x=5;
 	Tagpunkt.y=frame.size.height-20;
@@ -101,7 +99,6 @@
 	if (StundenArray==NULL)
 	{
 	StundenArray=[[NSMutableArray alloc]initWithCapacity:0];
-	[StundenArray retain];
 	}
 
 	Nullpunkt=[self convertPoint:NSMakePoint(0.0,0.0) toView:NULL];
@@ -167,7 +164,7 @@
 		else
 		{
 			//NSLog(@"setTagplan neuer Dic index: %d",i);
-			NSMutableDictionary* tempElementDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+			NSMutableDictionary* tempElementDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 			[tempElementDic setObject:[[derStundenArray objectAtIndex:i]objectForKey:@"kessel"] forKey:@"kessel"];
 			[StundenArray addObject:tempElementDic];
 		
@@ -226,8 +223,7 @@ return StundenArray;
 - (void)setStundenByteArray:(NSArray*)derStundenArray
 {
    StundenByteArray = derStundenArray;
-   [derStundenArray retain];
-   [StundenByteArray release];
+  
 }
 
 
@@ -310,7 +306,7 @@ return StundenArray;
 		modKey+=8;
 		
 	}
-	NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+	NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 	NSLog(@"modifiers: modKey: %d",modKey);
    
    

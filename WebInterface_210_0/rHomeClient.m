@@ -141,7 +141,7 @@ unsigned char h2int(char c)
             object:nil];
 
    
-   SendEEPROMDataDic = [[[NSMutableDictionary alloc]initWithCapacity:0]retain];
+   SendEEPROMDataDic = [[NSMutableDictionary alloc]initWithCapacity:0];
 
    
    
@@ -155,7 +155,6 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
    //HomeCentralURL=@"https://ruediheimlicher.ch";
 	
 	pw = @"ideur00";
-	[pw retain];
 	    // Set the WebView delegates
 		webView=[[WebView  alloc]init];
     [webView setFrameLoadDelegate:self];
@@ -358,11 +357,11 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 		int sendResetDelay=2.0;
 		//NSLog(@"EEPROMReadDataAktion  sendTimerDic: %@",[sendTimerDic description]);
 	
-		sendTimer=[[NSTimer scheduledTimerWithTimeInterval:sendResetDelay 
+		sendTimer=[NSTimer scheduledTimerWithTimeInterval:sendResetDelay 
 															  target:self 
 															selector:@selector(sendTimerFunktion:) 
 															userInfo:sendTimerDic 
-															 repeats:YES]retain];
+															 repeats:YES];
 						
 /* In sendTimerFunktion verschoben
 
@@ -408,7 +407,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 			NSLog(@"sendTimerFunktion sendTimer invalidate");
 			
 			//
-			NSAlert *Warnung = [[[NSAlert alloc] init] autorelease];
+			NSAlert *Warnung = [[NSAlert alloc] init];
 			[Warnung addButtonWithTitle:@"OK"];
 			//[Warnung addButtonWithTitle:@"Abbrechen"];
 			[Warnung setMessageText:[NSString stringWithFormat:@"%@",@"EEPROM lesen misslungen"]];
@@ -436,7 +435,6 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
          if ([derTimer isValid])
          {
 			[derTimer invalidate];
-			[derTimer release];
          }
 		}
 		
@@ -448,15 +446,15 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 {
 		//NSLog(@"EEPROMisWriteOKRequest ");
 		// Zaehler fuer Anzahl Versuche einsetzen
-		NSMutableDictionary* confirmTimerDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+		NSMutableDictionary* confirmTimerDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 		[confirmTimerDic setObject:[NSNumber numberWithInt:0]forKey:@"anzahl"];
 		int sendResetDelay=2.0;
 		//NSLog(@"EEPROMReadDataAktion  confirmTimerDic: %@",[confirmTimerDic description]);
-		confirmTimer=[[NSTimer scheduledTimerWithTimeInterval:sendResetDelay 
+		confirmTimer=[NSTimer scheduledTimerWithTimeInterval:sendResetDelay
 															  target:self 
 															selector:@selector(confirmTimerFunktion:) 
 															userInfo:confirmTimerDic 
-															 repeats:YES]retain];
+															 repeats:YES];
 															 
 	
 }
@@ -485,13 +483,12 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 		{
 			NSLog(@"confirmTimerFunktion confirmTimer invalidate");
 			// Misserfolg an AVRClient senden
-			NSMutableDictionary* tempDataDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+			NSMutableDictionary* tempDataDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 			[tempDataDic setObject:[NSNumber numberWithInt:0] forKey:@"iswriteok"];
 			NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
 			[nc postNotificationName:@"FinishLoad" object:self userInfo:tempDataDic];
 			
 			[derTimer invalidate];
-			[derTimer release];
 			
 		}
 		
@@ -521,7 +518,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
    NSLog(@"LoadTestAktion note: %@",[[note userInfo]description]);
    
    // Zaehler fuer Anzahl Versuche einsetzen
-			NSMutableDictionary* loadTimerDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+			NSMutableDictionary* loadTimerDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 			[loadTimerDic setObject:[NSNumber numberWithInt:0]forKey:@"anzahl"];
    
    loadTestStatus = START_STATUS0;
@@ -534,17 +531,16 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
    
 			//NSLog(@"EEPROMReadDataAktion  confirmTimerDic: %@",[confirmTimerDic description]);
    
-			NSTimer* loadTimer=[[NSTimer scheduledTimerWithTimeInterval:sendResetDelay
+			NSTimer* loadTimer=[NSTimer scheduledTimerWithTimeInterval:sendResetDelay
                                                               target:self
                                                             selector:@selector(loadTimerFunktion:)
                                                             userInfo:loadTimerDic
-                                                             repeats:YES]retain];
+                                                             repeats:YES];
    
    
    //				NSRunLoop *runLoop = [NSRunLoop currentRunLoop];
    //				[runLoop addTimer:TWITimer forMode:NSDefaultRunLoopMode];
    
-   [loadTimer release];
    
 }
 
@@ -740,7 +736,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
          
          
          // Blinkanzeige im PW-Feld
-         NSMutableDictionary* tempDataDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+         NSMutableDictionary* tempDataDic=[[NSMutableDictionary alloc]initWithCapacity:0];
          if (anz%2==0)// gerade
          {
             //[self loadURL:URL];
@@ -766,7 +762,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
          [self loadURL:statusURL];
 
          // Misserfolg an AVRClient senden
-         NSMutableDictionary* tempDataDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+         NSMutableDictionary* tempDataDic=[[NSMutableDictionary alloc]initWithCapacity:0];
          [tempDataDic setObject:[NSNumber numberWithInt:0] forKey:@"isstatusok"];
          if ([statusTimerDic objectForKey:@"local"] && [[statusTimerDic objectForKey:@"local"]intValue]==1 )
          {
@@ -889,14 +885,14 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 			[self loadURL:URL];
 			
 			//  Blinkanzeige im PWFeld
-			NSMutableDictionary* tempDataDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+			NSMutableDictionary* tempDataDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 			//[tempDataDic setObject:@"*" forKey:@"wait"];
 			
 			NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
 			[nc postNotificationName:@"StatusWait" object:self userInfo:tempDataDic];
          
 			// Zaehler fuer Anzahl Versuche einsetzen
-			NSMutableDictionary* confirmTimerDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+			NSMutableDictionary* confirmTimerDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 			[confirmTimerDic setObject:[NSNumber numberWithInt:0]forKey:@"anzahl"];
          
          if ([[note userInfo]objectForKey:@"status"] && [[[note userInfo]objectForKey:@"status"]intValue]==1)
@@ -911,11 +907,11 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
          int sendResetDelay=1.0;
 			//NSLog(@"EEPROMReadDataAktion  confirmTimerDic: %@",[confirmTimerDic description]);
          
-			confirmStatusTimer=[[NSTimer scheduledTimerWithTimeInterval:sendResetDelay
+			confirmStatusTimer=[NSTimer scheduledTimerWithTimeInterval:sendResetDelay
                                                               target:self
                                                             selector:@selector(statusTimerFunktion:)
                                                             userInfo:confirmTimerDic
-                                                             repeats:YES]retain];
+                                                             repeats:YES];
 			
 		}
 		
@@ -956,7 +952,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
          
 
 			// Blinkanzeige im PW-Feld
-			NSMutableDictionary* tempDataDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+			NSMutableDictionary* tempDataDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 			if (anz%2==0)// gerade
 			{
 			//[self loadURL:URL];
@@ -978,7 +974,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 			
 			NSLog(@"statusTimerFunktion statusTimer invalidate");
 			// Misserfolg an AVRClient senden
-			NSMutableDictionary* tempDataDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+			NSMutableDictionary* tempDataDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 			[tempDataDic setObject:[NSNumber numberWithInt:0] forKey:@"isstatusok"];
          if ([statusTimerDic objectForKey:@"local"] && [[statusTimerDic objectForKey:@"local"]intValue]==1 )
          {
@@ -1000,7 +996,6 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 			[nc postNotificationName:@"FinishLoad" object:self userInfo:tempDataDic];
 			
 			[derTimer invalidate];
-			[derTimer release];
 			
 		}
 		
@@ -1653,11 +1648,11 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
    
    
    
-   EEPROMUpdateTimer=[[NSTimer scheduledTimerWithTimeInterval:sendDelay
+   EEPROMUpdateTimer=[NSTimer scheduledTimerWithTimeInterval:sendDelay
                                                        target:self
                                                      selector:@selector(EEPROMUpdateTimerfunktion:)
                                                      userInfo:sendDic
-                                                      repeats:YES]retain];
+                                                      repeats:YES];
 
    
 }
@@ -1682,14 +1677,12 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
    {
       NSLog(@"anzahlcounter == 0 > EEPROMUpdateTimer invalidate");
       [timer invalidate];
-      [timer release];
       
    }
    else if (ladeposition == updatecounter-1)
    {
       NSLog(@"ladeposition == updatecounter-1 > EEPROMUpdateTimer invalidate");
       [timer invalidate];
-      [timer release];
       NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
       NSDictionary* tempDataDic=[NSDictionary dictionaryWithObjectsAndKeys:
                                  [NSNumber numberWithInt:1],@"fertig",
@@ -1813,8 +1806,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 
 - (void)setURL:(NSString *)u
 {
-	[url release];
-	url = [u retain];
+	url = u;
 }
 
 
@@ -1837,8 +1829,6 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 
 - (void)setURLToLoad:(NSURL *)URL
 {
-	[URL retain];
-	[URLToLoad release];
 	URLToLoad = URL;
 }
 
@@ -1856,8 +1846,6 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 }
 - (void)setSource:(NSString *)webContent
 {
-	[webContent retain];
-	[_source release];
 	_source = webContent;
 }
 
@@ -1869,7 +1857,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 - (void)webView:(WebView *)sender didFinishLoadForFrame:(WebFrame *)frame
 {
    NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
-	NSMutableDictionary* tempDataDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+	NSMutableDictionary* tempDataDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 	
    [tempDataDic setObject:[NSNumber numberWithInt:WebTask] forKey:@"webtask"];
 	//NSLog(@"***       HomeClient Webview didFinishLoadForFrame  ***");
@@ -1960,7 +1948,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 		CheckRange = [HTML_Inhalt rangeOfString:Data_String];
 		if (CheckRange.location < NSNotFound)
 		{
-			NSLog(@"didFinishLoadForFrame okcode: data ist da  loc: %d",CheckRange.location);
+			NSLog(@"didFinishLoadForFrame okcode: data ist da  loc: %lu",(unsigned long)CheckRange.location);
 			[tempDataDic setObject:[NSNumber numberWithInt:1] forKey:@"data"];
 		}
 		else
@@ -1973,7 +1961,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 		CheckRange = [HTML_Inhalt rangeOfString:EEPROM1_String];
 		if (CheckRange.location < NSNotFound)
 		{
-			NSLog(@"didFinishLoadForFrame: eeprom+ ist da loc: %d ",CheckRange.location);
+			NSLog(@"didFinishLoadForFrame: eeprom+ ist da loc: %lu ",(unsigned long)CheckRange.location);
 			[tempDataDic setObject:[NSNumber numberWithInt:1] forKey:@"eeprom+"];
          //loadTestStatus = END_WRITE;
       }
@@ -2166,7 +2154,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
             // Hex in dez umwandeln fuer senden an HomeServer
             NSArray* tempDataArray = [EEPROM_DataString componentsSeparatedByString:@"+"];
             //NSLog(@"tempDataArray: %@",[tempDataArray description]);
-            NSMutableArray* tempDezDataArray = [[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+            NSMutableArray* tempDezDataArray = [[NSMutableArray alloc]initWithCapacity:0];
             for (int i=0;i<[tempDataArray count];i++)
             {
                int data = [self HexStringZuInt:[tempDataArray objectAtIndex:i] ];
@@ -2272,7 +2260,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 		NSString* Error_String= @"error";
       NSString* EEPROMUpdate_String= @"eepromupdate";
 		
-		NSMutableDictionary* tempDataDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+		NSMutableDictionary* tempDataDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 		
 		NSString *provurl = [[[[frame provisionalDataSource] request] URL] absoluteString];
 		NSLog(@"didFailProvisionalLoadWithError: URL: %@",provurl);
@@ -2318,7 +2306,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 		
 		//NSBeginAlertSheet(@"Provisional Download misslungen", nil, nil, nil, [self window], nil, nil, nil, nil, errorDescription);
       
-		NSAlert *Warnung = [[[NSAlert alloc] init] autorelease];
+		NSAlert *Warnung = [[NSAlert alloc] init];
 		[Warnung addButtonWithTitle:@"OK"];
 		//	[Warnung addButtonWithTitle:@""];
 		//	[Warnung addButtonWithTitle:@""];
@@ -2360,7 +2348,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 			errorDescription = NSLocalizedString(@"An error occured during download.",@"Download ging schief.");
 		}	
 		
-		NSAlert *Warnung = [[[NSAlert alloc] init] autorelease];
+		NSAlert *Warnung = [[NSAlert alloc] init];
 		[Warnung addButtonWithTitle:@"OK"];
 		//	[Warnung addButtonWithTitle:@""];
 		//	[Warnung addButtonWithTitle:@""];
@@ -2378,7 +2366,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 		
 		
 		NSLog(@"Webview didFailLoadWithError");
-		NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]retain];
+		NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 		[NotificationDic setObject:error forKey:@"error"];
 		
 		NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];

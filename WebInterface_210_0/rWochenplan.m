@@ -22,9 +22,8 @@
     self = [super initWithFrame:frame];
     if (self) 
 	{
-	TagplanArray=[[[NSMutableArray alloc]initWithCapacity:0]retain];
+	TagplanArray=[[NSMutableArray alloc]initWithCapacity:0];
 	aktivObjektArray=[[NSMutableArray alloc]initWithCapacity:0];
-	[aktivObjektArray retain];
 	NSNotificationCenter*	nc=[NSNotificationCenter defaultCenter];
 		
 	[nc addObserver:self
@@ -48,11 +47,11 @@
 
 - (NSArray*)setWochenplanForRaum:(int)derRaum mitWochenplanArray:(NSArray*)derWochenplanArray
 {
-	NSMutableDictionary* GeometrieDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
-	NSMutableArray* GeometrieArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+	NSMutableDictionary* GeometrieDic=[[NSMutableDictionary alloc]initWithCapacity:0];
+	NSMutableArray* GeometrieArray=[[NSMutableArray alloc]initWithCapacity:0];
 
-	NSArray* Wochentage=[[NSArray arrayWithObjects:@"M<",@"DI", @"MI", @"DO", @"FR", @"SA", @"SO",nil]retain];
-	NSArray* Raumnamen=[[NSArray arrayWithObjects:@"Heizung", @"Werkstatt", @"WoZi", @"Buero", @"Labor", @"OG1", @"OG2", @"Estrich", nil]retain];
+	NSArray* Wochentage=[NSArray arrayWithObjects:@"M<",@"DI", @"MI", @"DO", @"FR", @"SA", @"SO",nil];
+	NSArray* Raumnamen=[NSArray arrayWithObjects:@"Heizung", @"Werkstatt", @"WoZi", @"Buero", @"Labor", @"OG1", @"OG2", @"Estrich", nil];
 	//NSLog(@"\n\nsetWochenplanForRaum: : %d    start",derRaum);
 	//NSLog(@"setWochenplanForRaum: derWochenplanArray: %@",[derWochenplanArray description]);
 	//NSLog(@"A0");
@@ -102,7 +101,7 @@
 		for (obj=0;obj<8;obj++)
 		{
          
-			NSMutableDictionary* tempaktivObjektDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+			NSMutableDictionary* tempaktivObjektDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 			if ((derRaum == 0)&&(wd==0))
 			{
             //NSLog(@"tempTagplanArray: %@",[tempTagplanArray description]);
@@ -150,7 +149,7 @@
 	//NSLog(@"\n				****\n");
 	
 	
-	NSMutableArray* TagbalkenArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+	NSMutableArray* TagbalkenArray=[[NSMutableArray alloc]initWithCapacity:0];
 	
 	int Tagbalkenhoehe=32;	//Hoehe eines Tagbalkens
 	int Titelhoehe=30;	// Hoehe des Titelfeldes über den Tagbalken ("Wochentag")
@@ -187,7 +186,7 @@
 		Balkenfeld.size.width-=10;
 		Balkenfeld.origin.x+=2;
 		Balkenfeld.origin.y+= (PlanFeld.size.height - Tagbalkenhoehe - Titelhoehe+2);
-		NSMutableArray* tempTagbalkenArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+		NSMutableArray* tempTagbalkenArray=[[NSMutableArray alloc]initWithCapacity:0];
 		//[GeometrieArray insertObject:[NSNumber numberWithFloat:Balkenfeld.origin.y] atIndex:0];
 		//[GeometrieArray addObject:[NSNumber numberWithFloat:Balkenfeld.origin.y]];
 
@@ -199,7 +198,7 @@
 		{
 			//NSLog(@"setWochenplanForRaum C objektbalken: %d",objektbalken);
 			//objektbalken=[einIndex intValue];
-			NSMutableDictionary* TagbalkenDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+			NSMutableDictionary* TagbalkenDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 			[TagbalkenArray addObject:TagbalkenDic];
 			
 			// Tagbalken erzeugen
@@ -319,7 +318,7 @@
 			Balkenfeld.origin.y-=(Tagbalkenhoehe+4);
 			
 			//Stundenplan erzeugen
-			NSMutableArray* tempStundenArray=[[[NSMutableArray alloc]initWithCapacity:0]retain];
+			NSMutableArray* tempStundenArray=[[NSMutableArray alloc]initWithCapacity:0];
 			int l;
 			//NSLog(@"Wochenplan setWochenplan vor Stundenplan");
 			
@@ -435,7 +434,7 @@
 - (void)ModifierAktion:(NSNotification*)note
 {
 	//NSLog(@"Wochenplan ModifierAktion: %@",[[note userInfo]description]);
-	NSArray* Raumnamen=[[NSArray arrayWithObjects:@"Heizung", @"Werkstatt", @"WoZi", @"Buero", @"Labor", @"OG1", @"OG2", @"Estrich", nil]retain];
+	NSArray* Raumnamen=[NSArray arrayWithObjects:@"Heizung", @"Werkstatt", @"WoZi", @"Buero", @"Labor", @"OG1", @"OG2", @"Estrich", nil];
 	
 	
 	if ([[[note userInfo]objectForKey:@"raum"]intValue]==Raum)
@@ -508,8 +507,8 @@
 	NSArray* Wochentage=[NSArray arrayWithObjects:@"MO",@"DI",@"MI",@"DO",@"FR",@"SA",@"SO",nil];
 
 	// Array mit den Stundenplaenen fuer das Objekt
-	NSMutableArray* tempWriteArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
-	NSMutableDictionary* tempWriteDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+	NSMutableArray* tempWriteArray=[[NSMutableArray alloc]initWithCapacity:0];
+	NSMutableDictionary* tempWriteDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 	
 	
 	if ([[[note userInfo]objectForKey:@"raum"]intValue]==Raum)

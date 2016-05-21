@@ -15,7 +15,7 @@ enum downloadflag{downloadpause, heute, last, datum}downloadFlag;
 
 - (void)setErrString:(NSString*)derErrString
 {
-	NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+	NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 	[NotificationDic setObject:derErrString forKey:@"err"];
 	//NSLog(@"setErrString: errString: %@",derErrString);
 	NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
@@ -26,24 +26,23 @@ enum downloadflag{downloadpause, heute, last, datum}downloadFlag;
 {
  	self = [super initWithWindowNibName:@"HomeData"];
 	//NSLog(@"HomeData init");
-	DownloadPfad = [[NSHomeDirectory() stringByAppendingPathComponent:@"Documents/TempDaten"]retain];
+	DownloadPfad = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents/TempDaten"];
 	
    ServerPfad =@"http://www.ruediheimlicher.ch/Data";
 //   ServerPfad =@"https://www.ruediheimlicher.ch/Data";
 	
    
    
-   [ServerPfad retain];
-	DataSuffix=[[NSString string]retain];
-	prevDataString=[[NSString string]retain];
+	DataSuffix=[NSString string];
+	prevDataString=[NSString string];
 	downloadFlag=downloadpause;
 	lastDataZeit=0;
-	HomeCentralData = [[[NSMutableData alloc]initWithCapacity:0]retain];
+	HomeCentralData = [[NSMutableData alloc]initWithCapacity:0];
 	
 	// Solar
 	lastSolarDataZeit=0;
-	SolarDataSuffix=[[NSString string]retain];
-	prevSolarDataString=[[NSString string]retain];
+	SolarDataSuffix=[NSString string];
+	prevSolarDataString=[NSString string];
 
 	NSNotificationCenter * nc;
 	nc=[NSNotificationCenter defaultCenter];
@@ -87,7 +86,6 @@ enum downloadflag{downloadpause, heute, last, datum}downloadFlag;
    NSCalendar *gregorian =[[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
    int dayOfYear =[gregorian ordinalityOfUnit:NSDayCalendarUnit
                                        inUnit:NSYearCalendarUnit forDate:tagdatum];
-   [gregorian release];
    return dayOfYear;
 }
 
@@ -213,7 +211,7 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
          {
             NSLog(@"offline");
          }
-			NSAlert *Warnung = [[[NSAlert alloc] init] autorelease];
+			NSAlert *Warnung = [[NSAlert alloc] init];
 			[Warnung addButtonWithTitle:@"OK"];
 			//	[Warnung addButtonWithTitle:@""];
 			//	[Warnung addButtonWithTitle:@""];
@@ -255,7 +253,7 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 			// Auf WindowController Timer auslösen
 			downloadFlag=heute;
 			//NSLog(@"DataVonHeute downloadFlag: %d",downloadFlag);
-			NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+			NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 			[NotificationDic setObject:[NSNumber numberWithInt:downloadFlag] forKey:@"downloadflag"];
 			[NotificationDic setObject:[NSNumber numberWithInt:lastDataZeit] forKey:@"lastdatazeit"];
          [NotificationDic setObject:[NSNumber numberWithInt:0] forKey:@"quelle"];
@@ -314,7 +312,6 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 		
 		DataSuffix=[NSString stringWithFormat:@"/HomeDaten/%@/HomeDaten%@%@%@.txt",[DatumArray objectAtIndex:0],[[DatumArray objectAtIndex:0]substringFromIndex:2],[DatumArray objectAtIndex:1],[DatumArray objectAtIndex:2]];
 		NSLog(@"DataSuffix: %@",DataSuffix);
-		[DataSuffix retain];
 		//NSString* URLPfad=[NSURL URLWithString:[ServerPfad stringByAppendingPathComponent:DataSuffix]];
 		//NSString* URLPfad=[NSURL URLWithString:[ServerPfad stringByAppendingPathComponent:@"HomeDaten.txt"]];
 		//NSLog(@"DataVon URLPfad: %@",URLPfad);
@@ -344,7 +341,7 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 			
 			//NSLog(@"Data von: %@ OK",DataString);
 			// Auf WindowController Timer stoppen, Diagramm leeren 
-			NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+			NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 			[NotificationDic setObject:[NSNumber numberWithInt:downloadFlag] forKey:@"downloadflag"];
 			[NotificationDic setObject:[NSNumber numberWithInt:lastDataZeit] forKey:@"lastdatazeit"];
 			[NotificationDic setObject:DataString forKey:@"datastring"];
@@ -401,7 +398,7 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 {
 	//NSLog(@"LastData");
 	NSString* returnString = [NSString string];
-	NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+	NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 	DataSuffix=@"LastData.txt";
 	downloadFlag=last;
 	
@@ -477,9 +474,7 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 		//NSLog(@"lastData: lastDatumString: %@",lastDatumString);
 		[NotificationDic setObject:lastDatumString forKey:@"lasttimestring"];
 		
-		[lastTimeString release];
-		[lastTimeRequest release];
-		
+				
 		
 		//NSString* aStr;
 		//aStr = [[NSString alloc] initWithData:aData encoding:NSASCIIStringEncoding];
@@ -573,7 +568,6 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 			NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
 			[nc postNotificationName:@"HomeDataDownload" object:self userInfo:NotificationDic];
 			
-			[HomeCentralRequest release];
 			HomeCentralRequest = NULL;
 			return DataString;
 		}
@@ -581,14 +575,12 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 		{
 			//NSLog(@"lastData: kein String");
 			[self setErrString:@"lastData: kein String"];
-			[HomeCentralRequest release];
 			
 		}
 		//NSLog(@"LastData: ");
 		NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
 		[nc postNotificationName:@"HomeDataDownload" object:self userInfo:NotificationDic];
 		
-		[DataString release];
 
 	}
 	
@@ -675,7 +667,7 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
    //NSLog(@"HomeData Found utxt string: %@",scriptReturn);
 
    
-   NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+   NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
    //[NotificationDic setObject:DataString forKey:@"routerip"];
    if (scriptReturn)
    {
@@ -727,7 +719,7 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
          //ERROR: 503
          NSArray* ErrorArray=[[[[WebFehler userInfo]objectForKey:@"NSUnderlyingError"]description]componentsSeparatedByString:@","];
          NSLog(@"SolarDataVonHeute ErrorArray: %@",[ErrorArray description]);
-         NSAlert *Warnung = [[[NSAlert alloc] init] autorelease];
+         NSAlert *Warnung = [[NSAlert alloc] init];
          [Warnung addButtonWithTitle:@"OK"];
          //	[Warnung addButtonWithTitle:@""];
          //	[Warnung addButtonWithTitle:@""];
@@ -765,7 +757,7 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
          // Auf WindowController Timer auslösen
          downloadFlag=heute;
          //NSLog(@"DataVonHeute downloadFlag: %d",downloadFlag);
-         NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+         NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
          [NotificationDic setObject:[NSNumber numberWithInt:downloadFlag] forKey:@"downloadflag"];
          [NotificationDic setObject:[NSNumber numberWithInt:lastDataZeit] forKey:@"lastdatazeit"];
          [NotificationDic setObject:DataString forKey:@"datastring"];
@@ -841,7 +833,7 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 			//ERROR: 503
 			NSArray* ErrorArray=[[[[WebFehler userInfo]objectForKey:@"NSUnderlyingError"]description]componentsSeparatedByString:@","];
 			NSLog(@"ErrorArray: %@",[ErrorArray description]);
-			NSAlert *Warnung = [[[NSAlert alloc] init] autorelease];
+			NSAlert *Warnung = [[NSAlert alloc] init];
 			[Warnung addButtonWithTitle:@"OK"];
 			//	[Warnung addButtonWithTitle:@""];
 			//	[Warnung addButtonWithTitle:@""];
@@ -879,7 +871,7 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 			// Auf WindowController Timer auslösen
 			downloadFlag=heute;
 			//NSLog(@"DataVonHeute downloadFlag: %d",downloadFlag);
-			NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+			NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 			[NotificationDic setObject:[NSNumber numberWithInt:downloadFlag] forKey:@"downloadflag"];
 			[NotificationDic setObject:[NSNumber numberWithInt:lastDataZeit] forKey:@"lastdatazeit"];
 			[NotificationDic setObject:DataString forKey:@"datastring"];
@@ -942,7 +934,6 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 		
 		SolarDataSuffix=[NSString stringWithFormat:@"/SolarDaten/%@/SolarDaten%@%@%@.txt",[DatumArray objectAtIndex:0],[[DatumArray objectAtIndex:0]substringFromIndex:2],[DatumArray objectAtIndex:1],[DatumArray objectAtIndex:2]];
 		//NSLog(@"DataSuffix: %@",SolarDataSuffix);
-		[SolarDataSuffix retain];
 		//NSString* URLPfad=[NSURL URLWithString:[ServerPfad stringByAppendingPathComponent:DataSuffix]];
 		//NSString* URLPfad=[NSURL URLWithString:[ServerPfad stringByAppendingPathComponent:@"HomeDaten.txt"]];
 		//NSLog(@"DataVon URLPfad: %@",URLPfad);
@@ -972,7 +963,7 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 			
 			//NSLog(@"Data von: %@ OK",DataString);
 			// Auf WindowController Timer stoppen, Diagramm leeren 
-			NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+			NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 			[NotificationDic setObject:[NSNumber numberWithInt:downloadFlag] forKey:@"downloadflag"];
 			[NotificationDic setObject:[NSNumber numberWithInt:lastDataZeit] forKey:@"lastdatazeit"];
 			[NotificationDic setObject:DataString forKey:@"datastring"];
@@ -1035,7 +1026,7 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 {
 	//NSLog(@"LastSolarData");
 	NSString* returnString = [NSString string];
-	NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+	NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 	SolarDataSuffix=@"LastSolarData.txt";
 	downloadFlag=last;
 	
@@ -1108,8 +1099,7 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 		//NSLog(@"lastSolarDatumString: %@",lastDatumString);
 		[NotificationDic setObject:lastDatumString forKey:@"lasttimestring"];
 		
-		[lastTimeString release];
-		[lastTimeRequest release];
+	
 		
 		
 		//NSString* aStr;
@@ -1213,7 +1203,6 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 			NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
 			[nc postNotificationName:@"SolarDataDownload" object:self userInfo:NotificationDic];
 			
-			[SolarCentralRequest release];
 			SolarCentralRequest = NULL;
 			return DataString;
 		}
@@ -1221,14 +1210,12 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 		{
 			//NSLog(@"LastSolarData: kein String");
 			[self setErrString:@"lastData: kein String"];
-			[SolarCentralRequest release];
 			
 		}
 		//NSLog(@"LastSolarData: D");
 		NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
 		[nc postNotificationName:@"SolarDataDownload" object:self userInfo:NotificationDic];
 		
-		[DataString release];
 		
 	}
 	
@@ -1381,8 +1368,8 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 
 - (NSArray*)KollektorMittelwerteVonJahr:(int)jahr
 {
-   NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
-   NSMutableArray* KollektorTemperaturArray = [[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+   NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
+   NSMutableArray* KollektorTemperaturArray = [[NSMutableArray alloc]initWithCapacity:0];
    if (isDownloading)
 	{
 		[NotificationDic setObject:@"busy" forKey:@"erfolg"];
@@ -1527,7 +1514,7 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
    
    //NSLog(@"EEPROMUpdateAktion UpdateArray nach sort  (data): %@",[[UpdateArray valueForKey:@"data" ] description]);
    
-   NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+   NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 	[NotificationDic setObject:UpdateArray forKey:@"updatearray"];
 	NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
 	[nc postNotificationName:@"HomeDataUpdate" object:self userInfo:NotificationDic]; // -> AVRClient
@@ -1684,7 +1671,7 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 - (NSArray*)ElektroStatistikVonJahr:(int)dasJahr Monat:(int)derMonat
 {
    // Zeile: 29.12.10	tab Elektro-Laufzeit: 1101	tab Pumpe-Laufzeit: 0.0
-	NSMutableArray* ElektrodatenArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+	NSMutableArray* ElektrodatenArray=[[NSMutableArray alloc]initWithCapacity:0];
 	//NSLog(@"ElektroStatistikVon: %d",dasJahr);
 	DataSuffix=@"ElektroZeit.txt";
 //	NSString* URLPfad=[NSURL URLWithString:[ServerPfad stringByAppendingPathComponent:DataSuffix]];
@@ -2055,7 +2042,6 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
             [downloadCancelButton setKeyEquivalent:@"\r"];
             [downloadCancelButton setKeyEquivalentModifierMask:0];
             [downloadCancelButton setTitle:@"Download"];
-            [download release];
             download = nil;
             receivedContentLength = 0;
         }
@@ -2209,13 +2195,13 @@ NSLog(@"NSCachedURLResponse");
 	//NSLog(@"downloadDidFinish DataPfad: %@",DataPfad);
 	//NSString* DataPfad = [DownloadPfad stringByAppendingPathComponent:@"HomeDaten.txt"];
 	//NSStringEncoding enc=0;
-	NSString* DataString = [[NSString string]retain];;
+	NSString* DataString = [NSString string];;
 	NSCharacterSet* CharOK=[NSCharacterSet alphanumericCharacterSet];
 	if ([[NSFileManager defaultManager]fileExistsAtPath:DataPfad])
 	{
 		//NSLog(@"File an Pfad da: %@",DataPfad);
 		
-		DataString=[[NSString stringWithContentsOfFile:DataPfad encoding:NSMacOSRomanStringEncoding error:NULL]retain];
+		DataString=[NSString stringWithContentsOfFile:DataPfad encoding:NSMacOSRomanStringEncoding error:NULL];
 		
 	}
 	else
@@ -2246,7 +2232,7 @@ NSLog(@"NSCachedURLResponse");
 		NSLog(@"downloadDidFinish: DataPfad: %@ Error",DataPfad);
 	}
 	
-	NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+	NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 	[NotificationDic setObject:[NSNumber numberWithInt:downloadFlag] forKey:@"downloadflag"];
 	[NotificationDic setObject:[NSNumber numberWithInt:lastDataZeit] forKey:@"lastdatazeit"];
 	[NotificationDic setObject:DataString forKey:@"datastring"];

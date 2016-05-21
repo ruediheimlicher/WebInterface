@@ -9,6 +9,7 @@
 #import <Cocoa/Cocoa.h>
 #import "rLegende.h"
 #import "rMehrkanalDiagramm.h"
+#import "defines.h"
 
 @interface rStatistikDiagramm : rMehrkanalDiagramm
 {

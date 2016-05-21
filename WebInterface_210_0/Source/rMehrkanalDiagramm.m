@@ -40,7 +40,6 @@ void r_itoa(int32_t zahl, char* string)
 		[self setFrame:Diagrammfeld];
 		DiagrammEcke=NSMakePoint(2.1,5.1);
 		Graph=[NSBezierPath bezierPath];
-		[Graph retain];
 		[Graph moveToPoint:DiagrammEcke];
 		lastPunkt=DiagrammEcke;
 		GraphFarbe=[NSColor blueColor]; 
@@ -48,27 +47,19 @@ void r_itoa(int32_t zahl, char* string)
 		StartwertX=1.0;
 		FaktorY=(frameRect.size.height-15.0)/255.0; // Reduktion auf Feldhoehe
 		//NSLog(@"MKDiagramm Diagrammfeldhoehe: %2.2f Faktor: %2.2f",(frameRect.size.height-15),FaktorY);
-		GraphArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
-		[GraphArray retain];
-		GraphFarbeArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
-		[GraphFarbeArray retain];
-		GraphKanalArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
-		[GraphKanalArray retain];
-		GraphKanalOptionenArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
-		[GraphKanalOptionenArray retain];
+		GraphArray=[[NSMutableArray alloc]initWithCapacity:0];
+		GraphFarbeArray=[[NSMutableArray alloc]initWithCapacity:0];
+		GraphKanalArray=[[NSMutableArray alloc]initWithCapacity:0];
+		GraphKanalOptionenArray=[[NSMutableArray alloc]initWithCapacity:0];
 	
-		DatenArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
-		[DatenArray retain];
+		DatenArray=[[NSMutableArray alloc]initWithCapacity:0];
 		
 		// Feld fuer die Wertangabe am Ende der Datenlinie
-		DatenFeldArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
-		[DatenFeldArray retain];
-		DatenWertArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
-		[DatenWertArray retain];
+		DatenFeldArray=[[NSMutableArray alloc]initWithCapacity:0];
+		DatenWertArray=[[NSMutableArray alloc]initWithCapacity:0];
 		
 		// Bezeichnung der Daten des Kanals
-		DatenTitelArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
-		[DatenTitelArray retain];
+		DatenTitelArray=[[NSMutableArray alloc]initWithCapacity:0];
 		int i;
 		
 		
@@ -76,7 +67,6 @@ void r_itoa(int32_t zahl, char* string)
 		{
 			NSBezierPath* tempGraph=[NSBezierPath bezierPath];
          
-			[tempGraph retain];
          [tempGraph setLineWidth:1.5];
 			float varRed=sin(i+(float)i/10.0)/3.0+0.6;
 			float varGreen=sin(2*i+(float)i/10.0)/3.0+0.6;
@@ -85,7 +75,6 @@ void r_itoa(int32_t zahl, char* string)
 			NSColor* tempColor=[NSColor colorWithCalibratedRed:varRed green: varGreen blue: varBlue alpha:1.0];
 			//NSLog(@"Farbe Kanal: %d Color: %@",i,[tempColor description]);
 			tempColor=[NSColor blackColor];
-			[tempColor retain];
 			[GraphFarbeArray addObject:tempColor];
 			[GraphArray addObject:tempGraph];
 			//[GraphKanalArray addObject:[NSMutableDictionary alloc]initWithCapacity:0]];
@@ -155,7 +144,6 @@ void r_itoa(int32_t zahl, char* string)
 - (void)setOrdinate:(id)dieOrdinate
 {
 	Ordinate=dieOrdinate;
-	[Ordinate retain];
 }
 
 - (void)setGraphFarbe:(NSColor*) dieFarbe forKanal:(int) derKanal
@@ -166,8 +154,6 @@ void r_itoa(int32_t zahl, char* string)
 - (void)setStartZeit:(NSCalendarDate*)dasDatum
 {
 DatenserieStartZeit = dasDatum;
-[dasDatum retain];
-[DatenserieStartZeit release];
 
 }
 
@@ -178,7 +164,6 @@ DatenserieStartZeit = dasDatum;
 	if ([[note userInfo]objectForKey:@"datenseriestartzeit"])
 	{
 		DatenserieStartZeit= (NSCalendarDate*)[[note userInfo]objectForKey:@"datenseriestartzeit"];
-		[DatenserieStartZeit retain];
 		//NSLog(@"MehrkanalDiagramm DatenserieStartZeit %@",DatenserieStartZeit);
 		
 	}
@@ -398,7 +383,6 @@ NSLog(@"setWert Kanal: %d  x: %2.2f y: %2.2f ",derKanal, derWert.x, derWert.y);
 			}		
 		}// if Kanal
 	} // for i
-	[derKanalArray retain];
 	[GraphKanalArray setArray:derKanalArray];
 	//[GraphKanalArray retain];
 //	[self setNeedsDisplay:YES];
@@ -470,7 +454,6 @@ NSLog(@"setWert Kanal: %d  x: %2.2f y: %2.2f ",derKanal, derWert.x, derWert.y);
 		[neuerGraph lineToPoint:neuerPunkt];
 		[[GraphArray objectAtIndex:i]appendBezierPath:neuerGraph];
 	}
-	[derKanalArray retain];
 	[GraphKanalArray setArray:derKanalArray];
 	//[GraphKanalArray release];
 	[self setNeedsDisplay:YES];
@@ -702,7 +685,6 @@ for (i=0;i<8;i++)
 {
 
 	NSBezierPath* tempGraph=[NSBezierPath bezierPath];
-	[tempGraph retain];
 	float varRed=sin(i+(float)i/10.0)/3.0+0.6;
 	float varGreen=sin(2*i+(float)i/10.0)/3.0+0.6;
 	float varBlue=sin(3*i+(float)i/10.0)/3.0+0.6;
@@ -710,7 +692,6 @@ for (i=0;i<8;i++)
 	NSColor* tempColor=[NSColor colorWithCalibratedRed:varRed green: varGreen blue: varBlue alpha:1.0];
 	//NSLog(@"Farbe Kanal: %d Color: %@",i,[tempColor description]);
 	tempColor=[NSColor blackColor];
-	[tempColor retain];
 	[GraphFarbeArray addObject:tempColor];
 	[GraphArray addObject:tempGraph];
 	[GraphKanalArray addObject:[NSNumber numberWithInt:0]];

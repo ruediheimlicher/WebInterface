@@ -2,6 +2,7 @@
 
 #import <Cocoa/Cocoa.h>
 #import "rOrdinate.h"
+#import "defines.h"
 
 @interface rMehrkanalDiagramm : NSView
 {
@@ -49,7 +50,7 @@
 - (void)setTag:(int)derTag;
 - (void)setDiagrammlageY:(float)DiagrammlageY;
 - (void)setOffsetX:(float)x;
-- (void)setOffsetY:(float)y;
+- (void)setOffsetY:(int)y;
 - (void)setGrundlinienOffset:(float)offset;
 - (float)GrundlinienOffset;
 - (void)setMaxOrdinate:(int)laenge;
@@ -70,5 +71,6 @@
 - (int)MaxOrdinate;
 - (void)clean;
 - (void)logRect:(NSRect)r;
+- (void)clear8Kanal;
 void r_itoa(int32_t zahl, char* string);
 @end

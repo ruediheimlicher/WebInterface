@@ -91,12 +91,11 @@ return YES;
 	
 		NSString* HexString=@"0 1 2 3 4 5 6 7 8 9 A B C D E F";
 		HexSet=[NSCharacterSet characterSetWithCharactersInString:HexString];
-		[HexSet retain];
-		HexArray=[[HexString componentsSeparatedByString:@" "]retain];
+		HexArray=[HexString componentsSeparatedByString:@" "];
 //		[self Alert:@"nach HexArray"];
 		//[HexSet addCharactersInString:HexString];
 		//NSLog(@"HexArray: %@ Anz:%d",[HexArray description],[HexArray count]);
-		BitArray=[[[NSMutableArray alloc]initWithCapacity:8]retain];
+		BitArray=[[NSMutableArray alloc]initWithCapacity:8];
 //		[self Alert:@"nach BitArray"];
 		KolonnenRaster =(int)(frame.size.width)/10;
 		ZeilenRaster=(int)(frame.size.height)/10;
@@ -373,7 +372,7 @@ NSRect LEDRect=NSInsetRect([[AnzeigenArray objectAtIndex:dieTaste]frame],2.0,2.0
 {
 	NSLog(@"EingabeFertigAktion note: %@",[[note userInfo]description]);
 	NSLog(@"[HexFeld string]: %@",[HexFeld string]);
-	NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+	NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 	PaketNummer=[[PaketNummerPop titleOfSelectedItem]intValue];
 	[NotificationDic setObject:[NSNumber numberWithInt:PaketNummer] forKey:@"paketnummer"];
 	[NotificationDic setObject:[HexFeld string] forKey:@"hexstring"];
@@ -392,7 +391,7 @@ NSRect LEDRect=NSInsetRect([[AnzeigenArray objectAtIndex:dieTaste]frame],2.0,2.0
 [BitArray replaceObjectAtIndex:[sender tag]withObject:[NSNumber numberWithBool:[sender state]]];
 NSString* HexString=[self HexAusBitArray:BitArray];
 [HexFeld setString:HexString];
-NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 PaketNummer=[[PaketNummerPop titleOfSelectedItem]intValue];
 [NotificationDic setObject:[NSNumber numberWithInt:PaketNummer] forKey:@"paketnummer"];
 [NotificationDic setObject:HexString forKey:@"hexstring"];
@@ -415,7 +414,7 @@ NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
 	//[HexFeld setStringValue:@"00"];
 	[HexFeld setString:@"00"];
 	[self display];
-	NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+	NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 	[NotificationDic setObject:[NSNumber numberWithInt:[sender tag]] forKey:@"clear"];
 	NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
 	[nc postNotificationName:@"Tastenaktion" object:self userInfo:NotificationDic];
@@ -425,7 +424,7 @@ NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
 -(IBAction)SendTastenAktion:(id)sender
 {
 	NSLog(@"SendTastenAktion tag: %ld",[sender tag]);
-	NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+	NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 	PaketNummer=[[PaketNummerPop titleOfSelectedItem]intValue];
 	[NotificationDic setObject:[NSNumber numberWithInt:PaketNummer] forKey:@"paketnummer"];
 	[NotificationDic setObject:[HexFeld string] forKey:@"hexstring"];
@@ -488,7 +487,7 @@ return [HexFeld string];
 - (NSArray*)BitArrayAusHex:(NSString*)derHexString
 {
 //NSLog(@"BitArrayAusHex: %@",derHexString);
-NSMutableArray* tempBitArray=[[[NSMutableArray alloc]initWithCapacity:8]retain];
+NSMutableArray* tempBitArray=[[NSMutableArray alloc]initWithCapacity:8];
 int i;
 for(i=0;i<8;i++)
 {

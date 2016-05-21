@@ -25,7 +25,6 @@
 		if (StundenArray==NULL)
 		{
 			StundenArray=[[NSMutableArray alloc]initWithCapacity:0];
-			[StundenArray retain];
 		}
 		AktivtastenSet = [NSMutableIndexSet indexSet];
       edit=0;
@@ -48,7 +47,7 @@
 	
 	// Taste zum Schreiben des Plans anlegen
 	NSRect WriteFeld=NSMakeRect(6,5.5,24,12);
-	rTaste* WriteTaste=[[[rTaste alloc]initWithFrame:WriteFeld]retain];
+	rTaste* WriteTaste=[[rTaste alloc]initWithFrame:WriteFeld];
 	[WriteTaste setButtonType:NSMomentaryLight];
 	[WriteTaste setTarget:self];
 	[WriteTaste setBordered:YES];
@@ -62,7 +61,7 @@
    
  	// Taste zum temporaerenSchreiben des Plans anlegen
 	NSRect HeuteFeld=NSMakeRect(36,5.5,18,12);
-	rTaste* HeuteTaste=[[[rTaste alloc]initWithFrame:HeuteFeld]retain];
+	rTaste* HeuteTaste=[[rTaste alloc]initWithFrame:HeuteFeld];
 	[HeuteTaste setButtonType:NSMomentaryLight];
 	[HeuteTaste setTarget:self];
 	[HeuteTaste setBordered:YES];
@@ -148,7 +147,7 @@
 	//AllFeld.origin.y+=8;
 	//AllFeld.size.height-=8;
 	AllFeld.size.width=14;
-	rTaste* AllTaste=[[[rTaste alloc]initWithFrame:AllFeld]retain];
+	rTaste* AllTaste=[[rTaste alloc]initWithFrame:AllFeld];
 	//	[AllTaste setButtonType:NSMomentaryLightButton];
 	[AllTaste setButtonType:NSMomentaryLight];
 	[AllTaste setTarget:self];
@@ -164,7 +163,7 @@
 }
 
 /*
-- (void)setTag:(int)tagwert
+- (void)setTag:(NSInteger)tagwert
 {
 //tag=tagwert;
 mark=tagwert;
@@ -174,7 +173,6 @@ mark=tagwert;
 
 - (void)setTitel:(NSString*)derTitel
 {
-	[Titel retain];
 	
 
 	Titel=derTitel;
@@ -223,7 +221,6 @@ aktiv=derStatus;
 	if (StundenArray==NULL)
 	{
 		StundenArray=[[NSMutableArray alloc]initWithCapacity:0];
-		[StundenArray retain];
 	}
 		//tag=derTag;
 		wochentag=derTag;
@@ -251,7 +248,7 @@ aktiv=derStatus;
 		else
 		{
 			NSLog(@"setTagplan neuer Dic index: %d",i);
-			NSMutableDictionary* tempElementDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+			NSMutableDictionary* tempElementDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 			[tempElementDic setObject:[[derStundenArray objectAtIndex:i]objectForKey:@"code"] forKey:@"code"];
 			[StundenArray addObject:tempElementDic];
 				
@@ -317,7 +314,7 @@ NSMutableDictionary* tempDic=(NSMutableDictionary*)[StundenArray objectAtIndex:d
 {
 	//NSLog(@"Datenbalken setStundenArrayAusByteArray derStundenByteArray: %@",[derStundenByteArray description]);
 	
-	NSMutableArray* tempStundenArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+	NSMutableArray* tempStundenArray=[[NSMutableArray alloc]initWithCapacity:0];
 	//NSArray* bitnummerArray=[NSArray arrayWithObjects: @"null", @"eins",@"zwei",@"drei",@"vier",@"fuenf",nil];
 
 	int i,k;
@@ -334,7 +331,7 @@ NSMutableDictionary* tempDic=(NSMutableDictionary*)[StundenArray objectAtIndex:d
 		
 		
 		//NSLog(@"i: %d tempString: %@ tempByte hex: %2.2X dez: %d dezString: %@",i,tempString,tempByte,tempByte,dezString);
-		NSMutableArray* tempStundenCodeArray=[[[NSMutableArray alloc]initWithCapacity:4]autorelease];
+		NSMutableArray* tempStundenCodeArray=[[NSMutableArray alloc]initWithCapacity:4];
 		for (k=0;k<4;k++)
 		{
 			uint8_t tempStundencode = tempByte & 0x03;
@@ -404,7 +401,7 @@ NSMutableDictionary* tempDic=(NSMutableDictionary*)[StundenArray objectAtIndex:d
       //NSLog(@"AllTasteAktion Wochentag: %d", [(rTagplanbalken*)[sender superview]Raum]);
       //NSLog(@"AllTasteAktion: %d", [(rTagplanbalken*)[sender superview]Objekt]);
       //NSLog(@"AllTasteAktion: %@", [(rTagplanbalken*)[sender superview]Titel]);
-      NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+      NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
       [NotificationDic setObject:[NSNumber numberWithInt:wochentag] forKey:@"wochentag"];
       [NotificationDic setObject:lastONArray forKey:@"lastonarray"];
       [NotificationDic setObject:[NSNumber numberWithInt:raum] forKey:@"raum"];
@@ -459,7 +456,7 @@ NSMutableDictionary* tempDic=(NSMutableDictionary*)[StundenArray objectAtIndex:d
 	//NSLog(@"StundenTasteAktion: %d", [(rTagplanbalken*)[sender superview]Raum]);
 	//NSLog(@"StundenTasteAktion: %d", [(rTagplanbalken*)[sender superview]Objekt]);
 	//NSLog(@"StundenTasteAktion: %@", [(rTagplanbalken*)[sender superview]Titel]);
-	NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+	NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 	[NotificationDic setObject:[NSNumber numberWithInt:wochentag] forKey:@"wochentag"];
 	[NotificationDic setObject:lastONArray forKey:@"lastonarray"];
 	
@@ -546,7 +543,7 @@ NSMutableDictionary* tempDic=(NSMutableDictionary*)[StundenArray objectAtIndex:d
 	//NSLog(@"Titel: %@", [(rTagplanbalken*)[sender superview]Titel]);
 	
 	NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
-	NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+	NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 	[NotificationDic setObject:[NSNumber numberWithInt:raum] forKey:@"raum"];
 	[NotificationDic setObject:[NSNumber numberWithInt:wochentag] forKey:@"wochentag"];
 	[NotificationDic setObject:[NSNumber numberWithInt:objekt] forKey:@"objekt"];//
@@ -600,7 +597,7 @@ NSMutableDictionary* tempDic=(NSMutableDictionary*)[StundenArray objectAtIndex:d
    int index=0;
    for (int i=0;i<[[self subviews]count];i++)
    {
-      int tempTag = [[[self subviews]objectAtIndex:i]tag];
+      int tempTag = ([[self subviews]objectAtIndex:i]).tag;
       //NSLog(@"i: %d view: %@ tag: %d",i,[[self subviews]objectAtIndex:i],tempTag);
       
       if ((tempTag >=100) && (tempTag < 108))
@@ -651,7 +648,7 @@ NSMutableDictionary* tempDic=(NSMutableDictionary*)[StundenArray objectAtIndex:d
    */
    return;
    NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
-   NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+   NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 	[NotificationDic setObject:[NSNumber numberWithInt:raum] forKey:@"raum"];
 	[NotificationDic setObject:[NSNumber numberWithInt:wochentag] forKey:@"wochentag"];
 	[NotificationDic setObject:[NSNumber numberWithInt:objekt] forKey:@"objekt"];//
@@ -755,7 +752,7 @@ return StundenArray;
 {
    //NSLog(@"Datenbalken typ: %d StundenArray: %@",typ,[[StundenArray valueForKey:@"code"]description]);
    //NSLog(@"Datenbalken typ: %d StundenArray: %@",typ,[StundenArray description]);
-	NSMutableArray* tempByteArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+	NSMutableArray* tempByteArray=[[NSMutableArray alloc]initWithCapacity:0];
 	
 	NSString* StundenbyteString=[NSString string];
 	for (int i=0;i<[StundenArray count];i++)
@@ -959,7 +956,7 @@ return tag;
 	//NSLog(@"lastONArray: %@",[lastONArray description]);
 	int i;
 	int all=-1;
-	NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+	NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 	[NotificationDic setObject:[NSNumber numberWithInt:wochentag] forKey:@"wochentag"];
 	[NotificationDic setObject:lastONArray forKey:@"lastonarray"];
 	[NotificationDic setObject:[NSNumber numberWithInt:raum] forKey:@"raum"];

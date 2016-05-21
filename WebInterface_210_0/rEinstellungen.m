@@ -13,7 +13,7 @@
 - (id) init
 {
 	self=[super initWithWindowNibName:@"Einstellungen"];
-   HomebusArray = [[[NSMutableArray alloc]initWithCapacity:0]retain];
+   HomebusArray = [[NSMutableArray alloc]initWithCapacity:0];
    
    NSNotificationCenter * nc;
 	nc=[NSNotificationCenter defaultCenter];
@@ -30,7 +30,7 @@
 - (void)awakeFromNib
 {
 	NSLog(@"Einstellungen awake");
-   updateIndexSet = [[NSMutableIndexSet indexSet]retain];
+   updateIndexSet = [NSMutableIndexSet indexSet];
 
 	NSFont* Tablefont;
 	Tablefont=[NSFont fontWithName:@"Helvetica" size: 12];
@@ -100,12 +100,11 @@
 	NSLog(@"rEinstellungen windowShouldClose: %@",[updateIndexSet description]);
 	
 	NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
-	NSMutableDictionary* BeendenDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+	NSMutableDictionary* BeendenDic=[[NSMutableDictionary alloc]initWithCapacity:0];
    [BeendenDic setObject:[NSNumber numberWithInt:1]forKey:@"quelle"];
 	[nc postNotificationName:@"IOWarriorBeenden" object:self userInfo:BeendenDic];
 
 
-	[HomebusArray release];
 	return YES;
 }
 
@@ -116,7 +115,7 @@
    
    
    NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
-	NSMutableDictionary* SaveDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+	NSMutableDictionary* SaveDic=[[NSMutableDictionary alloc]initWithCapacity:0];
    [SaveDic setObject:HomebusArray forKey:@"homebusarray"];
 	[nc postNotificationName:@"saveSettings" object:self userInfo:SaveDic];
 

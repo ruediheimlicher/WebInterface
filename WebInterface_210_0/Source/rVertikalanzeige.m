@@ -37,7 +37,7 @@
 - (void)setStringLevel:(NSString*)derLevel
 {
 	NSScanner *scanner;
-	int tempLevel;
+	uint tempLevel;
 
 	scanner = [NSScanner scannerWithString:derLevel];
 	[scanner scanHexInt:&tempLevel];
@@ -89,11 +89,11 @@
 	
 	if (startFix)
 	{
-		fixTimer=[[NSTimer scheduledTimerWithTimeInterval:fixTime
+		fixTimer=[NSTimer scheduledTimerWithTimeInterval:fixTime
 												   target:self 
 												 selector:@selector(fixTimerfunktion:) 
 												 userInfo:nil 
-												  repeats:NO]retain];
+												  repeats:NO];
 		maxSet=YES;//Timeout für Max
 	}
 	
@@ -145,7 +145,7 @@ maxSet=NO;
 holdMax=-1;
 }
 
-- (void)setTag:(int)derTag
+- (void)setTag:(long)derTag
 {
 tag=derTag;
 }

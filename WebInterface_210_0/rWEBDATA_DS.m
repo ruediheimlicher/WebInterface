@@ -14,7 +14,6 @@
 {
 
 	ValueKeyTabelle=[[NSMutableArray alloc]initWithCapacity:0];
-	[ValueKeyTabelle retain];
 	return self;
 }
 
@@ -26,8 +25,6 @@
 	
 //	[tempTagDic setObject:[NSNumber numberWithInt:3] forKey:@"drei"];
 //	[ValueKeyTabelle addObject:tempTagDic];
-	[ValueKeyTabelle release];
-	[derWochenplan retain];
 	[ValueKeyTabelle setArray:derWochenplan]; 
 	//NSLog(@"ValueKeyTabelle: %@",[ValueKeyTabelle description]);
 	

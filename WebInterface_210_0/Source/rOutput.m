@@ -223,7 +223,7 @@ return number;
     {
         NSControl *theSubview;
         NSScanner *theScanner;
-        int	  value;
+        UInt	  value;
         
         //theSubview = (NSControl*) [[window contentView] viewWithTag:i + 100];
 

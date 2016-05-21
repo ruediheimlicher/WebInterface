@@ -19,8 +19,10 @@
 - (id)initWithFrame:(NSRect)frame 
 {
     self = [super initWithFrame:frame];
-    if (self) {
-        [super initWithFrame:frame];
+    if (self)
+    {
+       
+       return self;
     }
     return self;
 }
@@ -244,7 +246,7 @@
 										[lastBalkenDic setObject:[NSNumber numberWithInt:0] forKey:@"y"];	// Objekt ist OFF
 										
 										// neuen Balken anlegen
-										NSMutableDictionary* neuerBalkenDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+										NSMutableDictionary* neuerBalkenDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 										[neuerBalkenDic setObject:[NSNumber numberWithInt:neuerPunkt.x] forKey:@"x"];
 										[neuerBalkenDic setObject:[NSNumber numberWithInt:neuerPunkt.x] forKey:@"start"];
 										[neuerBalkenDic setObject:[NSNumber numberWithInt:aktuellerWert] forKey:@"y"];
@@ -312,7 +314,7 @@
 							
 							float Brenndauerstart=[[derWerteArray objectAtIndex:0]floatValue];
 							//NSArray* tempDatenArray=[NSArray arrayWithObjects:[NSNumber numberWithDouble:Brenndauerstart],[NSNumber numberWithDouble:Brenndauerstart],[NSNumber numberWithDouble:0.0],nil];
-							NSMutableDictionary* neuerBalkenDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+							NSMutableDictionary* neuerBalkenDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 							[neuerBalkenDic setObject:[NSNumber numberWithDouble:Brenndauerstart] forKey:@"zeit"];
 							[neuerBalkenDic setObject:[NSNumber numberWithInt:neuerPunkt.x] forKey:@"x"];
 							[neuerBalkenDic setObject:[NSNumber numberWithInt:neuerPunkt.x] forKey:@"start"];
@@ -385,7 +387,7 @@
 					int Brenndauerstart=[[derWerteArray objectAtIndex:0]intValue];
 					//NSArray* tempDatenArray=[NSArray arrayWithObjects:[NSNumber numberWithDouble:Brenndauerstart],[NSNumber numberWithDouble:Brenndauerstart],[NSNumber numberWithDouble:0.0],nil];
 					//NSMutableDictionary* neuerBalkenDic=[NSMutableDictionary dictionaryWithObjects:tempDatenArray forKeys:[NSArray arrayWithObjects:@"start",@"x",@"y",nil]];
-					NSMutableDictionary* neuerBalkenDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+					NSMutableDictionary* neuerBalkenDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 					[neuerBalkenDic setObject:[NSNumber numberWithDouble:Brenndauerstart] forKey:@"zeit"];
 					[neuerBalkenDic setObject:[NSNumber numberWithInt:neuerPunkt.x] forKey:@"x"];
 					[neuerBalkenDic setObject:[NSNumber numberWithInt:neuerPunkt.x] forKey:@"start"];

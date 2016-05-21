@@ -16,14 +16,12 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
 		AchsenSpitze=AchsenEcke;
 		AchsenSpitze.y+=[self frame].size.height-0.5;
 		InhaltArray=[[NSMutableArray alloc] initWithCapacity: 0];
-		[InhaltArray retain];
 		Einheit=@"";
 		Schriftgroesse=9;
 		//InhaltArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
 		//[InhaltArray retain];
 		anzBalken=4;
-		BalkenlageArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
-		[BalkenlageArray retain];
+		BalkenlageArray=[[NSMutableArray alloc]initWithCapacity:0];
 	}
 	return self;
 }
@@ -56,8 +54,6 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
 - (void)setInhaltArray:(NSArray*)derInhaltArray
 {
 	//NSLog(@"Legende setInhaltArray: %@",[derInhaltArray description]);
-	[InhaltArray release];
-	[derInhaltArray retain];
 	InhaltArray=(NSMutableArray*)derInhaltArray;
 
 }

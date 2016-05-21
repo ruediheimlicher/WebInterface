@@ -57,7 +57,7 @@ int						IOW_busy;
 rData_DS*					Data_DS;
 NSArray*						Raumnamen;
 NSMutableDictionary*		TemperaturDaten;
-IBOutlet	id					TemperaturDiagrammScroller;
+IBOutlet	NSScrollView*					TemperaturDiagrammScroller;
 rTemperaturMKDiagramm*	TemperaturMKDiagramm;
 
 rOrdinate*					TemperaturOrdinate;
@@ -151,7 +151,7 @@ NSString *				frameStatus;
 	 
 // BrennerTab
 IBOutlet id				StatistikDiagrammFeld;
-IBOutlet	id				StatistikDiagrammScroller;
+IBOutlet	NSScrollView*			StatistikDiagrammScroller;
 IBOutlet	id				StatistikJahrPop;
 IBOutlet	id				StatistikMonatPop;
 
@@ -165,7 +165,7 @@ rLegende*							BrennerStatistikLegende;
 
 
 // SolarTab
-IBOutlet id							SolarDiagrammScroller;
+IBOutlet NSScrollView*							SolarDiagrammScroller;
 rSolarDiagramm*					SolarDiagramm;
 rDiagrammGitterlinien*			SolarGitterlinien;
 rSolarEinschaltDiagramm*		SolarEinschaltDiagramm;
@@ -210,7 +210,7 @@ IBOutlet id							SolaranlageBild;
 
 // SolarStatistikTab
 IBOutlet id                   SolarStatistikDiagrammFeld;
-IBOutlet	id                   SolarStatistikDiagrammScroller;
+IBOutlet	NSScrollView*                   SolarStatistikDiagrammScroller;
 IBOutlet	id                   SolarStatistikJahrPop;
 IBOutlet	id                   SolarStatistikMonatPop;
 IBOutlet	id                   SolarStatistikTagPop;

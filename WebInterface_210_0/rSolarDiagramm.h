@@ -22,5 +22,5 @@
 - (void)setStartWerteArray:(NSArray*)Werte;
 - (void)setWerteArray:(NSArray*)derWerteArray mitKanalArray:(NSArray*)derKanalArray;
 - (void)setWerteArray:(NSArray*)derWerteArray mitKanalArray:(NSArray*)derKanalArray mitVorgabenDic:(NSDictionary*)dieVorgaben;
-
+- (void)waagrechteLinienZeichnen;
 @end

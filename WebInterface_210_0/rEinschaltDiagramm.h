@@ -31,5 +31,5 @@
 - (void)setWerteArray:(NSArray*)derWerteArray mitKanalArray:(NSArray*)derKanalArray;
 - (void)setZeitKompression:(float)dieKompression;
 - (void)setWerteArray:(NSArray*)derWerteArray mitKanalArray:(NSArray*)derKanalArray mitVorgabenDic:(NSDictionary*)dieVorgaben;
-
+- (void)waagrechteLinienZeichnen;
 @end

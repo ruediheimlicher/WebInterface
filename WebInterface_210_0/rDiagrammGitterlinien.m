@@ -21,29 +21,23 @@
 		[self setFrame:Diagrammfeld];
 		DiagrammEcke=NSMakePoint(2.1,5.1);
 		Graph=[NSBezierPath bezierPath];
-		[Graph retain];
 		[Graph moveToPoint:DiagrammEcke];
 		lastPunkt=DiagrammEcke;
 		GraphFarbe=[NSColor blueColor]; 
 		OffsetY=0.0;
 		//NSLog(@"rDiagrammGitterlinien Diagrammfeldhoehe: %2.2f ",(frame.size.height-15));
 		GraphArray=[[NSMutableArray alloc]initWithCapacity:0];
-		[GraphArray retain];
 		GraphFarbeArray=[[NSMutableArray alloc]initWithCapacity:0];
-		[GraphFarbeArray retain];
 		
 		GraphKanalArray=[[NSMutableArray alloc]initWithCapacity:0];
-		[GraphKanalArray retain];
 		//DatenArray=[[NSMutableArray alloc]initWithCapacity:0];
 		//[DatenArray retain];
 		
-		NetzlinienY=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
-		[NetzlinienY retain];
+		NetzlinienY=[[NSMutableArray alloc]initWithCapacity:0];
 		
 		int i=0;
 		
 		NSBezierPath* tempGraph=[NSBezierPath bezierPath];
-		[tempGraph retain];
 		float varRed=sin(i+(float)i/10.0)/3.0+0.6;
 		float varGreen=sin(2*i+(float)i/10.0)/3.0+0.6;
 		float varBlue=sin(3*i+(float)i/10.0)/3.0+0.6;
@@ -51,7 +45,6 @@
 		NSColor* tempColor=[NSColor colorWithCalibratedRed:varRed green: varGreen blue: varBlue alpha:1.0];
 		//NSLog(@"Farbe Kanal: %d Color: %@",i,[tempColor description]);
 		tempColor=[NSColor blackColor];
-		[tempColor retain];
 		[GraphFarbeArray addObject:tempColor];
 		//NSMutableDictionary* tempGraphDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 		//[GraphArray addObject:tempGraphDic];
@@ -204,7 +197,7 @@
 						//NSLog(@"Gitterlinien ZeitString: %@",ZeitString);
 						
 						//NSLog(@"GraphArray: %@",[GraphArray description]);
-						NSMutableDictionary* tempLinienDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+						NSMutableDictionary* tempLinienDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 						[tempLinienDic setObject:[NSNumber numberWithInt:neuerPunkt.x] forKey:@"x"];
 						[tempLinienDic setObject:[NSNumber numberWithInt:Art] forKey:@"art"];
 						
@@ -265,7 +258,7 @@
 							//NSLog(@"Gitterlinien ZeitString: %@",ZeitString);
 							
 							//NSLog(@"GraphArray: %@",[GraphArray description]);
-							NSMutableDictionary* tempLinienDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+							NSMutableDictionary* tempLinienDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 							[tempLinienDic setObject:[NSNumber numberWithInt:neuerPunkt.x] forKey:@"x"];
 							[tempLinienDic setObject:[NSNumber numberWithInt:Art] forKey:@"art"];
 							
@@ -405,7 +398,7 @@
 				//NSLog(@"Gitterlinien ZeitString: %@",ZeitString);
 				
 				//NSLog(@"GraphArray: %@",[GraphArray description]);
-				NSMutableDictionary* tempLinienDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+				NSMutableDictionary* tempLinienDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 				[tempLinienDic setObject:[NSNumber numberWithInt:neuerPunkt.x] forKey:@"x"];
 				[tempLinienDic setObject:[NSNumber numberWithInt:Art] forKey:@"art"];
 				
@@ -448,9 +441,9 @@
 
 - (void)drawRect:(NSRect)rect
 {
- 	NSMutableDictionary* ZeitAttrs=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+ 	NSMutableDictionary* ZeitAttrs=[[NSMutableDictionary alloc]initWithCapacity:0];
 	
- 	NSMutableParagraphStyle* ZeitPar=[[[NSMutableParagraphStyle alloc]init]autorelease];
+ 	NSMutableParagraphStyle* ZeitPar=[[NSMutableParagraphStyle alloc]init];
 	[ZeitPar setAlignment:NSCenterTextAlignment];
 	[ZeitAttrs setObject:ZeitPar forKey:NSParagraphStyleAttributeName];
 	NSFont* ZeitFont=[NSFont fontWithName:@"Helvetica" size: 9];
@@ -554,7 +547,6 @@
 	}
 	int i=0;
 	NSBezierPath* tempGraph=[NSBezierPath bezierPath];
-	[tempGraph retain];
 	float varRed=sin(i+(float)i/10.0)/3.0+0.6;
 	float varGreen=sin(2*i+(float)i/10.0)/3.0+0.6;
 	float varBlue=sin(3*i+(float)i/10.0)/3.0+0.6;
@@ -562,7 +554,6 @@
 	NSColor* tempColor=[NSColor colorWithCalibratedRed:varRed green: varGreen blue: varBlue alpha:1.0];
 	//NSLog(@"Farbe Kanal: %d Color: %@",i,[tempColor description]);
 	tempColor=[NSColor blackColor];
-	[tempColor retain];
 	[GraphFarbeArray addObject:tempColor];
 	NSMutableDictionary* tempGraphDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 	//[GraphArray addObject:tempGraphDic];

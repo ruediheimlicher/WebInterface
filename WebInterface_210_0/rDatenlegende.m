@@ -13,7 +13,7 @@
 - (id)init
 {
    self = [super init];
-   LegendeArray = [[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+   LegendeArray = [[NSMutableArray alloc]initWithCapacity:0];
    randunten=12;
    randoben = 0;
    abstandvor=-1;
@@ -53,7 +53,7 @@ if ([vorgabendic objectForKey:@"randunten"])
 {
    
    // Array mit Dics zu jedem Cluster: Array mit Elementen, abstaende usw
-   NSMutableArray* ClusterArray = [[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+   NSMutableArray* ClusterArray = [[NSMutableArray alloc]initWithCapacity:0];
    
    //LegendeArray = [NSMutableArray arrayWithArray:array];
    
@@ -64,7 +64,7 @@ if ([vorgabendic objectForKey:@"randunten"])
    
    int clusterindex = 0;
    
-   [ClusterArray addObject:[[[NSMutableArray alloc]initWithCapacity:0]autorelease]];
+   [ClusterArray addObject:[[NSMutableArray alloc]initWithCapacity:0]];
    
    for (int i=0;i<[legendearray count];i++)
    {
@@ -121,7 +121,7 @@ if ([vorgabendic objectForKey:@"randunten"])
             float lastlegendeposition = [[[[ClusterArray lastObject]lastObject]objectForKey:@"legendeposition"]floatValue];
             [[[ClusterArray lastObject]lastObject]setObject:[NSNumber numberWithFloat:legendeposition-lastlegendeposition]forKey:@"abstandnach"];
             
-            [ClusterArray addObject:[[[NSMutableArray alloc]initWithCapacity:0]autorelease]];
+            [ClusterArray addObject:[[NSMutableArray alloc]initWithCapacity:0]];
             clusterindex ++;
          }
          

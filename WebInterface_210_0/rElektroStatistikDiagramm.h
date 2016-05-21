@@ -9,6 +9,7 @@
 #import <Cocoa/Cocoa.h>
 #import "rStatistikDiagramm.h"
 
+
 @interface rElektroStatistikDiagramm : rStatistikDiagramm
 {
 

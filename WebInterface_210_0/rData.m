@@ -12,9 +12,50 @@
 #define MO 0
 #define DI 1
 
+// http://stackoverflow.com/questions/111928/is-there-a-printf-converter-to-print-in-binary-format?page=1&tab=votes#tab-top
+
+const char *byte_to_binary_a(int x)
+{
+   static char b[9];
+   b[0] = '\0';
+   
+   int z;
+   for (z = 128; z > 0; z >>= 1)
+   {
+      strcat(b, ((x & z) == z) ? "1" : "0");
+   }
+   
+   return b;
+}
+
+const char *byte_to_binary(int x)
+{
+   static char b[9];
+   b[0] = '\0';
+   
+   int z;
+   char *p = b;
+   for (z = 128; z > 0; z >>= 1)
+   {
+      *p++ = (x & z) ? '1' : '0';
+   }
+   
+   return b;
+}
+
+
+
+const char bit_rep[16] =
+{
+   [ 0] = '0000', [ 1] = '0001', [ 2] = '0010', [ 3] = '0011',
+   [ 4] = '0100', [ 5] = '0101', [ 6] = '0110', [ 7] = '0111',
+   [ 8] = '1000', [ 9] = '1001', [10] = '1010', [11] = '1011',
+   [12] = '1100', [13] = '1101', [14] = '1110', [15] = '1111',
+};
 
 
 extern NSMutableArray* DatenplanTabelle;
+
 @implementation rData
 - (void) logRect:(NSRect)r
 {
@@ -57,7 +98,7 @@ extern NSMutableArray* DatenplanTabelle;
 
 - (int)HexStringZuInt:(NSString*) derHexString
 {
-	int returnInt=-1;
+	uint returnInt=-1;
 	NSScanner* theScanner = [NSScanner scannerWithString:derHexString];
 	
 	if ([theScanner scanHexInt:&returnInt])
@@ -69,12 +110,12 @@ extern NSMutableArray* DatenplanTabelle;
 	return returnInt;
 }
 
-- (int)tagdesjahresvonJahr:(int)jahr Monat:(int)monat Tag: (int)tag
+- (int)tagdesjahresvonJahr:(int)jahr Monat:(int)monat Tag: (int)tagdesmonats
 {
    // http://stackoverflow.com/questions/7664786/generate-nsdate-from-day-month-and-year
    NSCalendar *tagcalendar = [NSCalendar currentCalendar];
    NSDateComponents *components = [[NSDateComponents alloc] init];
-   [components setDay:tag];
+   [components setDay:tagdesmonats];
    [components setMonth:monat];
    [components setMonth:jahr];
    NSDate *tagdatum = [tagcalendar dateFromComponents:components];
@@ -82,8 +123,7 @@ extern NSMutableArray* DatenplanTabelle;
    NSCalendar *gregorian =[[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
    int dayOfYear =[gregorian ordinalityOfUnit:NSDayCalendarUnit
                         inUnit:NSYearCalendarUnit forDate:tagdatum];
-   [gregorian release];
-   return dayOfYear;
+      return dayOfYear;
 }
 
 - (id) init
@@ -157,34 +197,33 @@ extern NSMutableArray* DatenplanTabelle;
 
 	
 	Raumnamen=[NSArray arrayWithObjects:@"Heizung", @"Werkstatt",@"WoZi",@"Buero",@"Labor",@"OG 1",@"OG 2",@"Estrich",NULL];
-	[Raumnamen retain];
-	Eingangsdaten=[[[NSMutableArray alloc]initWithCapacity:0]retain];
+	Eingangsdaten=[[NSMutableArray alloc]initWithCapacity:0];
 	TemperaturDaten=[[NSMutableDictionary alloc]initWithCapacity:0];
 	TemperaturZeilenString=[[NSMutableString alloc]init];
-	DumpArray=[[[NSMutableArray alloc]initWithCapacity:0]retain];
+	DumpArray=[[NSMutableArray alloc]initWithCapacity:0];
 
-	HeizungKanalArray=[[[NSMutableArray alloc]initWithCapacity:0]retain];
+	HeizungKanalArray=[[NSMutableArray alloc]initWithCapacity:0];
 	[HeizungKanalArray setArray:[NSArray arrayWithObjects:@"1",@"1",@"1",@"0" ,@"0",@"0",@"0",@"1",nil]];
 
 
-	BrennerKanalArray=[[[NSMutableArray alloc]initWithCapacity:0]retain];
+	BrennerKanalArray=[[NSMutableArray alloc]initWithCapacity:0];
 	[BrennerKanalArray setArray:[NSArray arrayWithObjects:@"1",@"1",@"0",@"1" ,@"0",@"0",@"0",@"0",nil]];
 
-	BrennerStatistikKanalArray=[[[NSMutableArray alloc]initWithCapacity:0]retain];
+	BrennerStatistikKanalArray=[[NSMutableArray alloc]initWithCapacity:0];
 	[BrennerStatistikKanalArray setArray:[NSArray arrayWithObjects:@"1",@"0",@"0",@"0" ,@"0",@"0",@"0",@"0",nil]];
 
-	BrennerStatistikTemperaturKanalArray=[[[NSMutableArray alloc]initWithCapacity:0]retain];
+	BrennerStatistikTemperaturKanalArray=[[NSMutableArray alloc]initWithCapacity:0];
 	[BrennerStatistikTemperaturKanalArray setArray:[NSArray arrayWithObjects:@"1",@"0",@"0",@"0" ,@"0",@"0",@"0",@"0",nil]];
 	
 
-	SolarTemperaturKanalArray=[[[NSMutableArray alloc]initWithCapacity:0]retain];
+	SolarTemperaturKanalArray=[[NSMutableArray alloc]initWithCapacity:0];
 	[SolarTemperaturKanalArray setArray:[NSArray arrayWithObjects:@"0",@"1",@"1",@"1" ,@"0",@"0",@"0",@"0",nil]];
 
-   SolarStatistikTemperaturKanalArray=[[[NSMutableArray alloc]initWithCapacity:0]retain];
+   SolarStatistikTemperaturKanalArray=[[NSMutableArray alloc]initWithCapacity:0];
 	[SolarStatistikTemperaturKanalArray setArray:[NSArray arrayWithObjects:@"0",@"1",@"1",@"1" ,@"0",@"0",@"0",@"0",nil]];
 
 
-	SolarStatistikElektroKanalArray=[[[NSMutableArray alloc]initWithCapacity:0]retain];
+	SolarStatistikElektroKanalArray=[[NSMutableArray alloc]initWithCapacity:0];
 	[SolarStatistikElektroKanalArray setArray:[NSArray arrayWithObjects:@"0",@"1",@"1",@"1" ,@"0",@"0",@"0",@"0",nil]];
 	
 	
@@ -238,9 +277,7 @@ extern NSMutableArray* DatenplanTabelle;
 	//[StdCell selectSegmentWithTag:1];
 	//NSRect r=[[StdCell contentView] frame];
 	DatenserieStartZeit=[NSCalendarDate calendarDate];
-	[DatenserieStartZeit retain];
 	SimDatenserieStartZeit=[NSCalendarDate calendarDate];
-	[SimDatenserieStartZeit retain];
 	
 	[Kalender setCalendar:[NSCalendar currentCalendar]];
 	[Kalender setDateValue: [NSDate date]];
@@ -286,9 +323,9 @@ extern NSMutableArray* DatenplanTabelle;
 	
 	
 	
-	GesamtDatenArray=[[[NSMutableArray alloc]initWithCapacity:0]retain];
+	GesamtDatenArray=[[NSMutableArray alloc]initWithCapacity:0];
 	
-	Datenplan=[[[NSMutableArray alloc]initWithCapacity:0]retain];
+	Datenplan=[[NSMutableArray alloc]initWithCapacity:0];
    [DatenplanTab setDelegate:self];
 	
 	//	NSRect DatenplanTabRect=[DatenplanTab bounds];
@@ -304,7 +341,7 @@ extern NSMutableArray* DatenplanTabelle;
 #pragma mark awake TemperaturDiagrammScroller
 	[TemperaturDiagrammScroller setHasHorizontalScroller:YES];
 	[TemperaturDiagrammScroller setDrawsBackground:YES];
-	[TemperaturDiagrammScroller setAutoresizingMask:NSViewWidthSizable];
+	TemperaturDiagrammScroller.autoresizingMask=NSViewWidthSizable;
 	//[TemperaturDiagrammScroller setBackgroundColor:[NSColor blueColor]];
 	[TemperaturDiagrammScroller setHorizontalLineScroll:1.0];
 	//[TemperaturDiagrammScroller setAutohidesScrollers:NO];
@@ -460,18 +497,17 @@ extern NSMutableArray* DatenplanTabelle;
 	NSFont* TextFont;
 	TextFont=[NSFont fontWithName:@"Helvetica" size: Textschnitt];
 	
-	NSMutableParagraphStyle* TabellenKopfStil=[[[NSMutableParagraphStyle alloc]init]autorelease];
+	NSMutableParagraphStyle* TabellenKopfStil=[[NSMutableParagraphStyle alloc]init];
 	[TabellenKopfStil setTabStops:[NSArray array]];
-	NSTextTab* TabellenkopfWert1Tab=[[[NSTextTab alloc]initWithType:NSRightTabStopType location:wert1tab]autorelease];
+	NSTextTab* TabellenkopfWert1Tab=[[NSTextTab alloc]initWithType:NSRightTabStopType location:wert1tab];
 	[TabellenKopfStil addTabStop:TabellenkopfWert1Tab];
-	NSTextTab* TabellenkopfWert2Tab=[[[NSTextTab alloc]initWithType:NSRightTabStopType location:wert2tab]autorelease];
+	NSTextTab* TabellenkopfWert2Tab=[[NSTextTab alloc]initWithType:NSRightTabStopType location:wert2tab];
 	[TabellenKopfStil addTabStop:TabellenkopfWert2Tab];
-	NSMutableParagraphStyle* TabelleStil=[[[NSMutableParagraphStyle alloc]init]autorelease];
+	NSMutableParagraphStyle* TabelleStil=[[NSMutableParagraphStyle alloc]init];
 	[TabelleStil setTabStops:[NSArray array]];
 	//	[self Alert:@"ADWandler awake: nach TabelleStil setTabStops"];
 	NSMutableString* TabellenkopfString=[NSMutableString stringWithCapacity:0];
-	[TabellenkopfString retain];
-	NSArray* TabellenkopfArray=[[NSArray arrayWithObjects:@"Zeit",@"Wert",nil]retain];
+	NSArray* TabellenkopfArray=[NSArray arrayWithObjects:@"Zeit",@"Wert",nil];
 	int index;
 	for (index=0;index<[TabellenkopfArray count];index++)
 	{
@@ -485,7 +521,7 @@ extern NSMutableArray* DatenplanTabelle;
 	//	[self Alert:@"ADWandler awake: vor TabellenkopfString appendStrin"];
 	//[TabellenkopfString appendString:@"\n"];
 	
-	NSMutableAttributedString* attrKopfString=[[[NSMutableAttributedString alloc] initWithString:TabellenkopfString] autorelease]; 
+	NSMutableAttributedString* attrKopfString=[[NSMutableAttributedString alloc] initWithString:TabellenkopfString];
 	[attrKopfString addAttribute:NSParagraphStyleAttributeName value:TabellenKopfStil range:NSMakeRange(0,[TabellenkopfString length])];
 	[attrKopfString addAttribute:NSFontAttributeName value:TextFont range:NSMakeRange(0,[TabellenkopfString length])];
 	//[[TemperaturDatenFeld textStorage]appendAttributedString:attrKopfString];
@@ -498,10 +534,9 @@ extern NSMutableArray* DatenplanTabelle;
 	NSFont* MKTextFont;
 	MKTextFont=[NSFont fontWithName:@"Helvetica" size: MKTextschnitt];
 	NSMutableString* MKTabellenkopfString=[NSMutableString stringWithCapacity:0];
-	[MKTabellenkopfString retain];
-	NSMutableParagraphStyle* MKTabellenKopfStil=[[[NSMutableParagraphStyle alloc]init]autorelease];
+	NSMutableParagraphStyle* MKTabellenKopfStil=[[NSMutableParagraphStyle alloc]init];
 	[MKTabellenKopfStil setTabStops:[NSArray array]];
-	NSTextTab* TabellenkopfZeitTab=[[[NSTextTab alloc]initWithType:NSRightTabStopType location:zeittab]autorelease];
+	NSTextTab* TabellenkopfZeitTab=[[NSTextTab alloc]initWithType:NSRightTabStopType location:zeittab];
 	[MKTabellenKopfStil addTabStop:TabellenkopfZeitTab];
 	
 	[MKTabellenkopfString appendFormat:@"\t%@",@"Zeit"];// Zusätzlicher Tab fuer erste Zahl
@@ -514,41 +549,41 @@ extern NSMutableArray* DatenplanTabelle;
 		[MKTabellenkopfString appendFormat:@"\t%@",[[NSNumber numberWithInt:i]stringValue]];
 	}
     */
-   NSTextTab* TabellenkopfWertTab=[[[NSTextTab alloc]initWithType:NSRightTabStopType location:zeittab+(1)*werttab]autorelease];
+   NSTextTab* TabellenkopfWertTab=[[NSTextTab alloc]initWithType:NSRightTabStopType location:zeittab+(1)*werttab];
    //[TabellenkopfWertTab addToolTip:@"Temperatur*2"];
    [MKTabellenKopfStil addTabStop:TabellenkopfWertTab];
    [MKTabellenkopfString appendFormat:@"\tVL"];
-   TabellenkopfWertTab=[[[NSTextTab alloc]initWithType:NSRightTabStopType location:zeittab+(2)*werttab]autorelease];
+   TabellenkopfWertTab=[[NSTextTab alloc]initWithType:NSRightTabStopType location:zeittab+(2)*werttab];
    [MKTabellenKopfStil addTabStop:TabellenkopfWertTab];
    [MKTabellenkopfString appendFormat:@"\tRL"];
-   TabellenkopfWertTab=[[[NSTextTab alloc]initWithType:NSRightTabStopType location:zeittab+(3)*werttab]autorelease];
+   TabellenkopfWertTab=[[NSTextTab alloc]initWithType:NSRightTabStopType location:zeittab+(3)*werttab];
    [MKTabellenKopfStil addTabStop:TabellenkopfWertTab];
    [MKTabellenkopfString appendFormat:@"\tA"];
-   TabellenkopfWertTab=[[[NSTextTab alloc]initWithType:NSRightTabStopType location:zeittab+(4)*werttab]autorelease];
+   TabellenkopfWertTab=[[NSTextTab alloc]initWithType:NSRightTabStopType location:zeittab+(4)*werttab];
    [MKTabellenKopfStil addTabStop:TabellenkopfWertTab];
    [MKTabellenkopfString appendFormat:@"\tCd"];
 
-   TabellenkopfWertTab=[[[NSTextTab alloc]initWithType:NSRightTabStopType location:zeittab+(5)*werttab]autorelease];
+   TabellenkopfWertTab=[[NSTextTab alloc]initWithType:NSRightTabStopType location:zeittab+(5)*werttab];
    [MKTabellenKopfStil addTabStop:TabellenkopfWertTab];
    [MKTabellenkopfString appendFormat:@"\tstd"];
-   TabellenkopfWertTab=[[[NSTextTab alloc]initWithType:NSRightTabStopType location:zeittab+(6)*werttab]autorelease];
+   TabellenkopfWertTab=[[NSTextTab alloc]initWithType:NSRightTabStopType location:zeittab+(6)*werttab];
    [MKTabellenKopfStil addTabStop:TabellenkopfWertTab];
    [MKTabellenkopfString appendFormat:@"\tmin"];
-   TabellenkopfWertTab=[[[NSTextTab alloc]initWithType:NSRightTabStopType location:zeittab+(7)*werttab]autorelease];
+   TabellenkopfWertTab=[[NSTextTab alloc]initWithType:NSRightTabStopType location:zeittab+(7)*werttab];
    [MKTabellenKopfStil addTabStop:TabellenkopfWertTab];
    [MKTabellenkopfString appendFormat:@"\t"];
-   TabellenkopfWertTab=[[[NSTextTab alloc]initWithType:NSRightTabStopType location:zeittab+(8)*werttab]autorelease];
+   TabellenkopfWertTab=[[NSTextTab alloc]initWithType:NSRightTabStopType location:zeittab+(8)*werttab];
    [MKTabellenKopfStil addTabStop:TabellenkopfWertTab];
    [MKTabellenkopfString appendFormat:@"\tI"];
 
   
    
    
-	NSMutableParagraphStyle* MKTabelleStil=[[[NSMutableParagraphStyle alloc]init]autorelease];
+	NSMutableParagraphStyle* MKTabelleStil=[[NSMutableParagraphStyle alloc]init];
 	[MKTabelleStil setTabStops:[NSArray array]];
 	
 	[MKTabellenkopfString appendString:@"\n"];
-	NSMutableAttributedString* MKTabellenKopfString=[[[NSMutableAttributedString alloc] initWithString:MKTabellenkopfString] autorelease]; 
+	NSMutableAttributedString* MKTabellenKopfString=[[NSMutableAttributedString alloc] initWithString:MKTabellenkopfString];
 	
 	[MKTabellenKopfString addAttribute:NSParagraphStyleAttributeName value:MKTabellenKopfStil range:NSMakeRange(0,[MKTabellenkopfString length])];
 	[MKTabellenKopfString addAttribute:NSFontAttributeName value:MKTextFont range:NSMakeRange(0,[MKTabellenkopfString length])];
@@ -558,8 +593,7 @@ extern NSMutableArray* DatenplanTabelle;
 	
 	//
 	NSMutableString* MKTabellenString=[NSMutableString stringWithCapacity:0];
-	[MKTabellenString retain];
-	NSMutableParagraphStyle* MKTabellenStil=[[[NSMutableParagraphStyle alloc]init]autorelease];
+	NSMutableParagraphStyle* MKTabellenStil=[[NSMutableParagraphStyle alloc]init];
 	[MKTabellenStil setTabStops:[NSArray array]];
 	//NSTextTab* TabellenZeitTab=[[[NSTextTab alloc]initWithType:NSRightTabStopType location:zeittab]autorelease];
 	[MKTabellenStil addTabStop:TabellenkopfZeitTab];
@@ -567,14 +601,14 @@ extern NSMutableArray* DatenplanTabelle;
 	[MKTabellenString appendFormat:@"\t"];// Zusätzlicher Tab fuer erste Zahl
 	for (i=0;i<8;i++) 
 	{
-		NSTextTab* TabellenWertTab=[[[NSTextTab alloc]initWithType:NSRightTabStopType location:zeittab+(i+1)*werttab]autorelease];
+		NSTextTab* TabellenWertTab=[[NSTextTab alloc]initWithType:NSRightTabStopType location:zeittab+(i+1)*werttab];
 		[MKTabellenStil addTabStop:TabellenWertTab];
 		[MKTabellenString appendFormat:@"\t"];
 	}
 	[MKTabelleStil setTabStops:[NSArray array]];
 	
 	//[MKTabellenString appendString:@"\n"];
-	NSMutableAttributedString* MKattrString=[[[NSMutableAttributedString alloc] initWithString:MKTabellenString] autorelease]; 
+	NSMutableAttributedString* MKattrString=[[NSMutableAttributedString alloc] initWithString:MKTabellenString];
 	
 	[MKattrString addAttribute:NSParagraphStyleAttributeName value:MKTabellenStil range:NSMakeRange(0,[MKTabellenString length])];
 	[MKattrString addAttribute:NSFontAttributeName value:MKTextFont range:NSMakeRange(0,[MKTabellenString length])];
@@ -613,7 +647,7 @@ extern NSMutableArray* DatenplanTabelle;
 	[BrennerDiagramm setLegende:BrennerLegende];
 	
 	
-	NSMutableDictionary* TemperaturEinheitenDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+	NSMutableDictionary* TemperaturEinheitenDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 	[TemperaturEinheitenDic setObject:[NSNumber numberWithInt:2]forKey:@"minorteile"];
 	[TemperaturEinheitenDic setObject:[NSNumber numberWithInt:7]forKey:@"majorteile"];
 	[TemperaturEinheitenDic setObject:[NSNumber numberWithInt:10]forKey:@"nullpunkt"];
@@ -628,8 +662,8 @@ extern NSMutableArray* DatenplanTabelle;
 	[self setZeitKompression];
 	
 	
-	errString= [[NSString string]retain];
-	errPfad= [[NSString string]retain];
+	errString= [NSString string];
+	errPfad= [NSString string];
 	
 	NSCalendarDate* StartZeit=[NSCalendarDate calendarDate];
 	[StartZeit setCalendarFormat:@"%d.%m.%y %H:%M"];
@@ -637,7 +671,7 @@ extern NSMutableArray* DatenplanTabelle;
 	BOOL FileOK=NO;
 	BOOL istOrdner;
 	NSFileManager *Filemanager = [NSFileManager defaultManager];
-	NSString* TempDatenPfad=[[NSHomeDirectory() stringByAppendingFormat:@"%@%@",@"/Documents",@"/HomeData"]retain];
+	NSString* TempDatenPfad=[NSHomeDirectory() stringByAppendingFormat:@"%@%@",@"/Documents",@"/HomeData"];
 	FileOK= ([Filemanager fileExistsAtPath:TempDatenPfad isDirectory:&istOrdner]&&istOrdner);
 	if (FileOK)
 	{
@@ -657,18 +691,15 @@ extern NSMutableArray* DatenplanTabelle;
 		
 		errPfad=[NSString stringWithFormat:@"%@/errString %@.txt",[TempDatenPfad stringByAppendingPathComponent:@"Logs"],StartZeit];
 		
-		[errPfad retain];
 		//NSLog(@"reportStart errPfad: %@",errPfad);
 		if ([Filemanager fileExistsAtPath:errPfad])
 		{
 			errString = [NSString stringWithContentsOfFile:errPfad encoding:NSMacOSRomanStringEncoding error:NULL];
 			//NSLog(@"reportStart errString da: %@",errString);
-			[errString retain];
 		}
 		else
 		{
 			errString=[NSString stringWithFormat:@"Logfile vom: %@\r",[StartZeit description]];
-			[errString retain];
 			//NSLog(@"reportStart neurer errString: %@",errString);
 		}
 		
@@ -687,7 +718,7 @@ extern NSMutableArray* DatenplanTabelle;
 	[StatistikDiagrammScroller setHasHorizontalScroller:YES];
 	[StatistikDiagrammScroller setHasVerticalScroller:NO];
 	[StatistikDiagrammScroller setDrawsBackground:YES];
-	//[StatistikDiagrammScroller setAutoresizingMask:NSViewWidthSizable];
+	StatistikDiagrammScroller.autoresizingMask=NSViewWidthSizable;
 	//[StatistikDiagrammScroller setBackgroundColor:[NSColor blueColor]];
 	[StatistikDiagrammScroller setHorizontalLineScroll:1.0];
 	//[StatistikDiagrammScroller setAutohidesScrollers:NO];
@@ -768,7 +799,7 @@ extern NSMutableArray* DatenplanTabelle;
 	[TemperaturStatistikDiagramm setOrdinate:TemperaturStatistikOrdinate];
 	
 	
-	NSMutableDictionary* TempStatistikEinheitenDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+	NSMutableDictionary* TempStatistikEinheitenDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 	[TempStatistikEinheitenDic setObject:[NSNumber numberWithInt:2]forKey:@"minorteile"];
 	[TempStatistikEinheitenDic setObject:[NSNumber numberWithInt:4]forKey:@"majorteile"];
 	[TempStatistikEinheitenDic setObject:[NSNumber numberWithInt:10]forKey:@"nullpunkt"];
@@ -816,7 +847,7 @@ extern NSMutableArray* DatenplanTabelle;
 	[[StatistikDiagrammScroller documentView]addSubview:BrennerStatistikDiagramm];
 	
 	
-	NSMutableDictionary* BrennerStatistikEinheitenDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+	NSMutableDictionary* BrennerStatistikEinheitenDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 	[BrennerStatistikEinheitenDic setObject:[NSNumber numberWithInt:2]forKey:@"minorteile"];
 	[BrennerStatistikEinheitenDic setObject:[NSNumber numberWithInt:5]forKey:@"majorteile"];
 	[BrennerStatistikEinheitenDic setObject:[NSNumber numberWithInt:0]forKey:@"nullpunkt"];
@@ -883,7 +914,7 @@ extern NSMutableArray* DatenplanTabelle;
 	[SolarDiagrammScroller setHasHorizontalScroller:YES];
 	[SolarDiagrammScroller setHasVerticalScroller:NO];
 	[SolarDiagrammScroller setDrawsBackground:YES];
-	[SolarDiagrammScroller setAutoresizingMask:NSViewWidthSizable];
+	SolarDiagrammScroller.autoresizingMask=NSViewWidthSizable;
 	//[SolarDiagrammScroller setBackgroundColor:[NSColor blueColor]];
 	[SolarDiagrammScroller setHorizontalLineScroll:1.0];
 	//[SolarDiagrammScroller setAutohidesScrollers:NO];
@@ -932,7 +963,7 @@ extern NSMutableArray* DatenplanTabelle;
 	[[SolarDiagrammScroller documentView]addSubview:SolarDiagramm];
 
 
-	NSMutableDictionary* SolarEinheitenDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+	NSMutableDictionary* SolarEinheitenDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 	[SolarEinheitenDic setObject:[NSNumber numberWithInt:2]forKey:@"minorteile"];
 	[SolarEinheitenDic setObject:[NSNumber numberWithInt:8]forKey:@"majorteile"];
 	[SolarEinheitenDic setObject:[NSNumber numberWithInt:0]forKey:@"nullpunkt"];
@@ -1026,7 +1057,7 @@ extern NSMutableArray* DatenplanTabelle;
 	[SolarStatistikDiagrammScroller setHasHorizontalScroller:YES];
 	[SolarStatistikDiagrammScroller setHasVerticalScroller:NO];
 	[SolarStatistikDiagrammScroller setDrawsBackground:YES];
-	[SolarStatistikDiagrammScroller setAutoresizingMask:NSViewWidthSizable];
+	SolarStatistikDiagrammScroller.autoresizingMask=NSViewWidthSizable;
 	//[SolarStatistikDiagrammScroller setBackgroundColor:[NSColor blueColor]];
 	[SolarStatistikDiagrammScroller setHorizontalLineScroll:1.0];
 	//[SolarStatistikDiagrammScroller setAutohidesScrollers:NO];
@@ -1101,7 +1132,7 @@ extern NSMutableArray* DatenplanTabelle;
 	
 	[SolarStatistikDiagramm setOrdinate:SolarStatistikOrdinate];
 	
-	NSMutableDictionary* SolarStatistikEinheitenDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+	NSMutableDictionary* SolarStatistikEinheitenDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 	[SolarStatistikEinheitenDic setObject:[NSNumber numberWithInt:2]forKey:@"minorteile"];
 	[SolarStatistikEinheitenDic setObject:[NSNumber numberWithInt:6]forKey:@"majorteile"];
 	[SolarStatistikEinheitenDic setObject:[NSNumber numberWithInt:10]forKey:@"nullpunkt"];
@@ -1145,7 +1176,7 @@ extern NSMutableArray* DatenplanTabelle;
 
 	// set Ordinate
    
-   NSMutableDictionary* ElektroStatistikEinheitenDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+   NSMutableDictionary* ElektroStatistikEinheitenDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 	[ElektroStatistikEinheitenDic setObject:[NSNumber numberWithInt:2]forKey:@"minorteile"];
 	[ElektroStatistikEinheitenDic setObject:[NSNumber numberWithInt:6]forKey:@"majorteile"];
 	[ElektroStatistikEinheitenDic setObject:[NSNumber numberWithInt:10]forKey:@"nullpunkt"];
@@ -1171,7 +1202,7 @@ extern NSMutableArray* DatenplanTabelle;
 	// end Solarstatistik
 	
 	// Diagrammzeichnen veranlassen
-	NSMutableDictionary* BalkendatenDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+	NSMutableDictionary* BalkendatenDic=[[NSMutableDictionary alloc]initWithCapacity:0];
    
 	[BalkendatenDic setObject:[NSNumber numberWithInt:1]forKey:@"statistikdaten"];
 	[BalkendatenDic setObject:[NSNumber numberWithInt:1]forKey:@"aktion"];
@@ -1288,7 +1319,8 @@ extern NSMutableArray* DatenplanTabelle;
    int b1 = heizungcode & 0x04;
    int b2 = b1 >>2;
    int b3 = !b2;
-   NSLog(@"heizungcode: %d b1: %d b2: %d b3: %d brennerstatus: %d",heizungcode,b1,b2,b3,brennerstatus);
+   
+   NSLog(@"heizungcode: %d b1: %d b2: %d b3: %d brennerstatus: %d brennerstatus: %s",heizungcode,b1,b2,b3,brennerstatus,byte_to_binary(134));
    NSString* brennerstatusString =@"OFF";
    if ( brennerstatus)
    {
@@ -1401,7 +1433,7 @@ extern NSMutableArray* DatenplanTabelle;
    [codeFeld setNeedsDisplay:YES];
    
    // codeFeld.string = codeString;
-   NSLog(@"HomeDataDownloadAktion codeFeld: %@",[codeFeld string]);
+   DLog(@"HomeDataDownloadAktion codeFeld: %@",[codeFeld string]);
    
 }
 
@@ -1549,10 +1581,10 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
 		//NSLog(@"ExterneDatenAktion: Startzeit: *%@* StartzeitString: *%@*",[[note userInfo]objectForKey:@"startzeit"],StartzeitString);
 		
 		NSString* Kalenderformat=[[NSCalendarDate calendarDate]calendarFormat];
-		DatenserieStartZeit=[[NSCalendarDate dateWithString:[[note userInfo]objectForKey:@"startzeit"] calendarFormat:Kalenderformat]retain];
+		DatenserieStartZeit=[NSCalendarDate dateWithString:[[note userInfo]objectForKey:@"startzeit"] calendarFormat:Kalenderformat];
 		//int tag=[DatenserieStartZeit dayOfMonth];
 		
-		NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+		NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 		[NotificationDic setObject:@"datastart"forKey:@"data"];
 		[NotificationDic setObject:DatenserieStartZeit forKey:@"datenseriestartzeit"];
 		
@@ -1693,7 +1725,7 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
 				
 				
 				[TemperaturMKDiagramm setNeedsDisplay:YES];
-				NSMutableDictionary* tempVorgabenDic = [[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+				NSMutableDictionary* tempVorgabenDic = [[NSMutableDictionary alloc]initWithCapacity:0];
 				[tempVorgabenDic setObject:[NSNumber numberWithInt:5]forKey:@"anzbalken"];
 				[tempVorgabenDic setObject:[NSNumber numberWithInt:3]forKey:@"datenindex"];
 				
@@ -1726,28 +1758,27 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
 		[ClearTaste setEnabled:YES];
 		
 // 14.4.10 Doppeltes Laden verhindern.
-		NSTimer* KalenderTimer=[[NSTimer scheduledTimerWithTimeInterval:1
+		NSTimer* KalenderTimer=[NSTimer scheduledTimerWithTimeInterval:1
 																			  target:self 
 																			selector:@selector(KalenderFunktion:) 
 																			userInfo:nil 
-																			 repeats:NO]retain];
+																			 repeats:NO];
 		
 		NSRunLoop *runLoop = [NSRunLoop currentRunLoop];
 		[runLoop addTimer:KalenderTimer forMode:NSDefaultRunLoopMode];
 		
-		[KalenderTimer release];
 
 		//Kalenderblocker=0;
 	}
 	//NSBeep();
-	NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+	NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 	[NotificationDic setObject:[NSNumber numberWithInt:1] forKey:@"loaddataok"];
 	NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
 	[nc postNotificationName:@"LoadData" object:self userInfo:NotificationDic];
 	
    [Kalender setEnabled:YES];
 	
-	NSMutableDictionary* BalkendatenDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+	NSMutableDictionary* BalkendatenDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 	[BalkendatenDic setObject:[NSNumber numberWithInt:1]forKey:@"aktion"];
 	
 	//NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
@@ -1784,7 +1815,7 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
 
 - (void)ReadAktion:(NSNotification*)note
 {
-	NSNumberFormatter *numberFormatter =[[[NSNumberFormatter alloc] init] autorelease];
+	NSNumberFormatter *numberFormatter =[[NSNumberFormatter alloc] init];
 	// specify just positive format
 	[numberFormatter setFormat:@"##0.00"];
 	
@@ -1883,7 +1914,6 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
 						NSLog(@"ErrZuLang: %d",ErrZuLang);
 						NSLog(@"ErrZuLang: %d DatenpaketArray: %@",ErrZuLang,[DatenpaketArray description] );
 						errString =[NSString stringWithFormat:@"%@\rAnzDaten: %d ErrZuLang: %d DatenpaketArray: %@",errString,AnzDaten,ErrZuLang,[DatenpaketArray componentsJoinedByString:@"\t"]];
-						[errString retain];
 						[DatenpaketArray removeAllObjects]; // Aufräumen fuer naechste Serie
 						
 						/*
@@ -1922,7 +1952,6 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
 						//NSLog(@"ErrZuKurz: %d",ErrZuKurz);
 						NSLog(@"ErrZuKurz: %d DatenpaketArray: %@ ",ErrZuKurz,[DatenpaketArray description] );
 						errString =[NSString stringWithFormat:@"%@\rAnzDaten: %d ErrZuKurz: %d DatenpaketArray: %@",errString,AnzDaten,ErrZuKurz,[DatenpaketArray  componentsJoinedByString:@"\t"]];
-						[errString retain];
 						[ErrZuKurzFeld setIntValue:ErrZuKurz];
 						if ([DatenpaketArray count])
 						{
@@ -1950,7 +1979,6 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
 							NSLog(@"ParFehler: %d DatenpaketArray: %@",tempPar, [DatenpaketArray description]);
 							[ParFeld setIntValue:tempPar];
 							errString =[NSString stringWithFormat:@"%@\rAnzDaten: %d ParFehler: %d DatenpaketArray: %@",errString,AnzDaten,ErrZuLang,[DatenpaketArray  componentsJoinedByString:@"\t"]];
-							[errString retain];
 							if ([DatenpaketArray count])
 							{
 	//	22.3.09					[DatenpaketArray removeAllObjects]; // Aufräumen fuer naechste Serie
@@ -2237,7 +2265,7 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
 	
    //NSLog(@"LastDatenAktion StartDatenString: *%@*",StartDatenString);
 	NSString* Kalenderformat=[[NSCalendarDate calendarDate]calendarFormat];
-	NSLog(@"LastDatenaktion note A: %@",[[note userInfo]description]);
+	DLog(@"LastDatenaktion note: %@",[[note userInfo]description]);
    
    if ([[note userInfo]objectForKey:@"lastdatenarray"])
    {
@@ -2247,7 +2275,7 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
    }
 	if ([[note userInfo]objectForKey:@"startzeit"])
 	{
-		DatenserieStartZeit=[[NSCalendarDate dateWithString:[[note userInfo]objectForKey:@"startzeit"] calendarFormat:Kalenderformat]retain];
+		DatenserieStartZeit=[NSCalendarDate dateWithString:[[note userInfo]objectForKey:@"startzeit"] calendarFormat:Kalenderformat];
 	}
 	//int firsttag=[DatenserieStartZeit dayOfMonth];
 	int firstZeit=0;
@@ -2269,7 +2297,7 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
    
    NSLog(@"LastDataAktion codeFeld: %@",[codeFeld string]);
    
-	NSNumberFormatter *numberFormatter =[[[NSNumberFormatter alloc] init] autorelease];
+	NSNumberFormatter *numberFormatter =[[NSNumberFormatter alloc] init];
 	// specify just positive format
 	[numberFormatter setFormat:@"##0.00"];
 	
@@ -2336,7 +2364,7 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
 			[TemperaturMKDiagramm setWerteArray:HomeDatenArray mitKanalArray:HeizungKanalArray];
 			[TemperaturMKDiagramm setNeedsDisplay:YES];
 			
-			NSMutableDictionary* tempVorgabenDic = [[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+			NSMutableDictionary* tempVorgabenDic = [[NSMutableDictionary alloc]initWithCapacity:0];
 			
 			[tempVorgabenDic setObject:[NSNumber numberWithInt:5]forKey:@"anzbalken"];
 			[tempVorgabenDic setObject:[NSNumber numberWithInt:3]forKey:@"datenindex"];
@@ -2564,9 +2592,9 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
 
 	[SolarStartzeitFeld setStringValue:@""];
 
-	NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+	NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 	[NotificationDic setObject:@"clear"forKey:@"data"];
-	SolarDatenserieStartZeit=[[NSCalendarDate calendarDate]retain];
+	SolarDatenserieStartZeit=[NSCalendarDate calendarDate];
 	[NotificationDic setObject:DatenserieStartZeit forKey:@"datenseriestartzeit"];
 //	NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
 //	[nc postNotificationName:@"data" object:NULL userInfo:NotificationDic];
@@ -2583,7 +2611,7 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
 	[SolarStartzeitFeld setStringValue:@""];
 	[SolarKalender setDateValue: [NSDate date]];
 
-	NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+	NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 	[NotificationDic setObject:@"clear"forKey:@"data"];
 	//DatenserieStartZeit=[[NSCalendarDate calendarDate]retain];
 	//[NotificationDic setObject:DatenserieStartZeit forKey:@"datenseriestartzeit"];
@@ -2604,12 +2632,12 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
 		//NSLog(@"ExterneSolarDatenAktion: Startzeit: *%@* StartzeitString: *%@*",[[note userInfo]objectForKey:@"startzeit"],StartzeitString);
 		
 		NSString* Kalenderformat=[[NSCalendarDate calendarDate]calendarFormat];
-		SolarDatenserieStartZeit=[[NSCalendarDate dateWithString:[[note userInfo]objectForKey:@"startzeit"] calendarFormat:Kalenderformat]retain];
+		SolarDatenserieStartZeit=[NSCalendarDate dateWithString:[[note userInfo]objectForKey:@"startzeit"] calendarFormat:Kalenderformat];
       
       
 		int tag=[SolarDatenserieStartZeit dayOfMonth];
 		
-		NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+		NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 		[NotificationDic setObject:@"datastart"forKey:@"data"];
 		[NotificationDic setObject:SolarDatenserieStartZeit forKey:@"datenseriestartzeit"];
 		
@@ -2758,7 +2786,7 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
 			[SolarDiagrammScroller setNeedsDisplay:YES];
 		}
 		
-		NSMutableDictionary* tempVorgabenDic = [[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+		NSMutableDictionary* tempVorgabenDic = [[NSMutableDictionary alloc]initWithCapacity:0];
 		
 		/*
 		 derVorgabenDic enthaelt:
@@ -2844,16 +2872,15 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
 		[ClearTaste setEnabled:YES];
 		
 		// 14.4.10 Doppeltes Laden verhindern.
-		NSTimer* SolarKalenderTimer=[[NSTimer scheduledTimerWithTimeInterval:1
+		NSTimer* SolarKalenderTimer=[NSTimer scheduledTimerWithTimeInterval:1
 																			  target:self 
 																			selector:@selector(SolarKalenderFunktion:) 
 																			userInfo:nil 
-																			 repeats:NO]retain];
+																			 repeats:NO];
 		
 		NSRunLoop *runLoop = [NSRunLoop currentRunLoop];
 		[runLoop addTimer:SolarKalenderTimer forMode:NSDefaultRunLoopMode];
 		
-		[SolarKalenderTimer release];
 		//SolarKalenderblocker=0;
 		
 	}
@@ -2862,13 +2889,13 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
       NSLog(@"ExterneSolarDatenAktion kein datenarray da");
    }
 	//NSBeep();
-	NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+	NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 	[NotificationDic setObject:[NSNumber numberWithInt:1] forKey:@"loadsolardataok"];
 	NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
 //	[nc postNotificationName:@"LoadData" object:self userInfo:NotificationDic];
 	[SolarKalender setEnabled:YES];
 	
-	NSMutableDictionary* BalkendatenDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+	NSMutableDictionary* BalkendatenDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 	[BalkendatenDic setObject:[NSNumber numberWithInt:1]forKey:@"aktion"];
 	
 	//NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
@@ -2915,7 +2942,7 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
       //NSLog(@"LastSolarDatenaktion note: %@",[[note userInfo]description]);
       if ([[note userInfo]objectForKey:@"startzeit"])
       {
-         SolarDatenserieStartZeit=[[NSCalendarDate dateWithString:[[note userInfo]objectForKey:@"startzeit"] calendarFormat:Kalenderformat]retain];
+         SolarDatenserieStartZeit=[NSCalendarDate dateWithString:[[note userInfo]objectForKey:@"startzeit"] calendarFormat:Kalenderformat];
       }
       //int firsttag=[SolarDatenserieStartZeit dayOfMonth];
       
@@ -2934,7 +2961,7 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
 	}
 	anzSolarLoads=0;
 	[SolarZaehlerFeld setIntValue:anzSolarLoads];
-	NSNumberFormatter *numberFormatter =[[[NSNumberFormatter alloc] init] autorelease];
+	NSNumberFormatter *numberFormatter =[[NSNumberFormatter alloc] init];
 	// specify just positive format
 	[numberFormatter setFormat:@"##0.00"];
 	
@@ -3036,7 +3063,7 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
 			[SolarDiagramm setWerteArray:lastDatenArray mitKanalArray:TemperaturKanalArray];
 			[SolarDiagramm setNeedsDisplay:YES];
 			
-			NSMutableDictionary* tempVorgabenDic = [[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+			NSMutableDictionary* tempVorgabenDic = [[NSMutableDictionary alloc]initWithCapacity:0];
 			
 			/*
 			derVorgabenDic enthaelt:
@@ -3191,10 +3218,9 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
 	[SolarDatenFeld setString:[NSString string]];
 	AnzDaten=0;
 	SolarDatenserieStartZeit=[NSCalendarDate calendarDate];
-	[SolarDatenserieStartZeit retain];
 	//NSDictionary* DatumDic=[NSDictionary dictionaryWithObject:DatenserieStartZeit forKey:@"datenseriestartzeit"];
 	
-	NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+	NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 	[NotificationDic setObject:@"datastart"forKey:@"data"];
 	[NotificationDic setObject:SolarDatenserieStartZeit forKey:@"datenseriestartzeit"];
 	
@@ -3265,7 +3291,7 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
 	[StartzeitFeld setStringValue:@""];
 	[Kalender setDateValue: [NSDate date]];
 
-	NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+	NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 	[NotificationDic setObject:@"clear"forKey:@"data"];
 	//DatenserieStartZeit=[[NSCalendarDate calendarDate]retain];
 	//[NotificationDic setObject:DatenserieStartZeit forKey:@"datenseriestartzeit"];
@@ -3331,7 +3357,7 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
 	//NSLog(@"DatumArray: %@",[DatumArray description]);
 	//NSLog(@"reportKalender SuffixString: %@",SuffixString);
 	//NSLog(@"tag: %d jahr: %d",tag,jahr);
-	NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+	NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 	[NotificationDic setObject:SuffixString forKey:@"suffixstring"];
 	//[NotificationDic setObject:[[Kalender dateValue]description] forKey:@"datum"];
 	[NotificationDic setObject:[[sender dateValue]description] forKey:@"datum"];
@@ -3386,7 +3412,7 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
 	//NSLog(@"DatumArray: %@",[DatumArray description]);
 	//NSLog(@"reportSolarKalender SuffixString: %@",SuffixString);
 	//NSLog(@"tag: %d jahr: %d",tag,jahr);
-	NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+	NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 	[NotificationDic setObject:SuffixString forKey:@"suffixstring"];
 	//[NotificationDic setObject:[[Kalender dateValue]description] forKey:@"datum"];
 	[NotificationDic setObject:[[sender dateValue]description] forKey:@"datum"];
@@ -3447,7 +3473,7 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
 
 - (NSDictionary*)SolarStatistikDatum
 {
-	NSMutableDictionary* tempDatumDic = [[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+	NSMutableDictionary* tempDatumDic = [[NSMutableDictionary alloc]initWithCapacity:0];
 	
 	return tempDatumDic;
 
@@ -3476,7 +3502,7 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
 	NSLog(@"DatumArray: %@",[DatumArray description]);
 	//NSLog(@"reportSolarKalender SuffixString: %@",SuffixString);
 	//NSLog(@"tag: %d jahr: %d",tag,jahr);
-	NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+	NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 	[NotificationDic setObject:HeuteDatumString forKey:@"heute"];
 	[NotificationDic setObject:KalenderDatumString forKey:@"kalenderdatum"];
 	[NotificationDic setObject:[DatumArray objectAtIndex:0] forKey:@"kalenderjahr"];
@@ -3546,7 +3572,7 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
 	NSString* TitelString=@"HomeCentral\rFalkenstrasse 20\r8630 Rueti\rDatum: ";
 	NSString* DatumString=[NSString stringWithFormat:@"%@.%@.%@  %@:%@",tagString,monatString,jahrString,stundeString,minuteString];
 	NSArray* tempZeilenArray=[[TemperaturDatenFeld string]componentsSeparatedByString:@"\r"];
-	NSMutableArray* tempNeuerZeilenArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+	NSMutableArray* tempNeuerZeilenArray=[[NSMutableArray alloc]initWithCapacity:0];
 	
 	//NSLog(@"tempZeilenArray vor: %@",[tempZeilenArray description]);
 	if ([tempZeilenArray count]>1)
@@ -3593,7 +3619,7 @@ if ([[note userInfo]objectForKey:@"err"])
 	NSCalendarDate* errZeit=[NSCalendarDate calendarDate];
 	[errZeit setCalendarFormat:@"%H:%M"];
 
-	errString =[[NSString stringWithFormat:@"%@\n%@: %@",errString,errZeit,tempErrString]retain];
+	errString =[NSString stringWithFormat:@"%@\n%@: %@",errString,errZeit,tempErrString];
 	
 }
 }
@@ -3611,7 +3637,6 @@ if ([[note userInfo]objectForKey:@"err"])
 		BOOL errWriteOK=[errString writeToFile:errPfad atomically:YES];
 		
 		//NSLog(@"saveErrString errWriteOK: %d",errWriteOK);
-		[errString release];
 		return errWriteOK;
 	}
 	else
@@ -3636,10 +3661,9 @@ if ([[note userInfo]objectForKey:@"err"])
 	ErrZuLang=0;
 	ErrZuKurz=0;
 	DatenserieStartZeit=[NSCalendarDate calendarDate];
-	[DatenserieStartZeit retain];
 	//NSDictionary* DatumDic=[NSDictionary dictionaryWithObject:DatenserieStartZeit forKey:@"datenseriestartzeit"];
 	
-	NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+	NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 	[NotificationDic setObject:@"datastart"forKey:@"data"];
 	[NotificationDic setObject:DatenserieStartZeit forKey:@"datenseriestartzeit"];
 	
@@ -3712,8 +3736,8 @@ if ([[note userInfo]objectForKey:@"err"])
 	NSString* jahrString=[[[NSNumber numberWithInt:jahr]stringValue]substringWithRange:jahrRange];
 	int monat=[SaveDatum monthOfYear];
 	NSString* monatString=[[NSNumber numberWithInt:monat]stringValue];
-	int tag=[SaveDatum dayOfMonth];
-	NSString* tagString=[[NSNumber numberWithInt:tag]stringValue];
+	int wtag=[SaveDatum dayOfMonth];
+	NSString* tagString=[[NSNumber numberWithInt:wtag]stringValue];
 	int stunde=[SaveDatum hourOfDay];
 	NSString* stundeString=[[NSNumber numberWithInt:stunde]stringValue];
 	int minute=[SaveDatum minuteOfHour];
@@ -3774,8 +3798,8 @@ if ([[note userInfo]objectForKey:@"err"])
 	if ([derDatenDic objectForKey:@"temperaturdatenarray"])
 	{
 		//NSLog(@"Data setBrennerStatstik: BrennerdatenArray %@",[[derDatenDic objectForKey:@"temperaturdatenarray"] description]);
-		NSSortDescriptor* tagDescriptor = [[[NSSortDescriptor alloc] initWithKey:@"tagdesjahres"
-																							ascending:YES] autorelease];
+		NSSortDescriptor* tagDescriptor = [[NSSortDescriptor alloc] initWithKey:@"tagdesjahres"
+																							ascending:YES];
 		NSArray* sortDescriptors = [NSArray arrayWithObject:tagDescriptor];
 		TemperaturdatenArray = [[derDatenDic objectForKey:@"temperaturdatenarray"] sortedArrayUsingDescriptors:sortDescriptors];
 		
@@ -3796,8 +3820,8 @@ if ([[note userInfo]objectForKey:@"err"])
 	if ([derDatenDic objectForKey:@"brennerdatenarray"])
 	{
 		//NSLog(@"Data setBrennerStatstik: BrennerdatenArray %@",[[derDatenDic objectForKey:@"brennerdatenarray"] description]);
-		NSSortDescriptor* tagDescriptor = [[[NSSortDescriptor alloc] initWithKey:@"tagdesjahres"
-																							ascending:YES] autorelease];
+		NSSortDescriptor* tagDescriptor = [[NSSortDescriptor alloc] initWithKey:@"tagdesjahres"
+																							ascending:YES];
 		NSArray* sortDescriptors = [NSArray arrayWithObject:tagDescriptor];
 		BrennerdatenArray = [[derDatenDic objectForKey:@"brennerdatenarray"] sortedArrayUsingDescriptors:sortDescriptors];
 
@@ -3813,7 +3837,7 @@ if ([[note userInfo]objectForKey:@"err"])
 	NSArray* TemperaturtagArray=[TemperaturdatenArray valueForKey:@"tagdesjahres"];
 	
 	
-	NSMutableArray* StatistikArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+	NSMutableArray* StatistikArray=[[NSMutableArray alloc]initWithCapacity:0];
 	int index=0;
 	
 	for (index=0;index<366;index++)
@@ -3821,7 +3845,7 @@ if ([[note userInfo]objectForKey:@"err"])
 		
 		int anz=0;
 		NSNumber* indexNumber = [NSNumber numberWithInt:index];
-		NSMutableDictionary* tempDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+		NSMutableDictionary* tempDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 		NSUInteger TempIndex=[TemperaturtagArray indexOfObject:indexNumber];
 		if (TempIndex < NSNotFound) // Es gibt einen Eintrag
 		{
@@ -3892,7 +3916,7 @@ if ([[note userInfo]objectForKey:@"err"])
 	//NSLog(@"Data setBrennerStatstik: [StatistikArray count]: %d",[StatistikArray count]);
 	for (i=0;i<[StatistikArray count];i++)
 	{
-		NSMutableArray* tempWerteArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+		NSMutableArray* tempWerteArray=[[NSMutableArray alloc]initWithCapacity:0];
 		// Abszisse: tag des Jahres
 		[tempWerteArray addObject:[[StatistikArray objectAtIndex:i]objectForKey:@"tagdesjahres"]];
 		if ([[StatistikArray objectAtIndex:i]objectForKey:@"mittel"])
@@ -3919,7 +3943,7 @@ if ([[note userInfo]objectForKey:@"err"])
 		
 		// Brennerstatistikdaten
 		
-		NSMutableArray* tempBrennerWerteArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+		NSMutableArray* tempBrennerWerteArray=[[NSMutableArray alloc]initWithCapacity:0];
 		// Abszisse: tag des Jahres
 		[tempBrennerWerteArray addObject:[[StatistikArray objectAtIndex:i]objectForKey:@"tagdesjahres"]];
 		
@@ -3948,7 +3972,7 @@ if ([[note userInfo]objectForKey:@"err"])
 		
 		// Taglinien
 		
-		NSMutableArray* tempDatumArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+		NSMutableArray* tempDatumArray=[[NSMutableArray alloc]initWithCapacity:0];
 		// Abszisse: tag des Jahres
 		[tempDatumArray addObject:[[StatistikArray objectAtIndex:i]objectForKey:@"tagdesjahres"]];
 		
@@ -3970,7 +3994,7 @@ if ([[note userInfo]objectForKey:@"err"])
 	//NSLog(@"reportStatistikJahr: %d",[[sender selectedItem]tag]);
 	[TemperaturStatistikDiagramm clean];
 	[TagGitterlinien clean];
-	NSMutableDictionary* tempDatenDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+	NSMutableDictionary* tempDatenDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 	[tempDatenDic setObject:[NSNumber numberWithInt:1]forKey:@"aktion"];
 	NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
 	[nc postNotificationName:@"StatistikDaten" object:NULL userInfo:tempDatenDic];
@@ -3984,7 +4008,7 @@ if ([[note userInfo]objectForKey:@"err"])
 	NSLog(@"reportSolarStatistikJahr: %d",[[sender selectedItem]tag]);
 	[SolarStatistikDiagramm clean];
 	[SolarTagGitterlinien clean];
-	NSMutableDictionary* tempDatenDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+	NSMutableDictionary* tempDatenDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 	[tempDatenDic setObject:[NSNumber numberWithInt:1]forKey:@"aktion"];
 	NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
 	[nc postNotificationName:@"SolarStatistikDaten" object:NULL userInfo:tempDatenDic];
@@ -4074,8 +4098,8 @@ if ([[note userInfo]objectForKey:@"err"])
       TemperaturdatenArray=[TemperaturdatenSet allObjects];
 
 		//NSLog(@"Data setSolarStatstik: TemperaturdatenArray %@",[[derDatenDic objectForKey:@"temperaturdatenarray"] description]);
-		NSSortDescriptor* tagDescriptor = [[[NSSortDescriptor alloc] initWithKey:@"tagdesjahres"
-																							ascending:YES] autorelease];
+		NSSortDescriptor* tagDescriptor = [[NSSortDescriptor alloc] initWithKey:@"tagdesjahres"
+																							ascending:YES];
 		NSArray* sortDescriptors = [NSArray arrayWithObject:tagDescriptor];
 		TemperaturdatenArray = [TemperaturdatenArray sortedArrayUsingDescriptors:sortDescriptors];
 		//TemperaturdatenArray = [derDatenDic objectForKey:@"temperaturdatenarray"];
@@ -4143,7 +4167,7 @@ if ([[note userInfo]objectForKey:@"err"])
    //NSLog(@"SolarertragtagArray: %@",[SolarertragtagArray description]);
 	//NSLog(@"TemperaturtagArray count: %d last: %d array: %@",[TemperaturtagArray count],[[TemperaturtagArray lastObject]intValue],[TemperaturtagArray description]);
 	
-	NSMutableArray* TemperaturStatistikArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+	NSMutableArray* TemperaturStatistikArray=[[NSMutableArray alloc]initWithCapacity:0];
 
    int index=0;
 	
@@ -4154,7 +4178,7 @@ if ([[note userInfo]objectForKey:@"err"])
 		NSNumber* indexNumber = [NSNumber numberWithInt:index];
       
      // NSLog(@"index: %d indexNumber: %@ ",index,indexNumber);
-		NSMutableDictionary* tempDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+		NSMutableDictionary* tempDic=[[NSMutableDictionary alloc]initWithCapacity:0];
       
 		NSUInteger  TempIndex=[TemperaturtagArray indexOfObject:indexNumber];
 		if (TempIndex < [TemperaturdatenArray count] && [TemperaturdatenArray objectAtIndex:TempIndex])
@@ -4266,7 +4290,7 @@ if ([[note userInfo]objectForKey:@"err"])
 
    for (i=0;i<[TemperaturStatistikArray count];i++)
 	{
-		NSMutableArray* tempWerteArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+		NSMutableArray* tempWerteArray=[[NSMutableArray alloc]initWithCapacity:0];
 		// Abszisse: tag des Jahres
 		[tempWerteArray addObject:[[TemperaturStatistikArray objectAtIndex:i]objectForKey:@"tagdesjahres"]];
 		
@@ -4319,7 +4343,7 @@ if ([[note userInfo]objectForKey:@"err"])
 		
 		// Elektrostatistikdaten
 		
-		NSMutableArray* tempElektroWerteArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+		NSMutableArray* tempElektroWerteArray=[[NSMutableArray alloc]initWithCapacity:0];
 		// Abszisse: tag des Jahres
 		[tempElektroWerteArray addObject:[[TemperaturStatistikArray objectAtIndex:i]objectForKey:@"tagdesjahres"]];
 		
@@ -4388,7 +4412,7 @@ if ([[note userInfo]objectForKey:@"err"])
 		
 		// Taglinien
 		
-		NSMutableArray* tempDatumArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+		NSMutableArray* tempDatumArray=[[NSMutableArray alloc]initWithCapacity:0];
 		// Abszisse: tag des Jahres
 		[tempDatumArray addObject:[[TemperaturStatistikArray objectAtIndex:i]objectForKey:@"tagdesjahres"]];
 		
@@ -4463,8 +4487,6 @@ if ([[note userInfo]objectForKey:@"err"])
 
 - (void)setURLToLoad:(NSURL *)URL
 {
-    [URL retain];
-    [URLToLoad release];
     URLToLoad = URL;
 }
 
@@ -4557,7 +4579,7 @@ if ([[note userInfo]objectForKey:@"err"])
 		if (AnzDaten %7 == 0)
 		{
 			simDaySaved=0;
-			NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+			NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 			[NotificationDic setObject:@"savepart"forKey:@"data"];
 			[NotificationDic setObject:SimDatenserieStartZeit forKey:@"datenseriestartzeit"];
 			NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
@@ -4568,7 +4590,7 @@ if ([[note userInfo]objectForKey:@"err"])
 		if ((AnzDaten %23 == 0)&& (simDaySaved==0))
 		{
 			[DatenserieStartZeit dateByAddingTimeInterval:84600];
-			NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+			NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 			[NotificationDic setObject:@"saveganz"forKey:@"data"];
 			//[NotificationDic setObject:@"savepart"forKey:@"data"];
 			[NotificationDic setObject:SimDatenserieStartZeit forKey:@"datenseriestartzeit"];
@@ -4639,7 +4661,7 @@ if ([[note userInfo]objectForKey:@"err"])
 - (IBAction)reportSimStart:(id)sender 
 {
 	int Stunde,Minute;
-	SimDatenserieStartZeit=[[NSCalendarDate calendarDate]retain];
+	SimDatenserieStartZeit=[NSCalendarDate calendarDate];
 	NSCalendarDate *StartZeit = [NSCalendarDate calendarDate];
 	//dateWithString:@"Friday, 1 July 2001, 11:45"
 	//calendarFormat:@"%A, %d %B %Y, %I:%M"];
@@ -4649,7 +4671,7 @@ if ([[note userInfo]objectForKey:@"err"])
 	//NSLog(@"h: %d min: %d",Stunde, Minute);
 	[StartZeit setCalendarFormat:@"%d.%m.%y %H:%M"];
 	[StartzeitFeld setStringValue:[StartZeit description]];
-	NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+	NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 	[NotificationDic setObject:@"datastart"forKey:@"data"];
 	[NotificationDic setObject:[NSCalendarDate date]forKey:@"datenseriestartzeit"];
 	NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
@@ -4658,7 +4680,7 @@ if ([[note userInfo]objectForKey:@"err"])
 	[StartTaste setEnabled:NO];
 	
 	[DatenpaketArray removeAllObjects]; // Aufräumen fuer naechste Serie
-	NSMutableDictionary* infoDic=[[[NSMutableDictionary alloc]initWithCapacity:0]retain];
+	NSMutableDictionary* infoDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 	
 	NSDate *now = [[NSDate alloc] init];
 	SimTimer =[[NSTimer alloc] initWithFireDate:now
@@ -4671,8 +4693,6 @@ if ([[note userInfo]objectForKey:@"err"])
 	NSRunLoop *runLoop = [NSRunLoop currentRunLoop];
 	[runLoop addTimer:SimTimer forMode:NSDefaultRunLoopMode];
 	
-	//[SimTimer release];
-	[now release];
 	
 	SimRun=1;			
 	
@@ -4687,7 +4707,6 @@ if ([[note userInfo]objectForKey:@"err"])
 	if ([SimTimer isValid])
 	{
 		[SimTimer invalidate];
-		[SimTimer release];
 	}
 	
 }
@@ -4712,7 +4731,6 @@ if ([[note userInfo]objectForKey:@"err"])
 	NSCalendarDate* StartZeit=[NSCalendarDate calendarDate];
 	[StartZeit setCalendarFormat:@"%d.%m.%y %H:%M"];
 	errString=[NSString stringWithFormat:@"Logfile vom: %@\r",[StartZeit description]];
-	[errString retain];
 	[StartzeitFeld setStringValue:[StartZeit description]];
 	[StartZeit setCalendarFormat:@"%d%m%y_%H%M"];
 	
@@ -4720,7 +4738,7 @@ if ([[note userInfo]objectForKey:@"err"])
 	BOOL FileOK=NO;
 	BOOL istOrdner;
 	NSFileManager *Filemanager = [NSFileManager defaultManager];
-	NSString* USBPfad=[[NSHomeDirectory() stringByAppendingFormat:@"%@%@",@"/Documents",@"/USBInterfaceDaten"]retain];
+	NSString* USBPfad=[NSHomeDirectory() stringByAppendingFormat:@"%@%@",@"/Documents",@"/USBInterfaceDaten"];
 	FileOK= ([Filemanager fileExistsAtPath:USBPfad isDirectory:&istOrdner]&&istOrdner);
 	if (FileOK)
 	{
@@ -4737,15 +4755,13 @@ if ([[note userInfo]objectForKey:@"err"])
 	{
 		errPfad=[NSString stringWithFormat:@"%@/errString_%@.txt",[USBPfad stringByAppendingPathComponent:@"Logs"],StartZeit];
 
-		[errPfad retain];
 		NSLog(@"reportStart errPfad: %@",errPfad);
 
 	}
 	
-	[DatenserieStartZeit release];
 	
-	DatenserieStartZeit= [[NSCalendarDate calendarDate]retain];
-	NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+	DatenserieStartZeit= [NSCalendarDate calendarDate];
+	NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 	[NotificationDic setObject:@"datastart"forKey:@"data"];
 	[NotificationDic setObject:[NSCalendarDate calendarDate]forKey:@"datenseriestartzeit"];
 	NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
@@ -4759,7 +4775,7 @@ if ([[note userInfo]objectForKey:@"err"])
 - (IBAction)reportStop:(id)sender
 {
 	NSLog(@"Data reportStop");
-	NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+	NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 	[NotificationDic setObject:@"datastop"forKey:@"data"];
 	NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
 	[nc postNotificationName:@"data" object:NULL userInfo:NotificationDic];
@@ -4780,9 +4796,9 @@ if ([[note userInfo]objectForKey:@"err"])
 
 	[StartzeitFeld setStringValue:@""];
 
-	NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+	NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 	[NotificationDic setObject:@"clear"forKey:@"data"];
-	DatenserieStartZeit=[[NSCalendarDate calendarDate]retain];
+	DatenserieStartZeit=[NSCalendarDate calendarDate];
 	[NotificationDic setObject:DatenserieStartZeit forKey:@"datenseriestartzeit"];
 	NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
 	[nc postNotificationName:@"data" object:NULL userInfo:NotificationDic];
@@ -4917,7 +4933,7 @@ if ([[note userInfo]objectForKey:@"err"])
 	}
 	
 	NSArray* StringArray=[[TemperaturDatenFeld string]componentsSeparatedByString:@"\r"];
-	NSMutableArray* AbszissenArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+	NSMutableArray* AbszissenArray=[[NSMutableArray alloc]initWithCapacity:0];
 	int i;
 	for (i=0;i<[StringArray count];i++)
 	{
@@ -5027,7 +5043,7 @@ if ([[note userInfo]objectForKey:@"err"])
    
    
 	NSArray* StringArray=[[SolarDatenFeld string]componentsSeparatedByString:@"\r"];
-	NSMutableArray* AbszissenArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+	NSMutableArray* AbszissenArray=[[NSMutableArray alloc]initWithCapacity:0];
 	int i;
 	for (i=0;i<[StringArray count];i++)
 	{
@@ -5119,7 +5135,6 @@ if ([[note userInfo]objectForKey:@"err"])
 		//NSLog(@"ADWandler setEinkanalDaten                    leer  tempDatenArray: %@",[tempDatenArray description]);
 		
 		DatenserieStartZeit=[NSCalendarDate calendarDate];
-		[DatenserieStartZeit retain];
 		[TemperaturDaten setObject:[NSDate date] forKey:@"datenseriestartzeit"];
 		NSMutableArray* tempStartWerteArray=[[NSMutableArray alloc]initWithCapacity:8];
 		
@@ -5236,7 +5251,7 @@ if ([[note userInfo]objectForKey:@"err"])
 			{
 				NSLog(@"I2C Fehler");
 				
-				NSAlert *Warnung = [[[NSAlert alloc] init] autorelease];
+				NSAlert *Warnung = [[NSAlert alloc] init];
 				[Warnung addButtonWithTitle:@"OK"];
 				//	[Warnung addButtonWithTitle:@""];
 				//	[Warnung addButtonWithTitle:@""];
@@ -5285,7 +5300,7 @@ if ([[note userInfo]objectForKey:@"err"])
 		
 		NSArray* bitnummerArray=[NSArray arrayWithObjects: @"null", @"eins",@"zwei",@"drei",@"vier",@"fuenf",nil];
 		//		NSLog(@"Eingangsdaten: %@ \nAnz: %d",[Eingangsdaten description],[Eingangsdaten count]);
-		NSMutableArray* tempKesselArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+		NSMutableArray* tempKesselArray=[[NSMutableArray alloc]initWithCapacity:0];
 		
 		
 		
@@ -5294,7 +5309,7 @@ if ([[note userInfo]objectForKey:@"err"])
 		bit=0;
 		for (k=0;k<AnzahlDaten/6+1;k++)
 		{
-			NSMutableDictionary* tempReportDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+			NSMutableDictionary* tempReportDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 			for (bit=0;bit<6;bit++)
 			{
 				if (k*6+bit<AnzahlDaten)
@@ -5370,7 +5385,6 @@ if ([[note userInfo]objectForKey:@"err"])
 NSLog(@"Data writeIOWLog: %@",derFehler);
 NSString* tempFehlerString=[IOWFehlerLog string];
 [IOWFehlerLog setString:[NSString stringWithFormat:@"%@\n%@  Zeit: %@",tempFehlerString, derFehler,[NSCalendarDate calendarDate]]];
-[derFehler release];
 
 }
 
@@ -5403,7 +5417,7 @@ NSString* tempFehlerString=[IOWFehlerLog string];
 	
 	aktuellerTag=0;
 	NSDate *now = [[NSDate alloc] init];
-	NSMutableDictionary* infoDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+	NSMutableDictionary* infoDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 	[infoDic setObject:[NSNumber numberWithInt:0] forKey:@"tag"];
 	
 	IOWTimer =[[NSTimer alloc] initWithFireDate:now
@@ -5415,8 +5429,6 @@ NSString* tempFehlerString=[IOWFehlerLog string];
 	NSRunLoop *runLoop = [NSRunLoop currentRunLoop];
 	[runLoop addTimer:IOWTimer forMode:NSDefaultRunLoopMode];
 	
-	[IOWTimer release];
-	[now release];
 	
 }
 
@@ -5428,7 +5440,7 @@ NSString* tempFehlerString=[IOWFehlerLog string];
 	aktuellerTag=0;
 	//	[self setI2CStatus:1];
 	NSLog(@"writeDatenplan");
-	NSMutableDictionary* infoDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+	NSMutableDictionary* infoDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 	[infoDic setObject:[NSNumber numberWithInt:0] forKey:@"tag"];
 	NSDate *now = [[NSDate alloc] init];
 	IOWTimer =[[NSTimer alloc] initWithFireDate:now
@@ -5440,8 +5452,7 @@ NSString* tempFehlerString=[IOWFehlerLog string];
 	NSRunLoop *runLoop = [NSRunLoop currentRunLoop];
 	[runLoop addTimer:IOWTimer forMode:NSDefaultRunLoopMode];
 	
-	[IOWTimer release];
-	[now release];
+
 	
 }
 
@@ -5451,7 +5462,7 @@ NSString* tempFehlerString=[IOWFehlerLog string];
 	
 	//NSLog(@"readWoche");
 	NSArray* Wochentage=[NSArray arrayWithObjects:@"MO",@"DI",@"MI",@"DO",@"FR",@"SA",@"SO",nil];
-	NSMutableDictionary* tempInfoDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+	NSMutableDictionary* tempInfoDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 	
 	if ([derTimer userInfo])
 	{
@@ -5499,7 +5510,7 @@ NSString* tempFehlerString=[IOWFehlerLog string];
 - (void)setI2CStatus:(int)derStatus
 {
 	NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
-	NSMutableDictionary* i2cStatusDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+	NSMutableDictionary* i2cStatusDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 	[i2cStatusDic setObject:[NSNumber numberWithInt:derStatus]forKey:@"status"];
 	//NSLog(@"Data  setI2CStatus: Status: %d",derStatus);
 	[nc postNotificationName:@"i2cstatus" object:self userInfo:i2cStatusDic];
@@ -5512,8 +5523,8 @@ NSString* tempFehlerString=[IOWFehlerLog string];
 	NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
 	
 	
-	NSMutableDictionary* readEEPROMDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
-	NSMutableArray* i2cAdressArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+	NSMutableDictionary* readEEPROMDic=[[NSMutableDictionary alloc]initWithCapacity:0];
+	NSMutableArray* i2cAdressArray=[[NSMutableArray alloc]initWithCapacity:0];
 	
 	//Adressierung EEPROM
 	[i2cAdressArray addObject:[NSNumber numberWithInt:0x02]];	//write-Report
@@ -5528,7 +5539,7 @@ NSString* tempFehlerString=[IOWFehlerLog string];
 	[Adresse setStringValue:[i2cAdressArray componentsJoinedByString:@" "]];
 	[readEEPROMDic setObject:i2cAdressArray forKey:@"adressarray"];
 	
-	NSMutableArray* i2cCmdArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+	NSMutableArray* i2cCmdArray=[[NSMutableArray alloc]initWithCapacity:0];
 	
 	//Anforderung Daten
 	[i2cCmdArray addObject:[NSNumber numberWithInt:0x03]];	// read-Report
@@ -5565,9 +5576,9 @@ NSString* tempFehlerString=[IOWFehlerLog string];
 	//NSLog(@"writeEEPROM: i2cAdresse: %02X dieDaten: %@",i2cAdresse, [dieDaten description]);
 	int writeErr=0;
 	NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
-	NSMutableDictionary* writeEEPROMDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+	NSMutableDictionary* writeEEPROMDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 	
-	NSMutableArray* i2cWriteArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];//Sammelarray fuer die Arrays der Reports
+	NSMutableArray* i2cWriteArray=[[NSMutableArray alloc]initWithCapacity:0];//Sammelarray fuer die Arrays der Reports
 	int anzDaten=[dieDaten count];
 	//NSLog(@"writeEEPROM Aresse: %02X dieDaten: %@  anz: %d",startAdresse,[dieDaten description],[dieDaten count]);
 	//Adressierung EEPROM
@@ -5579,7 +5590,7 @@ NSString* tempFehlerString=[IOWFehlerLog string];
 	
 	if (anzDaten<=3) // nur ein Report mit Start/Stop
 	{
-		NSMutableArray* tempWriteArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+		NSMutableArray* tempWriteArray=[[NSMutableArray alloc]initWithCapacity:0];
 		[tempWriteArray addObject:[NSNumber numberWithInt:0x02]];	//write-Report
 		[tempWriteArray addObject:[NSNumber numberWithInt:0xc3 + anzDaten]]; // Startbit, Startadresse, bis 3 bytes,  Stopbit
 		[tempWriteArray addObject:[NSNumber numberWithInt:i2cAdresse]]; // I2C-Adresse EEPROM mit WRITE
@@ -5602,7 +5613,7 @@ NSString* tempFehlerString=[IOWFehlerLog string];
 	}
 	else
 	{
-		NSMutableArray* tempWriteArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+		NSMutableArray* tempWriteArray=[[NSMutableArray alloc]initWithCapacity:0];
 		[tempWriteArray addObject:[NSNumber numberWithInt:0x02]];	//write-Report
 		[tempWriteArray addObject:[NSNumber numberWithInt:0x83]]; // Startbit, Startadresse, 4 bytes  
 		[tempWriteArray addObject:[NSNumber numberWithInt:i2cAdresse]]; // I2C-Adresse EEPROM mit WRITE
@@ -5630,7 +5641,7 @@ NSString* tempFehlerString=[IOWFehlerLog string];
 		int pageIndex=0;
 		for (pageIndex=0;pageIndex<pages;pageIndex++)
 		{
-			NSMutableArray* tempWriteArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+			NSMutableArray* tempWriteArray=[[NSMutableArray alloc]initWithCapacity:0];
 			[tempWriteArray addObject:[NSNumber numberWithInt:0x02]];	//write-Report
 			
 			
@@ -5665,7 +5676,7 @@ NSString* tempFehlerString=[IOWFehlerLog string];
 		
 		if (restdaten)
 		{
-			NSMutableArray* tempWriteArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+			NSMutableArray* tempWriteArray=[[NSMutableArray alloc]initWithCapacity:0];
 			[tempWriteArray addObject:[NSNumber numberWithInt:0x02]];	//write-Report
 			[tempWriteArray addObject:[NSNumber numberWithInt: 0x40 + restdaten]];//restdaten und Stopbit
 			for (k=0;k<restdaten; k++)
@@ -5711,9 +5722,7 @@ NSString* tempFehlerString=[IOWFehlerLog string];
 		NSRunLoop *runLoop = [NSRunLoop currentRunLoop];
 		[runLoop addTimer:WriteTimer forMode:NSDefaultRunLoopMode];
 		
-		[WriteTimer release];
-		[now release];
-		
+			
 		
 	}//	anz>3
 	return writeErr;
@@ -5735,7 +5744,7 @@ NSString* tempFehlerString=[IOWFehlerLog string];
 		if (ReportNummer<[i2cWriteArray count])
 		{
 			//NSLog(@"WriteEEPROMFunktion ReportNummer: %d",ReportNummer);
-			NSMutableDictionary* writeEEPROMDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+			NSMutableDictionary* writeEEPROMDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 			NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];		
 			[writeEEPROMDic setObject:[i2cWriteArray objectAtIndex:ReportNummer]forKey:@"i2ceepromarray"];
 			//NSLog(@"WriteEEPROMFunktion [i2cWriteArray objectAtIndex:ReportNummer]: %@",[[i2cWriteArray objectAtIndex:ReportNummer] description]);
@@ -5775,7 +5784,7 @@ NSString* tempFehlerString=[IOWFehlerLog string];
 
 - (IBAction)writeTagplan:(id)sender
 {
-	NSMutableArray* tempTagplanArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+	NSMutableArray* tempTagplanArray=[[NSMutableArray alloc]initWithCapacity:0];
 	int TagPopIndex=[TagPop indexOfSelectedItem];
 	
 	NSLog(@"writeTagplan: Tag: %d",TagPopIndex);
@@ -5812,7 +5821,7 @@ NSString* tempFehlerString=[IOWFehlerLog string];
 - (void)writeWocheFunktion:(NSTimer*) derTimer
 {
 	NSLog(@"writeWocheFunktion");
-	NSMutableDictionary* tempInfoDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+	NSMutableDictionary* tempInfoDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 	
 	if ([derTimer userInfo])
 	{
@@ -5824,7 +5833,7 @@ NSString* tempFehlerString=[IOWFehlerLog string];
 	{
 		[self setI2CStatus:1];
 	}
-	NSMutableArray* tempTagplanArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+	NSMutableArray* tempTagplanArray=[[NSMutableArray alloc]initWithCapacity:0];
 	NSArray* Wochentage=[NSArray arrayWithObjects:@"MO",@"DI",@"MI",@"DO",@"FR",@"SA",@"SO",nil];
 	[TagPop selectItemAtIndex:aktuellerTag];
 	NSString* Tag=[Wochentage objectAtIndex: aktuellerTag];
@@ -5902,7 +5911,7 @@ NSString* tempFehlerString=[IOWFehlerLog string];
 if ([[tabViewItem identifier]intValue]==1)
 {
 		NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
-		NSMutableDictionary* BalkendatenDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+		NSMutableDictionary* BalkendatenDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 		[BalkendatenDic setObject:[NSNumber numberWithInt:1]forKey:@"aktion"];
 //		[nc postNotificationName:@"StatistikDaten" object:NULL userInfo:BalkendatenDic];
 
@@ -5911,7 +5920,7 @@ if ([[tabViewItem identifier]intValue]==1)
 if ([[tabViewItem identifier]intValue]==3)
 {
 		NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
-		NSMutableDictionary* BalkendatenDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+		NSMutableDictionary* BalkendatenDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 		[BalkendatenDic setObject:[NSNumber numberWithInt:3]forKey:@"aktion"];
 //		[nc postNotificationName:@"SolarStatistikDaten" object:NULL userInfo:BalkendatenDic];
 

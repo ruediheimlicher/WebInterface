@@ -35,7 +35,6 @@ NSLog(@"drawRect");
 	  //[self Alert:@"showADWandler nach init"];
 //	NSMutableArray* 
 	EinkanalDaten=[[NSMutableArray alloc]initWithCapacity:0];
-	[EinkanalDaten retain];
 	//NSLog(@"showADWandler vor showWindow: %@",[[[ADWandler window]contentView]description]);
 	//[self Alert:@"showADWandler vor showWindow"];
 	 
@@ -56,6 +55,7 @@ NSLog(@"drawRect");
 	[SichernPanel setDelegate:self];
 	[SichernPanel setCanCreateDirectories:YES];
 	
+  /*
    [SichernPanel beginSheetForDirectory:NSHomeDirectory()
 									file:@"MehrkanalDaten" 
 									modalForWindow:[ADWandler  window] 
@@ -67,6 +67,15 @@ NSLog(@"drawRect");
                             modalDelegate:self
                            didEndSelector:@selector(MehrkanalDatenPanelDidEnd:)
                               contextInfo:nil];
+*/
+
+   [SichernPanel beginSheetModalForWindow:[ADWandler window] completionHandler:^(NSModalResponse result)
+    {
+       NSNotificationCenter * nc;
+       nc=[NSNotificationCenter defaultCenter];
+       [nc postNotificationName:@"mehrkanaldaten" object:self];
+       
+    }];
 
 }
 - (void)MehrkanalDatenPanelDidEnd:(NSSavePanel *)sheet returnCode:(int)returnCode  contextInfo:(void  *)contextInfo;

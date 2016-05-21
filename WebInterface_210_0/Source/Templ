@@ -21,7 +21,7 @@ NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
 	  }//while
 
 
-	NSAlert *Warnung = [[[NSAlert alloc] init] autorelease];
+	NSAlert *Warnung = [[NSAlert alloc] init]];
 	[Warnung addButtonWithTitle:@"OK"];
 	[Warnung addButtonWithTitle:@"Abbrechen"];
 	[Warnung setMessageText:[NSString stringWithFormat:@"%@",@""]];

@@ -2,6 +2,8 @@
 
 #import <Cocoa/Cocoa.h>
 #import <WebKit/WebKit.h>
+#import "defines.h"
+
 @class WebDownload;
 
 @interface rHomeData : NSWindowController <NSURLDownloadDelegate>

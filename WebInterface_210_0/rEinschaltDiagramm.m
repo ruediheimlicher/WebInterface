@@ -26,7 +26,6 @@
 		[self setFrame:Diagrammfeld];
 		DiagrammEcke=NSMakePoint(2.1,5.1);
 		Graph=[NSBezierPath bezierPath];
-		[Graph retain];
 		[Graph moveToPoint:DiagrammEcke];
 		lastPunkt=DiagrammEcke;
 		GraphFarbe=[NSColor blueColor]; 
@@ -34,7 +33,6 @@
 		FaktorY=(frame.size.height-15.0)/255.0; // Reduktion auf Feldhoehe
 		//NSLog(@"EinschaltDiagramm Diagrammfeldhoehe: %2.2f Faktor: %2.2f",(frame.size.height-15),FaktorY);
 		GraphArray=[[NSMutableArray alloc]initWithCapacity:0];
-		[GraphArray retain];
 		//GraphFarbeArray=[[NSMutableArray alloc]initWithCapacity:0];
 		//[GraphFarbeArray retain];
 
@@ -44,10 +42,8 @@
 		//[DatenArray retain];
 		
 		BalkenlageArray=[[NSMutableArray alloc]initWithCapacity:0];
-		[BalkenlageArray retain];
 		
 		BalkenWerteArray=[[NSMutableArray alloc]initWithCapacity:0];
-		[BalkenWerteArray retain];
 
 
 		Brenndauer=0;
@@ -57,7 +53,6 @@
 		for (i=0;i<8;i++)
 		{
 			NSBezierPath* tempGraph=[NSBezierPath bezierPath];
-			[tempGraph retain];
 			float varRed=sin(i+(float)i/10.0)/3.0+0.6;
 			float varGreen=sin(2*i+(float)i/10.0)/3.0+0.6;
 			float varBlue=sin(3*i+(float)i/10.0)/3.0+0.6;
@@ -65,7 +60,6 @@
 			NSColor* tempColor=[NSColor colorWithCalibratedRed:varRed green: varGreen blue: varBlue alpha:1.0];
 			//NSLog(@"Farbe Kanal: %d Color: %@",i,[tempColor description]);
 			tempColor=[NSColor blackColor];
-			[tempColor retain];
 			[GraphFarbeArray addObject:tempColor];
 			NSMutableArray* tempGraphArray=[[NSMutableArray alloc]initWithCapacity:0];
 			[GraphArray addObject:tempGraphArray];
@@ -170,7 +164,6 @@
 - (void)setLegende:(id)dieLegende
 {
 	Legende=dieLegende;
-	[Legende retain];
 }
 
 
@@ -296,7 +289,7 @@
 						{
 							float Brenndauerstart=[[derWerteArray objectAtIndex:0]floatValue];
 							//NSArray* tempDatenArray=[NSArray arrayWithObjects:[NSNumber numberWithDouble:Brenndauerstart],[NSNumber numberWithDouble:Brenndauerstart],[NSNumber numberWithDouble:0.0],nil];
-							NSMutableDictionary* neuerBalkenDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+							NSMutableDictionary* neuerBalkenDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 							[neuerBalkenDic setObject:[NSNumber numberWithDouble:Brenndauerstart] forKey:@"zeit"];
 							[neuerBalkenDic setObject:[NSNumber numberWithInt:neuerPunkt.x] forKey:@"x"];
 							[neuerBalkenDic setObject:[NSNumber numberWithInt:neuerPunkt.x] forKey:@"start"];
@@ -323,7 +316,7 @@
 					int Brenndauerstart=[[derWerteArray objectAtIndex:0]intValue];
 					//NSArray* tempDatenArray=[NSArray arrayWithObjects:[NSNumber numberWithDouble:Brenndauerstart],[NSNumber numberWithDouble:Brenndauerstart],[NSNumber numberWithDouble:0.0],nil];
 					//NSMutableDictionary* neuerBalkenDic=[NSMutableDictionary dictionaryWithObjects:tempDatenArray forKeys:[NSArray arrayWithObjects:@"start",@"x",@"y",nil]];
-					NSMutableDictionary* neuerBalkenDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+					NSMutableDictionary* neuerBalkenDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 					[neuerBalkenDic setObject:[NSNumber numberWithDouble:Brenndauerstart] forKey:@"zeit"];
 					[neuerBalkenDic setObject:[NSNumber numberWithInt:neuerPunkt.x] forKey:@"x"];
 					[neuerBalkenDic setObject:[NSNumber numberWithInt:neuerPunkt.x] forKey:@"start"];
@@ -391,7 +384,7 @@
 			NSString* BrenndauerString=[NSString stringWithFormat:@"%@:%@:%@",StundenString,MinutenString,SekundenString];
 			//NSLog(@"Brenndauer: %2.2f BrenndauerString:%@",Brenndauer, BrenndauerString);
 
-			NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+			NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 			[NotificationDic setObject:[NSNumber numberWithDouble:Brenndauer] forKey:@"brenndauer"];
 			[NotificationDic setObject:[NSNumber numberWithInt:Brennsekunden] forKey:@"sekunden"];
 			[NotificationDic setObject:[NSNumber numberWithInt:Brennminuten] forKey:@"minuten"];
@@ -411,7 +404,6 @@
 			NSArray* tempDatenArray=[NSArray arrayWithObjects:[NSNumber numberWithDouble:neuerPunkt.x],[NSNumber numberWithDouble:neuerPunkt.y],nil];
 			tempWerteDic=[NSDictionary dictionaryWithObjects:tempDatenArray forKeys:[NSArray arrayWithObjects:@"x",@"y",nil]];
 			[[DatenArray objectAtIndex:i] addObject:tempWerteDic];
-			[tempWerteDic release];
 			
 	//		neuerPunkt.y+=([[derWerteArray objectAtIndex:i+1]floatValue])*FaktorY;//	Data, y-Wert
 	//		NSLog(@"setWerteArray: Kanal: %d x: %2.2f y: %2.2f",i,neuerPunkt.x,neuerPunkt.y);
@@ -499,7 +491,7 @@
 					{
 						if (aktuellerUhrWert==1)	// Uhr ist neu ON, neues Balkenstueck anfangen
 						{
-							NSMutableDictionary* neuerTagwertDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+							NSMutableDictionary* neuerTagwertDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 							[neuerTagwertDic setObject:[NSNumber numberWithInt:neuerPunkt.x] forKey:@"x"];
 							[neuerTagwertDic setObject:[NSNumber numberWithInt:neuerPunkt.x] forKey:@"start"];
 							[neuerTagwertDic setObject:[NSNumber numberWithInt:1] forKey:@"uhr"];
@@ -522,7 +514,7 @@
 				//NSLog(@"GraphArray i+1 ist leer");
 				if (aktuellerUhrWert==1)	// Uhr ist neu ON, neues Balkenstueck anfangen
 				{
-					NSMutableDictionary* neuerTagwertDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+					NSMutableDictionary* neuerTagwertDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 					[neuerTagwertDic setObject:[NSNumber numberWithInt:neuerPunkt.x] forKey:@"x"];
 					[neuerTagwertDic setObject:[NSNumber numberWithInt:neuerPunkt.x] forKey:@"start"];
 					[neuerTagwertDic setObject:[NSNumber numberWithInt:1] forKey:@"uhr"];
@@ -883,7 +875,7 @@
 										[lastBalkenDic setObject:[NSNumber numberWithInt:0] forKey:@"y"];	// Objekt ist OFF
 										
 										// neuen Balken anlegen
-										NSMutableDictionary* neuerBalkenDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+										NSMutableDictionary* neuerBalkenDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 										[neuerBalkenDic setObject:[NSNumber numberWithInt:neuerPunkt.x] forKey:@"x"];
 										[neuerBalkenDic setObject:[NSNumber numberWithInt:neuerPunkt.x] forKey:@"start"];
 										[neuerBalkenDic setObject:[NSNumber numberWithInt:aktuellerWert] forKey:@"y"];
@@ -951,7 +943,7 @@
 							
 							float Brenndauerstart=[[derWerteArray objectAtIndex:0]floatValue];
 							//NSArray* tempDatenArray=[NSArray arrayWithObjects:[NSNumber numberWithDouble:Brenndauerstart],[NSNumber numberWithDouble:Brenndauerstart],[NSNumber numberWithDouble:0.0],nil];
-							NSMutableDictionary* neuerBalkenDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+							NSMutableDictionary* neuerBalkenDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 							[neuerBalkenDic setObject:[NSNumber numberWithDouble:Brenndauerstart] forKey:@"zeit"];
 							[neuerBalkenDic setObject:[NSNumber numberWithInt:neuerPunkt.x] forKey:@"x"];
 							[neuerBalkenDic setObject:[NSNumber numberWithInt:neuerPunkt.x] forKey:@"start"];
@@ -1024,7 +1016,7 @@
 					int Brenndauerstart=[[derWerteArray objectAtIndex:0]intValue];
 					//NSArray* tempDatenArray=[NSArray arrayWithObjects:[NSNumber numberWithDouble:Brenndauerstart],[NSNumber numberWithDouble:Brenndauerstart],[NSNumber numberWithDouble:0.0],nil];
 					//NSMutableDictionary* neuerBalkenDic=[NSMutableDictionary dictionaryWithObjects:tempDatenArray forKeys:[NSArray arrayWithObjects:@"start",@"x",@"y",nil]];
-					NSMutableDictionary* neuerBalkenDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+					NSMutableDictionary* neuerBalkenDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 					[neuerBalkenDic setObject:[NSNumber numberWithDouble:Brenndauerstart] forKey:@"zeit"];
 					[neuerBalkenDic setObject:[NSNumber numberWithInt:neuerPunkt.x] forKey:@"x"];
 					[neuerBalkenDic setObject:[NSNumber numberWithInt:neuerPunkt.x] forKey:@"start"];
@@ -1329,12 +1321,11 @@
 		NSColor* tempColor=[NSColor colorWithCalibratedRed:varRed green: varGreen blue: varBlue alpha:1.0];
 		//NSLog(@"Farbe Kanal: %d Color: %@",i,[tempColor description]);
 		tempColor=[NSColor blackColor];
-		[tempColor retain];
 		[GraphFarbeArray addObject:tempColor];
 		NSMutableArray* tempGraphArray=[[NSMutableArray alloc]initWithCapacity:0];
 		[GraphArray addObject:tempGraphArray];
 		[GraphKanalArray addObject:[NSNumber numberWithInt:0]];
-		NSMutableArray* tempDatenArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+		NSMutableArray* tempDatenArray=[[NSMutableArray alloc]initWithCapacity:0];
 		[DatenArray addObject:tempDatenArray];
 		
 		[BalkenlageArray addObject:[NSNumber numberWithInt:i]];

@@ -8,6 +8,7 @@
 
 #import <Cocoa/Cocoa.h>
 #import "rStatistikDiagramm.h"
+#import "defines.h"
 
 @interface rSolarStatistikDiagramm : rStatistikDiagramm
 {

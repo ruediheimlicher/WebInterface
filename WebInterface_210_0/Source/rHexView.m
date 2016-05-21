@@ -18,7 +18,6 @@ self=[super initWithFrame:frame];
 mark=-1;
 NSString* HexString=@"0 1 2 3 4 5 6 7 8 9 A B C D E F a b c d e f";
 HexSet=[NSCharacterSet characterSetWithCharactersInString:HexString];
-[HexSet retain];
 
 return self;
 }
@@ -62,7 +61,7 @@ NSFont* HexFont=[NSFont fontWithName:@"Helvetica" size: 28];
 		if ([[self string]length]==2)
 		{
 			NSLog(@"keyDown:EnterKey");
-			NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+			NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 			[NotificationDic setObject:[NSNumber numberWithInt:36] forKey:@"key"];
 			[NotificationDic setObject:[[self string]uppercaseString] forKey:@"hexwert"];
 			[self setString:[[self string]uppercaseString]];
@@ -80,7 +79,7 @@ NSFont* HexFont=[NSFont fontWithName:@"Helvetica" size: 28];
 		}
 		else
 		{
-		NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+		NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 		[NotificationDic setObject:[theEvent characters] forKey:@"falscheszeichen"];
 		NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
 		[nc postNotificationName:@"FalschesZeichen" object:self userInfo:NotificationDic];

@@ -220,8 +220,6 @@
 //				NSRunLoop *runLoop = [NSRunLoop currentRunLoop];
 //				[runLoop addTimer:TWITimer forMode:NSDefaultRunLoopMode];
 				
-				[TWITimer release];
-				[now release];
 				
 				
 			}break;
@@ -286,7 +284,7 @@ NSLog(@"lastDataRead: %@",lastDataRead);
 		[self setNewDump];
 	}
 	
-	NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+	NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 	[NotificationDic setObject:[NSNumber numberWithInt:1] forKey:@"fertig"];
 	NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
 	[nc postNotificationName:@"i2c" object:self userInfo:NotificationDic];
@@ -315,7 +313,7 @@ NSLog(@"lastDataRead: %@",lastDataRead);
 	//NSLog(@"i2cEEPROMWriteReportAktion note: %@",[[note userInfo]description]);
 	
 	
-	NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+	NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 	[NotificationDic setObject:[NSNumber numberWithInt:1] forKey:@"fertig"];
 	NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
 	[nc postNotificationName:@"i2c" object:self userInfo:NotificationDic];
@@ -360,14 +358,13 @@ NSLog(@"lastDataRead: %@",lastDataRead);
 //				[runLoop addTimer:TWITimer forMode:NSDefaultRunLoopMode];
 				
 //				[AVRTimer release];
-				[now release];
 				
 
 		//[self WriteHexArray: HexArray];
 		//[self setNewDump];
 	}
 	
-	NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+	NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 	[NotificationDic setObject:[NSNumber numberWithInt:1] forKey:@"fertig"];
 	NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
 	[nc postNotificationName:@"i2c" object:self userInfo:NotificationDic];
@@ -448,10 +445,10 @@ NSLog(@"lastDataRead: %@",lastDataRead);
 			
 			int jahr=[[tempDatumDic objectForKey:@"jahr"]intValue];
 			int monat=[[tempDatumDic objectForKey:@"monat"]intValue];
-			int tag=[[tempDatumDic objectForKey:@"tag"]intValue];
+			int mtag=[[tempDatumDic objectForKey:@"tag"]intValue];
 			
 			
-			NSArray* SolarDatenArray=[HomeData SolarErtragVonJahr:jahr Monat:monat Tag:tag];
+			NSArray* SolarDatenArray=[HomeData SolarErtragVonJahr:jahr Monat:monat Tag:mtag];
 			if (SolarDatenArray && [SolarDatenArray count])
 			{
 				//NSLog(@"AVRController SolarStatistik: %@",[SolarDatenArray description]);
@@ -502,7 +499,7 @@ NSLog(@"lastDataRead: %@",lastDataRead);
 			
 			int jahr=[[tempDatumDic objectForKey:@"jahr"]intValue];
 			int monat=[[tempDatumDic objectForKey:@"monat"]intValue];
-			int tag=[[tempDatumDic objectForKey:@"tag"]intValue];
+			int mtag=[[tempDatumDic objectForKey:@"tag"]intValue];
 
 			
 			NSArray* ElektroDatenArray=[HomeData ElektroStatistikVonJahr:jahr Monat:monat];
@@ -566,7 +563,7 @@ NSLog(@"lastDataRead: %@",lastDataRead);
 			
 			int jahr=[[tempDatumDic objectForKey:@"jahr"]intValue];
 			int monat=[[tempDatumDic objectForKey:@"monat"]intValue];
-			int tag=[[tempDatumDic objectForKey:@"tag"]intValue];
+			int mtag=[[tempDatumDic objectForKey:@"tag"]intValue];
 			
 			
 			

@@ -86,7 +86,7 @@ void IOWarriorCallback ()
    
    NSString* ASString = @"return do shell script \"curl http://checkip.dyndns.org/\"";
    NSAppleScript* IP_appleScript = [[NSAppleScript alloc] initWithSource: ASString];
-   //NSLog(@"IP_appleScript: %@ ",[IP_appleScript description]);
+   //DLog(@"IP_appleScript: %@ ",[IP_appleScript description]);
    NSDictionary* IPErr=nil;
    NSAppleEventDescriptor * IP_Descriptor = [IP_appleScript executeAndReturnError:&IPErr];
    
@@ -372,7 +372,7 @@ void IOWarriorCallback ()
 	 [ADWandler setTabIndex:1];
 	 [ADWandler setEinkanalWahlTaste:3];
 	 
-	 NSMutableArray* tempKanalArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+	 NSMutableArray* tempKanalArray=[[NSMutableArray alloc]initWithCapacity:0];
 	 [tempKanalArray addObject:[NSNumber numberWithInt:1]];
 	 [tempKanalArray addObject:[NSNumber numberWithInt:0]];
 	 [tempKanalArray addObject:[NSNumber numberWithInt:1]];
@@ -409,7 +409,7 @@ void IOWarriorCallback ()
    NSString* AktuelleDaten = [NSString string];
    AktuelleDaten=[HomeData DataVonHeute];
    
-	NSLog(@"awake nach AktuelleDaten returnstring: %@",AktuelleDaten);
+	//NSLog(@"awake nach AktuelleDaten returnstring: %@",AktuelleDaten);
    
 	//NSLog(@"awake AktuelleDaten: \n%@",AktuelleDaten);
    
@@ -501,10 +501,6 @@ void IOWarriorCallback ()
 - (void) dealloc
 {
 	NSLog(@"dealloc");
-	[logEntries release];
-	[lastValueRead release];
-	[lastDataRead release];
-	[super dealloc];
 }
 
 
@@ -732,7 +728,7 @@ NSLog(@"stopReading begin");
         [readButton setTitle:@"Stop Reading"];
 		
 		// read ankuendigen
-		NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+		NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 		[NotificationDic setObject:[NSNumber numberWithInt:1] forKey:@"iowbusy"];
 		NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
 		[nc postNotificationName:@"ReadStart" object:self userInfo:NotificationDic];
@@ -743,7 +739,6 @@ NSLog(@"stopReading begin");
         // activate timer
 		
         readTimer = [NSTimer scheduledTimerWithTimeInterval:0.03 target:self selector:@selector(read:) userInfo:nil repeats:YES];
-		[readTimer retain];
     }
     else
     {
@@ -751,7 +746,7 @@ NSLog(@"stopReading begin");
         char* buffer;
         
         buffer = malloc(8);
-        IOWarriorSetInterruptCallback(listNode->ioWarriorHIDInterface, buffer, 8, reportHandlerCallback, self);
+        IOWarriorSetInterruptCallback(listNode->ioWarriorHIDInterface, buffer, 8, reportHandlerCallback, CFBridgingRetain(self));
     }
 }
 
@@ -768,7 +763,7 @@ void reportHandlerCallback (void *	 		target,
 		int                         reportID = -1;
 		NSData*                     dataRead;
 		char*                       buffer = (char*) target;
-		IOWarriorWindowController*  controller = refcon;
+		IOWarriorWindowController*  controller = CFBridgingRelease(refcon);
 		NSMutableArray*	DatenArray=[[NSMutableArray alloc]initWithCapacity:0];
 		
 		reportID = buffer[0];
@@ -776,7 +771,7 @@ void reportHandlerCallback (void *	 		target,
 		
 		//NSLog(@"reportHandlerCallback: Data: %@",[dataRead description]);
 		NSArray* bitnummerArray=[NSArray arrayWithObjects: @"null", @"eins",@"zwei",@"drei",@"vier",@"fuenf",nil];
-		NSMutableDictionary* tempReportDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+		NSMutableDictionary* tempReportDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 		const unsigned char *dataBuffer = [dataRead bytes];
 		int i;
 		
@@ -794,7 +789,7 @@ void reportHandlerCallback (void *	 		target,
 		
 		[controller setDump:DatenArray];		
 		
-		NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+		NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 		[NotificationDic setObject:[DatenArray copy]forKey:@"datenarray"];
 		NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
 		
@@ -866,11 +861,11 @@ HomeDataDownload
 				
 				if (![DownloadTimer isValid])
 				{
-					DownloadTimer=[[NSTimer scheduledTimerWithTimeInterval:12
+					DownloadTimer=[NSTimer scheduledTimerWithTimeInterval:12
 																					target:self 
 																				 selector:@selector(DownloadFunktion:) 
 																				 userInfo:nil 
-																				  repeats:YES]retain];
+																				  repeats:YES];
 					
 					
 					//NSRunLoop *runLoop = [NSRunLoop currentRunLoop];
@@ -889,7 +884,7 @@ HomeDataDownload
 			
 		case last:
 		{
-			NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+			NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 			[NotificationDic setObject:[NSNumber numberWithInt:lastDataZeit] forKey:@"previouslastdatazeit"];
 			int tempLastDataZeit=0;
          
@@ -1142,8 +1137,8 @@ NSLog(@"IOWarr WindowController reportPrint");
 			{
 				case 4: // aktuell
 				{
-					TagString=[[tempDatumArray objectAtIndex:1]retain];
-					ZeitString=[[[tempDatumArray objectAtIndex:2]substringWithRange:NSMakeRange(0,5)]retain];
+					TagString=[tempDatumArray objectAtIndex:1];
+					ZeitString=[[tempDatumArray objectAtIndex:2]substringWithRange:NSMakeRange(0,5)];
 					StartDatumString= [[tempDatenArray objectAtIndex:DataOffset-1]substringFromIndex:11];
 					NSString* Kalenderformat=[[NSCalendarDate date]calendarFormat];
 					
@@ -1158,8 +1153,8 @@ NSLog(@"IOWarr WindowController reportPrint");
 					
 				case 5: // ab 12.3.09
 				{
-					TagString=[[tempDatumArray objectAtIndex:2]retain];
-					ZeitString=[[[tempDatumArray objectAtIndex:4]substringWithRange:NSMakeRange(0,5)]retain];
+					TagString=[tempDatumArray objectAtIndex:2];
+					ZeitString=[[tempDatumArray objectAtIndex:4]substringWithRange:NSMakeRange(0,5)];
 					StartDatumString= [[tempDatenArray objectAtIndex:10]substringFromIndex:11];
 					int l=[StartDatumString length];
 					StartDatumString= [StartDatumString substringToIndex:l-1];
@@ -1175,8 +1170,8 @@ NSLog(@"IOWarr WindowController reportPrint");
 					
 				case 6:	//	vor 12.3.09
 				{
-					TagString=[[tempDatumArray objectAtIndex:3]retain];
-					ZeitString=[[[tempDatumArray objectAtIndex:5]substringWithRange:NSMakeRange(0,5)]retain];
+					TagString=[tempDatumArray objectAtIndex:3];
+					ZeitString=[[tempDatumArray objectAtIndex:5]substringWithRange:NSMakeRange(0,5)];
 					
 				}break;
 					
@@ -1190,8 +1185,8 @@ NSLog(@"IOWarr WindowController reportPrint");
 			
 			
 			
-			rohDatenArray = [[tempDatenArray subarrayWithRange:NSMakeRange(DataOffset,[tempDatenArray count]-DataOffset)]retain];
-			NSMutableArray* DatenArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+			rohDatenArray = [tempDatenArray subarrayWithRange:NSMakeRange(DataOffset,[tempDatenArray count]-DataOffset)];
+			NSMutableArray* DatenArray=[[NSMutableArray alloc]initWithCapacity:0];
 			//NSLog(@"openWithString rohDatenArray count: %lu",(unsigned long)[rohDatenArray count]);
 			int i=0;
 			for (i=0;i<[rohDatenArray count];i++)
@@ -1219,7 +1214,7 @@ NSLog(@"IOWarr WindowController reportPrint");
 				//NSLog(@"openWithString DatenArray sauber: %@",[DatenArray description]);
 				//NSLog(@"openWithString DatenArray sauber length: %d",[DatenArray count]);
 				//NSLog(@"DatenArray: %@",[[DatenArray objectAtIndex:0]description]);
-				NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+				NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 				[NotificationDic setObject:[NSNumber numberWithInt:Tag] forKey:@"datumtag"];
 				[NotificationDic setObject:[NSNumber numberWithInt:Monat] forKey:@"datummonat"];
 				[NotificationDic setObject:[NSNumber numberWithInt:Jahr] forKey:@"datumjahr"];
@@ -1247,7 +1242,7 @@ NSLog(@"IOWarr WindowController reportPrint");
 {
 	NSLog(@"reportOpen");
 	int DataOffset=12;	// erste Zeile der Daten
-	NSOpenPanel* OeffnenDialog= [[NSOpenPanel openPanel]retain];
+	NSOpenPanel* OeffnenDialog= [NSOpenPanel openPanel];
 	[OeffnenDialog setCanChooseFiles:YES];
 	[OeffnenDialog setCanChooseDirectories:NO];
 	[OeffnenDialog setAllowsMultipleSelection:NO];
@@ -1348,7 +1343,7 @@ SolarDataDownload
 			
 		case last:
 		{
-			NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+			NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 			[NotificationDic setObject:[NSNumber numberWithInt:lastSolarDataZeit] forKey:@"previouslastdatazeit"];
 			int tempLastDataZeit=0;
 			if ([[note userInfo] objectForKey:@"lastdatazeit"])
@@ -1510,8 +1505,8 @@ return;
 			{
 				case 4:
 				{
-					TagString=[[tempDatumArray objectAtIndex:1]retain];
-					ZeitString=[[[tempDatumArray objectAtIndex:2]substringWithRange:NSMakeRange(0,5)]retain];
+					TagString=[tempDatumArray objectAtIndex:1];
+					ZeitString=[[tempDatumArray objectAtIndex:2]substringWithRange:NSMakeRange(0,5)];
 					StartDatumString= [[tempDatenArray objectAtIndex:DataOffset-1]substringFromIndex:11];
 					NSString* Kalenderformat=[[NSCalendarDate date]calendarFormat];
 					
@@ -1526,8 +1521,8 @@ return;
 					
 				case 5: // ab 12.3.09
 				{
-					TagString=[[tempDatumArray objectAtIndex:2]retain];
-					ZeitString=[[[tempDatumArray objectAtIndex:4]substringWithRange:NSMakeRange(0,5)]retain];
+					TagString=[tempDatumArray objectAtIndex:2];
+					ZeitString=[[tempDatumArray objectAtIndex:4]substringWithRange:NSMakeRange(0,5)];
 					StartDatumString= [[tempDatenArray objectAtIndex:10]substringFromIndex:11];
 					int l=[StartDatumString length];
 					StartDatumString= [StartDatumString substringToIndex:l-1];
@@ -1543,8 +1538,8 @@ return;
 					
 				case 6:	//	vor 12.3.09
 				{
-					TagString=[[tempDatumArray objectAtIndex:3]retain];
-					ZeitString=[[[tempDatumArray objectAtIndex:5]substringWithRange:NSMakeRange(0,5)]retain];
+					TagString=[tempDatumArray objectAtIndex:3];
+					ZeitString=[[tempDatumArray objectAtIndex:5]substringWithRange:NSMakeRange(0,5)];
 					
 				}break;
 					
@@ -1559,8 +1554,8 @@ return;
 			
 //			DataOffset += 2; // Zeile mit Startzeit
 			
-			rohDatenArray = [[tempDatenArray subarrayWithRange:NSMakeRange(DataOffset,[tempDatenArray count]-DataOffset)]retain];
-			NSMutableArray* DatenArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+			rohDatenArray = [tempDatenArray subarrayWithRange:NSMakeRange(DataOffset,[tempDatenArray count]-DataOffset)];
+			NSMutableArray* DatenArray=[[NSMutableArray alloc]initWithCapacity:0];
 			//NSLog(@"openWithSolarString rohDatenArray count: %d",[rohDatenArray count]);
 			int i=0;
 			/*
@@ -1599,7 +1594,7 @@ return;
 				//NSLog(@"openWithSolarString DatenArray sauber: %@",[DatenArray description]);
 				//NSLog(@"openWithSolarString DatenArray sauber length: %d",[DatenArray count]);
 				//NSLog(@"openWithSolarString DatenArray first: %@",[[DatenArray objectAtIndex:0]description]);
-				NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+				NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 				[NotificationDic setObject:[NSNumber numberWithInt:Tag] forKey:@"datumtag"];
 				[NotificationDic setObject:[NSNumber numberWithInt:Monat] forKey:@"datummonat"];
 				[NotificationDic setObject:[NSNumber numberWithInt:Jahr] forKey:@"datumjahr"];
@@ -1704,7 +1699,7 @@ return;
 				if ([DatenArray count])
 				{
 					//NSLog(@"DatenArray: %@ Mark: %@",[DatenArray description],[DatenArray objectAtIndex:0]);
-					NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+					NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 					[NotificationDic setObject:[DatenArray copy]forKey:@"datenarray"];
 					NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
 					[nc postNotificationName:@"read" object:NULL userInfo:NotificationDic];
@@ -1934,8 +1929,7 @@ return;
 
 - (void) setLastValueRead:(NSData*) inData
 {
-    [inData retain];
-    [lastValueRead release];
+   
     lastValueRead = inData;
 }
 
@@ -1955,9 +1949,9 @@ return;
 	{
 
 	NSArray* bitnummerArray=[NSArray arrayWithObjects: @"report", @"anz", @"null", @"eins",@"zwei",@"drei",@"vier",@"fuenf",nil];
-	//		NSMutableArray* tempKesselArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
-	NSMutableDictionary* tempReportDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
-	NSMutableArray* tempDumpArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+	//		NSMutableArray* tempKesselArray=[[[NSMutableArray alloc]initWithCapacity:0];
+	NSMutableDictionary* tempReportDic=[[NSMutableDictionary alloc]initWithCapacity:0];
+	NSMutableArray* tempDumpArray=[[NSMutableArray alloc]initWithCapacity:0];
 	int k,anz;
 	anz=[derDatenArray count];
 	for (k=0;k<anz;k++)
@@ -1985,9 +1979,9 @@ return;
 	{
 
 	NSArray* bitnummerArray=[NSArray arrayWithObjects: @"report", @"anz", @"null", @"eins",@"zwei",@"drei",@"vier",@"fuenf",nil];
-	//		NSMutableArray* tempKesselArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
-	NSMutableDictionary* tempReportDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
-	NSMutableArray* tempDumpArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+	//		NSMutableArray* tempKesselArray=[[NSMutableArray alloc]initWithCapacity:0];
+	NSMutableDictionary* tempReportDic=[[NSMutableDictionary alloc]initWithCapacity:0];
+	NSMutableArray* tempDumpArray=[[NSMutableArray alloc]initWithCapacity:0];
 	int k,anz;
 	anz=[derDatenArray count];
 	for (k=0;k<anz;k++)
@@ -2208,7 +2202,7 @@ return;
 	BOOL USBDatenDa=NO;
 	BOOL istOrdner;
 	NSFileManager *Filemanager = [NSFileManager defaultManager];
-	NSString* USBPfad=[[NSHomeDirectory() stringByAppendingFormat:@"%@%@",@"/Documents",@"/USBInterfaceDaten"]retain];
+	NSString* USBPfad=[NSHomeDirectory() stringByAppendingFormat:@"%@%@",@"/Documents",@"/USBInterfaceDaten"];
 	USBDatenDa= ([Filemanager fileExistsAtPath:USBPfad isDirectory:&istOrdner]&&istOrdner);
 	//NSLog(@"mountedVolume:    HomeSndCalcVolume: %@",[HomeSndCalcPfad description]);	
 	if (USBDatenDa)
@@ -2223,7 +2217,7 @@ return;
 		NSLog(@"awake: PListPfad: %@ ",PListPfad);
 		if (PListPfad)		
 		{
-			NSMutableDictionary* tempPListDic;//=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+			NSMutableDictionary* tempPListDic;//=[[NSMutableDictionary alloc]initWithCapacity:0];
 			if ([Filemanager fileExistsAtPath:PListPfad])
 			{
 				tempPListDic=[NSMutableDictionary dictionaryWithContentsOfFile:PListPfad];
@@ -2268,7 +2262,7 @@ return;
 	BOOL USBDatenDa=NO;
 	BOOL istOrdner;
 	NSFileManager *Filemanager = [NSFileManager defaultManager];
-	NSString* USBPfad=[[NSHomeDirectory() stringByAppendingFormat:@"%@%@",@"/Documents",@"/USBInterfaceDaten"]retain];
+	NSString* USBPfad=[NSHomeDirectory() stringByAppendingFormat:@"%@%@",@"/Documents",@"/USBInterfaceDaten"];
 	USBDatenDa= ([Filemanager fileExistsAtPath:USBPfad isDirectory:&istOrdner]&&istOrdner);
 	//NSLog(@"mountedVolume:    HomeSndCalcVolume: %@",[HomeSndCalcPfad description]);	
 	if (USBDatenDa)
@@ -2299,7 +2293,7 @@ return;
 	{
 		NSLog(@"savePListAktion: PListPfad: %@ ",PListPfad);
 		
-		NSMutableDictionary* tempPListDic;//=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+		NSMutableDictionary* tempPListDic;//=[[NSMutableDictionary alloc]initWithCapacity:0];
 		NSFileManager *Filemanager=[NSFileManager defaultManager];
 		if ([Filemanager fileExistsAtPath:PListPfad])
 		{
@@ -2309,7 +2303,7 @@ return;
 		
 		else
 		{
-			tempPListDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+			tempPListDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 			NSLog(@"savePListAktion: neuer PListDic");
 		}
 		if ([ADWandler lastTabIndex])
@@ -2346,7 +2340,7 @@ return;
 	NSLog(@"IOW windowShouldClose");
 /*	
 	NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
-	NSMutableDictionary* BeendenDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+	NSMutableDictionary* BeendenDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 
 	[nc postNotificationName:@"IOWarriorBeenden" object:self userInfo:BeendenDic];
 
@@ -2368,7 +2362,7 @@ return;
 	BOOL USBDatenDa=NO;
 	BOOL istOrdner;
 	NSFileManager *Filemanager = [NSFileManager defaultManager];
-	NSString* USBPfad=[[NSHomeDirectory() stringByAppendingFormat:@"%@%@",@"/Documents",@"/USBInterfaceDaten"]retain];
+	NSString* USBPfad=[NSHomeDirectory() stringByAppendingFormat:@"%@%@",@"/Documents",@"/USBInterfaceDaten"];
 	USBDatenDa= ([Filemanager fileExistsAtPath:USBPfad isDirectory:&istOrdner]&&istOrdner);
 	//NSLog(@"mountedVolume:    HomeSndCalcVolume: %@",[HomeSndCalcPfad description]);	
 	if (USBDatenDa)
@@ -2403,7 +2397,7 @@ return;
 	
 	//NSString* monatString=[[NSNumber numberWithInt:monat]stringValue];
 	
-	int tag=[dasDatum dayOfMonth];
+	int tagdesmonats=[dasDatum dayOfMonth];
 	
 	//	Test
 	/*
@@ -2418,15 +2412,15 @@ return;
 	// end Test
 	
 	NSString* tagString;
-	if (tag<10)
+	if (tagdesmonats<10)
 	{
 		//[NSString stringWithFormat:@"0%d",Brennsekunden];
-		tagString=[NSString stringWithFormat:@"0%d",tag];;
+		tagString=[NSString stringWithFormat:@"0%d",tagdesmonats];;
 	}
 	else
 	{
 		//NSString* tagString=[[NSNumber numberWithInt:tag]stringValue];
-		tagString=[NSString stringWithFormat:@"%d",tag];;
+		tagString=[NSString stringWithFormat:@"%d",tagdesmonats];;
 	}
 	int stunde=[dasDatum hourOfDay];
 	NSString* stundeString=[[NSNumber numberWithInt:stunde]stringValue];
@@ -2561,7 +2555,7 @@ return;
 	NSLog(@"Beenden");
 	if ([AVR TWIStatus] == 0) // Homebus noch deaktiviert
 	{
-			NSAlert *Warnung = [[[NSAlert alloc] init] autorelease];
+			NSAlert *Warnung = [[NSAlert alloc] init];
 		[Warnung addButtonWithTitle:@"OK"];
 		//	[Warnung addButtonWithTitle:@""];
 		//	[Warnung addButtonWithTitle:@""];

@@ -6,22 +6,14 @@
 	self =[super initWithFrame:frame];
 	//NSLog(@"NetzBox initWithFrame");
 	NetzEcke=NSMakePoint(0.5,0.5);
-	KanalDatenArray=[[[NSMutableArray alloc] initWithCapacity: 0]autorelease];
-	[KanalDatenArray retain];
-	KanalTitelArray=[[[NSMutableArray alloc] initWithCapacity: 0]autorelease];
-	[KanalTitelArray retain];
-	KanalHexDatenArray=[[[NSMutableArray alloc] initWithCapacity: 0]autorelease];
-	[KanalHexDatenArray retain];
-	KanalFloatDatenArray=[[[NSMutableArray alloc] initWithCapacity: 0]autorelease];
-	[KanalFloatDatenArray retain];
-	KanalLevelArray=[[[NSMutableArray alloc] initWithCapacity: 0]autorelease];
-	[KanalLevelArray retain];
-	KanalNetzArray=[[[NSMutableArray alloc] initWithCapacity: 0]autorelease];
-	[KanalNetzArray retain];
-	KanalKolonnenArray=[[[NSMutableArray alloc] initWithCapacity: 0]autorelease];
-	[KanalKolonnenArray retain];
-	NetzArray=[[[NSMutableArray alloc] initWithCapacity: 0]autorelease];
-	[NetzArray retain];
+	KanalDatenArray=[[NSMutableArray alloc] initWithCapacity: 0];
+	KanalTitelArray=[[NSMutableArray alloc] initWithCapacity: 0];
+	KanalHexDatenArray=[[NSMutableArray alloc] initWithCapacity: 0];
+	KanalFloatDatenArray=[[NSMutableArray alloc] initWithCapacity: 0];
+	KanalLevelArray=[[NSMutableArray alloc] initWithCapacity: 0];
+	KanalNetzArray=[[NSMutableArray alloc] initWithCapacity: 0];
+	KanalKolonnenArray=[[NSMutableArray alloc] initWithCapacity: 0];
+	NetzArray=[[NSMutableArray alloc] initWithCapacity: 0];
 	int offsetlinks=5;
 	Kolonnenbreite=(int)([self frame].size.width-11.0)/8;
 	int i;
@@ -42,8 +34,7 @@ return self;
 {
 
 NSArray* TippTastenTitelArray=[NSArray arrayWithObjects:@"Read",@"Read",@"Read",@"Read",@"Read",@"Read",@"Read",@"Read",nil];
-NSMutableArray* TippTastenArray=[[[NSMutableArray alloc] initWithCapacity: 0]autorelease];
-[TippTastenArray retain];
+NSMutableArray* TippTastenArray=[[NSMutableArray alloc] initWithCapacity: 0];
 TippTastenArray=(NSMutableArray*)[self TastenArrayAnEcke:NSMakePoint(0.0,0.0)
 								mitHoehe:20.0
 						mitKolonnenArray:KanalKolonnenArray
@@ -59,8 +50,7 @@ for (i=0;i<8;i++)
 
 NSArray* TrackTitelArray=[NSArray arrayWithObjects:@"Track",@"Track",@"Track",@"Track",@"Track",@"Track",@"Track",@"Track",nil];
 
-NSMutableArray* TrackTastenArray=[[[NSMutableArray alloc] initWithCapacity: 0]autorelease];
-[TrackTastenArray retain];
+NSMutableArray* TrackTastenArray=[[NSMutableArray alloc] initWithCapacity: 0];
 
 TrackTastenArray=(NSMutableArray*)[self TastenArrayAnEcke:NSMakePoint(0.0,24.0)
 								mitHoehe:20.0
@@ -75,8 +65,7 @@ for (i=0;i<8;i++)
 }
 [NetzArray addObject:TrackTastenArray];
 
-NSMutableArray* HexFeldArray=[[[NSMutableArray alloc] initWithCapacity: 0]autorelease];
-[HexFeldArray retain];
+NSMutableArray* HexFeldArray=[[NSMutableArray alloc] initWithCapacity: 0];
 
 HexFeldArray=(NSMutableArray*)[self HexFeldArrayAnEcke:NSMakePoint(0.0,48.0)
 								mitHoehe:20.0
@@ -90,8 +79,7 @@ for (i=0;i<8;i++)
 [NetzArray addObject:HexFeldArray];
 
 
-NSMutableArray* IntFeldArray=[[[NSMutableArray alloc] initWithCapacity: 0]autorelease];
-[IntFeldArray retain];
+NSMutableArray* IntFeldArray=[[NSMutableArray alloc] initWithCapacity: 0];
 
 IntFeldArray=(NSMutableArray*)[self IntFeldArrayAnEcke:NSMakePoint(0.0,72.0)
 								mitHoehe:20.0
@@ -105,8 +93,7 @@ for (i=0;i<8;i++)
 [NetzArray addObject:IntFeldArray];
 
 
-NSMutableArray* AnzeigenArray=[[[NSMutableArray alloc] initWithCapacity: 0]autorelease];
-[AnzeigenArray retain];
+NSMutableArray* AnzeigenArray=[[NSMutableArray alloc] initWithCapacity: 0];
 
 AnzeigenArray=(NSMutableArray*)[self AnzeigenArrayAnEcke:NSMakePoint(0.0,96.0)
 								mitHoehe:127.0
@@ -128,7 +115,9 @@ for (z=0;z<[NetzArray count];z++)
 {
 for (k=0;k<8;k++)
 {
-	[[[NetzArray objectAtIndex:z]objectAtIndex:k]setTag:10*z+k];
+   rVertikalanzeige* tempanzeige = [[NetzArray objectAtIndex:z]objectAtIndex:k];
+   tempanzeige.tag =10*z+k;
+	((rVertikalanzeige*)[[NetzArray objectAtIndex:z]objectAtIndex:k]).tag =10*z+k;
 
 }
 }//for Z
@@ -143,7 +132,7 @@ for (k=0;k<8;k++)
 			   mitTitelArray:(NSArray*)derTitelArray
 			   mitTippTasten:(BOOL)derTyp
 {
-	NSMutableArray* tempTastenArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+	NSMutableArray* tempTastenArray=[[NSMutableArray alloc]initWithCapacity:0];
 	int i;
 	NSPoint tempEcke=dieEcke;
 	for (i=0;i<8;i++)
@@ -175,7 +164,6 @@ for (k=0;k<8;k++)
 		[tempTaste setTarget:self];
 		[tempTaste setAction:@selector(NetzBoxTastenArrayAktion:)];
 		[tempTastenArray addObject:tempTaste];
-		[tempTaste release];
 
 	}//for
 	
@@ -189,7 +177,7 @@ for (k=0;k<8;k++)
 						mitHold:(BOOL)mitHold
 					mitHoldZeit:(int)dieZeit
 {
-	NSMutableArray* tempAnzeigenArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+	NSMutableArray* tempAnzeigenArray=[[NSMutableArray alloc]initWithCapacity:0];
 	int i;
 	NSPoint tempEcke=dieEcke;
 	for (i=0;i<8;i++)
@@ -210,7 +198,6 @@ for (k=0;k<8;k++)
 //		[tempAnzeige setTitle:[derTitelArray objectAtIndex:i]];
 		//[tempAnzeige setLevel:i*20];
 		[tempAnzeigenArray addObject:tempAnzeige];
-		[tempAnzeige release];
 
 	}//for
 	
@@ -222,7 +209,7 @@ for (k=0;k<8;k++)
 					  mitHoehe:(float)dieHoehe
 			  mitKolonnenArray:(NSArray*)derKolonnenArray
 {
-	NSMutableArray* tempFeldArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+	NSMutableArray* tempFeldArray=[[NSMutableArray alloc]initWithCapacity:0];
 	int i;
 	NSPoint tempEcke=dieEcke;
 	for (i=0;i<8;i++)
@@ -239,7 +226,6 @@ for (k=0;k<8;k++)
 		[tempHexFeld setFont:HexFont];
 
 		[tempFeldArray addObject:tempHexFeld];
-		[tempHexFeld release];
 	}
 return tempFeldArray;
 }
@@ -249,7 +235,7 @@ return tempFeldArray;
 					  mitHoehe:(float)dieHoehe
 			  mitKolonnenArray:(NSArray*)derKolonnenArray
 {
-	NSMutableArray* tempFeldArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+	NSMutableArray* tempFeldArray=[[NSMutableArray alloc]initWithCapacity:0];
 	int i;
 	NSPoint tempEcke=dieEcke;
 	for (i=0;i<8;i++)
@@ -266,7 +252,6 @@ return tempFeldArray;
 		[tempIntFeld setFont:IntFont];
 
 		[tempFeldArray addObject:tempIntFeld];
-		[tempIntFeld release];
 	}
 return tempFeldArray;
 }
@@ -290,7 +275,7 @@ return tempFeldArray;
 -(void)NetzBoxTastenArrayAktion:(id)sender
 {
 	//NSLog(@"NetzBox TastenArrayAktion: tag: %d state: %d",[sender tag],[sender state]);
-	NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+	NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 	[NotificationDic setObject:[NSNumber numberWithInt:[sender tag]%10] forKey:@"kanal"];
 	[NotificationDic setObject:[NSNumber numberWithInt:[sender tag]] forKey:@"tag"];
 	[NotificationDic setObject:[NSNumber numberWithInt:[sender state]] forKey:@"state"];

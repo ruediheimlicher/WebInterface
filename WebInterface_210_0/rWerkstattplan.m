@@ -33,7 +33,6 @@
 	if (StundenArray==NULL)
 	{
 		StundenArray=[[NSMutableArray alloc]initWithCapacity:0];
-		[StundenArray retain];
 	}
 	[[WerkstattScroller verticalScroller] setFloatValue:1.0];
 	Nullpunkt=[self convertPoint:NSMakePoint(0.0,0.0) toView:NULL];
@@ -87,7 +86,7 @@
 		else
 		{
 			//NSLog(@"setBrennerTagplan neuer Dic index: %d",i);
-			NSMutableDictionary* tempElementDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+			NSMutableDictionary* tempElementDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 			[tempElementDic setObject:[[derStundenArray objectAtIndex:i]objectForKey:@"werkstatt"] forKey:@"werkstatt"];
 			[StundenArray addObject:tempElementDic];
 				
@@ -105,7 +104,6 @@
 	if (StundenArray==NULL)
 	{
 	StundenArray=[[NSMutableArray alloc]initWithCapacity:0];
-	[StundenArray retain];
 	}
 //[[WerkstattScroller verticalScroller] setFloatValue:1.0];
 
@@ -155,7 +153,7 @@
 		else
 		{
 			//NSLog(@"setrWerkstattplan neuer Dic index: %d",i);
-			NSMutableDictionary* tempElementDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+			NSMutableDictionary* tempElementDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 			[tempElementDic setObject:[[derStundenArray objectAtIndex:i]objectForKey:@"werkstatt"] forKey:@"werkstatt"];
 			[StundenArray addObject:tempElementDic];
 		
@@ -353,7 +351,7 @@ lastONArray=[[StundenArray valueForKey:@"werkstatt"]copy];
 	//NSLog(@"lastONArray: %@",[lastONArray description]);
 	int i;
 	int all=-1;
-	NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+	NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 	if ([self mouse:localMaus inRect:AllFeld])
 	{
 	if (modKey==2)//alt

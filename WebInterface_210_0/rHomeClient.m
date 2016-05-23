@@ -1629,10 +1629,10 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
    // Startwert fuer anzahl Versuche beim Warten auf busy=0
    [sendDic setObject:[NSNumber numberWithInt:10] forKey:@"anzahl"];
    
-   // Ladeposition
+   // Ladeposition, wird in der Timerfunktion inkrementiert
    [sendDic setObject:[NSNumber numberWithInt:0 ] forKey:@"ladeposition"];
 
-   // Anzahl Pakete
+   // Anzahl Pakete, die gesendet werden sollen
    [sendDic setObject:[NSNumber numberWithInt:[[updateDic objectForKey:@"updatearray"]count]] forKey:@"updatecounter"];
    
    //NSLog(@"updateEEPROMAktion sendDic: %@",[sendDic description]);
@@ -1662,7 +1662,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
    //NSLog(@"EEPROMUpdateTimerfunktion WriteWoche_busy: %d",WriteWoche_busy);
 	NSMutableDictionary* updateDic=(NSMutableDictionary*) [timer userInfo];
 	//NSLog(@"WriteModifierTimerfunktion  WriteTimerDic: %@",[WriteTimerDic description]);
-	int anzahlcounter=[[updateDic objectForKey:@"anzahl"]intValue];
+	int busycounter=[[updateDic objectForKey:@"anzahl"]intValue]; // Zaehler der Verbindungsversuche bei busy
    int updatecounter=[[updateDic objectForKey:@"updatecounter"]intValue];
    int ladeposition=[[updateDic objectForKey:@"ladeposition"]intValue];
 	
@@ -1671,9 +1671,15 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
    //NSLog(@"EEPROMUpdateTimerfunktion updatecounter: %d",updatecounter);
    //NSLog(@"EEPROMUpdateTimerfunktion ladeposition: %d",ladeposition);
    
-   anzahlcounter--;
+   busycounter--;
    
-   if ((anzahlcounter == 0) ) // zu lange gewartet oder alles geschickt
+   NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
+   NSDictionary* tempDataDic=[NSDictionary dictionaryWithObjectsAndKeys:
+                              [NSNumber numberWithInt:busycounter],@"busycount",
+                              nil];
+   [nc postNotificationName:@"EEPROMbusycount" object:self userInfo:tempDataDic];
+
+   if (busycounter == 0) // zu lange gewartet oder alles geschickt
    {
       NSLog(@"anzahlcounter == 0 > EEPROMUpdateTimer invalidate");
       [timer invalidate];
@@ -1687,7 +1693,6 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
       NSDictionary* tempDataDic=[NSDictionary dictionaryWithObjectsAndKeys:
                                  [NSNumber numberWithInt:1],@"fertig",
                                  nil];
-      
       
       [nc postNotificationName:@"EEPROMUpdateFertig" object:self userInfo:tempDataDic];
       
@@ -1719,6 +1724,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
       WriteWoche_busy=10;
       [self HomeClientWriteEEPROM:updateDic];
       [updateDic setObject:[NSNumber numberWithInt:ladeposition+1]forKey:@"ladeposition"];
+   
    }
   
   

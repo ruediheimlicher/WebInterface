@@ -39,9 +39,27 @@ const char *byte_to_binary(int x)
    {
       *p++ = (x & z) ? '1' : '0';
    }
-   
    return b;
 }
+
+int bit_to_binary(int x,int anz)
+{
+   static char b[9];
+   b[0] = '\0';
+   
+   int z;
+   char *p = b;
+   for (z = 128; z > 0; z >>= 1)
+   {
+      *p++ = (x & z) ? '1' : '0';
+   }
+   int c =  (int)b;
+   c &= 0x04;
+
+   return b;
+}
+
+
 
 
 
@@ -1312,29 +1330,40 @@ extern NSMutableArray* DatenplanTabelle;
    float ruecklauf = [[lastDataArray objectAtIndex:2]intValue]/2;
    float aussen = ([[lastDataArray objectAtIndex:3]intValue]-32)/2; // Korrektur, s. TemperaturMKDiagramm l 70
    float innen = [[[lastDataArray objectAtIndex:8]substringToIndex:2]intValue]/2.0; // \n abschneiden
-   int heizungcode = [[lastDataArray objectAtIndex:4]intValue];
    
+   int heizungcode = [[lastDataArray objectAtIndex:4]intValue]; // code der Heizung
+   NSString* heizungbitstring = [NSString stringWithCString:byte_to_binary(heizungcode) encoding:NSUTF8StringEncoding];
+   NSLog(@"heizungcode: %d heizungbitstring: %@",heizungcode,heizungbitstring);
+
+   
+   int brennerstundencode = (heizungcode & 0x30)>>4; // bit 4,5
+   //brennerstundencode=32>>4;
+   NSString* brennerstundencodestring = [[NSString stringWithCString:byte_to_binary(brennerstundencode) encoding:NSUTF8StringEncoding]substringFromIndex:6];
    //heizungcode = 15;
-   BOOL brennerstatus = !((heizungcode & (1<<2))>>2);
+   
+   
+   
+   BOOL brennerstatus = !((heizungcode & (1<<2))>>2); // bit 2
    int b1 = heizungcode & 0x04;
    int b2 = b1 >>2;
    int b3 = !b2;
    
-   NSLog(@"heizungcode: %d b1: %d b2: %d b3: %d brennerstatus: %d brennerstatus: %s",heizungcode,b1,b2,b3,brennerstatus,byte_to_binary(134));
-   NSString* brennerstatusString =@"OFF";
+   //NSLog(@"heizungcode: %d b1: %d b2: %d b3: %d brennerstatus: %d brennerstatus: %s heizungbitstring: %@",heizungcode,b1,b2,b3,brennerstatus,byte_to_binary(134),heizungbitstring);
+   NSString* brennerstatusstring =@"OFF";
    if ( brennerstatus)
    {
-      brennerstatusString =@" ON";
+      brennerstatusstring =@" ON";
    }
+   NSLog(@"brennerstundencode: %d brennerstundencodestring: %@ brennerstatusstring: %@",brennerstundencode,brennerstundencodestring,brennerstatusstring);
+
+   
    BOOL        rinnestatus = (heizungcode & ((1<<6)|(1<<7)))>>6; // bit nach rechts schieben
    
+  // NSLog(@"brennerstatus: %d rinne: %@",brennerstatus,brennerstatusstring);
    
- //  NSLog(@"heizungcode 15 Brenner OFF %d brenner: %d rinne: %d",heizungcode,brennerstatus,rinnestatus);
-   
-   // heizungcode = 11;
-   // brennerstatus = !((heizungcode & (1<<2))>>2);
-   // rinnestatus = (heizungcode & ((1<<6)|(1<<7)))>>6;
-   
+   int rinnestundencode = (heizungcode & ((1<<6)|(1<<7)))>>6; // bit 6,7
+   NSString* rinnestundencodestring = [[NSString stringWithCString:byte_to_binary(rinnestundencode) encoding:NSUTF8StringEncoding]substringFromIndex:6];
+
    if (minute<30) // erste halbe stunde, bit 6
    {
        rinnestatus = (heizungcode & ((1<<7)))>>7;
@@ -1343,10 +1372,21 @@ extern NSMutableArray* DatenplanTabelle;
    {
       rinnestatus = (heizungcode & ((1<<6)))>>6;
    }
-   NSLog(@"heizungcode  Brenner %d brenner: %d rinne: %d",heizungcode,brennerstatus,rinnestatus);
+   NSString* rinnestatusstring =@"OFF";
+   if ( rinnestatus)
+   {
+      rinnestatusstring =@" ON";
+   }
+   NSLog(@"rinnestundencode: %d rinnestundencodestring: %@ rinnestatusstring: %@",rinnestundencode,rinnestundencodestring,rinnestatusstring);
+
    
-   NSString* tempStringA = [NSString stringWithFormat:@"HZ:\tVorlauf:\t%2.1f\tRuecklauf:\t%2.1f\tBrenner:\t%@",vorlauf, ruecklauf ,brennerstatusString];
-   NSString* tempStringB = [NSString stringWithFormat:@"\tAussen:\t%2.1f\tInnen:\t%2.1f",aussen, innen ];
+  // NSLog(@"heizungcode  Brenner %d brenner: %d rinne: %d",heizungcode,brennerstatus,rinnestatus);
+   
+   NSString* tempStringA = [NSString stringWithFormat:@"HZ:\tVorlauf:\t%2.1f\tRuecklauf:\t%2.1f\tAussen:\t%2.1f",vorlauf, ruecklauf ,aussen];
+   NSString* tempStringB = [NSString stringWithFormat:@"\tcode:\t%@\tbrennercode:\t%@\tstatus: \t%@",heizungbitstring, brennerstundencodestring,brennerstatusstring];
+   NSString* tempStringC = [NSString stringWithFormat:@"\t\t\trinnecode:\t%@\tstatus: \t%@",rinnestundencodestring, rinnestatusstring];
+   
+   
    
    
    NSMutableParagraphStyle *tempMutableParagraphStyle;
@@ -1420,7 +1460,7 @@ extern NSMutableArray* DatenplanTabelle;
       //        [TabArray addObject:tempTab];
    }
    [tempMutableParagraphStyle setTabStops:TabArray];
-   codeString = [NSString stringWithFormat:@"%@\n%@",tempStringA,tempStringB];
+   codeString = [NSString stringWithFormat:@"%@\n%@\n%@",tempStringA,tempStringB,tempStringC];
    
    tempAttString = [[NSMutableAttributedString alloc]
                     initWithString:codeString];

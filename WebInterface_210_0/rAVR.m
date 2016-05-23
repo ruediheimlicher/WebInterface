@@ -269,7 +269,12 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
           selector:@selector(saveSettingsAktion:)
               name:@"saveSettings"
             object:nil];
-   
+ 
+   [nc addObserver:self
+          selector:@selector(EEPROMbusycountAktion:)
+              name:@"EEPROMbusycount"
+            object:nil];
+
 
 
 	
@@ -2871,6 +2876,12 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
 	}//if count
 }
 
+
+
+- (void)EEPROMbusycountAktion:(NSNotification*)note
+{
+   NSLog(@"EEPROMbusycountAktion busycount: %d",[[note userInfo]objectForKey:@"busicount"]);
+}
 
 - (IBAction)sendCmd:(id)sender
 {

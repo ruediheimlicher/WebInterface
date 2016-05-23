@@ -1048,9 +1048,10 @@ if (Webserver_busy)
 
    [Ablauffeld setStringValue:AblaufString];
    
-   
 }
 
+
+# pragma mark writeEEPROMWochenplan
 
 - (IBAction)writeEEPROMWochenplan:(id)sender
 {
@@ -1088,6 +1089,8 @@ if (Webserver_busy)
    {
       
       [writeEEPROMcounterfeld setStringValue:@""];
+      writeEEPROManzeige.intValue = 0;
+      busycountfeld.intValue = 0;
       
       Webserver_busy=1;// Wird jeweils in der Finishloadaktion zurueckgestellt, sobald das writeok angekommen ist.
 		[AdresseFeld setStringValue:@""];
@@ -1108,18 +1111,18 @@ if (Webserver_busy)
       [writeDic setObject:[NSNumber numberWithInt:0] forKey:@"wochentag"];
 		[writeDic setObject:[NSNumber numberWithInt:10]forKey:@"timeoutcounter"];
       
-      NSArray* raumListe = [[[WochenplanTab tabViewItemAtIndex:raum]view] subviews];
+      NSArray* raumListe = [[[WochenplanTab tabViewItemAtIndex:raum]view] subviews];// alle Views im Tab
       //NSLog(@"raumListe: %@",[raumListe description]  );
       for (int i=0;i<[raumListe count];i++)
       {
          if ([[raumListe objectAtIndex:i] isKindOfClass:[NSScrollView class]])
               {
-                 NSArray* TagplanListe = [(NSScrollView*)[[raumListe objectAtIndex:i]documentView]subviews];
+                 NSArray* TagplanListe = [(NSScrollView*)[[raumListe objectAtIndex:i]documentView]subviews];// aktivierte Tagplaene
                  //NSLog(@"TagplanListe: %@",[TagplanListe description]  );
                  
                  for (int k=0;k<[TagplanListe count];k++)
                  {
-                    if ([[TagplanListe objectAtIndex:k] isKindOfClass:[rTagplanbalken class]])
+                    if ([[TagplanListe objectAtIndex:k] isKindOfClass:[rTagplanbalken class]]) // Tagbalken suchen
                     {
                        rTagplanbalken* tempBalken = [TagplanListe objectAtIndex:k];
                        NSInteger temptag = tempBalken.tag;
@@ -2365,8 +2368,8 @@ if (Webserver_busy)
 			}
 			
 		} // wadr
-		
-		if ([[note userInfo]objectForKey:@"writeok"]) 
+#pragma mark writeok
+		if ([[note userInfo]objectForKey:@"writeok"])
 		{
 			
 			Write_OK=[[[note userInfo]objectForKey:@"writeok"]intValue];

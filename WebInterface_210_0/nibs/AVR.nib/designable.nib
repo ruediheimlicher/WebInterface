@@ -45,7 +45,7 @@
                 <outlet property="readTagTaste" destination="449" id="1058"/>
                 <outlet property="readWocheTaste" destination="1670" id="1673"/>
                 <outlet property="window" destination="5" id="41"/>
-                <outlet property="writeEEPROMcounterfeld" destination="1726" id="1728"/>
+                <outlet property="writeEEPROMcounterfeld" destination="Tfe-tA-rYc" id="kgu-WA-G7X"/>
                 <outlet property="writeWocheTaste" destination="1720" id="1724"/>
             </connections>
         </customObject>
@@ -357,7 +357,7 @@
                         </popUpButtonCell>
                     </popUpButton>
                     <popUpButton verticalHuggingPriority="750" id="438">
-                        <rect key="frame" x="516" y="607" width="90" height="26"/>
+                        <rect key="frame" x="516" y="630" width="90" height="26"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
                         <popUpButtonCell key="cell" type="push" title="A0" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="441" id="1609">
                             <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
@@ -410,15 +410,6 @@
                             <action selector="reportTWIState:" target="-2" id="1715"/>
                         </connections>
                     </button>
-                    <textField verticalHuggingPriority="750" id="1154">
-                        <rect key="frame" x="314" y="660" width="289" height="18"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" title="-" drawsBackground="YES" id="1619">
-                            <font key="font" metaFont="system" size="10"/>
-                            <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
-                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                        </textFieldCell>
-                    </textField>
                     <textField verticalHuggingPriority="750" id="1228">
                         <rect key="frame" x="207" y="627" width="21" height="16"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
@@ -533,7 +524,7 @@
                         </connections>
                     </popUpButton>
                     <textField verticalHuggingPriority="750" id="1582">
-                        <rect key="frame" x="396" y="613" width="110" height="17"/>
+                        <rect key="frame" x="396" y="635" width="110" height="17"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="EEPROM Adresse" id="1633">
                             <font key="font" metaFont="system"/>
@@ -565,7 +556,7 @@
                         </connections>
                     </popUpButton>
                     <textField verticalHuggingPriority="750" id="1650">
-                        <rect key="frame" x="314" y="639" width="289" height="18"/>
+                        <rect key="frame" x="314" y="658" width="289" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" title="-" drawsBackground="YES" id="1651">
                             <font key="font" metaFont="system" size="10"/>
@@ -587,15 +578,6 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Cmd" id="1656">
                             <font key="font" metaFont="system"/>
-                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                        </textFieldCell>
-                    </textField>
-                    <textField verticalHuggingPriority="750" id="1658">
-                        <rect key="frame" x="25" y="654" width="248" height="23"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <textFieldCell key="cell" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="HomeCentral Steuerung" id="1659">
-                            <font key="font" metaFont="system" size="19"/>
                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
@@ -627,7 +609,7 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     </progressIndicator>
                     <button verticalHuggingPriority="750" id="1676">
-                        <rect key="frame" x="308" y="606" width="82" height="32"/>
+                        <rect key="frame" x="308" y="626" width="82" height="32"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="push" title="Update" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="1677">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -638,7 +620,7 @@
                         </connections>
                     </button>
                     <button verticalHuggingPriority="750" id="1720">
-                        <rect key="frame" x="241" y="573" width="117" height="32"/>
+                        <rect key="frame" x="237" y="597" width="117" height="32"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="push" title="write Woche" bezelStyle="rounded" alignment="center" enabled="NO" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="1721">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -649,7 +631,7 @@
                         </connections>
                     </button>
                     <textField verticalHuggingPriority="750" id="1726">
-                        <rect key="frame" x="370" y="577" width="33" height="27"/>
+                        <rect key="frame" x="366" y="601" width="33" height="27"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="1727">
                             <font key="font" metaFont="system" size="18"/>
@@ -669,7 +651,7 @@
                         </connections>
                     </button>
                     <button verticalHuggingPriority="750" id="itx-eG-BvG">
-                        <rect key="frame" x="421" y="546" width="96" height="32"/>
+                        <rect key="frame" x="421" y="542" width="96" height="32"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="push" title="LoadTest" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="rvv-mK-Duj">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -680,7 +662,7 @@
                         </connections>
                     </button>
                     <button verticalHuggingPriority="750" id="7pl-LK-Zh0">
-                        <rect key="frame" x="530" y="546" width="71" height="32"/>
+                        <rect key="frame" x="530" y="542" width="71" height="32"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="push" title="reset" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="5lq-AP-V0t">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -690,6 +672,38 @@
                             </connections>
                         </buttonCell>
                     </button>
+                    <textField verticalHuggingPriority="750" id="Tfe-tA-rYc">
+                        <rect key="frame" x="404" y="602" width="28" height="22"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="HkC-e9-w2z">
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" red="0.049794898389231262" green="0.54983166436464082" blue="0.16256318389835284" alpha="1" colorSpace="calibratedRGB"/>
+                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <textField verticalHuggingPriority="750" id="1154">
+                        <rect key="frame" x="314" y="679" width="289" height="18"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" title="-" drawsBackground="YES" id="1619">
+                            <font key="font" metaFont="system" size="10"/>
+                            <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <textField verticalHuggingPriority="750" id="1658">
+                        <rect key="frame" x="25" y="674" width="248" height="23"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <textFieldCell key="cell" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="HomeCentral Steuerung" id="1659">
+                            <font key="font" metaFont="system" size="19"/>
+                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <levelIndicator verticalHuggingPriority="750" id="LhA-yj-MkF">
+                        <rect key="frame" x="243" y="578" width="96" height="18"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <levelIndicatorCell key="cell" alignment="left" maxValue="7" warningValue="2" criticalValue="2" id="MeU-EB-8km"/>
+                    </levelIndicator>
                 </subviews>
             </view>
             <connections>

@@ -129,6 +129,8 @@ NSTimer*                simTimer;
 NSTimer*                TimeoutTimer;
    
 NSTimer*                EEPROMUpdateTimer;
+   
+   
 
    IBOutlet id             EEPROMUpdatefeld;
    IBOutlet NSView*        EEPROMPlan;
@@ -142,6 +144,10 @@ NSTimer*                EEPROMUpdateTimer;
    IBOutlet id             writeEEPROMcounterfeld;
    int                     writeEEPROMcounter;
    int                     loadstatus;
+   
+   IBOutlet NSTextField*   busycountfeld;
+   
+   IBOutlet NSLevelIndicator* writeEEPROManzeige;
 
 }
 - (NSArray*)StundenArrayAusByteArray:(NSArray*)derStundenByteArray;

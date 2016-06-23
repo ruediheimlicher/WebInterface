@@ -11,7 +11,7 @@
 #import "rHomeClient.h"
 #import "rEinstellungen.h"
 
-@interface IOWarriorWindowController : NSObject <NSTableViewDelegate, NSTableViewDataSource,NSOpenSavePanelDelegate>
+@interface IOWarriorWindowController : NSObject <NSTableViewDelegate, NSTableViewDataSource,NSOpenSavePanelDelegate,NSURLConnectionDelegate>
 {
 	BOOL										isReading;
 	BOOL										isTracking;

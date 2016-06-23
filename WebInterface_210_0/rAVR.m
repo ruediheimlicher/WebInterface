@@ -393,7 +393,6 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
    {
       //[self setObjektTitelVonRaum:raumnummer];
    }
-   
 	/*
 	[self setObjektTitel:@"Brenner" forObjekt:0 forRaum:0];
 	[self setObjektTitel:@"Mode" forObjekt:1 forRaum:0];
@@ -794,13 +793,16 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
    
    
    NSString *urlString = [NSString stringWithFormat:host, @"texttowritetofile"];
-   //NSLog(@"urlString: %@",urlString);
+   NSLog(@"urlString: %@",urlString);
    NSURL *url = [NSURL URLWithString:urlString];
    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
    //[request setHTTPMethod:@"POST"];
    
    NSData *returnData = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:nil];
-   //NSLog(@"returnData: %@",returnData);
+   NSLog(@"returnData: %@",returnData);
+   
+   writeEEPROManzeige.intValue = 0;
+
 }
 
 - (void)setRaum:(int)derRaum
@@ -2880,7 +2882,7 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
 
 - (void)EEPROMbusycountAktion:(NSNotification*)note
 {
-   NSLog(@"EEPROMbusycountAktion busycount: %d",[[note userInfo]objectForKey:@"busicount"]);
+   NSLog(@"AVR EEPROMbusycountAktion busycount: %d",[[note userInfo]objectForKey:@"busicount"]);
 }
 
 - (IBAction)sendCmd:(id)sender

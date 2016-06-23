@@ -1167,7 +1167,7 @@ if (Webserver_busy)
                           [writeDic setObject:[NSNumber numberWithInt:0] forKey:@"mod"];
                           
                           
-                          NSLog(@"k: %d writeDic: %@ ",k,[writeDic description]);
+                          //NSLog(@"k: %d writeDic: %@ ",k,[writeDic description]);
                           
                           [EEPROMWriteArray addObject:writeDic];
                        }
@@ -1261,6 +1261,8 @@ if (Webserver_busy)
    if ([[note userInfo] objectForKey:@"ladeposition"])
    {
       [writeEEPROMcounterfeld setIntValue:[[[note userInfo] objectForKey:@"ladeposition"]intValue] ];
+      writeEEPROManzeige.intValue = [[[note userInfo] objectForKey:@"ladeposition"]intValue]+1;
+      [WriteFeld setStringValue:@""];
    }
 }
 

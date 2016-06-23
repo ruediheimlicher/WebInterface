@@ -1320,12 +1320,21 @@ extern NSMutableArray* DatenplanTabelle;
     uebertragen in d5
     */
    
-   
+   /*
+    aus EinschaltDiagramm:
+    int Stundenteil = DatenWert;
+    int TagWert = DatenWert;
+    TagWert &= 0x03;	// Bits 0, 1
+    Stundenteil &= 0x08;	// Bit 3: 0: erste halbe Stunde
+    Stundenteil >>=3;		// verschieben an Pos 0
+
+    
+    */
    
    NSArray* lastDataArray = [datastring componentsSeparatedByString:@"\t"];
-    NSLog(@"setcodeFeldMit lastDataArray: %@ anz: %ld",lastDataArray,[lastDataArray count]);
+  //  NSLog(@"setcodeFeldMit lastDataArray: %@ anz: %ld",lastDataArray,[lastDataArray count]);
    int minute = ([[lastDataArray objectAtIndex:0]intValue]/60)%60;
-   NSLog(@"minute: %d",minute);
+  // NSLog(@"minute: %d",minute);
    float vorlauf = [[lastDataArray objectAtIndex:1]intValue]/2;
    float ruecklauf = [[lastDataArray objectAtIndex:2]intValue]/2;
    float aussen = ([[lastDataArray objectAtIndex:3]intValue]-32)/2; // Korrektur, s. TemperaturMKDiagramm l 70
@@ -1333,28 +1342,31 @@ extern NSMutableArray* DatenplanTabelle;
    
    int heizungcode = [[lastDataArray objectAtIndex:4]intValue]; // code der Heizung
    NSString* heizungbitstring = [NSString stringWithCString:byte_to_binary(heizungcode) encoding:NSUTF8StringEncoding];
-   NSLog(@"heizungcode: %d heizungbitstring: %@",heizungcode,heizungbitstring);
+ //  NSLog(@"heizungcode: %d heizungbitstring: %@",heizungcode,heizungbitstring);
 
    
-   int brennerstundencode = (heizungcode & 0x30)>>4; // bit 4,5
+   int modestundencode = (heizungcode & 0x30)>>4; // bit 4,5
+   NSString* modestundencodestring = [[NSString stringWithCString:byte_to_binary(modestundencode) encoding:NSUTF8StringEncoding]substringFromIndex:6];
+   int modestufe = modestundencode;
+   
+   int brennerstundencode = (heizungcode & 0x03); // bit 1,2
+  
    //brennerstundencode=32>>4;
    NSString* brennerstundencodestring = [[NSString stringWithCString:byte_to_binary(brennerstundencode) encoding:NSUTF8StringEncoding]substringFromIndex:6];
    //heizungcode = 15;
-   
-   
    
    BOOL brennerstatus = !((heizungcode & (1<<2))>>2); // bit 2
    int b1 = heizungcode & 0x04;
    int b2 = b1 >>2;
    int b3 = !b2;
    
-   //NSLog(@"heizungcode: %d b1: %d b2: %d b3: %d brennerstatus: %d brennerstatus: %s heizungbitstring: %@",heizungcode,b1,b2,b3,brennerstatus,byte_to_binary(134),heizungbitstring);
+   NSLog(@"heizungcode: %d b1: %d b2: %d b3: %d heizungcode: %d brennerstatus: %s heizungbitstring: %@",heizungcode,b1,b2,b3,brennerstatus,byte_to_binary(134),heizungbitstring);
    NSString* brennerstatusstring =@"OFF";
    if ( brennerstatus)
    {
       brennerstatusstring =@" ON";
    }
-   NSLog(@"brennerstundencode: %d brennerstundencodestring: %@ brennerstatusstring: %@",brennerstundencode,brennerstundencodestring,brennerstatusstring);
+ //  NSLog(@"brennerstundencode: %d brennerstundencodestring: %@ brennerstatusstring: %@",brennerstundencode,brennerstundencodestring,brennerstatusstring);
 
    
    BOOL        rinnestatus = (heizungcode & ((1<<6)|(1<<7)))>>6; // bit nach rechts schieben
@@ -1377,7 +1389,7 @@ extern NSMutableArray* DatenplanTabelle;
    {
       rinnestatusstring =@" ON";
    }
-   NSLog(@"rinnestundencode: %d rinnestundencodestring: %@ rinnestatusstring: %@",rinnestundencode,rinnestundencodestring,rinnestatusstring);
+//   NSLog(@"rinnestundencode: %d rinnestundencodestring: %@ rinnestatusstring: %@",rinnestundencode,rinnestundencodestring,rinnestatusstring);
 
    
   // NSLog(@"heizungcode  Brenner %d brenner: %d rinne: %d",heizungcode,brennerstatus,rinnestatus);
@@ -1385,8 +1397,18 @@ extern NSMutableArray* DatenplanTabelle;
    NSString* tempStringA = [NSString stringWithFormat:@"HZ:\tVorlauf:\t%2.1f\tRuecklauf:\t%2.1f\tAussen:\t%2.1f",vorlauf, ruecklauf ,aussen];
    NSString* tempStringB = [NSString stringWithFormat:@"\tcode:\t%@\tbrennercode:\t%@\tstatus: \t%@",heizungbitstring, brennerstundencodestring,brennerstatusstring];
    NSString* tempStringC = [NSString stringWithFormat:@"\t\t\trinnecode:\t%@\tstatus: \t%@",rinnestundencodestring, rinnestatusstring];
+   NSString* tempStringD = [NSString stringWithFormat:@"\t\t\tmodecode:\t%@\tposition: \t%d",modestundencodestring, modestufe];
+  
+   // WS
+   int wslampestatus=0.0;
+   int wsofenstatus=0.0;
    
-   
+   NSString* tempStringE = [NSString stringWithFormat:@"WS:\tLampe:\t%2.1d\tOfen:\t%2.1d\t*\t%2.1d",wslampestatus, wsofenstatus ,0];
+
+   NSString* tempStringF = [NSString stringWithFormat:@"WZ:\tLampe:\t%2.1d\tOfen:\t%2.1d\t*\t%2.1d",wslampestatus, wsofenstatus ,0];
+
+   NSString* tempStringG = [NSString stringWithFormat:@"BR:\tLampe:\t%2.1d\tOfen:\t%2.1d\t*\t%2.1d",wslampestatus, wsofenstatus ,0];
+
    
    
    NSMutableParagraphStyle *tempMutableParagraphStyle;
@@ -1460,7 +1482,7 @@ extern NSMutableArray* DatenplanTabelle;
       //        [TabArray addObject:tempTab];
    }
    [tempMutableParagraphStyle setTabStops:TabArray];
-   codeString = [NSString stringWithFormat:@"%@\n%@\n%@",tempStringA,tempStringB,tempStringC];
+   codeString = [NSString stringWithFormat:@"%@\n%@\n%@\n%@\n%@\n%@\n%@",tempStringA,tempStringB,tempStringC,tempStringD,tempStringE,tempStringF,tempStringG];
    
    tempAttString = [[NSMutableAttributedString alloc]
                     initWithString:codeString];
@@ -1473,7 +1495,7 @@ extern NSMutableArray* DatenplanTabelle;
    [codeFeld setNeedsDisplay:YES];
    
    // codeFeld.string = codeString;
-   DLog(@"HomeDataDownloadAktion codeFeld: %@",[codeFeld string]);
+ //  DLog(@"HomeDataDownloadAktion codeFeld: %@",[codeFeld string]);
    
 }
 
@@ -1520,7 +1542,7 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
 	[LastDataFeld setStringValue:@"***"];
    
   
-   NSLog(@"rData HomeDataDownloadAktion quelle: %@",[[note userInfo]objectForKey:@"quelle"]);
+   //NSLog(@"rData HomeDataDownloadAktion quelle: %@",[[note userInfo]objectForKey:@"quelle"]);
 	if ([[note userInfo]objectForKey:@"datastring"])
    {
       NSString* tempString = [[note userInfo]objectForKey:@"datastring"];
@@ -2355,12 +2377,12 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
 		48476,	Laufzeit
 		74,		Vorlauf
 		74,		Ruecklauf
-		57,		
-		7,
-		13,
-		91,
+		57,		aussen
+		7,       code
+		13,      std
+		91,      min+64
 		0,
-		38
+		38       innen+20
 		*/
 		//float tempZeit=0;
 		int tempZeit=0;
@@ -4923,14 +4945,19 @@ if ([[note userInfo]objectForKey:@"err"])
 	NSLog(@"reportZeitKompression: %2.2F stretch: %2.2f",[[sender titleOfSelectedItem]floatValue],stretch);
 	
 	ZeitKompression=[[sender titleOfSelectedItem]floatValue];
+   NSLog(@"reportZeitKompression a1");
+   NSLog(@"reportZeitKompression ZeitKompression: %2.2f",ZeitKompression);
+
 	//[TemperaturMKDiagramm setEinheitenDicY:[NSDictionary dictionaryWithObject:[sender titleOfSelectedItem] forKey:@"zeitkompression"]];
 	[TemperaturMKDiagramm setZeitKompression:ZeitKompression];
+   NSLog(@"reportZeitKompression a2");
 	//[BrennerDiagramm setEinheitenDicY:[NSDictionary dictionaryWithObject:[sender titleOfSelectedItem] forKey:@"zeitkompression"]];
 	[BrennerDiagramm setZeitKompression:ZeitKompression];
+   NSLog(@"reportZeitKompression a3");
 	//[Gitterlinien setEinheitenDicY:[NSDictionary dictionaryWithObject:[sender titleOfSelectedItem] forKey:@"zeitkompression"]];
 	
 	int tempIntervall=2;
-	
+   NSLog(@"reportZeitKompression B");
 	
 	//NSLog(@"reportZeitKompression Zeitkompression tag raw: %d tag int: %d",[[sender selectedItem]tag],[[sender selectedItem]tag]);
 	
@@ -4966,12 +4993,13 @@ if ([[note userInfo]objectForKey:@"err"])
 
 	} // switch tag
 	
+    NSLog(@"reportZeitKompression C");
 	//if ([[sender titleOfSelectedItem]floatValue] <1.0)
 	{
 		[Gitterlinien setEinheitenDicY:[NSDictionary dictionaryWithObject:[NSNumber numberWithInt:tempIntervall] forKey:@"intervall"]];
 		
 	}
-	
+	 NSLog(@"reportZeitKompression D");
 	NSArray* StringArray=[[TemperaturDatenFeld string]componentsSeparatedByString:@"\r"];
 	NSMutableArray* AbszissenArray=[[NSMutableArray alloc]initWithCapacity:0];
 	int i;
@@ -4986,9 +5014,10 @@ if ([[note userInfo]objectForKey:@"err"])
 			}
 		}
 	}
+    NSLog(@"reportZeitKompression F");
 	//NSLog(@"Data AbszissenArray: %@",[AbszissenArray description]);
 	[Gitterlinien setZeitKompression:ZeitKompression mitAbszissenArray:AbszissenArray];
-	
+	 NSLog(@"reportZeitKompression G");
 	
 	
 	
@@ -5026,7 +5055,7 @@ if ([[note userInfo]objectForKey:@"err"])
       
       [[TemperaturDiagrammScroller contentView]setNeedsDisplay:YES];
 	}
-	
+   NSLog(@"reportSolarZeitKompression end");
 }
 
 

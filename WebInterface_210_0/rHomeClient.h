@@ -43,7 +43,7 @@ enum webtaskflag{idle, eepromread, eepromwrite,eepromreadwoche,eepromwritewoche}
 	int							WebTask;          // Auszuführende Aktion aufgrund von Web-Requests
    int							Webserver_busy;
    int							WriteWoche_busy;
-
+   int                     downloadflag;
 }
 
 - (void)setHomeCentralI2C:(int)derStatus;

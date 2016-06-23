@@ -15,7 +15,7 @@
     self = [super initWithFrame:frame];
     if (self) 
 	{
-		//NSLog(@"rDiagrammGitterlinien awake");
+		NSLog(@"rDiagrammGitterlinien init");
 		NSRect Diagrammfeld=frame;
 		//		Diagrammfeld.size.width+=400;
 		[self setFrame:Diagrammfeld];

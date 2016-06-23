@@ -4,7 +4,7 @@
 
 - (id)initWithFrame:(NSRect)frameRect
 {
-//NSLog(@"EinkanalDiagramm init");
+NSLog(@"EinkanalDiagramm init");
 	if ((self = [super initWithFrame:frameRect]) != nil) 
 	{
 		NSRect Diagrammfeld=frameRect;

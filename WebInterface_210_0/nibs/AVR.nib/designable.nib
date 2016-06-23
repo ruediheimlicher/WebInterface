@@ -45,6 +45,7 @@
                 <outlet property="readTagTaste" destination="449" id="1058"/>
                 <outlet property="readWocheTaste" destination="1670" id="1673"/>
                 <outlet property="window" destination="5" id="41"/>
+                <outlet property="writeEEPROManzeige" destination="LhA-yj-MkF" id="gPS-yi-14D"/>
                 <outlet property="writeEEPROMcounterfeld" destination="Tfe-tA-rYc" id="kgu-WA-G7X"/>
                 <outlet property="writeWocheTaste" destination="1720" id="1724"/>
             </connections>

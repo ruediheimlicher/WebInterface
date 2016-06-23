@@ -638,21 +638,22 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 	NSMutableArray* ErtragdatenArray=[[NSMutableArray alloc]initWithCapacity:0];
 	//NSLog(@"Router_IP");
 	NSString*IP_DataSuffix=@"ip.txt";
-   NSString* URLString=[ServerPfad stringByAppendingPathComponent:IP_DataSuffix];
+   NSString* URLString=[@"ruediheimlicher.ch/Data" stringByAppendingPathComponent:IP_DataSuffix];
 
-	NSURL* URLPfad=[NSURL URLWithString:[ServerPfad stringByAppendingPathComponent:IP_DataSuffix]];
+  // NSURL* URLPfad=[NSURL URLWithString:[ServerPfad stringByAppendingPathComponent:IP_DataSuffix]];
+   NSURL* ipURL=[NSURL URLWithString:URLString];
                         
 	//NSLog(@"Router_IP URLPfad: %@",URLPfad);
 
    NSURL *URL = [NSURL URLWithString:[ServerPfad stringByAppendingPathComponent:IP_DataSuffix]];
-	
+	NSLog(@"Router_IP URL Pfad: %@",[URL path]);
 	NSStringEncoding *  enc=0;
 	NSCharacterSet* CharOK=[NSCharacterSet alphanumericCharacterSet];
    
       
    
 	NSString* DataString=[NSString stringWithContentsOfURL:URL usedEncoding: enc error:NULL];
-	//NSLog(@"IP von Server: %@",DataString);
+	NSLog(@"IP von Server: %@",DataString);
    NSArray* IP_Array = [DataString componentsSeparatedByString:@"\r\n"];
    //NSLog(@"IP von Server IP_Array: %@",IP_Array);
    
@@ -664,9 +665,16 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
    NSAppleEventDescriptor *ipresult = [ipscript executeAndReturnError:&iperrorMessage];
    //NSLog(@"mount: %@",ipresult);
    NSString *scriptReturn = [ipresult stringValue];
-   //NSLog(@"HomeData Found utxt string: %@",scriptReturn);
-
-   
+   NSLog(@"HomeData Found utxt string: %@",scriptReturn);
+   NSError* err;
+   /*
+  // if ([[NSFileManager defaultManager]fileExistsAtPath:[URL path]])
+   {
+      [scriptReturn writeToURL:ipURL atomically:YES encoding:NSUTF8StringEncoding error:&err];
+      NSLog(@"err: %@",err);
+   //[NSFileManager defaultManager]
+   }
+*/
    NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
    //[NotificationDic setObject:DataString forKey:@"routerip"];
    if (scriptReturn)
@@ -674,7 +682,7 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
       [NotificationDic setObject:scriptReturn forKey:@"routerip"];
    }
    NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
-   [nc postNotificationName:@"Router_IP" object:self userInfo:NotificationDic];
+   [nc postNotificationName:@"routerIP" object:self userInfo:NotificationDic];
    
    return scriptReturn;
 }

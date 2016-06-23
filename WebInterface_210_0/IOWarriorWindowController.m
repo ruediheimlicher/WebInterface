@@ -88,12 +88,13 @@ void IOWarriorCallback ()
    NSAppleScript* IP_appleScript = [[NSAppleScript alloc] initWithSource: ASString];
    //DLog(@"IP_appleScript: %@ ",[IP_appleScript description]);
    NSDictionary* IPErr=nil;
+   /*
    NSAppleEventDescriptor * IP_Descriptor = [IP_appleScript executeAndReturnError:&IPErr];
    
    //NSLog(@"IPdescriptor: %@ IPErr: %@",[IP_Descriptor stringValue],IPErr);
    NSString* IP_AddressString = [IP_Descriptor stringValue];
    NSArray* IP_DescriptorArray = [IP_AddressString componentsSeparatedByString:@"Current IP Address:"];
-   //NSLog(@"IP_AddressArray: %@ ",[IP_DescriptorArray description]);
+   NSLog(@"IP_AddressArray: %@ ",[IP_DescriptorArray description]);
 
    NSArray* IP_AddressArray = [[IP_DescriptorArray objectAtIndex:1] componentsSeparatedByString:@"</body></html>"];
    
@@ -109,7 +110,7 @@ void IOWarriorCallback ()
          }
 
    NSLog(@"IP_Address: %@ ",IP_Address);
-
+*/
 	oldHour=[[NSCalendarDate date]hourOfDay];
 	daySaved=NO;
 	int adresse=0xABCD;

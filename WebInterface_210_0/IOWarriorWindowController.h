@@ -1,6 +1,8 @@
 /* IOWarriorWindowController */
 
 #import <Cocoa/Cocoa.h>
+
+#include <netdb.h>
 #import "IOWarriorLib.h"
 #import "rHexEingabe.h"
 #import "rADWandler.h"

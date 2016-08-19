@@ -6,7 +6,7 @@
 
 @class WebDownload;
 
-@interface rHomeData : NSWindowController <NSURLDownloadDelegate>
+@interface rHomeData : NSWindowController <NSURLDownloadDelegate,NSURLConnectionDelegate,NSURLSessionDataDelegate>
 {
 	IBOutlet NSMatrix *directoryMatrix;
 	IBOutlet NSButton *openButton;

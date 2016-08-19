@@ -138,6 +138,7 @@ IBOutlet id				ZaehlerFeld;
 int						LastLoadzeit;
    
 IBOutlet id				IPFeld;
+IBOutlet id				hostIPFeld;
 
 IBOutlet NSTextView*				codeFeld;
 NSString*                     codeString;
@@ -255,6 +256,8 @@ rTagGitterlinien*             SolarStatistikTagGitterlinien;
 - (IBAction)reportSuchen:(id)sender;
 - (IBAction)reportSolarClear:(id)sender;
 - (IBAction)reportSolarZeitKompression:(id)sender;
+
+- (IBAction)reportHostIP:(id)sender;
 
 - (void)clearSolarData;
 - (IBAction)reportSolarKalender:(id)sender;

@@ -848,7 +848,7 @@ HomeDataDownload
 			if ([[note userInfo] objectForKey:@"lastdatazeit"])
 			{
 				lastDataZeit=[[[note userInfo] objectForKey:@"lastdatazeit"]intValue];
-            //NSLog(@"IOW HomeDataDownloadAktion case heute: lastDataZeit: %d", lastDataZeit);
+            NSLog(@"IOW HomeDataDownloadAktion case heute: lastDataZeit: %d", lastDataZeit);
 			}
 			else
 			{

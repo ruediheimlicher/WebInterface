@@ -186,7 +186,7 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 		DataSuffix=@"HomeDaten.txt";
 		NSString* URLPfad=[[NSURL URLWithString:[ServerPfad stringByAppendingPathComponent:DataSuffix]]path];
 		//NSLog(@"DataVonHeute URLPfad: %@",URLPfad);
-		//NSLog(@"DataVonHeute  DownloadPfad: %@ DataSuffix: %@",DownloadPfad,DataSuffix);
+		NSLog(@"DataVonHeute  DownloadPfad: %@ DataSuffix: %@",DownloadPfad,DataSuffix);
 		NSURL *URL = [NSURL URLWithString:[ServerPfad stringByAppendingPathComponent:DataSuffix]];
       //NSLog(@"awake DataVonHeute URL: %@",URL);
 		NSStringEncoding *  enc=0;
@@ -438,14 +438,15 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
       
 		//NSURLRequest* lastTimeRequest=[ [NSURLRequest alloc] initWithURL: lastTimeURL cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:30.0];
 		NSURLRequest* lastTimeRequest=[ [NSURLRequest alloc] initWithURL: lastTimeURL cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData timeoutInterval:5.0];
-      
+      NSURLResponse* responseRequest;
 		//NSLog(@"Cache mem: %d",[[NSURLCache sharedURLCache]memoryCapacity]);
 		
 	
 		//[[NSURLCache sharedURLCache] removeCachedResponseForRequest:lastTimeRequest];
 
 		NSError* syncErr=NULL;
-		NSData* lastTimeData=[ NSURLConnection sendSynchronousRequest:lastTimeRequest returningResponse: nil error: &syncErr ];
+		NSData* lastTimeData=[ NSURLConnection sendSynchronousRequest:lastTimeRequest returningResponse: &responseRequest error: &syncErr ];
+      NSLog(@"responseRequest: *%@*",responseRequest.URL);
 		if (syncErr)
 		{
 			NSLog(@"LastData syncErr: :%@",syncErr);
@@ -466,12 +467,12 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 		
 		if ([lastTimeString length] < 7)
 		{
-			NSLog(@"lastTimestring zu kurz");
+			NSLog(@"LastData lastTimestring zu kurz: %@",lastTimeString);
 			return returnString;
 		}
 		
 		NSString* lastDatumString = [lastTimeString substringFromIndex:7];
-		//NSLog(@"lastData: lastDatumString: %@",lastDatumString);
+		NSLog(@"lastData: lastDatumString: %@",lastDatumString);
 		[NotificationDic setObject:lastDatumString forKey:@"lasttimestring"];
 		
 				
@@ -486,8 +487,7 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 		[NotificationDic setObject:[NSNumber numberWithFloat:delta] forKey:@"delta"];
 		
 		//HomeCentralData = [[NSURLConnection alloc] initWithRequest:HomeCentralRequest delegate:self];
-		
-		HomeCentralData = (NSMutableData*)[ NSURLConnection sendSynchronousRequest:HomeCentralRequest returningResponse: nil error: nil ];		
+		HomeCentralData = (NSMutableData*)[ NSURLConnection sendSynchronousRequest:HomeCentralRequest returningResponse: &responseRequest error: nil ];
 		
 		if (HomeCentralData==NULL)
 		{
@@ -658,12 +658,15 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
    //NSLog(@"IP von Server IP_Array: %@",IP_Array);
    
    //NSString *ipString = [NSString localizedStringWithFormat:@"do shell script \"curl ifconfig.me/ip\""];
-   NSString *ipString = [NSString localizedStringWithFormat:@"do shell script \"curl ident.me\""];
+   NSString *ipString = [NSString localizedStringWithFormat:@"do shell script \"curl -4 ident.me\""];
+  // NSString *ipString = [NSString localizedStringWithFormat:@"do shell script \"ipecho.net/plain ; echo\""];
+ //  NSString *ipString = [NSString localizedStringWithFormat:@"do shell script \"ipecho.net/plain\""];
+
    
    NSAppleScript *ipscript = [[NSAppleScript alloc] initWithSource:ipString];
    NSDictionary *iperrorMessage = nil;
    NSAppleEventDescriptor *ipresult = [ipscript executeAndReturnError:&iperrorMessage];
-   //NSLog(@"mount: %@",ipresult);
+   NSLog(@"mount: %@",ipresult);
    NSString *scriptReturn = [ipresult stringValue];
    NSLog(@"HomeData Found utxt string: %@",scriptReturn);
    NSError* err;
@@ -1099,7 +1102,7 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 		
 		if ([lastTimeString length] < 7)
 		{
-			NSLog(@"lastTimestring zu kurz");
+			NSLog(@"LastSolarData lastTimestring zu kurz");
 			return returnString;
 		}
 		

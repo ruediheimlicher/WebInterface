@@ -5,6 +5,8 @@
 //  Created by Sysadmin on 05.02.09.
 //  Copyright 2008 Ruedi Heimlicher. All rights reserved.
 //
+#include <netdb.h>
+#include <arpa/inet.h>
 
 #import "rData.h"
 #import "rHeizungplan.h"
@@ -1333,6 +1335,10 @@ extern NSMutableArray* DatenplanTabelle;
    
    NSArray* lastDataArray = [datastring componentsSeparatedByString:@"\t"];
   //  NSLog(@"setcodeFeldMit lastDataArray: %@ anz: %ld",lastDataArray,[lastDataArray count]);
+   if (lastDataArray.count <8) // noch keine Daten
+   {
+      return;
+   }
    int minute = ([[lastDataArray objectAtIndex:0]intValue]/60)%60;
   // NSLog(@"minute: %d",minute);
    float vorlauf = [[lastDataArray objectAtIndex:1]intValue]/2;
@@ -1490,8 +1496,7 @@ extern NSMutableArray* DatenplanTabelle;
                          value:tempMutableParagraphStyle
                          range:NSMakeRange(0,[codeString length])];
    
-   [[codeFeld textStorage]
-    setAttributedString:tempAttString];
+   [[codeFeld textStorage]setAttributedString:tempAttString];
    [codeFeld setNeedsDisplay:YES];
    
    // codeFeld.string = codeString;
@@ -1501,94 +1506,95 @@ extern NSMutableArray* DatenplanTabelle;
 
 -(void)HomeDataDownloadAktion:(NSNotification*)note
 {
-/*
-Aufgerufen von rHomeData.
-Setzt Feldwerte im Fenster Data.
-
-*/
-	//NSLog(@"rData HomeDataDownloadAktion note: %@",note);
-	[LoadMark performClick:NULL];
-	
-	if ([[note userInfo]objectForKey:@"err"])
-	{
-	[LastDataFeld setStringValue:[[note userInfo]objectForKey:@"err"]];
-	}
-/*
-	if ([[note userInfo]objectForKey:@"erfolg"])
-	{
-	[LastDataFeld setStringValue:[[note userInfo]objectForKey:@"erfolg"]];
-	}
-*/	
-if ([[note userInfo]objectForKey:@"lasttimestring"])
-	{
-		[LastDatazeitFeld setStringValue:[[note userInfo]objectForKey:@"lasttimestring"]];
-	}
-	else
-	{
-		[LastDatazeitFeld setStringValue:@"keine Zeitangabe"];
-	}
-
-	anzLoads++;
-	[ZaehlerFeld setIntValue:anzLoads];
+   /*
+    Aufgerufen von rHomeData.
+    Setzt Feldwerte im Fenster Data.
+    
+    */
+   //NSLog(@"rData HomeDataDownloadAktion note: %@",note);
+   [LoadMark performClick:NULL];
    
- 
-	if (anzLoads > 8)
-	{
-		//NSBeep();
-		[self reload:NULL];
-	}
-
-	//NSLog(@"rData HomeDataDownloadAktion anzLoads: %d",anzLoads);
-	[LastDataFeld setStringValue:@"***"];
+   if ([[note userInfo]objectForKey:@"err"])
+   {
+      [LastDataFeld setStringValue:[[note userInfo]objectForKey:@"err"]];
+   }
+   /*
+    if ([[note userInfo]objectForKey:@"erfolg"])
+    {
+    [LastDataFeld setStringValue:[[note userInfo]objectForKey:@"erfolg"]];
+    }
+    */
+   if ([[note userInfo]objectForKey:@"lasttimestring"])
+   {
+      [LastDatazeitFeld setStringValue:[[note userInfo]objectForKey:@"lasttimestring"]];
+   }
+   else
+   {
+      [LastDatazeitFeld setStringValue:@"keine Zeitangabe"];
+   }
    
-  
+   anzLoads++;
+   [ZaehlerFeld setIntValue:anzLoads];
+   
+   
+   if (anzLoads > 8)
+   {
+      //NSBeep();
+      [self reload:NULL];
+   }
+   
+   //NSLog(@"rData HomeDataDownloadAktion anzLoads: %d",anzLoads);
+   [LastDataFeld setStringValue:@"***"];
+   
+   
    //NSLog(@"rData HomeDataDownloadAktion quelle: %@",[[note userInfo]objectForKey:@"quelle"]);
-	if ([[note userInfo]objectForKey:@"datastring"])
+   if ([[note userInfo]objectForKey:@"datastring"])
    {
       NSString* tempString = [[note userInfo]objectForKey:@"datastring"];
       //tempString= [[[[NSNumber numberWithInt:anzLoads]stringValue]stringByAppendingString:@": "]stringByAppendingString:tempString];
       NSArray *dataArray =  [[[note userInfo]objectForKey:@"datastring"]componentsSeparatedByString:@"\n"];
+      NSLog(@"dataArray: %@",dataArray);
       int anz = [dataArray count];
       if (anz > 2)
       {
-      NSLog(@"dataArray last: %@ anz: %ld",[dataArray objectAtIndex:[dataArray count]-2],[dataArray count]);
+         NSLog(@"dataArray last: %@ anz: %ld",[dataArray objectAtIndex:[dataArray count]-2],[dataArray count]);
          tempString =[dataArray objectAtIndex:[dataArray count]-2];
       }
       if ([dataArray count]>9)
       {
          //dataArray = [dataArray subarrayWithRange:NSMakeRange([dataArray count]-9, 9)];
       }
-    //  NSLog(@"dataArray korr: %@",dataArray);
+      //  NSLog(@"dataArray korr: %@",dataArray);
       [LastDataFeld setStringValue:tempString];
       
       [self setcodeFeldMit:tempString];
    }
-	else
-	{
-	[LastDataFeld setStringValue:@"-"];
-	[LastDataFeld setStringValue:@"--"];
-	[LastDataFeld setStringValue:@"---"];
-	[LastDataFeld setStringValue:@"----"];
-	[LastDataFeld setStringValue:@"-----"];
-	}
-
-/*
-	if ([[note userInfo]objectForKey:@"lastdatazeit"])
-	{
-	int tempLastdataZeit=[[[note userInfo]objectForKey:@"lastdatazeit"] intValue];
-	NSLog(@"lastdatazeit: %d * LastLoadzeit: %d",tempLastdataZeit,LastLoadzeit );
-	
-	int	tempZeit=[[NSDate date] timeIntervalSinceDate:DatenserieStartZeit];		
-	//[LastDatazeitFeld setStringValue:[[note userInfo]objectForKey:@"lastdatazeit"]];
-	[LastDatazeitFeld setIntValue:tempLastdataZeit-LastLoadzeit];
-	}
-*/
-	if ([[note userInfo]objectForKey:@"delta"])
-	{
-	NSString* deltaString=[NSString stringWithFormat:@"%2.4F",[[[note userInfo]objectForKey:@"delta"]floatValue]];
-	[LoadtimeFeld setStringValue:deltaString];
-	}
-
+   else
+   {
+      [LastDataFeld setStringValue:@"-"];
+      [LastDataFeld setStringValue:@"--"];
+      [LastDataFeld setStringValue:@"---"];
+      [LastDataFeld setStringValue:@"----"];
+      [LastDataFeld setStringValue:@"-----"];
+   }
+   
+   /*
+    if ([[note userInfo]objectForKey:@"lastdatazeit"])
+    {
+    int tempLastdataZeit=[[[note userInfo]objectForKey:@"lastdatazeit"] intValue];
+    NSLog(@"lastdatazeit: %d * LastLoadzeit: %d",tempLastdataZeit,LastLoadzeit );
+    
+    int	tempZeit=[[NSDate date] timeIntervalSinceDate:DatenserieStartZeit];
+    //[LastDatazeitFeld setStringValue:[[note userInfo]objectForKey:@"lastdatazeit"]];
+    [LastDatazeitFeld setIntValue:tempLastdataZeit-LastLoadzeit];
+    }
+    */
+   if ([[note userInfo]objectForKey:@"delta"])
+   {
+      NSString* deltaString=[NSString stringWithFormat:@"%2.4F",[[[note userInfo]objectForKey:@"delta"]floatValue]];
+      [LoadtimeFeld setStringValue:deltaString];
+   }
+   
 }
 
 /*
@@ -2561,6 +2567,80 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
    [IPFeld setStringValue:IP_String];
 }
 
+- (void)setHost_IP:(NSString*)dieIP
+{
+   NSString* IP_String = [NSString stringWithFormat:@"IP_Adresse Host: %@",dieIP];
+   [hostIPFeld setStringValue:IP_String];
+}
+
+- (IBAction)reportHostIP:(id)sender
+{
+   //http://www.binarytides.com/hostname-to-ip-address-c-sockets-linux/
+   
+   char *findhost = "ruediheimlicher.ch";
+   char ip[100];
+   struct hostent *he;
+   struct in_addr **addr_list;
+   int i;
+   
+   if ( (he = gethostbyname( findhost ) ) == NULL)
+   {
+      NSLog(@"err");
+      // get the host info
+      //herror("gethostbyname");
+      //return 1;
+   }
+   
+   addr_list = (struct in_addr **) he->h_addr_list;
+   
+   for(i = 0; addr_list[i] != NULL; i++)
+   {
+      //Return the first one;
+      strcpy(ip , inet_ntoa(*addr_list[i]) );
+      //return 0;
+   }
+   NSLog(@"ip: %s",ip);
+  // sprintf("ip: %c\n",ip);
+   
+   
+  /*
+   // http://beej.us/guide/bgnet/output/html/multipage/inet_ntopman.html
+   struct sockaddr_in sa;
+   char ipadresse[INET_ADDRSTRLEN];
+   
+   // store this IP address in sa:
+   //inet_pton(AF_INET, "192.0.2.33", &(sa.sin_addr));
+   
+   // now get it back and print it
+   inet_ntop(AF_INET, &("ruediheimlicher.ch"), ipadresse, INET_ADDRSTRLEN);
+   
+   printf("ipadresse: %s\n", ipadresse); // prints "192.0.2.33"
+   
+   //buff = inet_ntoa((host_entry->h_addr_list[0]));
+  // printf("buff 2 %s \n",buff);
+   char * ipbuf;
+   */
+   
+   // http://stackoverflow.com/questions/6812649/is-there-a-way-to-get-the-ip-address-from-given-url-in-cocoa
+   NSString* hostname = @"http://ruediheimlicher.ch";
+   NSURL *validURL = [NSURL URLWithString: hostname];
+   NSString *host = [validURL host];
+   NSString *ipAdress = [[NSHost hostWithName:host]address];
+   printf("\n%s IP: %s",[host  UTF8String],[ipAdress  UTF8String]);
+   NSString* hostIP_String = [NSString stringWithFormat:@"IP_Adresse Host: %@",ipAdress];
+
+   [hostIPFeld setStringValue: hostIP_String];
+   
+   NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
+   if (ipAdress)
+   {
+      [NotificationDic setObject:ipAdress forKey:@"hostip"];
+   }
+   NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
+//   [nc postNotificationName:@"hostIP" object:self userInfo:NotificationDic];
+
+   
+}
 #pragma mark solar
 
 
@@ -4950,14 +5030,14 @@ if ([[note userInfo]objectForKey:@"err"])
 
 	//[TemperaturMKDiagramm setEinheitenDicY:[NSDictionary dictionaryWithObject:[sender titleOfSelectedItem] forKey:@"zeitkompression"]];
 	[TemperaturMKDiagramm setZeitKompression:ZeitKompression];
-   NSLog(@"reportZeitKompression a2");
+  // NSLog(@"reportZeitKompression a2");
 	//[BrennerDiagramm setEinheitenDicY:[NSDictionary dictionaryWithObject:[sender titleOfSelectedItem] forKey:@"zeitkompression"]];
 	[BrennerDiagramm setZeitKompression:ZeitKompression];
-   NSLog(@"reportZeitKompression a3");
+   //NSLog(@"reportZeitKompression a3");
 	//[Gitterlinien setEinheitenDicY:[NSDictionary dictionaryWithObject:[sender titleOfSelectedItem] forKey:@"zeitkompression"]];
 	
 	int tempIntervall=2;
-   NSLog(@"reportZeitKompression B");
+   //NSLog(@"reportZeitKompression B");
 	
 	//NSLog(@"reportZeitKompression Zeitkompression tag raw: %d tag int: %d",[[sender selectedItem]tag],[[sender selectedItem]tag]);
 	
@@ -4993,13 +5073,13 @@ if ([[note userInfo]objectForKey:@"err"])
 
 	} // switch tag
 	
-    NSLog(@"reportZeitKompression C");
+   // NSLog(@"reportZeitKompression C");
 	//if ([[sender titleOfSelectedItem]floatValue] <1.0)
 	{
 		[Gitterlinien setEinheitenDicY:[NSDictionary dictionaryWithObject:[NSNumber numberWithInt:tempIntervall] forKey:@"intervall"]];
 		
 	}
-	 NSLog(@"reportZeitKompression D");
+	// NSLog(@"reportZeitKompression D");
 	NSArray* StringArray=[[TemperaturDatenFeld string]componentsSeparatedByString:@"\r"];
 	NSMutableArray* AbszissenArray=[[NSMutableArray alloc]initWithCapacity:0];
 	int i;
@@ -5014,10 +5094,10 @@ if ([[note userInfo]objectForKey:@"err"])
 			}
 		}
 	}
-    NSLog(@"reportZeitKompression F");
+   // NSLog(@"reportZeitKompression F");
 	//NSLog(@"Data AbszissenArray: %@",[AbszissenArray description]);
 	[Gitterlinien setZeitKompression:ZeitKompression mitAbszissenArray:AbszissenArray];
-	 NSLog(@"reportZeitKompression G");
+	// NSLog(@"reportZeitKompression G");
 	
 	
 	
@@ -5055,7 +5135,7 @@ if ([[note userInfo]objectForKey:@"err"])
       
       [[TemperaturDiagrammScroller contentView]setNeedsDisplay:YES];
 	}
-   NSLog(@"reportSolarZeitKompression end");
+  // NSLog(@"reportSolarZeitKompression end");
 }
 
 

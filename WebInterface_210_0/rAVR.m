@@ -341,8 +341,29 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
 - (void)awakeFromNib
 {
 	//NSLog(@"AVR awake");
+   char* u="80+f+0+0+7+f0+ff+ff";
+   char* buffer= malloc(32);
+   //lcd_putc('C');
    
+   strcpy(buffer, u);
    
+   //lcd_putc('D');
+   uint8_t outbuffer[8]={};
+   uint8_t index=0;
+   char* linePtr = malloc(32);
+   
+   linePtr = strtok(buffer,"+");
+   
+   while (linePtr !=NULL)								// Datenstring: Bei '+' trennen
+   {
+      //EEPROMTxDaten[index++] = strtol(linePtr,NULL,16); //http://www.mkssoftware.com/docs/man3/strtol.3.asp
+      outbuffer[index++] = strtol(linePtr,NULL,16); //http://www.mkssoftware.com/docs/man3/strtol.3.asp
+      linePtr = strtok(NULL,"+");
+   }
+   free(linePtr);
+   free(buffer);
+   
+
    //NSString *ipString = [NSString localizedStringWithFormat:@"do shell script \"curl ifconfig.me/ip\""];
    NSString *ipString = [NSString localizedStringWithFormat:@"do shell script \"curl ident.me\""];
 
@@ -793,13 +814,13 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
    
    
    NSString *urlString = [NSString stringWithFormat:host, @"texttowritetofile"];
-   NSLog(@"urlString: %@",urlString);
+   NSLog(@"EEE urlString: %@",urlString);
    NSURL *url = [NSURL URLWithString:urlString];
    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
    //[request setHTTPMethod:@"POST"];
-   
-   NSData *returnData = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:nil];
-   NSLog(@"returnData: %@",returnData);
+     NSURLResponse* responseRequest;
+   NSData *returnData = [NSURLConnection sendSynchronousRequest:request returningResponse:&responseRequest error:nil];
+   NSLog(@"EEE returnData: %@ responseRequest URL: %@",returnData,responseRequest.URL);
    
    writeEEPROManzeige.intValue = 0;
 

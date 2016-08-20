@@ -1183,13 +1183,28 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 		// lbyte, hbyte anfuegen
 		WriteDataSuffix = [NSString stringWithFormat:@"%@&lbyte=%@&hbyte=%@",WriteDataSuffix,lbyte,hbyte];
 		//NSLog(@"HomeClientWriteStandardAktion WriteDataSuffix: %@",WriteDataSuffix);
-		
+      
+		NSString* DataString=@"&data=1"; // Data ankuendigen
 		// data anfuegen
 		int i=0;
+      for (i=0;i<8;i++) // 8 bytes uebertragen
+      {
+         if (i<[DatenByteArray count])
+         {
+            DataString= [NSString stringWithFormat:@"%@&d%d=%x",DataString,i,[[DatenByteArray objectAtIndex:i]intValue]];
+         }
+         else // auffuellen mit 0xff
+         {
+            DataString= [NSString stringWithFormat:@"%@&d%d=%x",DataString,i,0xff];
+
+         }
+
+      }// for i
       
+      NSLog(@" DataString: %@",DataString);
+		
       
-      
-		NSString* DataString=@"&data=";
+      /*
 		//NSLog(@" Datenarray count %d",[DatenArray count]);
 		//NSLog(@" DataString: %@",DataString);
 		NSString* TestString=[NSString string];// Kontrolle
@@ -1217,6 +1232,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 				//TestString = [TestString stringByAppendingString:@"+"];
 			}
 		}
+      */
 		//NSLog(@"HomeClientWriteStandardAktion DataString: %@ TestString: %@",DataString, TestString);
 		/*
        // +++++++++
@@ -1322,16 +1338,16 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
    
   
    NSData *EEPROM_Data = [WriteDataSuffix dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES];
-    /*
-     NSString* HomeClientURLString =[NSString stringWithFormat:@"%@/twi?data=%@",HomeCentralURL, EEPROM_Data];
+   
+   //  NSString* HomeClientURLString =[NSString stringWithFormat:@"%@/twi?data=%@",HomeCentralURL, EEPROM_Data];
    NSLog(@"HomeClientWriteStandardAktion HomeClientURLString: %@",HomeClientURLString);
-*/
+
    
    
    
    NSURL *URL = [NSURL URLWithString:HomeClientURLString];
    downloadflag = 1;
-   [self loadURL:URL];
+ //  [self loadURL:URL];
    
    //NSLog(@"HomeClientWriteStandardAktion DatenByteArray count: %d",[DatenByteArray count]);
    NSString* EEPROM_DataString=[DatenByteArray componentsJoinedByString:@"+"];

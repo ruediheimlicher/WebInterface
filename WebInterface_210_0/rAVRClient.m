@@ -1852,6 +1852,7 @@ if (Webserver_busy)
 {
    /*
     Stellt je nach Wert des Radiobuttons zwei Array zusammen
+    
     PListFixArray: Daten vom Homeserver (und vom damit synchronisierten EEPROM) sollen in die PList geschrieben werden, Tagplanbalken soll neu gezeichnet werden.
     > updatePListMitDicArray
     
@@ -1882,7 +1883,7 @@ if (Webserver_busy)
             NSInteger tempTag = tempbalken.tag;
             
             if (tempTag < 2000)
-               if ([EEPROMPlan  viewWithTag:tempTag]) // Radio
+               if ([EEPROMPlan  viewWithTag:tempTag]) // Radiobutton
                {
                   int wahl = [[EEPROMPlan  viewWithTag:tempTag]selectedRow];
                   //NSLog(@"i: %d radiotag: %d wahl: %d",i,tempTag,wahl);

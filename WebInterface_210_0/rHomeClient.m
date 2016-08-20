@@ -1138,6 +1138,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
    //	int Objekt=[[[note userInfo]objectForKey:@"objekt"]intValue];
    //	NSArray* DatenArray=[[note userInfo]objectForKey:@"stundenarray"];
    
+
    WebTask = idle;
    
    //NSLog(@"HomeClientWriteStandardAktion tagbalkentyp aus userinfo: %@", [[note userInfo]objectForKey:@"tagbalkentyp"]);
@@ -1184,6 +1185,8 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 		WriteDataSuffix = [NSString stringWithFormat:@"%@&lbyte=%@&hbyte=%@",WriteDataSuffix,lbyte,hbyte];
 		//NSLog(@"HomeClientWriteStandardAktion WriteDataSuffix: %@",WriteDataSuffix);
       
+      NSLog(@"DatenByteArray: %@",DatenByteArray);
+      
 		NSString* DataString=@"&data=1"; // Data ankuendigen
 		// data anfuegen
 		int i=0;
@@ -1191,7 +1194,10 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
       {
          if (i<[DatenByteArray count])
          {
+            NSLog(@"DataString vor: %@ i: %d data: %d",DataString,i,[[DatenByteArray objectAtIndex:i]intValue]);
             DataString= [NSString stringWithFormat:@"%@&d%d=%x",DataString,i,[[DatenByteArray objectAtIndex:i]intValue]];
+            NSLog(@"DataString nach: %@",DataString);
+
          }
          else // auffuellen mit 0xff
          {
@@ -1201,7 +1207,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 
       }// for i
       
-      NSLog(@" DataString: %@",DataString);
+      NSLog(@"HomeClientWriteStandardAktion DataString: %@",DataString);
 		
       
       /*
@@ -1347,7 +1353,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
    
    NSURL *URL = [NSURL URLWithString:HomeClientURLString];
    downloadflag = 1;
- //  [self loadURL:URL];
+   [self loadURL:URL];
    
    //NSLog(@"HomeClientWriteStandardAktion DatenByteArray count: %d",[DatenByteArray count]);
    NSString* EEPROM_DataString=[DatenByteArray componentsJoinedByString:@"+"];
@@ -1451,6 +1457,25 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
          //NSLog(@"HomeClientWriteEEPROM WriteDataSuffix: %@",WriteDataSuffix);
          
          // data anfuegen
+         NSString* DataString=@"&data=1"; // Data ankuendigen
+         // data anfuegen
+         int i=0;
+         for (i=0;i<8;i++) // 8 bytes uebertragen
+         {
+            if (i<[DatenByteArray count])
+            {
+               DataString= [NSString stringWithFormat:@"%@&d%d=%x",DataString,i,[[DatenByteArray objectAtIndex:i]intValue]];
+            }
+            else // auffuellen mit 0xff
+            {
+               DataString= [NSString stringWithFormat:@"%@&d%d=%x",DataString,i,0xff];
+               
+            }
+            
+         }// for i
+         
+         NSLog(@"HomeClientWriteEEPROM DataString: %@",DataString);
+/*
          int i=0;
          NSString* DataString=@"&data=";
          //NSLog(@" Datenarray count %d",[DatenArray count]);
@@ -1478,7 +1503,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
                //TestString = [TestString stringByAppendingString:@"+"];
             }
          }
-         
+ */
          WriteDataSuffix = [NSString stringWithFormat:@"%@%@",WriteDataSuffix,DataString];
          //NSLog(@"HomeClientWriteStandardAktion WriteDataSuffix ganz: %@",WriteDataSuffix);
       }
@@ -1555,8 +1580,12 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 		
 		
 		int i=0;
+      
+      
 		NSString* DataStringA=@"&data="; // 32 Bytes
 		NSString* DataStringB=@"&data=";	// 24 Bytes
+      
+      
 		//NSLog(@" Datenarray count %d",[DatenArray count]);
 		//NSLog(@" DataString: %@",DataString);
 		NSString* TestString=[NSString string];
@@ -1606,7 +1635,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 				DataStringB = [DataStringB stringByAppendingString:@"+"];
 			}
 		}
-		NSLog(@"HomeClientWriteStandardAktion \nDataStringA: %@ \nDataStringB: %@",DataStringA, DataStringB);
+		NSLog(@"HomeClientWriteModifierAktion \nDataStringA: %@ \nDataStringB: %@",DataStringA, DataStringB);
 		
 		
 		WriteDataSuffixA = [NSString stringWithFormat:@"%@%@",WriteDataSuffixA,DataStringA];
@@ -1722,6 +1751,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
                           13
                           ];
   */
+   // CGI_UPDATE_CLEAR: cgi-bin/eepromupdate.pl
    NSString* URLString = [NSString stringWithFormat:@"http://%s/%s?pw=%s&perm=%d",
                           WEBSERVER_VHOST,
                           CGI_UPDATE_CLEAR,

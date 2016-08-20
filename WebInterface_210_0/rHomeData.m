@@ -446,7 +446,7 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 
 		NSError* syncErr=NULL;
 		NSData* lastTimeData=[ NSURLConnection sendSynchronousRequest:lastTimeRequest returningResponse: &responseRequest error: &syncErr ];
-      NSLog(@"responseRequest: *%@*",responseRequest.URL);
+//      NSLog(@"responseRequest: *%@*",responseRequest.URL);
 		if (syncErr)
 		{
 			NSLog(@"LastData syncErr: :%@",syncErr);
@@ -472,7 +472,7 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 		}
 		
 		NSString* lastDatumString = [lastTimeString substringFromIndex:7];
-		NSLog(@"lastData: lastDatumString: %@",lastDatumString);
+		//NSLog(@"lastData: lastDatumString: %@",lastDatumString);
 		[NotificationDic setObject:lastDatumString forKey:@"lasttimestring"];
 		
 				

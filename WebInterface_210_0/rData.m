@@ -1366,7 +1366,7 @@ extern NSMutableArray* DatenplanTabelle;
    int b2 = b1 >>2;
    int b3 = !b2;
    
-   NSLog(@"heizungcode: %d b1: %d b2: %d b3: %d heizungcode: %d brennerstatus: %s heizungbitstring: %@",heizungcode,b1,b2,b3,brennerstatus,byte_to_binary(134),heizungbitstring);
+   //NSLog(@"heizungcode: %d b1: %d b2: %d b3: %d heizungcode: %d brennerstatus: %s heizungbitstring: %@",heizungcode,b1,b2,b3,brennerstatus,byte_to_binary(134),heizungbitstring);
    NSString* brennerstatusstring =@"OFF";
    if ( brennerstatus)
    {
@@ -1553,7 +1553,7 @@ extern NSMutableArray* DatenplanTabelle;
       NSString* tempString = [[note userInfo]objectForKey:@"datastring"];
       //tempString= [[[[NSNumber numberWithInt:anzLoads]stringValue]stringByAppendingString:@": "]stringByAppendingString:tempString];
       NSArray *dataArray =  [[[note userInfo]objectForKey:@"datastring"]componentsSeparatedByString:@"\n"];
-      NSLog(@"dataArray: %@",dataArray);
+      //NSLog(@"dataArray: %@",dataArray);
       int anz = [dataArray count];
       if (anz > 2)
       {
@@ -2363,7 +2363,7 @@ extern NSMutableArray* DatenplanTabelle;
  //  codeString = [NSString stringWithFormat:@"anzLoads: %d",anzLoads ];
  //  [codeFeld insertText: codeString];
    
-   NSLog(@"LastDataAktion codeFeld: %@",[codeFeld string]);
+//   NSLog(@"LastDataAktion codeFeld: %@",[codeFeld string]);
    
 	NSNumberFormatter *numberFormatter =[[NSNumberFormatter alloc] init];
 	// specify just positive format

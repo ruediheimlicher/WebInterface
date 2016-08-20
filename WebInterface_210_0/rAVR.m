@@ -342,6 +342,17 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
 {
 	//NSLog(@"AVR awake");
    char* u="80+f+0+0+7+f0+ff+ff";
+   
+   
+   printf("b: *%x*\n", atoi("17"));
+
+   
+   char* a = "F1";
+   uint8_t aa = strtol(a,nil,16);
+   
+   
+   printf("a: %s aa: %d\n",a,aa);
+   
    char* buffer= malloc(32);
    //lcd_putc('C');
    

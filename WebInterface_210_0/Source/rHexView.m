@@ -91,12 +91,17 @@ NSFont* HexFont=[NSFont fontWithName:@"Helvetica" size: 28];
 			
 		}
 		
+         /*
 		NSAlert * FalschesZeichenAlert=[NSAlert alertWithMessageText:@"Falsches Zeichen!" 
 		defaultButton:NULL 
 		alternateButton:NULL 
 		otherButton:NULL 
 		informativeTextWithFormat:@"Zeichen: %@\n%@",[theEvent characters],@"Es sind nur die Ziffern von 0 bis 9 erlaubt"];
-		[FalschesZeichenAlert runModal];
+		*/
+         NSAlert * FalschesZeichenAlert=[[NSAlert alloc]init];
+         FalschesZeichenAlert.messageText= @"Falsches Zeichen!";
+         FalschesZeichenAlert.informativeText = [NSString stringWithFormat:@"Zeichen: %@\n%@",[theEvent characters],@"Es sind nur die Ziffern von 0 bis 9 erlaubt"];
+         [FalschesZeichenAlert runModal];
 		//NSLog(@"Falsches Zeichen");
 		}
 	}

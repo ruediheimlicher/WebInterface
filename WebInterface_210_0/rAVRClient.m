@@ -879,7 +879,7 @@ if (Webserver_busy)
 		[Warnung setMessageText:[NSString stringWithFormat:@"%@",@"Homebus aktiv!"]];
 		
 		NSString* s1=@"Der Homebus muss deaktiviert sein, um auf das EEPROM zu schreiben.";
-		NSString* s2=@"WriteStandardAktion";
+		NSString* s2=@"Quelle: WriteStandardAktion";
 		NSString* InformationString=[NSString stringWithFormat:@"%@\n%@",s1,s2];
 		[Warnung setInformativeText:InformationString];
 		[Warnung setAlertStyle:NSWarningAlertStyle];
@@ -1075,7 +1075,7 @@ if (Webserver_busy)
     [Warnung setMessageText:[NSString stringWithFormat:@"%@",@"Homebus aktiv!"]];
     
     NSString* s1=@"Der Homebus muss deaktiviert sein, um auf das EEPROM zu schreiben.";
-    NSString* s2=@"writeEEPROMWochenplan";
+    NSString* s2=@"Quelle: writeEEPROMWochenplan";
     NSString* InformationString=[NSString stringWithFormat:@"%@\n%@",s1,s2];
     [Warnung setInformativeText:InformationString];
     [Warnung setAlertStyle:NSWarningAlertStyle];
@@ -1379,7 +1379,7 @@ if (Webserver_busy)
 		[Warnung setMessageText:[NSString stringWithFormat:@"%@",@"Homebus aktiv!"]];
 		
 		NSString* s1=@"Der Homebus muss deaktiviert sein, um auf das EEPROM zu schreiben.";
-		NSString* s2=@"WriteModifier";
+		NSString* s2=@"Quelle: WriteModifierAktion";
 		NSString* InformationString=[NSString stringWithFormat:@"%@\n%@",s1,s2];
 		[Warnung setInformativeText:InformationString];
 		[Warnung setAlertStyle:NSWarningAlertStyle];
@@ -2039,7 +2039,7 @@ if (Webserver_busy)
           [Warnung setMessageText:[NSString stringWithFormat:@"%@",@"Homebus aktiv!"]];
           
           NSString* s1=@"Der Homebus muss deaktiviert sein, um auf das EEPROM zu schreiben.";
-          NSString* s2=@"Fixtaste";
+          NSString* s2=@"Quelle: Fixtaste";
           NSString* InformationString=[NSString stringWithFormat:@"%@\n%@",s1,s2];
           [Warnung setInformativeText:InformationString];
           [Warnung setAlertStyle:NSWarningAlertStyle];

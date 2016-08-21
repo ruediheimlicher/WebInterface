@@ -31,6 +31,8 @@ int					changed;
 
 int					TagbalkenTyp;
 //int					AnzPlaene;
+   int            twistatus;
+   int            local;
 
 NSPoint				Nullpunkt;
 NSMutableArray*	StundenArray;
@@ -52,7 +54,7 @@ NSMutableIndexSet*  AktivtastenSet;
 - (void)setObjekt:(NSNumber*)dieObjektNumber;
 - (void)setRaum:(int)derRaum;
 - (void)setWochentag:(int)derWochentag;
-
+- (void)setTWIStatus:(int)derStatus;
 - (int)wochentag;
 - (int)raum;
 - (int)objekt;

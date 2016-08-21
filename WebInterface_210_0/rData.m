@@ -684,10 +684,29 @@ extern NSMutableArray* DatenplanTabelle;
 	
 	errString= [NSString string];
 	errPfad= [NSString string];
+   
+
+   NSDateComponents *heutecomponents = [[NSCalendar currentCalendar] components:NSCalendarUnitDay | NSCalendarUnitMonth | NSCalendarUnitYear |NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond fromDate:[NSDate date]];
+   NSInteger tagdesmonats = [heutecomponents day];
+   NSInteger monat = [heutecomponents month];
+   NSInteger jahr = [heutecomponents year];
+    NSInteger stunde = [heutecomponents hour];
+    NSInteger minute = [heutecomponents minute];
+   NSInteger sekunde = [heutecomponents second];
+   jahr-=2000;
+   NSString* StartZeit = [NSString stringWithFormat:@"%02ld.%02ld.%02ld",(long)tagdesmonats,(long)monat,(long)jahr];
+
+   
+   NSString* StartZeitFull = [NSString stringWithFormat:@"%02ld.%02ld.%02ld %02ld:%02ld:%02ld",(long)tagdesmonats,(long)monat,(long)jahr,(long)stunde,(long)minute,(long)sekunde];
+
+   NSLog(@"awake StartZeit: %@ StartZeitFull: %@",StartZeit, StartZeitFull);
+   
+   
+//	NSCalendarDate* StartZeit=[NSCalendarDate calendarDate];
+//	[StartZeit setCalendarFormat:@"%d.%m.%y %H:%M"];
 	
-	NSCalendarDate* StartZeit=[NSCalendarDate calendarDate];
-	[StartZeit setCalendarFormat:@"%d.%m.%y %H:%M"];
-	// Pfad fuer Logfile einrichten
+   NSLog(@"awake StartZeit A: %@",StartZeit);
+   // Pfad fuer Logfile einrichten
 	BOOL FileOK=NO;
 	BOOL istOrdner;
 	NSFileManager *Filemanager = [NSFileManager defaultManager];
@@ -707,8 +726,9 @@ extern NSMutableArray* DatenplanTabelle;
 	}
 	if (FileOK)
 	{
-		[StartZeit setCalendarFormat:@"%d.%m.%y"];
-		
+		//[StartZeit setCalendarFormat:@"%d.%m.%y"];
+		NSLog(@"awake StartZeit: %@",StartZeit);
+      
 		errPfad=[NSString stringWithFormat:@"%@/errString %@.txt",[TempDatenPfad stringByAppendingPathComponent:@"Logs"],StartZeit];
 		
 		//NSLog(@"reportStart errPfad: %@",errPfad);

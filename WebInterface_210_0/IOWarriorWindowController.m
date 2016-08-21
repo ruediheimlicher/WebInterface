@@ -71,11 +71,17 @@ void IOWarriorCallback ()
 
 - (void)Alert:(NSString*)derFehler
 {
+   /*
 	NSAlert * DebugAlert=[NSAlert alertWithMessageText:@"Debugger!" 
 		defaultButton:NULL 
 		alternateButton:NULL 
 		otherButton:NULL 
 		informativeTextWithFormat:@"Mitteilung: \n%@",derFehler];
+   */
+   NSAlert * DebugAlert=[[NSAlert alloc]init];
+   DebugAlert.messageText= @"Debugger!";
+   DebugAlert.informativeText = [NSString stringWithFormat:@"Mitteilung: \n%@",derFehler];
+
 		[DebugAlert runModal];
 
 }

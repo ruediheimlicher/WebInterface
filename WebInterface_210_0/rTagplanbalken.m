@@ -22,16 +22,35 @@
 		aktiv=1;
 		changed=0;
 		TagbalkenTyp=0;
+      twistatus=1;
+      local=0;
 		if (StundenArray==NULL)
 		{
 			StundenArray=[[NSMutableArray alloc]initWithCapacity:0];
 		}
 		AktivtastenSet = [NSMutableIndexSet indexSet];
+      
+      NSNotificationCenter * nc;
+      nc=[NSNotificationCenter defaultCenter];
+      
+      [nc addObserver:self
+             selector:@selector(TWIstatusAktion:) // TWI-Status
+                 name:@"twistatus"
+               object:nil];
+
 	}
     return self;
 	
 	
    
+}
+
+- (void)TWIstatusAktion:(NSNotification*)note
+{
+   NSLog(@"Tagplanbalken TWIstatusAktion note: %@",note);
+   twistatus = [[[note userInfo]objectForKey:@"status"]intValue];
+   local = [[[note userInfo]objectForKey:@"local"]intValue];
+   //NSLog(@"Tagplanbalken twistatus: %d",twistatus);
 }
 
 - (void)BalkenAnlegen
@@ -553,7 +572,11 @@ NSMutableDictionary* tempDic=(NSMutableDictionary*)[StundenArray objectAtIndex:d
 	//NSLog(@"Raum: %d", [(rTagplanbalken*)[sender superview]Raum]);
 	//NSLog(@"Objekt: %d", [(rTagplanbalken*)[sender superview]Objekt]);
 	//NSLog(@"Titel: %@", [(rTagplanbalken*)[sender superview]Titel]);
-	
+	if (twistatus)
+   {
+      NSBeep();
+      return;
+   }
 	NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
 	NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 	[NotificationDic setObject:[NSNumber numberWithInt:raum] forKey:@"raum"];

@@ -563,7 +563,8 @@ if (i<8)
 
 - (BOOL)textShouldBeginEditing:(NSText *)textObject
 {
-NSLog(@"textShouldBeginEditing");
+   NSLog(@"textShouldBeginEditing");
+   return YES;
 }
 
 - (void)textDidBeginEditing:(NSNotification *)aNotification

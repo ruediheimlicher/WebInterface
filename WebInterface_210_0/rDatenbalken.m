@@ -647,6 +647,8 @@ NSMutableDictionary* tempDic=(NSMutableDictionary*)[StundenArray objectAtIndex:d
    }
    */
    return;
+   
+   
    NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
    NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 	[NotificationDic setObject:[NSNumber numberWithInt:raum] forKey:@"raum"];

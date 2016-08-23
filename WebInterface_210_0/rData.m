@@ -5506,7 +5506,7 @@ if ([[note userInfo]objectForKey:@"err"])
 		{
 			//int wert=[[Eingangsdaten objectAtIndex:i]intValue];
 			EEScanner = [NSScanner scannerWithString:[Eingangsdaten objectAtIndex:i]];
-			int scanWert=0;
+			uint scanWert=0;
 			if ([EEScanner scanHexInt:&scanWert]) //intwert derDaten
 			{
 				KesselCode=scanWert>>6; //	6 Stellen nach rechts schieben, bleiben bit0 und bit1 

@@ -611,7 +611,7 @@ IOWarriorHIDDeviceInterface ** IOWarriorCreateHIDDeviceInterface (io_object_t hi
 														   (void *) &pphidDeviceInterface);
 		//NSLog (@" after QueryInterface" );
         if (plugInResult != S_OK)
-            PrintErrMsg ("CouldnÕt query HID class device interface from plugInInterface");
+            PrintErrMsg ("Could not query HID class device interface from plugInInterface");
         (*plugInInterface)->Release (plugInInterface);
     }
     else

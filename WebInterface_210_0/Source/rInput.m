@@ -73,7 +73,7 @@ static NSString* kReportDirectionOut = @"W";
 			int k;
 			for (k=0;k<reportSize;k++)
 			{
-				NSString* InputString =[NSString stringWithFormat:@"%X", (UInt8*) buffer[k]];
+				NSString* InputString =[NSString stringWithFormat:@"%X",  buffer[k]];
 				if (InputString)
 				{
 					if ([InputString length]==1)//vorstehende Null fehlt

@@ -3,6 +3,7 @@
 #import <Cocoa/Cocoa.h>
 #import "rOrdinate.h"
 #import "defines.h"
+#import "Utils.h"
 
 @interface rMehrkanalDiagramm : NSView
 {
@@ -38,14 +39,14 @@
 	NSString*					Einheit;
 	NSMutableArray*			EinheitenYArray;
 	NSMutableArray*			DatenTitelArray;
-	NSCalendarDate*			DatenserieStartZeit;
+	NSDate*                 DatenserieStartZeit;
 
 	int							OffsetY;
 	
 	rOrdinate*					Ordinate;
 	
 	int							Darstellungsoption; 
-
+   Utils*                  Util;
 }
 - (void)setTag:(int)derTag;
 - (void)setDiagrammlageY:(float)DiagrammlageY;

@@ -944,6 +944,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 		NSString* TWIStatusSuffix=[NSString string];
 		if ([[[note userInfo]objectForKey:@"status"]intValue])         //neuer Status ist 1
 		{
+         
 			TWIStatusSuffix = [NSString stringWithFormat:@"pw=%@&status=%@",pw,@"1"];
          // &wadr=0&lbyte=00&hbyte=00&data=80+f+0+0+7+f0+ff+ff
 			NSString* TWIStatusURLString =[NSString stringWithFormat:@"%@/twi?%@",HomeCentralURL, TWIStatusSuffix];
@@ -1387,6 +1388,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 }
 
 
+
 - (void)HomeClientWriteEEPROM:(NSDictionary*)updateDic
 {
 	/*
@@ -1508,7 +1510,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
          //NSLog(@"HomeClientWriteStandardAktion WriteDataSuffix ganz: %@",WriteDataSuffix);
       }
       NSString* HomeClientURLString =[NSString stringWithFormat:@"%@/twi?%@",HomeCentralURL, WriteDataSuffix];
-      //NSLog(@"HomeClientWriteEEPROM HomeClientURLString: %@",HomeClientURLString);
+//      NSLog(@"HomeClientWriteEEPROM HomeClientURLString: %@",HomeClientURLString);
       NSURL *URL = [NSURL URLWithString:HomeClientURLString];
       
       [self loadURL:URL];

@@ -65,7 +65,7 @@
 		Teile = 2;
 		LinieOK=0; // keine Linie zeichnen
 		
-		DatenserieStartZeit=[[NSCalendarDate alloc]init];
+		DatenserieStartZeit=[[NSDate alloc]init];
 		
 		NSNotificationCenter * nc;
 		nc=[NSNotificationCenter defaultCenter];
@@ -87,8 +87,9 @@
 {
 	[super StartAktion:note];
 	//NSLog(@"DiagrammGitterlinien StartAktion note: %@",[[note userInfo]description]);
-	StartStunde=[DatenserieStartZeit hourOfDay];
-	StartMinute=[DatenserieStartZeit minuteOfHour];
+   StartStunde=[[NSCalendar currentCalendar] component:NSCalendarUnitHour  fromDate:DatenserieStartZeit];
+   StartMinute=[[NSCalendar currentCalendar] component:NSCalendarUnitMinute fromDate:DatenserieStartZeit];
+
 	//NSLog(@"DiagrammGitterlinien StartStunde: %d StartMinute: %d",StartStunde, StartMinute);
 	
 	

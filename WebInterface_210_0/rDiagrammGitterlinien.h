@@ -9,6 +9,7 @@
 #import <Cocoa/Cocoa.h>
 #import "rMehrkanalDiagramm.h"
 #import "rLegende.h"
+#import "Utils.h"
 
 @interface rDiagrammGitterlinien : rMehrkanalDiagramm
 {
@@ -16,7 +17,7 @@
 		int					Teile;
 		int					LinieOK;
 		rLegende*			Legende;
-//		NSCalendarDate*	DatenserieStartZeit;
+		//NSDateComponents*	DatenserieStartZeit;
 		int					StartStunde;
 		int					StartMinute;
 

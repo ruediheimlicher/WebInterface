@@ -13,5 +13,7 @@
 @interface Utils : NSObject {
 
 }
+
 - (void) logRect:(NSRect)r;
+- (NSDateComponents*) heute;
 @end

@@ -47,7 +47,7 @@
 
 - (void)TWIstatusAktion:(NSNotification*)note
 {
-   NSLog(@"Tagplanbalken TWIstatusAktion note: %@",note);
+   //NSLog(@"Tagplanbalken TWIstatusAktion note: %@",note);
    twistatus = [[[note userInfo]objectForKey:@"status"]intValue];
    local = [[[note userInfo]objectForKey:@"local"]intValue];
    //NSLog(@"Tagplanbalken twistatus: %d",twistatus);

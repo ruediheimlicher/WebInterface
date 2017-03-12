@@ -103,8 +103,8 @@ IBOutlet	id				ZeitKompressionTaste;
 float						ZeitKompression;
 NSDate*					start;
 NSDate*					LaunchZeit;
-NSCalendarDate*		DatenserieStartZeit;
-NSCalendarDate*		SimDatenserieStartZeit;
+NSDate*		DatenserieStartZeit;
+NSDate*		SimDatenserieStartZeit;
 int						simDaySaved;
 NSMutableString*		TemperaturZeilenString;
 IBOutlet	id				TemperaturWertFeld;
@@ -239,7 +239,7 @@ rTagGitterlinien*             SolarStatistikTagGitterlinien;
 
 
 }
-
+- (NSDateComponents*) heute;
 - (void)setI2CStatus:(int)derStatus;
 - (void)setBrennerTagplan:(id)sender;
 

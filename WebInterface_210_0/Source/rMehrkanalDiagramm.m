@@ -34,6 +34,10 @@ void r_itoa(int32_t zahl, char* string)
 {
 	if ((self = [super initWithFrame:frameRect]) != nil) 
 	{
+      Util = [[Utils alloc ]init];
+      //DatenserieStartZeit= [Util heute];
+      DatenserieStartZeit= [NSDate date];
+      
 		// Add initialization code here
 		NSRect Diagrammfeld=frameRect;
 		//		Diagrammfeld.size.width+=400;
@@ -437,6 +441,8 @@ NSLog(@"setWert Kanal: %d  x: %2.2f y: %2.2f ",derKanal, derWert.x, derWert.y);
 - (void)setWerteArray:(NSArray*)derWerteArray mitKanalArray:(NSArray*)derKanalArray mitVorgabenDic:(NSDictionary*)dieVorgaben
 {
 //	NSLog(@"setWerteArray: %@ KanalArray: %@ dieVorgaben: %@",[derWerteArray description],[derKanalArray description],[dieVorgaben description] );
+   NSLog(@"setWerteArray  KanalArray: %@ dieVorgaben: %@",[derKanalArray description],[dieVorgaben description] );
+
 	int i;
 	float faktorX=1.0;
 	if ([dieVorgaben objectForKey:@"faktorx"])

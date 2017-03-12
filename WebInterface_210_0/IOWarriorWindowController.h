@@ -95,6 +95,10 @@
 	NSTimer*									SolarDownloadTimer;
 
 }
+
+//- (NSDateComponents*) heute;
+
+
 /*" Actions methods"*/
 - (IBAction)doRead:(id)sender;
 - (IBAction)doWrite:(id)sender;

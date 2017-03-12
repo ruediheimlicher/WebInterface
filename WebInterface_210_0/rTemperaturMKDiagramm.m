@@ -48,6 +48,21 @@
 }
 - (void)setWerteArray:(NSArray*)derWerteArray mitKanalArray:(NSArray*)derKanalArray
 {
+   // KanalArray: 8 Elemente, 1 wenn Kanal eingeschaltet
+   // WerteArray: Werte aus Web. Elemente: Array, 1. Wert ist tagsekunde, 8 Werte aus Messungen
+   /*
+    2016-12-11 08:16:16.348649 WebInterface[18002:3445796] setWerteArray WerteArray: (
+    0,
+    66,
+    64,
+    31,
+    4,
+    0,
+    65,
+    0,
+    34
+    )
+    */
 	//NSLog(@"setWerteArray WerteArray: %@",[derWerteArray description]);//,[derKanalArray description]);
 	int i;
 	
@@ -56,7 +71,8 @@
 	float	maxAnzeigewert=MaxY-MinY;
 	float AnzeigeFaktor= maxSortenwert/maxAnzeigewert;
 	//NSLog(@"setWerteArray: FaktorY: %2.2f MaxY; %2.2F MinY: %2.2F maxAnzeigewert: %2.2F AnzeigeFaktor: %2.2F",FaktorY,MaxY,MinY,maxAnzeigewert, AnzeigeFaktor);
-	//NSLog(@"setWerteArray:SortenFaktor: %2.2f",SortenFaktor);
+   //NSLog(@"setWerteArray:SortenFaktor: %2.2f",SortenFaktor);
+   //NSLog(@"setWerteArray:count: %lu",(unsigned long)[derWerteArray count]);
    
 	for (i=0;i<[derWerteArray count]-1;i++) // erster Wert ist Abszisse
 	{
@@ -64,8 +80,10 @@
 		{
 			//NSLog(@"+++			Temperatur  setWerteArray: Kanal: %d	x: %2.2f",i,[[derWerteArray objectAtIndex:0]floatValue]);
 			NSPoint neuerPunkt=DiagrammEcke;
-			neuerPunkt.x+=[[derWerteArray objectAtIndex:0]floatValue]*ZeitKompression;	//	Zeit, x-Wert, erster Wert im Array
-			float InputZahl=[[derWerteArray objectAtIndex:i+1]floatValue];	// Input vom IOW, 0-255
+			
+         neuerPunkt.x += [[derWerteArray objectAtIndex:0]floatValue]*ZeitKompression;	//	Zeit, x-Wert, erster Wert im WerteArray
+			
+         float InputZahl=[[derWerteArray objectAtIndex:i+1]floatValue];	// Input vom IOW, 0-255
 			
 			// Korrektur bei i=2: Aussentemperatur um 16 reduzieren
 			if (i==2)
@@ -100,7 +118,7 @@
 			[[DatenArray objectAtIndex:i] addObject:tempWerteDic];
 			
 			NSBezierPath* neuerGraph=[NSBezierPath bezierPath];
-			if ([[GraphArray objectAtIndex:i]isEmpty]) // Anfang
+			if ([[GraphArray objectAtIndex:i]isEmpty]) // letzter Punkt ist leer, Anfang eines neuen Linienabschnitts
 			{
 				neuerPunkt.x=DiagrammEcke.x;
 				[neuerGraph moveToPoint:neuerPunkt];
@@ -116,7 +134,6 @@
 		}// if Kanal
 	} // for i
 	[GraphKanalArray setArray:derKanalArray];
-	//[GraphKanalArray retain];
    //	[self setNeedsDisplay:YES];
 }
 

@@ -61,8 +61,6 @@ static NSString*	kDefaultMacrosKey = @"default macros";
 IOWarriorWindowController* gWindowController = nil;
 
 //
-
-
 void IOWarriorCallback ()
 /*" Called when IOWarrior is added or removed. "*/
 {
@@ -89,6 +87,17 @@ void IOWarriorCallback ()
 /*" Invoked when the nib file including the window has been loaded. "*/
 - (void) awakeFromNib
 {
+   
+   uint16_t ii=0;
+   uint8_t mmcbuffer[512];
+   while (ii<0xFF)
+   {
+      uint16_t wert =ii+100;
+      mmcbuffer[2*ii] = wert & 0x00FF;
+      mmcbuffer[2*ii+1] = (wert & 0xFF00)>>8;
+      NSLog(@"i: %d wert: %d LO: %d HI: %d",ii,wert ,mmcbuffer[2*ii],mmcbuffer[2*ii+1]);
+      ii += 1;
+   }
    
    NSString* ASString = @"return do shell script \"curl http://checkip.dyndns.org/\"";
    NSAppleScript* IP_appleScript = [[NSAppleScript alloc] initWithSource: ASString];
@@ -418,7 +427,7 @@ void IOWarriorCallback ()
    
 	//NSLog(@"awake nach AktuelleDaten returnstring: %@",AktuelleDaten);
    
-	//NSLog(@"awake AktuelleDaten: \n%@",AktuelleDaten);
+	NSLog(@"awake AktuelleDaten: \n%@",AktuelleDaten);
    
 	if (AktuelleDaten &&[AktuelleDaten length])
 	{
@@ -1081,6 +1090,38 @@ NSLog(@"IOWarr WindowController reportPrint");
 	
 	NSString* ZeitString = [NSString string];
 	NSString* StartDatumString=[NSString string];
+   
+   NSDate *now = [[NSDate alloc] init];
+   NSCalendar *kalender = [NSCalendar currentCalendar];
+   [kalender setFirstWeekday:2];
+   NSDateComponents *components = [kalender components:( NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay | NSCalendarUnitWeekday | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond ) fromDate:now];
+   components.weekday = components.weekday-1;
+  NSLog(@"Stunde: %ld", components.hour);
+   NSLog(@"Day: %ld", [components day]);
+     NSLog(@"weekDay: %ld", [components weekday]);
+   NSLog(@"Month: %ld", [components month]);
+   NSLog(@"Year: %ld", [components year]);
+   
+// http://rypress.com/tutorials/objective-c/data-types/dates
+//   http://iaintheindie.com/2014/08/08/useful-nsdate-nscalendar-tricks/#StartEnd_of_the_Week
+   NSCalendar *gregorianCalendar = [NSCalendar currentCalendar];
+
+   NSInteger wochentag = [gregorianCalendar component:NSCalendarUnitWeekday fromDate:[NSDate date]]-1;
+   NSLog(@"wochentag: %d", wochentag); // 5, which corresponds to Thursday in the Gregorian Calendar
+
+   NSInteger tagdesmonats = [gregorianCalendar component:NSCalendarUnitDay fromDate:[NSDate date]];
+   NSLog(@"tag: %d", tagdesmonats); //
+
+   NSInteger stunde = [gregorianCalendar component:NSCalendarUnitHour fromDate:[NSDate date]];
+   NSLog(@"stunde: %d", stunde); //
+
+   NSDateComponents *dateComponents = [[NSDateComponents alloc] init];
+   dateComponents.day = 4;
+   dateComponents.month = 5;
+   dateComponents.year = 2004;
+   
+  
+   
 	NSCalendarDate* StartZeit= [NSCalendarDate date];
 
 	NSCharacterSet* CharOK=[NSCharacterSet alphanumericCharacterSet];
@@ -1149,7 +1190,9 @@ NSLog(@"IOWarr WindowController reportPrint");
 					StartDatumString= [[tempDatenArray objectAtIndex:DataOffset-1]substringFromIndex:11];
 					NSString* Kalenderformat=[[NSCalendarDate date]calendarFormat];
 					
-					StartZeit=[NSCalendarDate dateWithString:StartDatumString calendarFormat:Kalenderformat];
+					
+               
+               StartZeit=[NSCalendarDate dateWithString:StartDatumString calendarFormat:Kalenderformat];
 					//NSLog(@"Format: %@ StartZeit: %@",Kalenderformat,[StartZeit description]);
 					Tag=[StartZeit dayOfMonth];
 					Monat=[StartZeit monthOfYear];

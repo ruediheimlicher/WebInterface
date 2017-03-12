@@ -130,6 +130,18 @@ extern NSMutableArray* DatenplanTabelle;
 	return returnInt;
 }
 
+- (NSDateComponents*) heute
+{
+   NSDate *now = [[NSDate alloc] init];
+   NSCalendar *kalender = [NSCalendar currentCalendar];
+   [kalender setFirstWeekday:2];
+   NSDateComponents *components = [kalender components:( NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay | NSCalendarUnitWeekday | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond ) fromDate:now];
+   components.weekday = components.weekday-1;
+   return components;
+}
+
+
+
 - (int)tagdesjahresvonJahr:(int)jahr Monat:(int)monat Tag: (int)tagdesmonats
 {
    // http://stackoverflow.com/questions/7664786/generate-nsdate-from-day-month-and-year
@@ -1364,8 +1376,12 @@ extern NSMutableArray* DatenplanTabelle;
    float vorlauf = [[lastDataArray objectAtIndex:1]intValue]/2;
    float ruecklauf = [[lastDataArray objectAtIndex:2]intValue]/2;
    float aussen = ([[lastDataArray objectAtIndex:3]intValue]-32)/2; // Korrektur, s. TemperaturMKDiagramm l 70
-   float innen = [[[lastDataArray objectAtIndex:8]substringToIndex:2]intValue]/2.0; // \n abschneiden
+   float innen = [[lastDataArray objectAtIndex:8]intValue]/2;
    
+ //if ([[[lastDataArray objectAtIndex:8]stringValue ]length] > 1)
+ {
+    //float innen = [[[lastDataArray objectAtIndex:8]substringToIndex:2]intValue]/2.0; // \n abschneiden
+ }
    int heizungcode = [[lastDataArray objectAtIndex:4]intValue]; // code der Heizung
    NSString* heizungbitstring = [NSString stringWithCString:byte_to_binary(heizungcode) encoding:NSUTF8StringEncoding];
  //  NSLog(@"heizungcode: %d heizungbitstring: %@",heizungcode,heizungbitstring);
@@ -4759,7 +4775,7 @@ if ([[note userInfo]objectForKey:@"err"])
 			NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
 			[nc postNotificationName:@"data" object:NULL userInfo:NotificationDic];
 			//[DatenserieStartZeit addTimeInterval:84600];
-			NSLog(@"saveGanz: Tag: %d",[SimDatenserieStartZeit dayOfMonth]);
+//			NSLog(@"saveGanz: Tag: %d",[SimDatenserieStartZeit dayOfMonth]);
 			
 			simDaySaved=YES;
 		}

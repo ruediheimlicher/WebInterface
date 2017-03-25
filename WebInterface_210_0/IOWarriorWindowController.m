@@ -95,7 +95,7 @@ void IOWarriorCallback ()
       uint16_t wert =ii+100;
       mmcbuffer[2*ii] = wert & 0x00FF;
       mmcbuffer[2*ii+1] = (wert & 0xFF00)>>8;
-      NSLog(@"i: %d wert: %d LO: %d HI: %d",ii,wert ,mmcbuffer[2*ii],mmcbuffer[2*ii+1]);
+      //NSLog(@"i: %d wert: %d LO: %d HI: %d",ii,wert ,mmcbuffer[2*ii],mmcbuffer[2*ii+1]);
       ii += 1;
    }
    
@@ -427,7 +427,7 @@ void IOWarriorCallback ()
    
 	//NSLog(@"awake nach AktuelleDaten returnstring: %@",AktuelleDaten);
    
-	NSLog(@"awake AktuelleDaten: \n%@",AktuelleDaten);
+	//NSLog(@"awake AktuelleDaten: \n%@",AktuelleDaten);
    
 	if (AktuelleDaten &&[AktuelleDaten length])
 	{
@@ -1495,7 +1495,7 @@ return;
 	NSString* ZeitString = [NSString string];
 	NSString* StartDatumString=[NSString string];
 	NSCalendarDate* StartZeit= [NSCalendarDate date];
-
+   NSString* StartZeitString;
 	NSCharacterSet* CharOK=[NSCharacterSet alphanumericCharacterSet];
 	char last=[derDatenString characterAtIndex:[derDatenString length]-1];
 	//NSLog(@"Letzter Char: %c",last);
@@ -1508,7 +1508,7 @@ return;
 	
 	if ([derDatenString length])
 	{
-		//NSLog(@"openWithString DatenString: \n%@",derDatenString);
+      NSLog(@"openWithString DatenString: \n%@",[derDatenString substringToIndex:150]);
 		NSArray* tempDatenArray= [derDatenString componentsSeparatedByString:@"\n"];
 		//	NSArray* tempDatenArray= [DatenString componentsSeparatedByString:@"\r"];
 		
@@ -1556,15 +1556,47 @@ return;
 				case 4:
 				{
 					TagString=[tempDatumArray objectAtIndex:1];
+               NSLog(@"TagString: %@",TagString);
+               NSArray* tempTagArray= [TagString componentsSeparatedByString:@"-"];
+
 					ZeitString=[[tempDatumArray objectAtIndex:2]substringWithRange:NSMakeRange(0,5)];
+               NSLog(@"ZeitString: %@",ZeitString);
+               NSArray* tempZeitArray= [ZeitString componentsSeparatedByString:@":"];
+
 					StartDatumString= [[tempDatenArray objectAtIndex:DataOffset-1]substringFromIndex:11];
-					NSString* Kalenderformat=[[NSCalendarDate date]calendarFormat];
+               NSLog(@"StartDatumString: %@",StartDatumString);
+               
+               StartZeitString = [StartDatumString substringWithRange:NSMakeRange(0,[StartDatumString length])];
+					NSLog(@"StartZeitString: %@",StartZeitString);
+               NSArray* tempStartZeitArray= [StartZeitString componentsSeparatedByString:@" "];
+               if ([[tempStartZeitArray objectAtIndex:0]length]==0)
+               {
+                  tempStartZeitArray = [tempStartZeitArray subarrayWithRange:NSMakeRange(1,[tempStartZeitArray count]-1)];
+               }
+               NSLog(@"tempStartZeitArray: %@",tempStartZeitArray);
+               //NSString* zeitstring = [NSString stringWithFormat:@"%@T%@ %@",[tempStartZeitArray objectAtIndex:0],[tempStartZeitArray objectAtIndex:1],[tempStartZeitArray objectAtIndex:2]];
+              NSString* zeitstring = [NSString stringWithFormat:@"%@T%@ %@",[tempStartZeitArray objectAtIndex:0],[tempStartZeitArray objectAtIndex:1],@"+0000"];
+               NSLog(@"zeitstring: %@",zeitstring);
+               NSDateFormatter * DateFormatter = [[NSDateFormatter alloc] init];
+               DateFormatter.dateFormat = @"yyyy-MM-dd'T'HH:mm:ssZZZZZ";
+              // NSString *string = @"1996-12-19T16:39:57-08:00";
+               NSString *string =  @"2017-03-12T00:00:48 +0100";
+               NSDate* StartZeit = [DateFormatter dateFromString:zeitstring];
+               
+               
+               
+               NSString* Kalenderformat=[[NSCalendarDate date]calendarFormat];
 					
-					StartZeit=[NSCalendarDate dateWithString:StartDatumString calendarFormat:Kalenderformat];
-					//NSLog(@"openWithSolarString Format: %@ StartZeit: %@",Kalenderformat,[StartZeit description]);
-					Tag=[StartZeit dayOfMonth];
-					Monat=[StartZeit monthOfYear];
-					Jahr=[StartZeit yearOfCommonEra];
+					//StartZeit=[NSCalendarDate dateWithString:StartDatumString calendarFormat:Kalenderformat];
+					
+               //NSLog(@"openWithSolarString Format: %@ StartZeit: %@",Kalenderformat,[StartZeit description]);
+               
+               NSLog(@"openWithSolarString StartZeit: %@ StartZeit desc: %@",StartZeit,[[StartZeit copy ]description]);
+					
+               
+               Tag=[[tempTagArray objectAtIndex: 2]intValue];
+					Monat=[[tempTagArray objectAtIndex: 1]intValue];
+					Jahr=[[tempTagArray objectAtIndex: 0]intValue];
 					//NSLog(@"openWithSolarString case 4 StartZeit: %@ tag: %d monat: %d Jahr: %d",[StartZeit description],Tag, Monat, Jahr);
 					
 				}break;
@@ -1576,7 +1608,7 @@ return;
 					StartDatumString= [[tempDatenArray objectAtIndex:10]substringFromIndex:11];
 					int l=[StartDatumString length];
 					StartDatumString= [StartDatumString substringToIndex:l-1];
-					//NSLog(@"openWithString case 5 StartDatumString 5: *%@*",StartDatumString);
+					NSLog(@"openWithString case 5 StartDatumString 5: *%@*",StartDatumString);
 					NSString* Kalenderformat=[[NSCalendarDate date]calendarFormat];
 					
 					StartZeit=[NSCalendarDate dateWithString:StartDatumString calendarFormat:Kalenderformat];
@@ -1650,8 +1682,9 @@ return;
 				[NotificationDic setObject:[NSNumber numberWithInt:Jahr] forKey:@"datumjahr"];
 				[NotificationDic setObject:[ZeitString copy]forKey:@"datumzeit"];
 				[NotificationDic setObject:[[StartZeit description] copy]forKey:@"startzeit"];
+            [NotificationDic setObject:StartZeitString forKey:@"startzeit"];
 				[NotificationDic setObject:[DatenArray copy] forKey:@"datenarray"];
-				
+				NSLog(@"openWithSolarString NotificationDic: %@",[NotificationDic objectForKey:@"startzeit"] );
 				NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
 				[nc postNotificationName:@"externesolardaten" object:self userInfo:NotificationDic];
 				

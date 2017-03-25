@@ -187,7 +187,7 @@ float									SolarZeitKompression;
 IBOutlet id							SolarLoadtimeFeld;
 IBOutlet id							SolarLoadMark;
 IBOutlet id							SolarStartzeitFeld;
-NSCalendarDate*					SolarDatenserieStartZeit;
+NSDate*                       SolarDatenserieStartZeit;
 IBOutlet NSDatePicker *			SolarKalender;
 int									SolarHeuteblocker;
 int									SolarKalenderblocker;

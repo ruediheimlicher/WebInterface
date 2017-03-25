@@ -65,7 +65,7 @@
 - (void)setGraphFarbe:(NSColor*) dieFarbe forKanal:(int) derKanal;
 - (void)setWertMitX:(float)x mitY:(float)y forKanal:(int)derKanal;
 - (void)setStartWerteArray:(NSArray*)Werte;
-- (void)setStartZeit:(NSCalendarDate*)dasDatum;
+- (void)setStartZeit:(NSDate*)dasDatum;
 - (void)setWerteArray:(NSArray*)derWerteArray mitKanalArray:(NSArray*)derKanalArray;
 - (void)setWerteArray:(NSArray*)derWerteArray mitKanalArray:(NSArray*)derKanalArray mitVorgabenDic:(NSDictionary*)dieVorgaben;
 - (void)setOrdinate:(id)dieOrdinate;

@@ -2807,13 +2807,17 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
 	if ([[note userInfo]objectForKey:@"startzeit"])
 	{
 		NSString* StartzeitString = [[note userInfo]objectForKey:@"startzeit"];
-		//NSLog(@"ExterneSolarDatenAktion: Startzeit: *%@* StartzeitString: *%@*",[[note userInfo]objectForKey:@"startzeit"],StartzeitString);
-		
+		NSLog(@"ExterneSolarDatenAktion: Startzeit: *%@* StartzeitString: *%@*",[[note userInfo]objectForKey:@"startzeit"],StartzeitString);
+      NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
+      // @"YYYY-MM-dd\'T\'HH:mm:ssZZZZZ"
+      [dateFormat setDateFormat:@"YYYY.MM.dd  HH:mm:ss"];
+      
 		NSString* Kalenderformat=[[NSCalendarDate calendarDate]calendarFormat];
 		SolarDatenserieStartZeit=[NSCalendarDate dateWithString:[[note userInfo]objectForKey:@"startzeit"] calendarFormat:Kalenderformat];
       
       
-		int tag=[SolarDatenserieStartZeit dayOfMonth];
+      long tag = [[NSCalendar currentCalendar] component:NSCalendarUnitDay  fromDate:SolarDatenserieStartZeit];
+		//long tag=[SolarDatenserieStartZeit dayOfMonth];
 		
 		NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 		[NotificationDic setObject:@"datastart"forKey:@"data"];

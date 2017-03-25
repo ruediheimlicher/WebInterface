@@ -15,7 +15,7 @@
 {
     MacroNamePanelController* 	theController;
     NSString* 			result = nil;
-    int				returnCode;
+    long				returnCode;
 
     theController = [[MacroNamePanelController alloc] init];
     [theController showWindow:nil];

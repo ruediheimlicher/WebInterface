@@ -2688,7 +2688,7 @@ Setzt Feldwerte im Fenster Data.
 
 */
 
-	//NSLog(@"rData SolarDataDownloadAktion");
+	NSLog(@"rData SolarDataDownloadAktion*");
 	[SolarLoadMark performClick:NULL];
 	
 	if ([[note userInfo]objectForKey:@"err"])

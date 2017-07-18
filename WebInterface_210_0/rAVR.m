@@ -2479,7 +2479,7 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
 {
 	NSLog(@"writeEEPROM: i2cAdresse:  %02X count: %d dieDaten: %@",i2cAdresse,[dieDaten count], [dieDaten description]);
 	int writeErr=0;
-	return;
+	return 0;
 	NSMutableArray* tempEEPROMArray=[[NSMutableArray alloc]initWithCapacity:0]; //SammelArray der Pakete fuer IOW
 
 	

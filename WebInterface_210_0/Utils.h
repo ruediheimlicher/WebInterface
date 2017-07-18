@@ -11,9 +11,13 @@
 
 
 @interface Utils : NSObject {
+   Utils*                  Util;
 
 }
 
 - (void) logRect:(NSRect)r;
 - (NSDateComponents*) heute;
+
+
+- (NSString*)passwortstring;
 @end

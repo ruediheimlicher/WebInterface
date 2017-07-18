@@ -137,6 +137,7 @@ IBOutlet id				LoadtimeFeld;
 IBOutlet id				ZaehlerFeld;
 int						LastLoadzeit;
    
+   
 IBOutlet id				IPFeld;
 IBOutlet id				hostIPFeld;
 

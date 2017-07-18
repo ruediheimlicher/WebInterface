@@ -62,79 +62,116 @@ unsigned char h2int(char c)
    return returnInt;
 }
 
+- (NSString*)passwortstring
+{
+   NSString* returnstring = [NSString string];
+   NSString* ResourcenPfad=[[[NSBundle mainBundle]bundlePath]stringByAppendingPathComponent:@"Contents/Resources"];
+   NSLog(@"ResourcenPfad: %@",ResourcenPfad);
+   NSString* PasswortTabellePfad=[[[NSBundle mainBundle]bundlePath]stringByAppendingPathComponent:@"Contents/Resources/Passwort.txt"];
+   NSString* PasswortTabelleString = [NSString stringWithContentsOfFile:PasswortTabellePfad];
+   
+   NSLog(@"PasswortString: \n%@",PasswortTabelleString);
+   NSArray* PasswortTabelle = [PasswortTabelleString componentsSeparatedByString:@"\n"];
+   NSLog(@"PasswortArray: \n%@",PasswortTabelle  );
+   NSLog(@"PasswortArray 6: \n%@",[PasswortTabelle objectAtIndex:6] );
+   NSString* tempPW = [[[PasswortTabelle objectAtIndex:6]componentsSeparatedByString:@"\t"]objectAtIndex:3];
+   NSLog(@"tempPW: %@",tempPW);
+   
+   /*
+    pw_array = {0x47,	0x3E,	0xD,	0x5,	0x21,	0x3D,	0x42,	0x25,
+    0x22,	0x34,	0x3F,	0x4C,	0x10,	0x5,	0x3C,	0x63,
+    0x50,	0x5,	0x7,	0x0,	0x3C,	0x11,	0x43,	0x4D,
+    0x6,	0x5E,	0x0,	0x53,	0x34,	0x10,	0x41,	0x1F,
+    0x2A,	0x5E,	0x16,	0x2B,	0x56,	0x7,	0x44,	0x62,
+    0x8,	0x54,	0x18,	0x2F,	0x4D,	0x1,	0x5F,	0x4,
+    0x9,	0x22,	0x5E,	0x36,	0x2C,	0x48,	0x45,	0x13,
+    0x26,	0x5C,	0x4D,	0x4B,	0x32,	0x1E,	0x1D,	0x3F};
+    */
+
+   srand((unsigned int)time(NULL));   // should only be called once
+   int randomnummer1 = rand()%64+1;
+   NSLog(@"passwortstring randomnummer 1: *%d* reminder: %d mantisse: %d",randomnummer1 ,randomnummer1%8,randomnummer1/8);
+   int randomzeile = randomnummer1%8;
+   int randomkolonne = randomnummer1/8;
+   NSLog(@"passwortstring randomnummer 1: *%d* randomzeile: %d randomkolonne: %d",randomnummer1 ,randomzeile,randomkolonne);
+   NSString* passwort = [[[PasswortTabelle objectAtIndex:randomzeile]componentsSeparatedByString:@"\t"]objectAtIndex:randomkolonne];
+   returnstring = [NSString stringWithFormat:@"%02X%02X",randomnummer1,[passwort intValue]];
+   
+   
+   return returnstring;
+}
+
+
 - (id)init
 {
-	self = [super init];
-   
-   
-	NSNotificationCenter * nc;
-	nc=[NSNotificationCenter defaultCenter];
-	
-	[nc addObserver:self
-			 selector:@selector(EEPROMReadStartAktion:)
-				  name:@"EEPROMReadStart"
-				object:nil];
-
-	[nc addObserver:self
-			 selector:@selector(EEPROMReadWocheStartAktion:)
-				  name:@"EEPROMReadWocheStart"
-				object:nil];
-	
-	
-
-	
+   self = [super init];
+   NSNotificationCenter * nc;
+   nc=[NSNotificationCenter defaultCenter];
    [nc addObserver:self
-			 selector:@selector(EEPROMReadDataAktion:)
-				  name:@"EEPROMReadData"
-				object:nil];
-	
-	[nc addObserver:self
-			 selector:@selector(TWIStatusAktion:)
-				  name:@"twistatus"
-				object:nil];
-
-	[nc addObserver:self
-			 selector:@selector(LocalStatusAktion:)
-				  name:@"localstatus"
-				object:nil];
-	
-	[nc addObserver:self
-			 selector:@selector(TestStatusAktion:)
-				  name:@"teststatus"
-				object:nil];
+          selector:@selector(EEPROMReadStartAktion:)
+              name:@"EEPROMReadStart"
+            object:nil];
+   
+   [nc addObserver:self
+          selector:@selector(EEPROMReadWocheStartAktion:)
+              name:@"EEPROMReadWocheStart"
+            object:nil];
+   
+   
+   
+   
+   [nc addObserver:self
+          selector:@selector(EEPROMReadDataAktion:)
+              name:@"EEPROMReadData"
+            object:nil];
+   
+   [nc addObserver:self
+          selector:@selector(TWIStatusAktion:)
+              name:@"twistatus"
+            object:nil];
+   
+   [nc addObserver:self
+          selector:@selector(LocalStatusAktion:)
+              name:@"localstatus"
+            object:nil];
+   
+   [nc addObserver:self
+          selector:@selector(TestStatusAktion:)
+              name:@"teststatus"
+            object:nil];
    
    [nc addObserver:self
           selector:@selector(LoadTestAktion:)
               name:@"loadtest"
             object:nil];
-
-	
-		[nc addObserver:self
-			 selector:@selector(HomeClientWriteStandardAktion:)
-				  name:@"HomeClientWriteStandard"
-				object:nil];
-
-		[nc addObserver:self
-			 selector:@selector(HomeClientWriteModifierAktion:)
-				  name:@"HomeClientWriteModifier"
-				object:nil];
-
+   
+   
    [nc addObserver:self
-			 selector:@selector(EEPROMUpdateClearAktion:)
-				  name:@"EEPROMUpdateClear"
-				object:nil];
-	
+          selector:@selector(HomeClientWriteStandardAktion:)
+              name:@"HomeClientWriteStandard"
+            object:nil];
+   
    [nc addObserver:self
-			 selector:@selector(updateEEPROMAktion:)
-				  name:@"updateEEPROM"
-				object:nil];
-	
-
-      [nc addObserver:self
-			 selector:@selector(EEPROMWriteWocheAktion:)
-				  name:@"EEPROMWriteWoche"
-				object:nil];
-
+          selector:@selector(HomeClientWriteModifierAktion:)
+              name:@"HomeClientWriteModifier"
+            object:nil];
+   
+   [nc addObserver:self
+          selector:@selector(EEPROMUpdateClearAktion:)
+              name:@"EEPROMUpdateClear"
+            object:nil];
+   
+   [nc addObserver:self
+          selector:@selector(updateEEPROMAktion:)
+              name:@"updateEEPROM"
+            object:nil];
+   
+   
+   [nc addObserver:self
+          selector:@selector(EEPROMWriteWocheAktion:)
+              name:@"EEPROMWriteWoche"
+            object:nil];
+   
    [nc addObserver:self
           selector:@selector(resetMasterAktion:)
               name:@"resetmaster"
@@ -144,42 +181,47 @@ unsigned char h2int(char c)
           selector:@selector(routerIPAktion:)
               name:@"routerIP"
             object:nil];
-
+   
    [nc addObserver:self
           selector:@selector(hostIPAktion:)
               name:@"hostIP"
             object:nil];
-
-  
+   
+   
    
    SendEEPROMDataDic = [[NSMutableDictionary alloc]initWithCapacity:0];
-
+   
    
    
    
 #pragma mark HomeCentralURL
-	
-HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
-	
+   
+   HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
+   
    //LocalHomeCentralURL=@"192.168.1.210";
    //HomeCentralURL=@"http://192.168.1.210";
    //HomeCentralURL=@"https://ruediheimlicher.ch";
-	
-	pw = @"ideur00";
-	    // Set the WebView delegates
-		webView=[[WebView  alloc]init];
-    [webView setFrameLoadDelegate:self];
-    [webView setUIDelegate:self];
-    [webView setResourceLoadDelegate:self];
-	//WebPreferences *prefs = [webView preferences]; 
-	//[prefs setUsesPageCache:NO]; 
-	//[prefs setCacheModel:WebCacheModelDocumentViewer];
-	// Maximale Anzahl Versuche um die EEPROM-Daten zu vom Webserver zu lesen
-	maxAnzahl = 25;
+   Util = [[Utils alloc ]init];
+   pw = [Util passwortstring];
+   NSLog(@"HomeClient pw: %@",pw);
+   
+   pw = @"ideur00";
+   
+   
+   // Set the WebView delegates
+   webView=[[WebView  alloc]init];
+   [webView setFrameLoadDelegate:self];
+   [webView setUIDelegate:self];
+   [webView setResourceLoadDelegate:self];
+   //WebPreferences *prefs = [webView preferences];
+   //[prefs setUsesPageCache:NO]; 
+   //[prefs setCacheModel:WebCacheModelDocumentViewer];
+   // Maximale Anzahl Versuche um die EEPROM-Daten zu vom Webserver zu lesen
+   maxAnzahl = 25;
    loadAlertOK = 0;
    loadTestStatus=0;
    //lastEEPROMData = [[NSString string]retain];
-	return self;
+   return self;
 }
 
 
@@ -2485,9 +2527,11 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 		[tempDataDic setObject:provurl forKey:@"provurl"];
 		[tempDataDic setObject:[NSNumber numberWithInt:1] forKey:@"waitrad"];
 		// Test, ob URL einen okcode  enthält
+      CheckRange = [provurl rangeOfString:@"pw="]; // Passwortstring ist da, eigene URL
+
 		CheckRange = [provurl rangeOfString:PW_String]; // Passwortstring ist da, eigene URL
 		NSLog(@"didFailProvisionalLoadWithError: CheckRange fuer pw-string?");
-      
+      NSString* s1=@"";
       if (CheckRange.location < NSNotFound)
 		{
 			[tempDataDic setObject:Error_String forKey:@"error"];
@@ -2496,6 +2540,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 			if (CheckRange.location < NSNotFound)
 			{
 				NSLog(@"didFailProvisionalLoadWithError: Status = 0");
+            s1=@"Provisional Download misslungen in Status0-Anforderung.";
 				//[tempDataDic setObject:@"status" forKey:@"antwort"];
 				[tempDataDic setObject:[NSNumber numberWithInt:0] forKey:@"twistatus"];
 			}
@@ -2503,6 +2548,7 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 			if (CheckRange.location < NSNotFound)
 			{
 				NSLog(@"didFailProvisionalLoadWithError: Status = 1");
+            s1=@"Provisional Download misslungen in Status1-Anforderung.";
 				//[tempDataDic setObject:@"status" forKey:@"antwort"];
 				[tempDataDic setObject:[NSNumber numberWithInt:1] forKey:@"twistatus"];
 			}
@@ -2522,17 +2568,17 @@ HomeCentralURL=@"http://ruediheimlicher.dyndns.org";
 		//	[Warnung addButtonWithTitle:@""];
 		//	[Warnung addButtonWithTitle:@""];
 		//	[Warnung addButtonWithTitle:@"Abbrechen"];
-		NSString* MessageText= NSLocalizedString(@"Error in ProvisionalDownload",@"Provisional Download misslungen");
+		NSString* MessageText= NSLocalizedString(@"Fehler im ProvisionalDownload.",@"Provisional Download misslungen");
 		//NSString* Detailstring = @"
       downloadflag = 0;
       [Warnung setMessageText:[NSString stringWithFormat:@"%@",MessageText]];
 		
 		//[tempDataDic setObject:[NSNumber numberWithInt:-1] forKey:@"twistatus"];
 		
-		NSString* s1=errorDescription;
+		NSString* s2=errorDescription;
 		[tempDataDic setObject:errorDescription forKey:@"errordescription"];
 		
-		NSString* s2=@"";
+		
 		NSString* InformationString=[NSString stringWithFormat:@"%@\n%@",s1,s2];
 		[Warnung setInformativeText:InformationString];
 		[Warnung setAlertStyle:NSWarningAlertStyle];

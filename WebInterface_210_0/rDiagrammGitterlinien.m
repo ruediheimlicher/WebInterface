@@ -87,7 +87,7 @@
 {
 	[super StartAktion:note];
 	//NSLog(@"DiagrammGitterlinien StartAktion note: %@",[[note userInfo]description]);
-   NSLog(@"DiagrammGitterlinien StartAktion DatenserieStartZeit: %@",[DatenserieStartZeit description]);
+   //NSLog(@"DiagrammGitterlinien StartAktion DatenserieStartZeit: %@",[DatenserieStartZeit description]);
 
    StartStunde=[[NSCalendar currentCalendar] component:NSCalendarUnitHour  fromDate:DatenserieStartZeit];
 

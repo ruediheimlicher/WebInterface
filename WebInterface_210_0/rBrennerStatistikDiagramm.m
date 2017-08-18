@@ -87,7 +87,7 @@
 		 
 		 
     }
-	 		NSLog(@"BrennerStatistikDiagramm init");
+	 		//NSLog(@"BrennerStatistikDiagramm init");
 		//[self logRect:[self frame]];
 
     return self;

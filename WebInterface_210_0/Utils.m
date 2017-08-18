@@ -34,7 +34,7 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
 {
    NSString* returnstring = [NSString string];
    NSString* ResourcenPfad=[[[NSBundle mainBundle]bundlePath]stringByAppendingPathComponent:@"Contents/Resources"];
-   NSLog(@"ResourcenPfad: %@",ResourcenPfad);
+   //NSLog(@"ResourcenPfad: %@",ResourcenPfad);
    NSString* PasswortTabellePfad=[[[NSBundle mainBundle]bundlePath]stringByAppendingPathComponent:@"Contents/Resources/Passwort.txt"];
    NSString* PasswortTabelleString = [NSString stringWithContentsOfFile:PasswortTabellePfad];
    
@@ -57,7 +57,7 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
     */
    
    srand((unsigned int)time(NULL));   // should only be called once
-   int randomnummer1 = rand()%64+1;
+   int randomnummer1 = rand()%63+1;
    NSLog(@"Util passwortstring randomnummer 1: *%d* reminder: %d mantisse: %d",randomnummer1 ,randomnummer1%8,randomnummer1/8);
    int randomzeile = randomnummer1%8;
    int randomkolonne = randomnummer1/8;

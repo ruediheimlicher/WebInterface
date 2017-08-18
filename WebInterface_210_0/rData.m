@@ -603,7 +603,7 @@ extern NSMutableArray* DatenplanTabelle;
    [MKTabellenkopfString appendFormat:@"\tmin"];
    TabellenkopfWertTab=[[NSTextTab alloc]initWithType:NSRightTabStopType location:zeittab+(7)*werttab];
    [MKTabellenKopfStil addTabStop:TabellenkopfWertTab];
-   [MKTabellenkopfString appendFormat:@"\t"];
+   [MKTabellenkopfString appendFormat:@"\t"]; // Abstand
    TabellenkopfWertTab=[[NSTextTab alloc]initWithType:NSRightTabStopType location:zeittab+(8)*werttab];
    [MKTabellenKopfStil addTabStop:TabellenkopfWertTab];
    [MKTabellenkopfString appendFormat:@"\tI"];
@@ -717,7 +717,7 @@ extern NSMutableArray* DatenplanTabelle;
 //	NSCalendarDate* StartZeit=[NSCalendarDate calendarDate];
 //	[StartZeit setCalendarFormat:@"%d.%m.%y %H:%M"];
 	
-   NSLog(@"awake StartZeit A: %@",StartZeit);
+   //NSLog(@"awake StartZeit A: %@",StartZeit);
    // Pfad fuer Logfile einrichten
 	BOOL FileOK=NO;
 	BOOL istOrdner;
@@ -739,7 +739,7 @@ extern NSMutableArray* DatenplanTabelle;
 	if (FileOK)
 	{
 		//[StartZeit setCalendarFormat:@"%d.%m.%y"];
-		NSLog(@"awake StartZeit: %@",StartZeit);
+		//NSLog(@"awake StartZeit: %@",StartZeit);
       
 		errPfad=[NSString stringWithFormat:@"%@/errString %@.txt",[TempDatenPfad stringByAppendingPathComponent:@"Logs"],StartZeit];
 		
@@ -1811,14 +1811,16 @@ extern NSMutableArray* DatenplanTabelle;
 			//NSString* tempDatenString=(NSString*)[einDatenString substringWithRange:NSMakeRange(0,[einDatenString length]-1)];
 			
 			//NSMutableArray* tempZeilenArray= (NSMutableArray*)[einDatenString componentsSeparatedByString:@"\t"];
+         
 			// Datenstring aufteilen in Komponenten
+         
 			NSMutableArray* tempZeilenArray= (NSMutableArray*)[einDatenString componentsSeparatedByString:@"\r"];
 			
 			//NSLog(@"ExterneDatenAktion einDatenString: %@\n tempZeilenArray:%@\n", einDatenString,[tempZeilenArray description]);
 			//NSLog(@"ExterneDatenAktion einDatenString: %@ count: %d", einDatenString, [tempZeilenArray count]);
 			if ([tempZeilenArray count]== 9) // Daten vollständig
 			{
-				//NSLog(@"ExterneDatenAktion tempZeilenArray:%@",[tempZeilenArray description]);
+	//			NSLog(@"ExterneDatenAktion tempZeilenArray:%@",[tempZeilenArray description]);
 				// Datenserie auf Startzeit synchronisieren
 				int tempZeit=[[tempZeilenArray objectAtIndex:0]intValue];
 				
@@ -2688,7 +2690,7 @@ Setzt Feldwerte im Fenster Data.
 
 */
 
-	NSLog(@"rData SolarDataDownloadAktion*");
+	//NSLog(@"rData SolarDataDownloadAktion*");
 	[SolarLoadMark performClick:NULL];
 	
 	if ([[note userInfo]objectForKey:@"err"])
@@ -2725,6 +2727,7 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
 	if ([[note userInfo]objectForKey:@"datastring"])
 	{
 	NSString* tempString = [[note userInfo]objectForKey:@"datastring"];
+   //   NSLog(@"SolarDataDownloadAktion tempString: \n%@",tempString);
 	//tempString= [[[[NSNumber numberWithInt:anzSolarLoads]stringValue]stringByAppendingString:@": "]stringByAppendingString:tempString];
 
 	[LastSolarDataFeld setStringValue:tempString];
@@ -2807,7 +2810,7 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
 	if ([[note userInfo]objectForKey:@"startzeit"])
 	{
 		NSString* StartzeitString = [[note userInfo]objectForKey:@"startzeit"];
-		NSLog(@"ExterneSolarDatenAktion: Startzeit: *%@* StartzeitString: *%@*",[[note userInfo]objectForKey:@"startzeit"],StartzeitString);
+		//NSLog(@"ExterneSolarDatenAktion: Startzeit: *%@* StartzeitString: *%@*",[[note userInfo]objectForKey:@"startzeit"],StartzeitString);
       NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
       // @"YYYY-MM-dd\'T\'HH:mm:ssZZZZZ"
       [dateFormat setDateFormat:@"YYYY.MM.dd  HH:mm:ss"];
@@ -2852,7 +2855,7 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
 		//NSLog(@"ExterneSolarDatenAktion tempDatenArray last Data:%@",[[tempDatenArray lastObject]description]);
 		
 		NSArray* tempZeilenArray= (NSArray*)[[tempDatenArray lastObject] componentsSeparatedByString:@"\r"];
-      //NSLog(@"tempZeilenArray: %@",[tempZeilenArray description]);
+      //NSLog(@"tempZeilenArray: \n%@",[tempZeilenArray description]);
 		NSString* tempWertString;
 		tempWertString=[NSString stringWithFormat:@"%2.1f",[[tempZeilenArray objectAtIndex:1]intValue]/2.0];
 		[KollektorVorlaufFeld setStringValue:tempWertString];
@@ -2865,20 +2868,29 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
 		tempWertString=[NSString stringWithFormat:@"%2.1f",[[tempZeilenArray objectAtIndex:5]intValue]/2.0];
 		[BoilerobenFeld setStringValue:tempWertString];
 		
-		tempWertString=[NSString stringWithFormat:@"%2.1f",[[tempZeilenArray objectAtIndex:6]intValue]/2.0];
+//		tempWertString=[NSString stringWithFormat:@"%2.1f",[[tempZeilenArray objectAtIndex:6]intValue]/2.0];
+// 170818 Korr Kollektortemp aus in solar.pl korrigiertem Wert(kein /2 mehr)
+      tempWertString=[NSString stringWithFormat:@"%2.1f",[[tempZeilenArray objectAtIndex:6]intValue]];
+      
 		[KollektorTemperaturFeld setStringValue:tempWertString];
 
       
       
       int tempTemperatur = [[tempZeilenArray objectAtIndex:6]intValue];
+      /*
       if ([[tempZeilenArray objectAtIndex:7]intValue]&0x01)
       {
          tempTemperatur += 255;
       }
+      */
       
       //      tempWertString=[NSString stringWithFormat:@"%2.1f",[[lastDatenArray objectAtIndex:6]intValue]/2.0];
-      tempWertString=[NSString stringWithFormat:@"%2.1f",tempTemperatur/2.0];
-      //NSLog(@"last tempWertString: %@",tempWertString);
+//      tempWertString=[NSString stringWithFormat:@"%2.1f",tempTemperatur/2.0];
+
+      // 170818 Korr Kollektortemp aus in solar.pl korrigiertem Wert(kein /2 mehr)
+      tempWertString=[NSString stringWithFormat:@"%2.1f",tempTemperatur];
+      
+      NSLog(@"externeSolarDatenAktion tempWertString: %@",tempWertString);
       
 		// Zeit des ersten Datensatzes
 		//int firstZeit = [[[[tempDatenArray objectAtIndex:0] componentsSeparatedByString:@"\t"]objectAtIndex:0]intValue];
@@ -3008,12 +3020,17 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
                
                int kollektortemperatur =[[tempZeilenArray objectAtIndex:6]intValue];
               int kollektorcode =[[tempZeilenArray objectAtIndex:7]intValue];
+             
+  //             [tempZeilenArray replaceObjectAtIndex:6 withObject:[NSNumber numberWithInt:kollektortemperatur]];
+               
+               /*
                if (kollektorcode & 0x01)
                {
                   kollektortemperatur += 255;
                   [tempZeilenArray replaceObjectAtIndex:6 withObject:[NSNumber numberWithInt:kollektortemperatur]];
                }
-               //NSLog(@"kollektortemperatur: %d kollektorcode: %d",kollektortemperatur,kollektorcode);
+                */
+               //NSLog(@"ExterneSolarDatenAktion kollektortemperatur: %d \ntempZeilenArray\n%@",kollektortemperatur,tempZeilenArray);
                
 					
 					[SolarDiagramm setWerteArray:tempZeilenArray mitKanalArray:SolarTemperaturKanalArray ];
@@ -3166,14 +3183,13 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
 	 */
 	NSString* tempWertString;
 	
-	
-	
 	NSPoint tempOrigin=[[SolarDiagrammScroller documentView] frame].origin;
 	NSRect tempFrame=[[SolarDiagrammScroller documentView] frame];
 	
 	if ([[note userInfo]objectForKey:@"lastdatenarray"])
 	{
 		NSMutableArray* lastDatenArray=(NSMutableArray*)[[note userInfo]objectForKey:@"lastdatenarray"];
+      //NSLog(@"LastSolarDatenAktion lastDatenArray: %@",lastDatenArray);
 		tempWertString=[NSString stringWithFormat:@"%2.1f",[[lastDatenArray objectAtIndex:1]intValue]/2.0];
 		[KollektorVorlaufFeld setStringValue:tempWertString];
 		tempWertString=[NSString stringWithFormat:@"%2.1f",[[lastDatenArray objectAtIndex:2]intValue]/2.0];
@@ -3186,14 +3202,15 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
 		[BoilerobenFeld setStringValue:tempWertString];
 		
       int tempTemperatur = [[lastDatenArray objectAtIndex:6]intValue];
+      /*
       if ([[lastDatenArray objectAtIndex:7]intValue]&0x01)
       {
          tempTemperatur += 255;
          [lastDatenArray replaceObjectAtIndex:6 withObject: [NSNumber numberWithInt:tempTemperatur]];
       }
-		
+		*/
 //      tempWertString=[NSString stringWithFormat:@"%2.1f",[[lastDatenArray objectAtIndex:6]intValue]/2.0];
-      tempWertString=[NSString stringWithFormat:@"%2.1f",tempTemperatur/2.0];
+      tempWertString=[NSString stringWithFormat:@"%2.1f",tempTemperatur];
       //NSLog(@"lastSolarDatenAktion tempWertString: %@",tempWertString);
 
       [KollektorTemperaturFeld setStringValue:tempWertString];
@@ -3242,6 +3259,8 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
 			//NSLog(@"DatenpaketArray: %@" ,[DatenpaketArray description]);
 			//NSLog(@"LastSolarDatenAktion lastDatenArray: %@" ,[lastDatenArray description]);
 			
+         //NSLog(@"LastSolarDatenAktion lastDatenArray\n%@",lastDatenArray);
+
 			[SolarDiagramm setWerteArray:lastDatenArray mitKanalArray:TemperaturKanalArray];
 			[SolarDiagramm setNeedsDisplay:YES];
 			

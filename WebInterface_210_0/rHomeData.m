@@ -186,7 +186,7 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 		DataSuffix=@"HomeDaten.txt";
 		NSString* URLPfad=[[NSURL URLWithString:[ServerPfad stringByAppendingPathComponent:DataSuffix]]path];
 		//NSLog(@"DataVonHeute URLPfad: %@",URLPfad);
-		NSLog(@"DataVonHeute  DownloadPfad: %@ DataSuffix: %@",DownloadPfad,DataSuffix);
+		//NSLog(@"DataVonHeute  DownloadPfad: %@ DataSuffix: %@",DownloadPfad,DataSuffix);
 		NSURL *URL = [NSURL URLWithString:[ServerPfad stringByAppendingPathComponent:DataSuffix]];
       //NSLog(@"awake DataVonHeute URL: %@",URL);
 		NSStringEncoding *  enc=0;
@@ -666,7 +666,7 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
    NSAppleScript *ipscript = [[NSAppleScript alloc] initWithSource:ipString];
    NSDictionary *iperrorMessage = nil;
    NSAppleEventDescriptor *ipresult = [ipscript executeAndReturnError:&iperrorMessage];
-   NSLog(@"mount: %@",ipresult);
+   //NSLog(@"mount: %@",ipresult);
    NSString *scriptReturn = [ipresult stringValue];
    NSLog(@"HomeData Found utxt string: %@",scriptReturn);
    NSError* err;
@@ -1171,6 +1171,9 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 				int Kollektortemperatur=KollektortemperaturH;
 				Kollektortemperatur<<=2;
 				Kollektortemperatur += KollektortemperaturL;
+            Kollektortemperatur = [[tempDataArray objectAtIndex:6]intValue];
+            // 
+            
 				int Kontrolle=Kollektortemperatur;
 				Kontrolle>>=2;
 				//NSLog(@"LastSolarData Kollektortemperatur H: %d L: %d T: %d K: %d",KollektortemperaturH,KollektortemperaturL,Kollektortemperatur,Kontrolle);
@@ -1452,7 +1455,7 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
       }
       else
       {
-         NSLog(@"HomeData KollektorMittelwerteVonJahr: %d: kein Inhalt von kollektormittelwerte.txt",jahr);
+         //NSLog(@"HomeData KollektorMittelwerteVonJahr: %d: kein Inhalt von kollektormittelwerte.txt",jahr);
       }
       
       //NSLog(@"KollektorTemperaturArray: %@",[[KollektorTemperaturArray valueForKey:@"mittelwert" ]description]);

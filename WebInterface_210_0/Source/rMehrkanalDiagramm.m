@@ -397,7 +397,7 @@ NSLog(@"setWert Kanal: %d  x: %2.2f y: %2.2f ",derKanal, derWert.x, derWert.y);
    if (dieKompression)
    {
       float stretch = dieKompression/ZeitKompression;
-      NSLog(@"MKDiagramm setZeitKompression ZeitKompression: %2.2f dieKompression: %2.2f stretch: %2.2f",ZeitKompression,dieKompression,stretch);
+      //NSLog(@"MKDiagramm setZeitKompression ZeitKompression: %2.2f dieKompression: %2.2f stretch: %2.2f",ZeitKompression,dieKompression,stretch);
       ZeitKompression=dieKompression;
       NSAffineTransform *transform = [NSAffineTransform transform];
       //NSLog(@"MKDiagramm setZeitKompression a1");
@@ -406,7 +406,7 @@ NSLog(@"setWert Kanal: %d  x: %2.2f y: %2.2f ",derKanal, derWert.x, derWert.y);
       int i=0;
       if ([GraphArray count]==0)
       {
-         NSLog(@"MKDiagramm setZeitKompression a3");
+         //NSLog(@"MKDiagramm setZeitKompression a3");
          return;
       }
       for (i=0;i<8;i++)
@@ -418,9 +418,9 @@ NSLog(@"setWert Kanal: %d  x: %2.2f y: %2.2f ",derKanal, derWert.x, derWert.y);
             //NSLog(@"i: %d GraphArray objectAtIndex:i: %@",i,[[GraphArray objectAtIndex:i] description]);
             if ( ![[GraphArray objectAtIndex:i] isEmpty])
             {
-               NSLog(@"MKDiagramm setZeitKompression a12");
+               //NSLog(@"MKDiagramm setZeitKompression a12");
                [[GraphArray objectAtIndex:i] transformUsingAffineTransform: transform];
-               NSLog(@"MKDiagramm setZeitKompression a13");
+               //NSLog(@"MKDiagramm setZeitKompression a13");
                [[GraphArray objectAtIndex:i]stroke];
             }
          }

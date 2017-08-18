@@ -66,6 +66,7 @@
 	{
 		if ([[derKanalArray objectAtIndex:i]intValue])
 		{
+        // NSLog(@"+++			Temperatur  setWerteArray: Kanal: %d	y: %2.2f",i,[[derWerteArray objectAtIndex:i]floatValue]);
 			//NSLog(@"+++			Temperatur  setWerteArray: Kanal: %d	x: %2.2f",i,[[derWerteArray objectAtIndex:0]floatValue]);
 			NSPoint neuerPunkt=DiagrammEcke;
 			neuerPunkt.x+=[[derWerteArray objectAtIndex:0]floatValue]*ZeitKompression;	//	Zeit, x-Wert, erster Wert im Array
@@ -76,6 +77,11 @@
 				case 2: // Kollektortemperatur 8 Bit
 				//	InputZahl -= 163;
 					break;
+            case 5:
+            {
+               //NSLog(@"InputZahl: %2.2f",InputZahl);
+               InputZahl *= 2; // andere Werte sind mit Faktor 2 gespeichert
+            }break;
 					
 			}// switch i	
 			

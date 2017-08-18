@@ -1096,24 +1096,25 @@ NSLog(@"IOWarr WindowController reportPrint");
    [kalender setFirstWeekday:2];
    NSDateComponents *components = [kalender components:( NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay | NSCalendarUnitWeekday | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond ) fromDate:now];
    components.weekday = components.weekday-1;
+   /*
   NSLog(@"Stunde: %ld", components.hour);
    NSLog(@"Day: %ld", [components day]);
      NSLog(@"weekDay: %ld", [components weekday]);
    NSLog(@"Month: %ld", [components month]);
    NSLog(@"Year: %ld", [components year]);
-   
+   */
 // http://rypress.com/tutorials/objective-c/data-types/dates
 //   http://iaintheindie.com/2014/08/08/useful-nsdate-nscalendar-tricks/#StartEnd_of_the_Week
    NSCalendar *gregorianCalendar = [NSCalendar currentCalendar];
 
    NSInteger wochentag = [gregorianCalendar component:NSCalendarUnitWeekday fromDate:[NSDate date]]-1;
-   NSLog(@"wochentag: %d", wochentag); // 5, which corresponds to Thursday in the Gregorian Calendar
+//   NSLog(@"wochentag: %d", wochentag); // 5, which corresponds to Thursday in the Gregorian Calendar
 
    NSInteger tagdesmonats = [gregorianCalendar component:NSCalendarUnitDay fromDate:[NSDate date]];
-   NSLog(@"tag: %d", tagdesmonats); //
+//   NSLog(@"tag: %d", tagdesmonats); //
 
    NSInteger stunde = [gregorianCalendar component:NSCalendarUnitHour fromDate:[NSDate date]];
-   NSLog(@"stunde: %d", stunde); //
+ //  NSLog(@"stunde: %d", stunde); //
 
    NSDateComponents *dateComponents = [[NSDateComponents alloc] init];
    dateComponents.day = 4;
@@ -1508,7 +1509,7 @@ return;
 	
 	if ([derDatenString length])
 	{
-      NSLog(@"openWithString DatenString: \n%@",[derDatenString substringToIndex:150]);
+      //NSLog(@"openWithString DatenString: \n%@",[derDatenString substringToIndex:150]);
 		NSArray* tempDatenArray= [derDatenString componentsSeparatedByString:@"\n"];
 		//	NSArray* tempDatenArray= [DatenString componentsSeparatedByString:@"\r"];
 		
@@ -1556,27 +1557,27 @@ return;
 				case 4:
 				{
 					TagString=[tempDatumArray objectAtIndex:1];
-               NSLog(@"TagString: %@",TagString);
+               //NSLog(@"TagString: %@",TagString);
                NSArray* tempTagArray= [TagString componentsSeparatedByString:@"-"];
 
 					ZeitString=[[tempDatumArray objectAtIndex:2]substringWithRange:NSMakeRange(0,5)];
-               NSLog(@"ZeitString: %@",ZeitString);
+               //NSLog(@"ZeitString: %@",ZeitString);
                NSArray* tempZeitArray= [ZeitString componentsSeparatedByString:@":"];
 
 					StartDatumString= [[tempDatenArray objectAtIndex:DataOffset-1]substringFromIndex:11];
-               NSLog(@"StartDatumString: %@",StartDatumString);
+               //NSLog(@"StartDatumString: %@",StartDatumString);
                
                StartZeitString = [StartDatumString substringWithRange:NSMakeRange(0,[StartDatumString length])];
-					NSLog(@"StartZeitString: %@",StartZeitString);
+					//NSLog(@"StartZeitString: %@",StartZeitString);
                NSArray* tempStartZeitArray= [StartZeitString componentsSeparatedByString:@" "];
                if ([[tempStartZeitArray objectAtIndex:0]length]==0)
                {
                   tempStartZeitArray = [tempStartZeitArray subarrayWithRange:NSMakeRange(1,[tempStartZeitArray count]-1)];
                }
-               NSLog(@"tempStartZeitArray: %@",tempStartZeitArray);
+               //NSLog(@"tempStartZeitArray: %@",tempStartZeitArray);
                //NSString* zeitstring = [NSString stringWithFormat:@"%@T%@ %@",[tempStartZeitArray objectAtIndex:0],[tempStartZeitArray objectAtIndex:1],[tempStartZeitArray objectAtIndex:2]];
               NSString* zeitstring = [NSString stringWithFormat:@"%@T%@ %@",[tempStartZeitArray objectAtIndex:0],[tempStartZeitArray objectAtIndex:1],@"+0000"];
-               NSLog(@"zeitstring: %@",zeitstring);
+               //NSLog(@"zeitstring: %@",zeitstring);
                NSDateFormatter * DateFormatter = [[NSDateFormatter alloc] init];
                DateFormatter.dateFormat = @"yyyy-MM-dd'T'HH:mm:ssZZZZZ";
               // NSString *string = @"1996-12-19T16:39:57-08:00";
@@ -1591,7 +1592,7 @@ return;
 					
                //NSLog(@"openWithSolarString Format: %@ StartZeit: %@",Kalenderformat,[StartZeit description]);
                
-               NSLog(@"openWithSolarString StartZeit: %@ StartZeit desc: %@",StartZeit,[[StartZeit copy ]description]);
+               //NSLog(@"openWithSolarString StartZeit: %@ StartZeit desc: %@",StartZeit,[[StartZeit copy ]description]);
 					
                
                Tag=[[tempTagArray objectAtIndex: 2]intValue];

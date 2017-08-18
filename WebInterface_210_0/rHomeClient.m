@@ -66,7 +66,7 @@ unsigned char h2int(char c)
 {
    NSString* returnstring = [NSString string];
    NSString* ResourcenPfad=[[[NSBundle mainBundle]bundlePath]stringByAppendingPathComponent:@"Contents/Resources"];
-   NSLog(@"ResourcenPfad: %@",ResourcenPfad);
+   //NSLog(@"ResourcenPfad: %@",ResourcenPfad);
    NSString* PasswortTabellePfad=[[[NSBundle mainBundle]bundlePath]stringByAppendingPathComponent:@"Contents/Resources/Passwort.txt"];
    NSString* PasswortTabelleString = [NSString stringWithContentsOfFile:PasswortTabellePfad];
    
@@ -245,7 +245,7 @@ unsigned char h2int(char c)
    NSURLRequest *HCRequest = [ [NSURLRequest alloc] initWithURL: URL cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:10.0];
    if (HCRequest)
    {
-      NSLog(@"loadURL:Request OK");
+      //NSLog(@"loadURL:Request OK");
       [[webView mainFrame] loadRequest:HCRequest];
    }
    else
@@ -285,7 +285,7 @@ unsigned char h2int(char c)
    NSURLRequest *HCRequest = [ [NSURLRequest alloc] initWithURL: URL cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:10.0];
    if (HCRequest)
    {
-      NSLog(@"loadURL:Request OK");
+      //NSLog(@"loadURL:Request OK");
       [[webView mainFrame] loadRequest:HCRequest];
    }
    else
@@ -2046,7 +2046,7 @@ unsigned char h2int(char c)
 
 - (void)loadURL:(NSURL *)URL
 {
-   NSLog(@"loadURL: %@",URL);
+   //NSLog(@"loadURL: %@",URL);
    if (downloadflag)
    {
       NSMutableURLRequest *HCRequest = [ [NSMutableURLRequest alloc] initWithURL: URL cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:10.0];
@@ -2056,7 +2056,7 @@ unsigned char h2int(char c)
       
       //	NSLog(@"Cache mem: %d",[[NSURLCache sharedURLCache]memoryCapacity]);
       //	[[NSURLCache sharedURLCache] removeCachedResponseForRequest:HCRequest]; // > crash
-      NSLog(@"loadURL:Vor loadRequest");
+      //NSLog(@"loadURL:Vor loadRequest");
       if (HCRequest)
       {
          //NSLog(@"loadURL:Request OK");
@@ -2111,7 +2111,7 @@ unsigned char h2int(char c)
 	//NSLog(@"sender: %@",[sender description]);
 	// Only report feedback for the main frame.
 	NSString* HTML_Inhalt=[self dataRepresentationOfType:HTMLDocumentType];
-	NSLog(@"didFinishLoadForFrame Antwort: \nHTML_Inhalt: \t%@\n",HTML_Inhalt);
+//	NSLog(@"didFinishLoadForFrame Antwort: \nHTML_Inhalt: \t%@\n",HTML_Inhalt);
 	loadAlertOK=1;
 	NSRange CheckRange;
 	NSString* Code_String= @"okcode=";
@@ -2481,7 +2481,7 @@ unsigned char h2int(char c)
     if (frame == [sender mainFrame])
 	 {
         NSString *provurl = [[[[frame provisionalDataSource] request] URL] absoluteString];
-		  NSLog(@"HomeClient didStartProvisionalLoadForFrame: URL: %@",provurl);
+		  //NSLog(@"HomeClient didStartProvisionalLoadForFrame: URL: %@",provurl);
        
        // URL: http://ruediheimlicher.dyndns.org/twi?pw=ideur00&rdata=10
        

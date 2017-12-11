@@ -64,7 +64,7 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
    NSLog(@"passwortstring randomnummer 1: *%d* randomzeile: %d randomkolonne: %d",randomnummer1 ,randomzeile,randomkolonne);
    NSString* passwort1 = [[[PasswortTabelle objectAtIndex:randomzeile]componentsSeparatedByString:@"\t"]objectAtIndex:randomkolonne];
 
-   int randomnummer2 = rand()%64+1;
+   int randomnummer2 = rand()%63+1;
    NSLog(@"Util passwortstring randomnummer 1: *%d* reminder: %d mantisse: %d",randomnummer2 ,randomnummer2%8,randomnummer2/8);
    randomzeile = randomnummer2%8;
    randomkolonne = randomnummer2/8;

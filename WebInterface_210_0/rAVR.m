@@ -186,6 +186,11 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
 	
 	nc=[NSNotificationCenter defaultCenter];
 	
+   [nc addObserver:self
+          selector:@selector(LocalStatusAktion:)
+              name:@"localstatus"
+            object:nil];
+
 		[nc addObserver:self
 		   selector:@selector(TagplancodeAktion:) // Mausklicks im Tagplanbalken
 			   name:@"Tagplancode"
@@ -379,48 +384,7 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
    free(linePtr);
    free(buffer);
    
-   localNetz = NO; 
-   //NSString *ipString = [NSString localizedStringWithFormat:@"do shell script \"curl ifconfig.me/ip\""];
-   NSString *ipString = [NSString localizedStringWithFormat:@"do shell script \"curl ident.me\""];
-
-   NSAppleScript *ipscript = [[NSAppleScript alloc] initWithSource:ipString];
-   NSDictionary *iperrorMessage = nil;
-   
-   NSAppleEventDescriptor *ipresult = [ipscript executeAndReturnError:&iperrorMessage];
-    NSLog(@"mount: %@",ipresult);
-   NSString *scriptReturn = [ipresult stringValue];
-   NSLog(@"IP: %@",scriptReturn);
-   
-   if (scriptReturn == NULL)
-   {
-      NSAlert *Warnung = [[NSAlert alloc] init];
-      [Warnung addButtonWithTitle:@"OK"];
-      //   [Warnung addButtonWithTitle:@""];
-      //   [Warnung addButtonWithTitle:@""];
-      //   [Warnung addButtonWithTitle:@"Abbrechen"];
-      NSString* MessageText= NSLocalizedString(@"No IP",@"Verbindung misslungen");
-      [Warnung setMessageText:[NSString stringWithFormat:@"%@ \n%@",@"AVR awake",MessageText]];
-      
-      
-      NSString* s1=@"Kein Netz";
-       NSString* InformationString=[NSString stringWithFormat:@"Fehler: %@",s1];
-      [Warnung setInformativeText:InformationString];
-      [Warnung setAlertStyle:NSWarningAlertStyle];
-      
-      int antwort=[Warnung runModal];
-      NSLog(@"Connection: %d",antwort);
-      [LocalTaste setEnabled:YES];
-      [TWIStatusTaste setEnabled:YES];
-      NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
-      NSMutableDictionary* localStatusDic=[[NSMutableDictionary alloc]initWithCapacity:0];
-      localNetz = YES; // lokales Netzwerk benutzen
-      [localStatusDic setObject:[NSNumber numberWithInt:1]forKey:@"status"];
-      [nc postNotificationName:@"localstatus" object:self userInfo:localStatusDic];
-      
-
-   }
-
-   int tg=0;
+     int tg=0;
    int rm=3;
    int obj=0;
    int startadr = rm*RAUMPLANBREITE + tg * TAGPLANBREITE + obj * 0x08;
@@ -852,6 +816,20 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
    */
    writeEEPROManzeige.intValue = 0;
    NSLog(@"AVR awake end");
+}
+- (void)LocalStatusAktion:(NSNotification*)note
+{
+   NSLog(@"AVR LocalStatusAktion note: %@",[[note userInfo]description]);
+   [LocalTaste setEnabled:YES];
+   [TWIStatusTaste setEnabled:YES];
+   localNetz = YES;
+}
+
+- (void)setLocalStatus
+{
+   [LocalTaste setEnabled:YES];
+   [TWIStatusTaste setEnabled:YES];
+
 }
 
 - (void)setRaum:(int)derRaum

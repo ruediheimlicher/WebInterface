@@ -87,45 +87,18 @@ void IOWarriorCallback ()
 /*" Invoked when the nib file including the window has been loaded. "*/
 - (void) awakeFromNib
 {
+   localNetz = NO;
    
-   uint16_t ii=0;
-   uint8_t mmcbuffer[512];
-   while (ii<0xFF)
-   {
-      uint16_t wert =ii+100;
-      mmcbuffer[2*ii] = wert & 0x00FF;
-      mmcbuffer[2*ii+1] = (wert & 0xFF00)>>8;
-      //NSLog(@"i: %d wert: %d LO: %d HI: %d",ii,wert ,mmcbuffer[2*ii],mmcbuffer[2*ii+1]);
-      ii += 1;
-   }
    
+     
    NSString* ASString = @"return do shell script \"curl http://checkip.dyndns.org/\"";
    NSAppleScript* IP_appleScript = [[NSAppleScript alloc] initWithSource: ASString];
    //DLog(@"IP_appleScript: %@ ",[IP_appleScript description]);
    NSDictionary* IPErr=nil;
-   /*
-   NSAppleEventDescriptor * IP_Descriptor = [IP_appleScript executeAndReturnError:&IPErr];
-   
-   //NSLog(@"IPdescriptor: %@ IPErr: %@",[IP_Descriptor stringValue],IPErr);
-   NSString* IP_AddressString = [IP_Descriptor stringValue];
-   NSArray* IP_DescriptorArray = [IP_AddressString componentsSeparatedByString:@"Current IP Address:"];
-   NSLog(@"IP_AddressArray: %@ ",[IP_DescriptorArray description]);
+    NSNotificationCenter * nc;
+   nc=[NSNotificationCenter defaultCenter];
 
-   NSArray* IP_AddressArray = [[IP_DescriptorArray objectAtIndex:1] componentsSeparatedByString:@"</body></html>"];
-   
-   NSString* IP_Address = [IP_AddressArray objectAtIndex:0];
-   
-   NSCharacterSet* CharOK=[NSCharacterSet alphanumericCharacterSet];
-   
-   char first=[IP_Address characterAtIndex:0];
-   if (![CharOK characterIsMember:first])
-			{
-            //NSLog(@"DataVonHeute: String korrigieren");
-            IP_Address=[IP_Address substringFromIndex:1];
-         }
-
-   NSLog(@"IP_Address: %@ ",IP_Address);
-*/
+ 
    // new calendar
    NSDate *now = [[NSDate alloc] init];
    NSCalendar *kalender = [NSCalendar currentCalendar];
@@ -246,8 +219,6 @@ void IOWarriorCallback ()
 	[dumpTable setDelegate:Dump_DS];
 	[dumpTable setDataSource:Dump_DS];
 	dumpCounter=0;
-	//[self populateInterfacePopup];
-//	[self interfacePopupChanged:self];
 	[self tableViewSelectionDidChange:nil];
 	logEntries = [[NSMutableArray alloc] init];
 	[logTable setTarget:self];
@@ -256,8 +227,11 @@ void IOWarriorCallback ()
 	[self updateMacroPopup];
 	[ignoreDuplicatesCheckBox setState:ignoreDuplicates];
 	
-	NSNotificationCenter * nc;
-	nc=[NSNotificationCenter defaultCenter];
+   [nc addObserver:self
+          selector:@selector(LocalStatusAktion:)
+              name:@"localstatus"
+            object:nil];
+
 	[nc addObserver:self
 			 selector:@selector(TastenAktion:)
 				  name:@"Tastenaktion"
@@ -382,51 +356,60 @@ void IOWarriorCallback ()
 				  name:@"SolarStatistikDaten"
 				object:nil];
    
+   //AVR=[[rAVR alloc]init];
 
+   localNetz = NO; 
+   
+      NSAlert *Warnung = [[NSAlert alloc] init];
+      [Warnung addButtonWithTitle:@"Web"];
+      [Warnung addButtonWithTitle:@"Lokal"];
+      //   [Warnung addButtonWithTitle:@""];
+      //   [Warnung addButtonWithTitle:@"Abbrechen"];
+      NSString* MessageText= NSLocalizedString(@"Netz-Zugang",@"Verbindung misslungen");
+      [Warnung setMessageText:[NSString stringWithFormat:@"%@ \n%@",@"IOWarriorWindowController awake",MessageText]];
+      
+      
+      NSString* s1=@"Auswahl";
+      NSString* InformationString=[NSString stringWithFormat:@"Comment: %@",s1];
+      [Warnung setInformativeText:InformationString];
+      [Warnung setAlertStyle:NSWarningAlertStyle];
+      
+      int antwort=[Warnung runModal];
+      NSLog(@"Connection: %d",antwort);
+      switch (antwort)
+      {
+         case 1000:
+         {
+            
+          }break;
+         case 1001:
+         {
+            localNetz = YES; // lokales Netzwerk benutzen
+            NSMutableDictionary* localStatusDic=[[NSMutableDictionary alloc]initWithCapacity:0];
+                        
+            [localStatusDic setObject:[NSNumber numberWithInt:1]forKey:@"status"];
+            [nc postNotificationName:@"localstatus" object:self userInfo:localStatusDic];
 
-	
+         }
+      }
+     
+   
 	lastDataRead=[[NSData alloc]init];
-	//	[self readPList];
 	
    [self showAVR:NULL];
-	
+	   
+   if (localNetz == NO)
+   {
+      [self showHomeData:NULL];
    
-   //[AVR setWochenplan:NULL];
-
-	//	[self showADWandler:NULL];	
-	/*
-	 [ADWandler setInterfaceNummer:2];
-	 [ADWandler setTabIndex:1];
-	 [ADWandler setEinkanalWahlTaste:3];
-	 
-	 NSMutableArray* tempKanalArray=[[NSMutableArray alloc]initWithCapacity:0];
-	 [tempKanalArray addObject:[NSNumber numberWithInt:1]];
-	 [tempKanalArray addObject:[NSNumber numberWithInt:0]];
-	 [tempKanalArray addObject:[NSNumber numberWithInt:1]];
-	 [tempKanalArray addObject:[NSNumber numberWithInt:1]];
-	 [tempKanalArray addObject:[NSNumber numberWithInt:1]];
-	 [tempKanalArray addObject:[NSNumber numberWithInt:0]];
-	 [tempKanalArray addObject:[NSNumber numberWithInt:1]];
-	 [tempKanalArray addObject:[NSNumber numberWithInt:0]];
-	 [ADWandler setMehrkanalWahlTasteMitArray:tempKanalArray];
-	 //[NSArray arrayWithObjects:0,1,1,1,0,1,0,1,0,nil]];
-	 [self Alert:@"ADWandler awake vor readPList "];
-	 [self readPList];
-	 */
-	//	
-	//	[self readPList];
-	//	[ADWandler showWindow:self];
+      [self showData:NULL]; // Observer von Data muessen vor HomeData aktiviert sein
    
-   [self showHomeData:NULL];
-   
-	[self showData:NULL]; // Observer von Data muessen vor HomeData aktiviert sein
-   
-	
-	//NSLog(@"BIN  zahl: %d bin: %02X",14, 14);
-	
-	HomeClient = [[rHomeClient alloc]init];
-	
-	  
+      HomeClient = [[rHomeClient alloc]init];
+   }
+	  else
+     {
+        [AVR setLocalStatus];
+     }
    
 	lastDataZeit=0;
 	//[self startHomeData];
@@ -435,9 +418,6 @@ void IOWarriorCallback ()
    // heutige Daten laden
    NSString* AktuelleDaten = [NSString string];
    AktuelleDaten=[HomeData DataVonHeute];
-   
-	//NSLog(@"awake nach AktuelleDaten returnstring: %@",AktuelleDaten);
-   
 	//NSLog(@"awake AktuelleDaten: \n%@",AktuelleDaten);
    
 	if (AktuelleDaten &&[AktuelleDaten length])
@@ -448,36 +428,14 @@ void IOWarriorCallback ()
       
 		[self setStatistikDaten];
       
-      //NSArray* IP_Array = [HomeData Router_IP];
-      /*
-      NSLog(@"IP_Array: %@",[IP_Array description]);
-     
-      if ([IP_Array count] >1)
-      {
-         if ([[IP_Array objectAtIndex:0] isEqualToString:[IP_Array objectAtIndex:1]]) // gleiche IP
-         {
-            [Data setRouter_IP:[IP_Array objectAtIndex:0]];
-
-         }
-         else
-         {
-            
-         }
-      
-      }
-      else
-      {
-         [Data setRouter_IP:[IP_Array objectAtIndex:0]];
-         
-      }
-      */
-      
       NSString* IP_String = [HomeData Router_IP];
+      
       [Data setRouter_IP:IP_String];
 	}
 	else
 	{
-		NSLog(@"awake Kein Input");
+		NSLog(@"awake Kein Web-Input");
+      [Data setRouter_IP:@"192.168.1.210"];
 	}
    NSLog(@"end DatenVonHeute");
    
@@ -530,81 +488,25 @@ void IOWarriorCallback ()
 	NSLog(@"dealloc");
 }
 
-
-- (void) populateInterfacePopup
-/*" Inserts currently available IOWarrior interfaces into popup menu. "*/
+- (void)LocalStatusAktion:(NSNotification*)note
 {
-	//NSLog(@"populateInterfacePopup");
-    int i, interfaceCount;
-    int vor=[interfacePopup numberOfItems];
-	BOOL neu=NO;
-	if (vor &&[[interfacePopup itemAtIndex:0]tag]==-1)
-	{
-	neu=YES;
-	}
-	
-    [interfacePopup removeAllItems];
-    interfaceCount = IOWarriorCountInterfaces ();
-	//NSLog(@"vor: %d interfaceCount: %d",vor,interfaceCount);
-    if (0 == interfaceCount)
-    {
-        [interfacePopup setEnabled:NO];
-		if (vor &&!neu)
-		{
-		NSRunAlertPanel (@"IOWarrior: Auf Wiedersehen", @"Es ist kein IOWarrior mehr eingesteckt.", @"OK", nil, nil);
-		}
-		else if (neu)
-		{
-		//NSRunAlertPanel (@"IOWarrior: Guten Tag", @"Ich habe noch keinen IOWarrior gefunden.", @"OK", nil, nil);
-		}
-    }
-    else
-    {
-        [interfacePopup setEnabled:YES];
-		if (interfaceCount>vor)
-		{
-		NSRunAlertPanel (@"IOWarrior: Guten Tag", @"Ich habe einen neuen IOWarrior gefunden.", @"OK", nil, nil);
-		}
-
-    }
-    for (i = 0; i < interfaceCount; i++)
-    {
-        IOWarriorListNode* 	listNode;
-        NSString*		title;
-
-        listNode = IOWarriorInterfaceListNodeAtIndex (i);
-        title = [NSString stringWithFormat:@"%@ (SN %@)", [self nameForIOWarriorInterfaceType:listNode->interfaceType],
-            listNode->serialNumber];
-        [interfacePopup addItemWithTitle:title];
-		[[interfacePopup itemWithTitle:title]setTag:i];
-    }
-	
-    [self interfacePopupChanged:self];
+   NSLog(@"IOWarriorWindowController LocalStatusAktion note: %@",[[note userInfo]description]);
+   NSURL* HomeCentralURL;
+   if ([[note userInfo]objectForKey:@"status"] && [[[note userInfo]objectForKey:@"status"]intValue]==1) // URL umschalten
+   {
+      localNetz = YES;
+   HomeCentralURL = @"http://192.168.1.210";
+      //NSLog(@"LocalStatusAktion local: HomeCentralURL: %@",HomeCentralURL);
+   }
+   else
+   {
+      localNetz = NO;
+ //     HomeCentralURL = @"http://ruediheimlicher.dyndns.org";
+      //NSLog(@"LocalStatusAktion global: HomeCentralURL: %@",HomeCentralURL);
+   }
+   NSLog(@"IOWarriorWindowController LocalStatusAktion HomeCentralURL: %@",HomeCentralURL);
 }
 
-- (NSString*) nameForIOWarriorInterfaceType:(int) inType
-/*" Returns a human readable name for a given IOWarrior interface type. "*/
-{
-    switch (inType)
-    {
-        case kIOWarrior40Interface0:
-            return @"IOWarrior40 Interface 0";
-            break;
-
-        case kIOWarrior40Interface1:
-            return @"IOWarrior40 Interface 1";
-            break;
-
-        case kIOWarrior24Interface0:
-            return @"IOWarrior24 Interface 0";
-            break;
-
-        case kIOWarrior24Interface1:
-            return @"IOWarrior24 Interface 1";
-            break;
-    }
-    return @"Unknown interface type";
-}
 
 
 

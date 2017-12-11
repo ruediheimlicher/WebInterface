@@ -32,11 +32,6 @@
 	[AVR showWindow:NULL];
 	beendet=0;
 	// [self Alert:@"showAVR nach showWindow"];
-	if (IOWarriorIsPresent ())
-	{
-		//	NSArray* HexStringArray=[NSArray arrayWithObjects:@"9F",@"FF",nil];
-		//	[self WriteHexStringArray: HexStringArray];
-	}
 	
 }
 

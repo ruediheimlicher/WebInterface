@@ -50,6 +50,7 @@
 	int							beendet;
 	//int							gesichert;
 	int							old;
+   BOOL                    localNetz;
 	/*	
 	 rHexEingabe*	HexEingabe0;
 	 rHexEingabe*	HexEingabe1;

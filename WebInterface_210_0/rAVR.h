@@ -152,6 +152,7 @@ NSTimer*                EEPROMUpdateTimer;
    IBOutlet NSLevelIndicator* writeEEPROManzeige;
 
 }
+- (void)setLocalStatus;
 - (NSArray*)StundenArrayAusByteArray:(NSArray*)derStundenByteArray;
 - (NSArray*)StundenArrayAusDezArray:(NSArray*)derStundenByteArray;
 - (void)HomebusAnlegen;

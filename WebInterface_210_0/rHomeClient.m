@@ -101,6 +101,10 @@ unsigned char h2int(char c)
    return returnstring;
 }
 
+- (BOOL)localNetz
+{
+   return localNetz;
+}
 
 - (id)init
 {
@@ -628,15 +632,17 @@ unsigned char h2int(char c)
 
 - (void)LocalStatusAktion:(NSNotification*)note
 {
-   //NSLog(@"HomeClient LocalStatusAktion note: %@",[[note userInfo]description]);
+   NSLog(@"HomeClient LocalStatusAktion note: %@",[[note userInfo]description]);
 
    if ([[note userInfo]objectForKey:@"status"] && [[[note userInfo]objectForKey:@"status"]intValue]==1) // URL umschalten
    {
+      localNetz = YES;
       HomeCentralURL = @"http://192.168.1.210";
       //NSLog(@"LocalStatusAktion local: HomeCentralURL: %@",HomeCentralURL);
    }
    else
    {
+      localNetz = NO;
       HomeCentralURL = @"http://ruediheimlicher.dyndns.org";
    //NSLog(@"LocalStatusAktion global: HomeCentralURL: %@",HomeCentralURL);
    }
@@ -2610,7 +2616,7 @@ unsigned char h2int(char c)
 		//	[Warnung addButtonWithTitle:@""];
 		//	[Warnung addButtonWithTitle:@""];
 		//	[Warnung addButtonWithTitle:@"Abbrechen"];
-		NSString* MessageText= NSLocalizedString(@"Error in Download",@"Download misslungen");
+      NSString* MessageText= NSLocalizedString(@"HomeClient: Error in Download",@"Download misslungen");
 		[Warnung setMessageText:[NSString stringWithFormat:@"%@",MessageText]];
 		
 		NSString* s1=errorDescription;

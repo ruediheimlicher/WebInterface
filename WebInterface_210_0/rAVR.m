@@ -379,16 +379,46 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
    free(linePtr);
    free(buffer);
    
-
+   localNetz = NO; 
    //NSString *ipString = [NSString localizedStringWithFormat:@"do shell script \"curl ifconfig.me/ip\""];
    NSString *ipString = [NSString localizedStringWithFormat:@"do shell script \"curl ident.me\""];
 
    NSAppleScript *ipscript = [[NSAppleScript alloc] initWithSource:ipString];
    NSDictionary *iperrorMessage = nil;
-//   NSAppleEventDescriptor *ipresult = [ipscript executeAndReturnError:&iperrorMessage];
-//    NSLog(@"mount: %@",ipresult);
-//   NSString *scriptReturn = [ipresult stringValue];
-   //NSLog(@"IP: %@",scriptReturn);
+   
+   NSAppleEventDescriptor *ipresult = [ipscript executeAndReturnError:&iperrorMessage];
+    NSLog(@"mount: %@",ipresult);
+   NSString *scriptReturn = [ipresult stringValue];
+   NSLog(@"IP: %@",scriptReturn);
+   
+   if (scriptReturn == NULL)
+   {
+      NSAlert *Warnung = [[NSAlert alloc] init];
+      [Warnung addButtonWithTitle:@"OK"];
+      //   [Warnung addButtonWithTitle:@""];
+      //   [Warnung addButtonWithTitle:@""];
+      //   [Warnung addButtonWithTitle:@"Abbrechen"];
+      NSString* MessageText= NSLocalizedString(@"No IP",@"Verbindung misslungen");
+      [Warnung setMessageText:[NSString stringWithFormat:@"%@ \n%@",@"AVR awake",MessageText]];
+      
+      
+      NSString* s1=@"Kein Netz";
+       NSString* InformationString=[NSString stringWithFormat:@"Fehler: %@",s1];
+      [Warnung setInformativeText:InformationString];
+      [Warnung setAlertStyle:NSWarningAlertStyle];
+      
+      int antwort=[Warnung runModal];
+      NSLog(@"Connection: %d",antwort);
+      [LocalTaste setEnabled:YES];
+      [TWIStatusTaste setEnabled:YES];
+      NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
+      NSMutableDictionary* localStatusDic=[[NSMutableDictionary alloc]initWithCapacity:0];
+      localNetz = YES; // lokales Netzwerk benutzen
+      [localStatusDic setObject:[NSNumber numberWithInt:1]forKey:@"status"];
+      [nc postNotificationName:@"localstatus" object:self userInfo:localStatusDic];
+      
+
+   }
 
    int tg=0;
    int rm=3;
@@ -430,24 +460,6 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
    {
       //[self setObjektTitelVonRaum:raumnummer];
    }
-	/*
-	[self setObjektTitel:@"Brenner" forObjekt:0 forRaum:0];
-	[self setObjektTitel:@"Mode" forObjekt:1 forRaum:0];
-	[self setObjektTitel:@"Rinne" forObjekt:2 forRaum:0];
-	
-	[self setObjektTitel:@"Lampe 1" forObjekt:0 forRaum:1];
-	[self setObjektTitel:@"Ofen" forObjekt:1 forRaum:1];
-	[self setObjektTitel:@"Lampe" forObjekt:0 forRaum:2];
-	[self setObjektTitel:@"Radiator" forObjekt:1 forRaum:2];
-	
-	[self setObjektTitel:@"Lampe" forObjekt:0 forRaum:3];
-	[self setObjektTitel:@"Lampe" forObjekt:0 forRaum:4];
-	[self setObjektTitel:@"Lampe" forObjekt:0 forRaum:5];
-	[self setObjektTitel:@"Lampe" forObjekt:0 forRaum:6];
-   
-   // Estrich
-	[self setObjektTitel:@"Lampe" forObjekt:0 forRaum:7];
-   */
    
    
 	// Alternative Typen setzen
@@ -825,7 +837,7 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
 	//[self setObjektTitel:@"Ofen" forObjekt:1 forRaum:4];
 
 //   NSString *host = @"https://www.ruediheimlicher.ch/Data/EEE.txt?myvar=%@";
-   
+   /*
    NSString *host = @"http://www.ruediheimlicher.ch/Data/EEE.txt?myvar=%@";
    
    
@@ -837,9 +849,9 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
      NSURLResponse* responseRequest;
    NSData *returnData = [NSURLConnection sendSynchronousRequest:request returningResponse:&responseRequest error:nil];
    NSLog(@"EEE returnData: %@ responseRequest URL: %@",returnData,responseRequest.URL);
-   
+   */
    writeEEPROManzeige.intValue = 0;
-
+   NSLog(@"AVR awake end");
 }
 
 - (void)setRaum:(int)derRaum

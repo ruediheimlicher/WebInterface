@@ -35,7 +35,7 @@
 	}
 	//[self Alert:@"showHomeData nach init"];
 	//	NSMutableArray* 
-	if ([HomeData window]) ;
+	if ([HomeData window]) 
 	{
 		//	[self Alert:@"showHomeData window da"];
 		

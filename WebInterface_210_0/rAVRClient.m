@@ -94,11 +94,15 @@
 
 - (IBAction)reportLocalTaste:(id)sender;
 {
-   //NSLog(@"AVRClient reportLocalTaste: state: %d",[sender state]);
+   NSLog(@"AVRClient reportLocalTaste: state: %d",[sender state]);
    NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
 	NSMutableDictionary* localStatusDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 	[localStatusDic setObject:[NSNumber numberWithInt:[sender state]]forKey:@"status"];
 	[nc postNotificationName:@"localstatus" object:self userInfo:localStatusDic];
+   if ([LocalTaste isEnabled])
+   {
+      [TWIStatusTaste setEnabled:YES];
+   }
 }
 
 - (IBAction)reportTestTaste:(id)sender;
@@ -1081,7 +1085,8 @@ if (Webserver_busy)
     [Warnung setAlertStyle:NSWarningAlertStyle];
     
     int antwort=[Warnung runModal];
-    return;
+    
+       return;
     }
     
     else

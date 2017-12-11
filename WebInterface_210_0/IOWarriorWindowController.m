@@ -126,8 +126,19 @@ void IOWarriorCallback ()
 
    NSLog(@"IP_Address: %@ ",IP_Address);
 */
-	oldHour=[[NSCalendarDate date]hourOfDay];
-	daySaved=NO;
+   // new calendar
+   NSDate *now = [[NSDate alloc] init];
+   NSCalendar *kalender = [NSCalendar currentCalendar];
+   [kalender setFirstWeekday:2];
+   NSDateComponents *components = [kalender components:( NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay | NSCalendarUnitWeekday | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond ) fromDate:now];
+   components.weekday = components.weekday-1;
+
+   // end new Calendar
+   oldHour = components.hour;
+   
+	//oldHour=[[NSCalendarDate date]hourOfDay];
+
+   daySaved=NO;
 	int adresse=0xABCD;
 	adresse = 0xA030;
 	int lbyte=adresse<<8;
@@ -235,8 +246,8 @@ void IOWarriorCallback ()
 	[dumpTable setDelegate:Dump_DS];
 	[dumpTable setDataSource:Dump_DS];
 	dumpCounter=0;
-	[self populateInterfacePopup];
-	[self interfacePopupChanged:self];
+	//[self populateInterfacePopup];
+//	[self interfacePopupChanged:self];
 	[self tableViewSelectionDidChange:nil];
 	logEntries = [[NSMutableArray alloc] init];
 	[logTable setTarget:self];
@@ -377,7 +388,7 @@ void IOWarriorCallback ()
 	lastDataRead=[[NSData alloc]init];
 	//	[self readPList];
 	
-		[self showAVR:NULL];
+   [self showAVR:NULL];
 	
    
    //[AVR setWochenplan:NULL];
@@ -409,7 +420,7 @@ void IOWarriorCallback ()
    [self showHomeData:NULL];
    
 	[self showData:NULL]; // Observer von Data muessen vor HomeData aktiviert sein
-	
+   
 	
 	//NSLog(@"BIN  zahl: %d bin: %02X",14, 14);
 	
@@ -527,7 +538,7 @@ void IOWarriorCallback ()
     int i, interfaceCount;
     int vor=[interfacePopup numberOfItems];
 	BOOL neu=NO;
-	if (vor &&[[interfacePopup itemAtIndex:0]tag]==-1);
+	if (vor &&[[interfacePopup itemAtIndex:0]tag]==-1)
 	{
 	neu=YES;
 	}
@@ -1014,7 +1025,8 @@ HomeDataDownload
 			}
 			else
 			{
-				[self DruckDatenSchreibenMitDatum:[NSCalendarDate date] ganzerTag:NO];
+            
+				[self DruckDatenSchreibenMitDatum:[NSCalendar currentCalendar] ganzerTag:NO];
 			}
 			
 			
@@ -1126,162 +1138,164 @@ NSLog(@"IOWarr WindowController reportPrint");
 	NSCalendarDate* StartZeit= [NSCalendarDate date];
 
 	NSCharacterSet* CharOK=[NSCharacterSet alphanumericCharacterSet];
-	char last=[derDatenString characterAtIndex:[derDatenString length]-1];
-	//NSLog(@"Letzter Char: %c",last);
-	// eventuelle Zeilenschaltung am Ende entfernen
-
-	if (![CharOK characterIsMember:last])
-	{
-		derDatenString=[derDatenString substringToIndex:[derDatenString length]-1];
-	}
-	
-	if ([derDatenString length])
-	{
-		//NSLog(@"openWithString DatenString: \n%@",derDatenString);
-		NSArray* tempDatenArray= [derDatenString componentsSeparatedByString:@"\n"];
-		//	NSArray* tempDatenArray= [DatenString componentsSeparatedByString:@"\r"];
-		
-		//NSLog(@"openWithString tempDatenArray count: %d",[tempDatenArray count]);
-		int DataOffset=12;
-		if ([tempDatenArray count] >DataOffset)	// mindestens 1 Data
-		{
-			
-			// Tabellenkopf entfernen: Zeile mit Datum suchen
-			
-         DataOffset=0;
-			NSEnumerator* DataEnum=[tempDatenArray objectEnumerator];
-			id eineZeile;
-			while (eineZeile=[DataEnum nextObject])
-			{
-				DataOffset++;
-				//NSLog(@"eineZeile: %@",eineZeile);
-				NSRange r=[eineZeile rangeOfString:@"Startzeit:"];
-				
-            // Zeile mit "Startzeit" suchen, offset in Dataoffset speichern
-				if (!(NSEqualRanges(r,NSMakeRange(NSNotFound,0))))
-				{
-					//NSLog(@"openWithString bingo: %@",eineZeile);
-					break;
-				}
-			}//while
-			//NSLog(@"DataOffset: %d",DataOffset);
-			
-			//		DataOffset += 3; // Zeile mit Startzeit
-			//		DatenArray = [[tempDatenArray subarrayWithRange:NSMakeRange(DataOffset,[tempDatenArray count]-DataOffset)]retain];
-			
-			NSString* DatumString= [tempDatenArray objectAtIndex:DataOffset-1];
-			
-			// Eventuellen Leerschlag am Anfang entfernen
-			char first=[DatumString characterAtIndex:0];
-			if (![CharOK characterIsMember:first])
-			{
-				DatumString=[DatumString substringFromIndex:1];
-			}
-			
-			// Datumstring nach leerschlaegen auftrennen
-			NSArray* tempDatumArray= [DatumString componentsSeparatedByString:@" "];
-			//NSLog(@"openWithString tempDatumArray: %@ count: %d",[tempDatumArray description], [tempDatumArray count]);
-			
-			switch ([tempDatumArray count])
-			{
-				case 4: // aktuell
-				{
-					TagString=[tempDatumArray objectAtIndex:1];
-					ZeitString=[[tempDatumArray objectAtIndex:2]substringWithRange:NSMakeRange(0,5)];
-					StartDatumString= [[tempDatenArray objectAtIndex:DataOffset-1]substringFromIndex:11];
-					NSString* Kalenderformat=[[NSCalendarDate date]calendarFormat];
-					
-					
-               
-               StartZeit=[NSCalendarDate dateWithString:StartDatumString calendarFormat:Kalenderformat];
-					//NSLog(@"Format: %@ StartZeit: %@",Kalenderformat,[StartZeit description]);
-					Tag=[StartZeit dayOfMonth];
-					Monat=[StartZeit monthOfYear];
-					Jahr=[StartZeit yearOfCommonEra];
-					//NSLog(@"openWithString StartZeit case 4: %@ tag: %d monat: %d Jahr: %d",[StartZeit description],Tag, Monat, Jahr);
-					
-				}break;
-					
-				case 5: // ab 12.3.09
-				{
-					TagString=[tempDatumArray objectAtIndex:2];
-					ZeitString=[[tempDatumArray objectAtIndex:4]substringWithRange:NSMakeRange(0,5)];
-					StartDatumString= [[tempDatenArray objectAtIndex:10]substringFromIndex:11];
-					int l=[StartDatumString length];
-					StartDatumString= [StartDatumString substringToIndex:l-1];
-					//NSLog(@"openWithString StartDatumString 5: *%@*",StartDatumString);
-					NSString* Kalenderformat=[[NSCalendarDate date]calendarFormat];
-					
-					StartZeit=[NSCalendarDate dateWithString:StartDatumString calendarFormat:Kalenderformat];
-					//NSLog(@"Format: %@ StartZeit: %@",Kalenderformat,[StartZeit description]);
-					//NSLog(@"openWithString StartZeit case 5: %@ tag: %d",[StartZeit description],[StartZeit dayOfMonth]);
-					
-					
-				}break;
-					
-				case 6:	//	vor 12.3.09
-				{
-					TagString=[tempDatumArray objectAtIndex:3];
-					ZeitString=[[tempDatumArray objectAtIndex:5]substringWithRange:NSMakeRange(0,5)];
-					
-				}break;
-					
-					
-			}	//	switch count
-			
-			
-			//NSLog(@"tempDatenArray count: %d",[tempDatenArray count]);
-			//NSLog(@"Tag: %@ Zeit: %@",TagString, ZeitString);
-			//NSLog(@"tempDatenArray: %@",[tempDatenArray description]);
-			
-			
-			
-			rohDatenArray = [tempDatenArray subarrayWithRange:NSMakeRange(DataOffset,[tempDatenArray count]-DataOffset)];
-			NSMutableArray* DatenArray=[[NSMutableArray alloc]initWithCapacity:0];
-			//NSLog(@"openWithString rohDatenArray count: %lu",(unsigned long)[rohDatenArray count]);
-			int i=0;
-			for (i=0;i<[rohDatenArray count];i++)
-			//for (i=0;i<1;i++)
-
-			{
+   if ([derDatenString length])
+   {
+      char last=[derDatenString characterAtIndex:[derDatenString length]-1];
+      //NSLog(@"Letzter Char: %c",last);
+      // eventuelle Zeilenschaltung am Ende entfernen
+      
+      if (![CharOK characterIsMember:last])
+      {
+         derDatenString=[derDatenString substringToIndex:[derDatenString length]-1];
+      }
+      
+      if ([derDatenString length])
+      {
+         //NSLog(@"openWithString DatenString: \n%@",derDatenString);
+         NSArray* tempDatenArray= [derDatenString componentsSeparatedByString:@"\n"];
+         //	NSArray* tempDatenArray= [DatenString componentsSeparatedByString:@"\r"];
+         
+         //NSLog(@"openWithString tempDatenArray count: %d",[tempDatenArray count]);
+         int DataOffset=12;
+         if ([tempDatenArray count] >DataOffset)	// mindestens 1 Data
+         {
             
-				NSMutableArray* tempDatenArray=[[NSMutableArray alloc]initWithCapacity:0];
-				tempDatenArray = [NSMutableArray arrayWithArray: [[rohDatenArray objectAtIndex:i] componentsSeparatedByString:@"\t"]];
-				while ([tempDatenArray count]<9)
-				{
-					[tempDatenArray addObject: [NSNumber numberWithInt:0]];
-				}
-				//NSLog(@"tempDatenArray: %@",[tempDatenArray description]);
-				NSString* tempZeilenString= [tempDatenArray componentsJoinedByString:@"\r"];
-				if (i==0)
-				{
-					//NSLog(@"openWithString erster tempZeilenString : \n%@",tempZeilenString);
-				}
-				[DatenArray addObject:tempZeilenString];
-			}
-			
-			if ([DatenArray count])
-			{
-				//NSLog(@"openWithString DatenArray sauber: %@",[DatenArray description]);
-				//NSLog(@"openWithString DatenArray sauber length: %d",[DatenArray count]);
-				//NSLog(@"DatenArray: %@",[[DatenArray objectAtIndex:0]description]);
-				NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
-				[NotificationDic setObject:[NSNumber numberWithInt:Tag] forKey:@"datumtag"];
-				[NotificationDic setObject:[NSNumber numberWithInt:Monat] forKey:@"datummonat"];
-				[NotificationDic setObject:[NSNumber numberWithInt:Jahr] forKey:@"datumjahr"];
-				[NotificationDic setObject:[ZeitString copy]forKey:@"datumzeit"];
-				[NotificationDic setObject:[[StartZeit description] copy]forKey:@"startzeit"];
-				[NotificationDic setObject:[DatenArray copy] forKey:@"datenarray"];
-				
-				NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
-				[nc postNotificationName:@"externedaten" object:self userInfo:NotificationDic];
-				
-			}	// if [DatenArray count]
-			
-		}	// [tempDatenArray count] >11
-		
-	}
-	
+            // Tabellenkopf entfernen: Zeile mit Datum suchen
+            
+            DataOffset=0;
+            NSEnumerator* DataEnum=[tempDatenArray objectEnumerator];
+            id eineZeile;
+            while (eineZeile=[DataEnum nextObject])
+            {
+               DataOffset++;
+               //NSLog(@"eineZeile: %@",eineZeile);
+               NSRange r=[eineZeile rangeOfString:@"Startzeit:"];
+               
+               // Zeile mit "Startzeit" suchen, offset in Dataoffset speichern
+               if (!(NSEqualRanges(r,NSMakeRange(NSNotFound,0))))
+               {
+                  //NSLog(@"openWithString bingo: %@",eineZeile);
+                  break;
+               }
+            }//while
+            //NSLog(@"DataOffset: %d",DataOffset);
+            
+            //		DataOffset += 3; // Zeile mit Startzeit
+            //		DatenArray = [[tempDatenArray subarrayWithRange:NSMakeRange(DataOffset,[tempDatenArray count]-DataOffset)]retain];
+            
+            NSString* DatumString= [tempDatenArray objectAtIndex:DataOffset-1];
+            
+            // Eventuellen Leerschlag am Anfang entfernen
+            char first=[DatumString characterAtIndex:0];
+            if (![CharOK characterIsMember:first])
+            {
+               DatumString=[DatumString substringFromIndex:1];
+            }
+            
+            // Datumstring nach leerschlaegen auftrennen
+            NSArray* tempDatumArray= [DatumString componentsSeparatedByString:@" "];
+            //NSLog(@"openWithString tempDatumArray: %@ count: %d",[tempDatumArray description], [tempDatumArray count]);
+            
+            switch ([tempDatumArray count])
+            {
+               case 4: // aktuell
+               {
+                  TagString=[tempDatumArray objectAtIndex:1];
+                  ZeitString=[[tempDatumArray objectAtIndex:2]substringWithRange:NSMakeRange(0,5)];
+                  StartDatumString= [[tempDatenArray objectAtIndex:DataOffset-1]substringFromIndex:11];
+                  NSString* Kalenderformat=[[NSCalendarDate date]calendarFormat];
+                  
+                  
+                  
+                  StartZeit=[NSCalendarDate dateWithString:StartDatumString calendarFormat:Kalenderformat];
+                  //NSLog(@"Format: %@ StartZeit: %@",Kalenderformat,[StartZeit description]);
+                  Tag=[StartZeit dayOfMonth];
+                  Monat=[StartZeit monthOfYear];
+                  Jahr=[StartZeit yearOfCommonEra];
+                  //NSLog(@"openWithString StartZeit case 4: %@ tag: %d monat: %d Jahr: %d",[StartZeit description],Tag, Monat, Jahr);
+                  
+               }break;
+                  
+               case 5: // ab 12.3.09
+               {
+                  TagString=[tempDatumArray objectAtIndex:2];
+                  ZeitString=[[tempDatumArray objectAtIndex:4]substringWithRange:NSMakeRange(0,5)];
+                  StartDatumString= [[tempDatenArray objectAtIndex:10]substringFromIndex:11];
+                  int l=[StartDatumString length];
+                  StartDatumString= [StartDatumString substringToIndex:l-1];
+                  //NSLog(@"openWithString StartDatumString 5: *%@*",StartDatumString);
+                  NSString* Kalenderformat=[[NSCalendarDate date]calendarFormat];
+                  
+                  StartZeit=[NSCalendarDate dateWithString:StartDatumString calendarFormat:Kalenderformat];
+                  //NSLog(@"Format: %@ StartZeit: %@",Kalenderformat,[StartZeit description]);
+                  //NSLog(@"openWithString StartZeit case 5: %@ tag: %d",[StartZeit description],[StartZeit dayOfMonth]);
+                  
+                  
+               }break;
+                  
+               case 6:	//	vor 12.3.09
+               {
+                  TagString=[tempDatumArray objectAtIndex:3];
+                  ZeitString=[[tempDatumArray objectAtIndex:5]substringWithRange:NSMakeRange(0,5)];
+                  
+               }break;
+                  
+                  
+            }	//	switch count
+            
+            
+            //NSLog(@"tempDatenArray count: %d",[tempDatenArray count]);
+            //NSLog(@"Tag: %@ Zeit: %@",TagString, ZeitString);
+            //NSLog(@"tempDatenArray: %@",[tempDatenArray description]);
+            
+            
+            
+            rohDatenArray = [tempDatenArray subarrayWithRange:NSMakeRange(DataOffset,[tempDatenArray count]-DataOffset)];
+            NSMutableArray* DatenArray=[[NSMutableArray alloc]initWithCapacity:0];
+            //NSLog(@"openWithString rohDatenArray count: %lu",(unsigned long)[rohDatenArray count]);
+            int i=0;
+            for (i=0;i<[rohDatenArray count];i++)
+               //for (i=0;i<1;i++)
+               
+            {
+               
+               NSMutableArray* tempDatenArray=[[NSMutableArray alloc]initWithCapacity:0];
+               tempDatenArray = [NSMutableArray arrayWithArray: [[rohDatenArray objectAtIndex:i] componentsSeparatedByString:@"\t"]];
+               while ([tempDatenArray count]<9)
+               {
+                  [tempDatenArray addObject: [NSNumber numberWithInt:0]];
+               }
+               //NSLog(@"tempDatenArray: %@",[tempDatenArray description]);
+               NSString* tempZeilenString= [tempDatenArray componentsJoinedByString:@"\r"];
+               if (i==0)
+               {
+                  //NSLog(@"openWithString erster tempZeilenString : \n%@",tempZeilenString);
+               }
+               [DatenArray addObject:tempZeilenString];
+            }
+            
+            if ([DatenArray count])
+            {
+               //NSLog(@"openWithString DatenArray sauber: %@",[DatenArray description]);
+               //NSLog(@"openWithString DatenArray sauber length: %d",[DatenArray count]);
+               //NSLog(@"DatenArray: %@",[[DatenArray objectAtIndex:0]description]);
+               NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
+               [NotificationDic setObject:[NSNumber numberWithInt:Tag] forKey:@"datumtag"];
+               [NotificationDic setObject:[NSNumber numberWithInt:Monat] forKey:@"datummonat"];
+               [NotificationDic setObject:[NSNumber numberWithInt:Jahr] forKey:@"datumjahr"];
+               [NotificationDic setObject:[ZeitString copy]forKey:@"datumzeit"];
+               [NotificationDic setObject:[[StartZeit description] copy]forKey:@"startzeit"];
+               [NotificationDic setObject:[DatenArray copy] forKey:@"datenarray"];
+               
+               NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
+               [nc postNotificationName:@"externedaten" object:self userInfo:NotificationDic];
+               
+            }	// if [DatenArray count]
+            
+         }	// [tempDatenArray count] >11
+         
+      }
+   }
 	
 	
 	//} // if count

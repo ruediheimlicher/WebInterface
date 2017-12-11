@@ -20,7 +20,8 @@
 	
 	NSURLRequest *				HomeCentralRequest;
 	NSMutableData *			HomeCentralData;
-	BOOL isDownloading;
+	BOOL                    isDownloading;
+   BOOL                    localNetz;
 	
 	WebDownload *download;
 	

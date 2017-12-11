@@ -47,7 +47,7 @@ enum webtaskflag{idle, eepromread, eepromwrite,eepromreadwoche,eepromwritewoche}
    // Dic fuer Senden von EEPROMDaten an HomeServer
    NSMutableDictionary*    SendEEPROMDataDic;
    NSTimer*                EEPROMUpdateTimer;
-   
+   BOOL                    localNetz; // lokales Netzwerk benutzen
 	int							WebTask;          // Auszuführende Aktion aufgrund von Web-Requests
    int							Webserver_busy;
    int							WriteWoche_busy;
@@ -55,6 +55,7 @@ enum webtaskflag{idle, eepromread, eepromwrite,eepromreadwoche,eepromwritewoche}
    Utils*                  Util;
 }
 
+- (BOOL)localNetz;
 - (void)setHomeCentralI2C:(int)derStatus;
 - (void)setWebI2C:(int)derStatus;
 - (NSString*)ReadURLForEEPROM:(int)EEPROMADDRESS hByte: (int)hbyte lByte:(int)lByte;

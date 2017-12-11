@@ -1,0 +1,63 @@
+{
+    IBClasses = (
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {CLASS = NSLevelIndicator; LANGUAGE = ObjC; SUPERCLASS = NSControl; }, 
+        {CLASS = NSSegmentedControl; LANGUAGE = ObjC; SUPERCLASS = NSControl; }, 
+        {
+            ACTIONS = {
+                reportCancel = id; 
+                reportClear1Kanal = id; 
+                reportClear8Kanal = id; 
+                reportClose = id; 
+                reportEinkanalOffset = id; 
+                reportRead1Kanal = id; 
+                reportRead1RandomKanal = id; 
+                reportRead8Kanal = id; 
+                reportRead8RandomKanal = id; 
+                reportReadAll = id; 
+                reportTrack1Kanal = id; 
+                reportTrack1RandomKanal = id; 
+                reportTrack8Kanal = id; 
+                reportTrack8RandomKanal = id; 
+            }; 
+            CLASS = rADWandler; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                ADTab = id; 
+                CancelTaste = id; 
+                EinKanalDiagrammWertFeld = id; 
+                EinkanalDatenFeld = id; 
+                EinkanalDiagramm = id; 
+                EinkanalDiagrammScroller = id; 
+                EinkanalOffsetSchieber = id; 
+                EinkanalZeitKompressionTaste = id; 
+                InterfaceNummerTaste = id; 
+                KanalWahlTaste = id; 
+                MehrKanalDiagrammWertFeld = id; 
+                MehrkanalDatenFeld = id; 
+                MehrkanalDiagramm = id; 
+                MehrkanalDiagrammScroller = id; 
+                MehrkanalReadRandTaste = id; 
+                MehrkanalReadTaste = id; 
+                MehrkanalScroller = id; 
+                MehrkanalTrackRandTaste = id; 
+                MehrkanalTrackTaste = id; 
+                MehrkanalTrackZeitTaste = id; 
+                MehrkanalWahlTaste = id; 
+                MehrkanalWertFeld = id; 
+                MehrkanalZeitKompressionTaste = id; 
+                NetzBox = id; 
+                SchliessenTaste = id; 
+                TrackRandomTaste = id; 
+                TrackTaste = id; 
+                TrackZeitTaste = id; 
+                testbox = id; 
+            }; 
+            SUPERCLASS = NSWindowController; 
+        }, 
+        {CLASS = rEinkanalDiagramm; LANGUAGE = ObjC; SUPERCLASS = NSView; }, 
+        {CLASS = rMehrkanalDiagramm; LANGUAGE = ObjC; SUPERCLASS = NSView; }, 
+        {CLASS = rNetzBox; LANGUAGE = ObjC; SUPERCLASS = NSBox; }
+    ); 
+    IBVersion = 1; 
+}

@@ -192,6 +192,11 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 		NSStringEncoding *  enc=0;
 		NSCharacterSet* CharOK=[NSCharacterSet alphanumericCharacterSet];
 		NSError* WebFehler=NULL;
+      
+      if (localNetz == YES)
+         {
+            return returnString;
+         }
 		NSString* DataString=[NSString stringWithContentsOfURL:URL usedEncoding: enc error:&WebFehler];
 		//NSLog(@"DataVonHeute WebFehler: :%@",[[WebFehler userInfo]description]);
 		if (WebFehler)
@@ -211,13 +216,14 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
          {
             NSLog(@"offline");
          }
+         
 			NSAlert *Warnung = [[NSAlert alloc] init];
 			[Warnung addButtonWithTitle:@"OK"];
 			//	[Warnung addButtonWithTitle:@""];
 			//	[Warnung addButtonWithTitle:@""];
 			//	[Warnung addButtonWithTitle:@"Abbrechen"];
-			NSString* MessageText= NSLocalizedString(@"Error in Download",@"Download misslungen");
-			[Warnung setMessageText:[NSString stringWithFormat:@"%@",MessageText]];
+			NSString* MessageText= NSLocalizedString(@"HomeData Error in Download",@"Download misslungen");
+			[Warnung setMessageText:[NSString stringWithFormat:@"%@ \n%@",@"DataVonHeute ",MessageText]];
 			
 			NSString* s1=[NSString stringWithFormat:@"URL: \n%@",URL];
          
@@ -229,10 +235,10 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 			[Warnung setInformativeText:InformationString];
 			[Warnung setAlertStyle:NSWarningAlertStyle];
 			
-			int antwort=[Warnung runModal];
-         
-         
+	//		int antwort=[Warnung runModal];
+   //      NSLog(@"DataVonHeute antwort: %d",antwort);
 			return returnString;
+         
 		}
       
 		if ([DataString length])
@@ -610,7 +616,7 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 - (void)LocalStatusAktion:(NSNotification*)note
 {
    NSLog(@"HomeData LocalStatusAktion note: %@",[[note userInfo]description]);
-
+   localNetz = YES;
 }
 
 - (void)TestStatusAktion:(NSNotification*)note
@@ -678,6 +684,7 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
    //[NSFileManager defaultManager]
    }
 */
+   
    NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
    //[NotificationDic setObject:DataString forKey:@"routerip"];
    if (scriptReturn)
@@ -703,6 +710,12 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
    }
    else
    {
+      
+      if (localNetz == YES)
+      {
+         return returnString;
+      }
+
       //NSArray* BrennerdatenArray = [self BrennerStatistikVonJahr:2010 Monat:0];
       //NSLog(@"BrennerdatenArray: %@",[BrennerdatenArray description]);
       
@@ -715,6 +728,12 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
       //NSLog(@"SolarDataVonHeute URL: %@",URL);
       //NSURL *URL = [NSURL URLWithString:@"http://www.schuleduernten.ch/blatt/cgi-bin/HomeDaten.txt"];
       //www.schuleduernten.ch/blatt/cgi-bin/HomeDaten/HomeDaten090730.txt
+      
+      if (localNetz == YES)
+      {
+         return returnString;
+      }
+    
       NSStringEncoding *  enc=0;
       NSCharacterSet* CharOK=[NSCharacterSet alphanumericCharacterSet];
       NSError* WebFehler=NULL;
@@ -735,7 +754,7 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
          //	[Warnung addButtonWithTitle:@""];
          //	[Warnung addButtonWithTitle:@""];
          //	[Warnung addButtonWithTitle:@"Abbrechen"];
-         NSString* MessageText= NSLocalizedString(@"Error in Download",@"Download misslungen");
+         NSString* MessageText= NSLocalizedString(@"Error in Download",@"SolarDataVonHeute\nDownload misslungen");
          [Warnung setMessageText:[NSString stringWithFormat:@"%@",MessageText]];
          
          NSString* s1=[NSString stringWithFormat:@"URL: \n%@",URL];
@@ -849,7 +868,7 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 			//	[Warnung addButtonWithTitle:@""];
 			//	[Warnung addButtonWithTitle:@""];
 			//	[Warnung addButtonWithTitle:@"Abbrechen"];
-			NSString* MessageText= NSLocalizedString(@"Error in Download",@"Download misslungen");
+			NSString* MessageText= NSLocalizedString(@"Error in Download",@"TestSolarData Download misslungen");
 			[Warnung setMessageText:[NSString stringWithFormat:@"%@",MessageText]];
 			
 			NSString* s1=[NSString stringWithFormat:@"URL: \n%@",URL];

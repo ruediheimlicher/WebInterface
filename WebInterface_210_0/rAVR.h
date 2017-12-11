@@ -145,6 +145,8 @@ NSTimer*                EEPROMUpdateTimer;
    int                     writeEEPROMcounter;
    int                     loadstatus;
    
+   BOOL                    localNetz; // lokales Netzwerk benutzen
+   
    IBOutlet NSTextField*   busycountfeld;
    
    IBOutlet NSLevelIndicator* writeEEPROManzeige;

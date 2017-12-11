@@ -87,397 +87,429 @@ void IOWarriorCallback ()
 /*" Invoked when the nib file including the window has been loaded. "*/
 - (void) awakeFromNib
 {
+   //Reachability* reachability = [[Reachability reachabilityWithHostName: @"www.apple.com"];
+   //NetworkStatus netStatus = [reachability currentReachabilityStatus];
+   
+   /*
+    //NSString *ipString = [NSString localizedStringWithFormat:@"do shell script \"ping -c 2 192.168.1.210\""];
+    NSString *ipString = [NSString localizedStringWithFormat:@"do shell script \"ping -c 2 www.apple.com\""];
+    
+    NSAppleScript *ipscript = [[NSAppleScript alloc] initWithSource:ipString];
+    NSDictionary *iperrorMessage = nil;
+    NSAppleEventDescriptor *ipresult = [ipscript executeAndReturnError:&iperrorMessage];
+    //NSLog(@"mount: %@",ipresult);
+    NSString *scriptReturn = [ipresult stringValue];
+    NSLog(@"HomeData Found ping string: %@",scriptReturn);
+    */
    localNetz = NO;
    
+   localHostIP = [NSURL URLWithString:@"http://192.168.1.210"];
+   webHostIP = [NSURL URLWithString:@"http://ruediheimlicher.dyndns.org"];
    
-     
    NSString* ASString = @"return do shell script \"curl http://checkip.dyndns.org/\"";
    NSAppleScript* IP_appleScript = [[NSAppleScript alloc] initWithSource: ASString];
    //DLog(@"IP_appleScript: %@ ",[IP_appleScript description]);
+   
    NSDictionary* IPErr=nil;
-    NSNotificationCenter * nc;
+   NSNotificationCenter * nc;
    nc=[NSNotificationCenter defaultCenter];
-
- 
+   
+   
    // new calendar
    NSDate *now = [[NSDate alloc] init];
    NSCalendar *kalender = [NSCalendar currentCalendar];
    [kalender setFirstWeekday:2];
    NSDateComponents *components = [kalender components:( NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay | NSCalendarUnitWeekday | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond ) fromDate:now];
    components.weekday = components.weekday-1;
-
+   
    // end new Calendar
    oldHour = components.hour;
    
-	//oldHour=[[NSCalendarDate date]hourOfDay];
-
+   //oldHour=[[NSCalendarDate date]hourOfDay];
+   
    daySaved=NO;
-	int adresse=0xABCD;
-	adresse = 0xA030;
-	int lbyte=adresse<<8;
-	lbyte &= 0xff00;
-	lbyte >>=8;
-	int hbyte=adresse>>8;
-	
-	uint8_t aa=0xA0;
-	
-	char* TWIString=itoa((int)aa,16);
-	//NSLog(@"aa: %d TWIString: %s",aa,TWIString);
-	//int lbyte=adresse%0x100;
-	//int hbyte=adresse/0x100;
-	//lbyte>>=8;
-	//NSLog(@"adresse: %x lbyte: %x hbyte; %x",adresse, lbyte,hbyte);
-	
-	//gesichert=0;
-	anzDataOK=0;
-	old=0;
-	uint8_t Daten=0xfc;
-	
-	
-	NSImage* myImage = [NSImage imageNamed: @"HAUS"];
-	[NSApp setApplicationIconImage: myImage];
-
-	
-	anzSessionFiles=0; // Anzahl gesicherte Files am aktuellen Tag
-	
-	/*
-	[WindowMenu setDelegate:self];
-	[[WindowMenu itemWithTag:1] setTarget:self];//AVR
-	[[WindowMenu itemWithTag:2] setTarget:self];//Data
-	[[WindowMenu itemWithTag:3] setTarget:self];//AVR
-*/
-	
-	uint8_t TagStundenCodeA=(Daten>>4);	//	Stunde A oberer Balken im char, bit 4, 5
-	TagStundenCodeA &= 0x03;	//	Bit 0, 1
-	
-	uint8_t TagStundenCodeB=(Daten>>2);	//	Stunde A oberer Balken im char, bit 3, 2
-	TagStundenCodeB &= 0x03;	//	Bit 0, 1
-	
-	//NSLog(@"Daten: %02X TagStundenCodeA: %02X TagStundenCodeB; %02X",Daten, TagStundenCodeA,TagStundenCodeB);
-	
-	TagStundenCodeA >>=2;
-	//
-	
-	TagStundenCodeB >>=2;
-	//
-	//NSLog(@"Daten: %02X TagStundenCodeA: %02X TagStundenCodeB; %02X",Daten, TagStundenCodeA,TagStundenCodeB);
-	
-	uint8_t zahl=244;
-	char string[3];
-	uint8_t l,h;                             // schleifenzähler
-	//NSLog(@"zahl: %d   hex: %02X ",zahl, zahl);
-	
-	
-	//  string[4]='\0';                       // String Terminator
-	string[2]='\0';                       // String Terminator
-	l=(zahl % 16);
-	if (l<10)
-		string[1]=l +'0';  
-	else
-	{
-		l%=10;
-		string[1]=l + 'A'; 
-		
-	}
-	zahl /=16;
-	h= zahl % 16;
-	if (h<10)
-		string[0]=h +'0';  
-	else
-	{
-		h%=10;
-		string[0]=h + 'A'; 
-	}
-	
-	
-	
-	
-	
-	NSString* hexString=[NSString stringWithUTF8String:string ];
-	//NSLog(@"l: %d h: %d zahl convertiert: %@ ",l,h, hexString);
-	
-	// set the global ptr to the main window controller to self, needed for iowarrior callbacks
-	gWindowController = self;
-	//	NSString *systemVersion = [[NSDictionary dictionaryWithContentsOfFile:@"/System/Library/CoreServices/SystemVersion.plist"] objectForKey:@"ProductVersion"];    
-	//	NSLog(@"systemVersion: %@",systemVersion);
-	//	NSArray* VersionArray=[systemVersion componentsSeparatedByString:@"."];
-	//	NSLog(@"VersionArray: %@",[VersionArray description]);
-	// init the IOWarrior library
-	NSString* SysVersion=SystemVersion();
-	NSArray* VersionArray=[SysVersion componentsSeparatedByString:@"."];
-	SystemNummer=[[VersionArray objectAtIndex:1]intValue];
-	//NSLog(@"SystemVersion aus Funktion: %@ Nummer: %d ",SysVersion,SystemNummer);
-	//IOWarriorInit ();
-	//IOWarriorIsPresent (); // builds the list of available IOWarrior interface, speeds up library operations
-	//IOWarriorSetDeviceCallback (IOWarriorCallback, nil);
-	isReading = false;
-	isTracking = false;
-	ignoreDuplicates = YES;
-	
-	dumpTabelle=[[NSMutableArray alloc]initWithCapacity:0];
-	Dump_DS=[[rDump_DS alloc]init];
-	[dumpTable setDelegate:Dump_DS];
-	[dumpTable setDataSource:Dump_DS];
-	dumpCounter=0;
-	[self tableViewSelectionDidChange:nil];
-	logEntries = [[NSMutableArray alloc] init];
-	[logTable setTarget:self];
-	[logTable setDoubleAction:@selector(logTableDoubleClicked)];
-	// populate macropopup
-	[self updateMacroPopup];
-	[ignoreDuplicatesCheckBox setState:ignoreDuplicates];
-	
+   int adresse=0xABCD;
+   adresse = 0xA030;
+   int lbyte=adresse<<8;
+   lbyte &= 0xff00;
+   lbyte >>=8;
+   int hbyte=adresse>>8;
+   
+   uint8_t aa=0xA0;
+   
+   char* TWIString=itoa((int)aa,16);
+   //NSLog(@"aa: %d TWIString: %s",aa,TWIString);
+   //int lbyte=adresse%0x100;
+   //int hbyte=adresse/0x100;
+   //lbyte>>=8;
+   //NSLog(@"adresse: %x lbyte: %x hbyte; %x",adresse, lbyte,hbyte);
+   
+   //gesichert=0;
+   anzDataOK=0;
+   old=0;
+   uint8_t Daten=0xfc;
+   
+   
+   NSImage* myImage = [NSImage imageNamed: @"HAUS"];
+   [NSApp setApplicationIconImage: myImage];
+   
+   
+   anzSessionFiles=0; // Anzahl gesicherte Files am aktuellen Tag
+   
+   /*
+    [WindowMenu setDelegate:self];
+    [[WindowMenu itemWithTag:1] setTarget:self];//AVR
+    [[WindowMenu itemWithTag:2] setTarget:self];//Data
+    [[WindowMenu itemWithTag:3] setTarget:self];//AVR
+    */
+   
+   uint8_t TagStundenCodeA=(Daten>>4);	//	Stunde A oberer Balken im char, bit 4, 5
+   TagStundenCodeA &= 0x03;	//	Bit 0, 1
+   
+   uint8_t TagStundenCodeB=(Daten>>2);	//	Stunde A oberer Balken im char, bit 3, 2
+   TagStundenCodeB &= 0x03;	//	Bit 0, 1
+   
+   //NSLog(@"Daten: %02X TagStundenCodeA: %02X TagStundenCodeB; %02X",Daten, TagStundenCodeA,TagStundenCodeB);
+   
+   TagStundenCodeA >>=2;
+   //
+   
+   TagStundenCodeB >>=2;
+   //
+   //NSLog(@"Daten: %02X TagStundenCodeA: %02X TagStundenCodeB; %02X",Daten, TagStundenCodeA,TagStundenCodeB);
+   
+   uint8_t zahl=244;
+   char string[3];
+   uint8_t l,h;                             // schleifenzähler
+   //NSLog(@"zahl: %d   hex: %02X ",zahl, zahl);
+   
+   
+   //  string[4]='\0';                       // String Terminator
+   string[2]='\0';                       // String Terminator
+   l=(zahl % 16);
+   if (l<10)
+      string[1]=l +'0';  
+   else
+   {
+      l%=10;
+      string[1]=l + 'A'; 
+      
+   }
+   zahl /=16;
+   h= zahl % 16;
+   if (h<10)
+      string[0]=h +'0';  
+   else
+   {
+      h%=10;
+      string[0]=h + 'A'; 
+   }
+   
+   
+   
+   
+   
+   NSString* hexString=[NSString stringWithUTF8String:string ];
+   //NSLog(@"l: %d h: %d zahl convertiert: %@ ",l,h, hexString);
+   
+   // set the global ptr to the main window controller to self, needed for iowarrior callbacks
+   gWindowController = self;
+   //	NSString *systemVersion = [[NSDictionary dictionaryWithContentsOfFile:@"/System/Library/CoreServices/SystemVersion.plist"] objectForKey:@"ProductVersion"];    
+   //	NSLog(@"systemVersion: %@",systemVersion);
+   //	NSArray* VersionArray=[systemVersion componentsSeparatedByString:@"."];
+   //	NSLog(@"VersionArray: %@",[VersionArray description]);
+   // init the IOWarrior library
+   NSString* SysVersion=SystemVersion();
+   NSArray* VersionArray=[SysVersion componentsSeparatedByString:@"."];
+   SystemNummer=[[VersionArray objectAtIndex:1]intValue];
+   //NSLog(@"SystemVersion aus Funktion: %@ Nummer: %d ",SysVersion,SystemNummer);
+   //IOWarriorInit ();
+   //IOWarriorIsPresent (); // builds the list of available IOWarrior interface, speeds up library operations
+   //IOWarriorSetDeviceCallback (IOWarriorCallback, nil);
+   isReading = false;
+   isTracking = false;
+   ignoreDuplicates = YES;
+   
+   dumpTabelle=[[NSMutableArray alloc]initWithCapacity:0];
+   Dump_DS=[[rDump_DS alloc]init];
+   [dumpTable setDelegate:Dump_DS];
+   [dumpTable setDataSource:Dump_DS];
+   dumpCounter=0;
+   [self tableViewSelectionDidChange:nil];
+   logEntries = [[NSMutableArray alloc] init];
+   [logTable setTarget:self];
+   [logTable setDoubleAction:@selector(logTableDoubleClicked)];
+   // populate macropopup
+   [self updateMacroPopup];
+   [ignoreDuplicatesCheckBox setState:ignoreDuplicates];
+   
    [nc addObserver:self
           selector:@selector(LocalStatusAktion:)
               name:@"localstatus"
             object:nil];
-
-	[nc addObserver:self
-			 selector:@selector(TastenAktion:)
-				  name:@"Tastenaktion"
-				object:nil];
-	
-	[nc addObserver:self
-			 selector:@selector(EinzelTastenAktion:)
-				  name:@"Einzeltastenaktion"
-				object:nil];
-	
-	[nc addObserver:self
-			 selector:@selector(SendTastenAktion:)
-				  name:@"SendTastenAktion"
-				object:nil];
-	
-	[nc addObserver:self
-			 selector:@selector(SendAktion:)
-				  name:@"SendAktion"
-				object:nil];
-	
-	[nc addObserver:self
-			 selector:@selector(InputAktion:)
-				  name:@"InputAktion"
-				object:nil];
-	
-	[nc addObserver:self
-			 selector:@selector(BeendenAktion:)
-				  name:@"IOWarriorBeenden"
-				object:nil];
-
-	
-	[nc addObserver:self
-			 selector:@selector(FensterSchliessenAktion:)
-				  name:@"NSWindowWillCloseNotification"
-				object:nil];
-	
-	[nc addObserver:self
-			 selector:@selector(FensterWirdSchliessenAktion:)
-				  name:@"NSWindowShouldCloseNotification"
-				object:nil];
-	
-	[nc addObserver:self
-			 selector:@selector(sendCmdAktion:)
-				  name:@"sendcmd"
-				object:nil];
-	
-	[nc addObserver:self
-			 selector:@selector(i2cEEPROMReadReportAktion:)
-				  name:@"i2ceepromread"
-				object:nil];
-	
-	
-	[nc addObserver:self
-			 selector:@selector(i2cEEPROMWriteReportAktion:)
-				  name:@"i2ceepromwrite"
-				object:nil];
-	
-	
-	[nc addObserver:self
-			 selector:@selector(i2cStatusAktion:) // Action von USBWrrior
-				  name:@"i2cstatus"
-				object:nil];
-	
-	
-	[nc addObserver:self
-			 selector:@selector(DataAktion:)
-				  name:@"data"
-				object:nil];
-
-	[nc addObserver:self
-			 selector:@selector(HomeDataDownloadAktion:)
-				  name:@"HomeDataDownload"
-				object:nil];
-	
-	[nc addObserver:self
-			 selector:@selector(HomeDataKalenderAktion:)
-				  name:@"HomeDataKalender"
-				object:nil];
-
-	[nc addObserver:self
-			 selector:@selector(HomeDataSolarKalenderAktion:)
-				  name:@"SolarDataKalender"
-				object:nil];
-
-	//HomeDataSolarKalenderAktion
-	[nc addObserver:self
-			 selector:@selector(StatistikDatenAktion:)
-				  name:@"StatistikDaten"
-				object:nil];
-
-	[nc addObserver:self
-			 selector:@selector(HomeDataSolarStatistikKalenderAktion:)
-				  name:@"SolarStatistikKalender"
-				object:nil];
-
-	
-	
-		[nc addObserver:self
-			 selector:@selector(DatenVonHeuteAktion:)
-				  name:@"datenvonheute"
-				object:nil];
-
-	[nc addObserver:self
-			 selector:@selector(SolarDataDownloadAktion:)
-				  name:@"SolarDataDownload"
-				object:nil];
-	
-		[nc addObserver:self
-			 selector:@selector(SolarDatenVonHeuteAktion:)
-				  name:@"solardatenvonheute"
-				object:nil];
-
-
-	
-	[nc addObserver:self
-			 selector:@selector(HomeDataSolarKalenderAktion:)
-				  name:@"HomeDataSolarKalender"
-				object:nil];
-
+   
    [nc addObserver:self
-			 selector:@selector(SolarStatistikDatenAktion:)
-				  name:@"SolarStatistikDaten"
-				object:nil];
+          selector:@selector(TastenAktion:)
+              name:@"Tastenaktion"
+            object:nil];
+   
+   [nc addObserver:self
+          selector:@selector(EinzelTastenAktion:)
+              name:@"Einzeltastenaktion"
+            object:nil];
+   
+   [nc addObserver:self
+          selector:@selector(SendTastenAktion:)
+              name:@"SendTastenAktion"
+            object:nil];
+   
+   [nc addObserver:self
+          selector:@selector(SendAktion:)
+              name:@"SendAktion"
+            object:nil];
+   
+   [nc addObserver:self
+          selector:@selector(InputAktion:)
+              name:@"InputAktion"
+            object:nil];
+   
+   [nc addObserver:self
+          selector:@selector(BeendenAktion:)
+              name:@"IOWarriorBeenden"
+            object:nil];
+   
+   
+   [nc addObserver:self
+          selector:@selector(FensterSchliessenAktion:)
+              name:@"NSWindowWillCloseNotification"
+            object:nil];
+   
+   [nc addObserver:self
+          selector:@selector(FensterWirdSchliessenAktion:)
+              name:@"NSWindowShouldCloseNotification"
+            object:nil];
+   
+   [nc addObserver:self
+          selector:@selector(sendCmdAktion:)
+              name:@"sendcmd"
+            object:nil];
+   
+   [nc addObserver:self
+          selector:@selector(i2cEEPROMReadReportAktion:)
+              name:@"i2ceepromread"
+            object:nil];
+   
+   
+   [nc addObserver:self
+          selector:@selector(i2cEEPROMWriteReportAktion:)
+              name:@"i2ceepromwrite"
+            object:nil];
+   
+   
+   [nc addObserver:self
+          selector:@selector(i2cStatusAktion:) // Action von USBWrrior
+              name:@"i2cstatus"
+            object:nil];
+   
+   
+   [nc addObserver:self
+          selector:@selector(DataAktion:)
+              name:@"data"
+            object:nil];
+   
+   [nc addObserver:self
+          selector:@selector(HomeDataDownloadAktion:)
+              name:@"HomeDataDownload"
+            object:nil];
+   
+   [nc addObserver:self
+          selector:@selector(HomeDataKalenderAktion:)
+              name:@"HomeDataKalender"
+            object:nil];
+   
+   [nc addObserver:self
+          selector:@selector(HomeDataSolarKalenderAktion:)
+              name:@"SolarDataKalender"
+            object:nil];
+   
+   //HomeDataSolarKalenderAktion
+   [nc addObserver:self
+          selector:@selector(StatistikDatenAktion:)
+              name:@"StatistikDaten"
+            object:nil];
+   
+   [nc addObserver:self
+          selector:@selector(HomeDataSolarStatistikKalenderAktion:)
+              name:@"SolarStatistikKalender"
+            object:nil];
+   
+   
+   
+   [nc addObserver:self
+          selector:@selector(DatenVonHeuteAktion:)
+              name:@"datenvonheute"
+            object:nil];
+   
+   [nc addObserver:self
+          selector:@selector(SolarDataDownloadAktion:)
+              name:@"SolarDataDownload"
+            object:nil];
+   
+   [nc addObserver:self
+          selector:@selector(SolarDatenVonHeuteAktion:)
+              name:@"solardatenvonheute"
+            object:nil];
+   
+   
+   
+   [nc addObserver:self
+          selector:@selector(HomeDataSolarKalenderAktion:)
+              name:@"HomeDataSolarKalender"
+            object:nil];
+   
+   [nc addObserver:self
+          selector:@selector(SolarStatistikDatenAktion:)
+              name:@"SolarStatistikDaten"
+            object:nil];
    
    //AVR=[[rAVR alloc]init];
-
+   
    localNetz = NO; 
+   HomeClient = [[rHomeClient alloc]init];
+   NSAlert *Warnung = [[NSAlert alloc] init];
+   [Warnung addButtonWithTitle:@"Web"];
+   [Warnung addButtonWithTitle:@"Lokal"];
+   //   [Warnung addButtonWithTitle:@""];
+   //   [Warnung addButtonWithTitle:@"Abbrechen"];
+   NSString* MessageText= NSLocalizedString(@"Netz-Zugang",@"Verbindung misslungen");
+   [Warnung setMessageText:[NSString stringWithFormat:@"%@ \n%@",@"IOWarriorWindowController awake",MessageText]];
    
-      NSAlert *Warnung = [[NSAlert alloc] init];
-      [Warnung addButtonWithTitle:@"Web"];
-      [Warnung addButtonWithTitle:@"Lokal"];
-      //   [Warnung addButtonWithTitle:@""];
-      //   [Warnung addButtonWithTitle:@"Abbrechen"];
-      NSString* MessageText= NSLocalizedString(@"Netz-Zugang",@"Verbindung misslungen");
-      [Warnung setMessageText:[NSString stringWithFormat:@"%@ \n%@",@"IOWarriorWindowController awake",MessageText]];
-      
-      
-      NSString* s1=@"Auswahl";
-      NSString* InformationString=[NSString stringWithFormat:@"Comment: %@",s1];
-      [Warnung setInformativeText:InformationString];
-      [Warnung setAlertStyle:NSWarningAlertStyle];
-      
-      int antwort=[Warnung runModal];
-      NSLog(@"Connection: %d",antwort);
-      switch (antwort)
+   
+   NSString* s1=@"Auswahl";
+   NSString* InformationString=[NSString stringWithFormat:@"Comment: %@",s1];
+   [Warnung setInformativeText:InformationString];
+   [Warnung setAlertStyle:NSWarningAlertStyle];
+   
+   int antwort=[Warnung runModal];
+   //NSLog(@"Connection: %d",antwort);
+   NSMutableDictionary* localStatusDic=[[NSMutableDictionary alloc]initWithCapacity:0];
+   
+   switch (antwort)
+   {
+      case 1000: // Web benutzen
       {
-         case 1000:
-         {
-            
-          }break;
-         case 1001:
-         {
-            localNetz = YES; // lokales Netzwerk benutzen
-            NSMutableDictionary* localStatusDic=[[NSMutableDictionary alloc]initWithCapacity:0];
-                        
-            [localStatusDic setObject:[NSNumber numberWithInt:1]forKey:@"status"];
-            [nc postNotificationName:@"localstatus" object:self userInfo:localStatusDic];
-
-         }
+         [localStatusDic setObject:[NSNumber numberWithInt:0]forKey:@"status"];
+         [localStatusDic setObject:webHostIP forKey:@"localhostip"];
+         [nc postNotificationName:@"localstatus" object:self userInfo:localStatusDic];
+         
+         
+      }break;
+      case 1001:
+      {
+         localNetz = YES; // lokales Netzwerk benutzen
+         
+         [localStatusDic setObject:[NSNumber numberWithInt:1]forKey:@"status"];
+         [localStatusDic setObject:localHostIP forKey:@"localhostip"];
+         [nc postNotificationName:@"localstatus" object:self userInfo:localStatusDic];
+         
       }
-     
+   }
    
-	lastDataRead=[[NSData alloc]init];
-	
+   
+   
+   lastDataRead=[[NSData alloc]init];
+   
    [self showAVR:NULL];
-	   
+   
    if (localNetz == NO)
    {
       [self showHomeData:NULL];
-   
+      
       [self showData:NULL]; // Observer von Data muessen vor HomeData aktiviert sein
-   
-      HomeClient = [[rHomeClient alloc]init];
+      
+      
    }
-	  else
-     {
-        [AVR setLocalStatus];
-     }
+   else
+   {
+      [AVR setLocalStatus];
+   }
    
-	lastDataZeit=0;
-	//[self startHomeData];
-	//NSLog(@"awake vor AktuelleDaten");
-	
+   lastDataZeit=0;
+   //[self startHomeData];
+   //NSLog(@"awake vor AktuelleDaten");
+   
    // heutige Daten laden
    NSString* AktuelleDaten = [NSString string];
    AktuelleDaten=[HomeData DataVonHeute];
-	//NSLog(@"awake AktuelleDaten: \n%@",AktuelleDaten);
    
-	if (AktuelleDaten &&[AktuelleDaten length])
-	{
-		//NSLog(@"awake openWithString\n\n");
+   //NSLog(@"awake AktuelleDaten: \n%@",AktuelleDaten);
+   
+   if (AktuelleDaten &&[AktuelleDaten length])
+   {
+      //NSLog(@"awake openWithString\n\n");
       
-		[self openWithString:AktuelleDaten];
+      [self openWithString:AktuelleDaten];
       
-		[self setStatistikDaten];
+      [self setStatistikDaten];
       
       NSString* IP_String = [HomeData Router_IP];
       
       [Data setRouter_IP:IP_String];
-	}
-	else
-	{
-		NSLog(@"awake Kein Web-Input");
-      [Data setRouter_IP:@"192.168.1.210"];
-	}
+   }
+   else
+   {
+      NSLog(@"awake Kein Web-Input");
+      
+      
+      localNetz = YES; // lokales Netzwerk benutzen
+      
+      [localStatusDic setObject:[NSNumber numberWithInt:1]forKey:@"status"];
+      [localStatusDic setObject:localHostIP forKey:@"localhostip"];
+      [nc postNotificationName:@"localstatus" object:self userInfo:localStatusDic];
+
+      //[Data setRouter_IP:@"192.168.1.210"];
+   }
    NSLog(@"end DatenVonHeute");
    
-	
-	#pragma mark awake Solar
-	
+   
+#pragma mark awake Solar
+   
    [HomeData setPumpeLeistungsfaktor:0.0138];  // W/s
    [HomeData setElektroLeistungsfaktor:0.833]; // W/s
    [HomeData setFluidLeistungsfaktor:0.0625]; // Leistungsuebertragung in kJ/s*K
- 
+   
    
    
    NSString* AktuelleSolarDaten=[HomeData SolarDataVonHeute];
-	//NSString* AktuelleSolarDaten=[HomeData TestSolarData];
-	
+   //NSString* AktuelleSolarDaten=[HomeData TestSolarData];
+   
    
    //NSLog(@"awake nach AktuelleSolarDaten");
-	//NSLog(@"awake AktuelleSolarDaten: \n%@",AktuelleSolarDaten);
-	if (AktuelleSolarDaten &&[AktuelleSolarDaten length])
-	{
-		//NSLog(@"awake openWithSolarString\n\n");
-		[self openWithSolarString:AktuelleSolarDaten];
+   //NSLog(@"awake AktuelleSolarDaten: \n%@",AktuelleSolarDaten);
+   if (AktuelleSolarDaten &&[AktuelleSolarDaten length])
+   {
+      //NSLog(@"awake openWithSolarString\n\n");
+      [self openWithSolarString:AktuelleSolarDaten];
       
       [self setSolarStatistikDaten];
-	}
-	else
-	{
-		NSLog(@"awake Kein SolarInput");
-	}
-	
+   }
+   else
+   {
+      NSLog(@"awake Kein SolarInput");
+   }
+   
    //NSLog(@"end SolarDatenVonHeute");
-
-
-
-	//[Data showWindow:self];
-	//[Data writeIOWLog:@"IOWFehler Start"];
-
-//	[self setStatistikDaten];
-	
-	
-	// Kontrolle vor Beenden
-	TWIStatus=1;
+   
+   
+   
+   //[Data showWindow:self];
+   //[Data writeIOWLog:@"IOWFehler Start"];
+   
+   //	[self setStatistikDaten];
+   
+   
+   // Kontrolle vor Beenden
+   TWIStatus=1;
 }
 
 
@@ -490,12 +522,12 @@ void IOWarriorCallback ()
 
 - (void)LocalStatusAktion:(NSNotification*)note
 {
-   NSLog(@"IOWarriorWindowController LocalStatusAktion note: %@",[[note userInfo]description]);
+   //NSLog(@"IOWarriorWindowController LocalStatusAktion note: %@",[[note userInfo]description]);
    NSURL* HomeCentralURL;
    if ([[note userInfo]objectForKey:@"status"] && [[[note userInfo]objectForKey:@"status"]intValue]==1) // URL umschalten
    {
       localNetz = YES;
-   HomeCentralURL = @"http://192.168.1.210";
+      HomeCentralURL = [NSURL URLWithString:@"http://192.168.1.210"];
       //NSLog(@"LocalStatusAktion local: HomeCentralURL: %@",HomeCentralURL);
    }
    else
@@ -504,7 +536,7 @@ void IOWarriorCallback ()
  //     HomeCentralURL = @"http://ruediheimlicher.dyndns.org";
       //NSLog(@"LocalStatusAktion global: HomeCentralURL: %@",HomeCentralURL);
    }
-   NSLog(@"IOWarriorWindowController LocalStatusAktion HomeCentralURL: %@",HomeCentralURL);
+   //NSLog(@"IOWarriorWindowController LocalStatusAktion HomeCentralURL: %@",HomeCentralURL);
 }
 
 

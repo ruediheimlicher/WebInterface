@@ -815,20 +815,18 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
    NSLog(@"EEE returnData: %@ responseRequest URL: %@",returnData,responseRequest.URL);
    */
    writeEEPROManzeige.intValue = 0;
-   NSLog(@"AVR awake end");
+   //NSLog(@"AVR awake end");
 }
 - (void)LocalStatusAktion:(NSNotification*)note
 {
    NSLog(@"AVR LocalStatusAktion note: %@",[[note userInfo]description]);
-   [LocalTaste setEnabled:YES];
-   [TWIStatusTaste setEnabled:YES];
-   localNetz = YES;
+    localNetz = YES;
 }
 
 - (void)setLocalStatus
 {
    [LocalTaste setEnabled:YES];
-   [TWIStatusTaste setEnabled:YES];
+   //[TWIStatusTaste setEnabled:YES];
 
 }
 

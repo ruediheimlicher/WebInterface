@@ -180,9 +180,37 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 	} 
 	else 
 	{
+ 
 		//NSArray* BrennerdatenArray = [self BrennerStatistikVonJahr:2010 Monat:0];
 		//NSLog(@"BrennerdatenArray: %@",[BrennerdatenArray description]);
 		
+      //NSString *ipString = [NSString localizedStringWithFormat:@"do shell script \"ping -c 2 www.apple.com\""];
+     NSString *ipString = [NSString localizedStringWithFormat:@"do shell script \"ping -c 2 8.8.8.8\""];
+      
+      NSAppleScript *ipscript = [[NSAppleScript alloc] initWithSource:ipString];
+      NSDictionary *iperrorMessage = nil;
+      NSAppleEventDescriptor *ipresult = [ipscript executeAndReturnError:&iperrorMessage];
+      //NSLog(@"mount: %@",ipresult);
+      NSString *scriptReturn = [ipresult stringValue];
+      NSLog(@"HomeData Found ping string: %@",scriptReturn);
+
+      if (scriptReturn == nil)
+      {
+         NSAlert *Warnung = [[NSAlert alloc] init];
+         [Warnung addButtonWithTitle:@"OK"];
+         NSString* MessageText= NSLocalizedString(@"Netz-Zugang",@"Verbindung misslungen");
+         [Warnung setMessageText:[NSString stringWithFormat:@"%@ \n%@",@"DataVonHeute:",MessageText]];
+         
+         
+         NSString* s1=@"Kein Web. Lokals Netz";
+         NSString* InformationString=[NSString stringWithFormat:@"Comment: %@",s1];
+         [Warnung setInformativeText:InformationString];
+         [Warnung setAlertStyle:NSWarningAlertStyle];
+
+         int antwort=[Warnung runModal];
+
+         return returnString;
+      }
 		DataSuffix=@"HomeDaten.txt";
 		NSString* URLPfad=[[NSURL URLWithString:[ServerPfad stringByAppendingPathComponent:DataSuffix]]path];
 		//NSLog(@"DataVonHeute URLPfad: %@",URLPfad);
@@ -642,7 +670,7 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
    
 //   NSString* extip = curl ifconfig.me/ip
 	NSMutableArray* ErtragdatenArray=[[NSMutableArray alloc]initWithCapacity:0];
-	//NSLog(@"Router_IP");
+	NSLog(@"Router_IP");
 	NSString*IP_DataSuffix=@"ip.txt";
    NSString* URLString=[@"ruediheimlicher.ch/Data" stringByAppendingPathComponent:IP_DataSuffix];
 
@@ -663,11 +691,7 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
    NSArray* IP_Array = [DataString componentsSeparatedByString:@"\r\n"];
    //NSLog(@"IP von Server IP_Array: %@",IP_Array);
    
-   //NSString *ipString = [NSString localizedStringWithFormat:@"do shell script \"curl ifconfig.me/ip\""];
    NSString *ipString = [NSString localizedStringWithFormat:@"do shell script \"curl -4 ident.me\""];
-  // NSString *ipString = [NSString localizedStringWithFormat:@"do shell script \"ipecho.net/plain ; echo\""];
- //  NSString *ipString = [NSString localizedStringWithFormat:@"do shell script \"ipecho.net/plain\""];
-
    
    NSAppleScript *ipscript = [[NSAppleScript alloc] initWithSource:ipString];
    NSDictionary *iperrorMessage = nil;
@@ -675,15 +699,67 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
    //NSLog(@"mount: %@",ipresult);
    NSString *scriptReturn = [ipresult stringValue];
    NSLog(@"HomeData Found utxt string: %@",scriptReturn);
+   if (scriptReturn == NULL)
+   {
+      NSAlert *Warnung = [[NSAlert alloc] init];
+      [Warnung addButtonWithTitle:@"OK"];
+      //   [Warnung addButtonWithTitle:@""];
+      //   [Warnung addButtonWithTitle:@""];
+      //   [Warnung addButtonWithTitle:@"Abbrechen"];
+      NSString* MessageText= NSLocalizedString(@"No IP",@"Verbindung misslungen");
+      [Warnung setMessageText:[NSString stringWithFormat:@"%@ \n%@",@"AVR awake",MessageText]];
+      
+      
+      NSString* s1=@"Kein Netz";
+      NSString* InformationString=[NSString stringWithFormat:@"Fehler: %@",s1];
+      [Warnung setInformativeText:InformationString];
+      [Warnung setAlertStyle:NSWarningAlertStyle];
+      
+      int antwort=[Warnung runModal];
+      NSLog(@"Connection: %d",antwort);
+      return 0;
+   }
    NSError* err;
    /*
-  // if ([[NSFileManager defaultManager]fileExistsAtPath:[URL path]])
-   {
-      [scriptReturn writeToURL:ipURL atomically:YES encoding:NSUTF8StringEncoding error:&err];
-      NSLog(@"err: %@",err);
-   //[NSFileManager defaultManager]
-   }
-*/
+    NSString *ipString = [NSString localizedStringWithFormat:@"do shell script \"curl ident.me\""];
+    
+    NSAppleScript *ipscript = [[NSAppleScript alloc] initWithSource:ipString];
+    NSDictionary *iperrorMessage = nil;
+    
+    NSAppleEventDescriptor *ipresult = [ipscript executeAndReturnError:&iperrorMessage];
+    NSLog(@"mount: %@",ipresult);
+    NSString *scriptReturn = [ipresult stringValue];
+    NSLog(@"IP: %@",scriptReturn);
+    
+    if (scriptReturn == NULL)
+    {
+    NSAlert *Warnung = [[NSAlert alloc] init];
+    [Warnung addButtonWithTitle:@"OK"];
+    //   [Warnung addButtonWithTitle:@""];
+    //   [Warnung addButtonWithTitle:@""];
+    //   [Warnung addButtonWithTitle:@"Abbrechen"];
+    NSString* MessageText= NSLocalizedString(@"No IP",@"Verbindung misslungen");
+    [Warnung setMessageText:[NSString stringWithFormat:@"%@ \n%@",@"AVR awake",MessageText]];
+    
+    
+    NSString* s1=@"Kein Netz";
+    NSString* InformationString=[NSString stringWithFormat:@"Fehler: %@",s1];
+    [Warnung setInformativeText:InformationString];
+    [Warnung setAlertStyle:NSWarningAlertStyle];
+    
+    int antwort=[Warnung runModal];
+    NSLog(@"Connection: %d",antwort);
+    [LocalTaste setEnabled:YES];
+    [TWIStatusTaste setEnabled:YES];
+    NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
+    NSMutableDictionary* localStatusDic=[[NSMutableDictionary alloc]initWithCapacity:0];
+    [localStatusDic setObject:[NSNumber numberWithInt:1]forKey:@"status"];
+    [nc postNotificationName:@"localstatus" object:self userInfo:localStatusDic];
+    
+    
+    }
+    
+    */
    
    NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
    //[NotificationDic setObject:DataString forKey:@"routerip"];

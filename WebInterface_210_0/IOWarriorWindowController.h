@@ -40,8 +40,11 @@
 	IBOutlet    NSPopUpButton*       ReportIDPop;
 	
 	NSData*						lastValueRead; /*" The last value read"*/
-	NSData*						lastDataRead; /*" The last value read"*/
+	NSData*						lastDataRead; /*" The last Data read"*/
 	NSData*						secureDataRead;
+   
+   NSURL*                  localHostIP;
+   NSURL*                  webHostIP;
 	int							anzDataOK;
 	int							anzSessionFiles;
 	int							oldHour;
@@ -51,25 +54,6 @@
 	//int							gesichert;
 	int							old;
    BOOL                    localNetz;
-	/*	
-	 rHexEingabe*	HexEingabe0;
-	 rHexEingabe*	HexEingabe1;
-	 NSBox*			AnzeigeBox;
-	 //NSMutableArray* HexDatenArray;
-	 NSMutableArray* PortArray;
-	 NSTextField*	PortFeld0;
-	 NSTextField*	PortFeld1;
-	 NSTextField*	PortFeld2;
-	 NSTextField*	PortFeld3;
-	 NSButton*		Port0SetInputTaste;
-	 NSButton*		Port0ClearTaste;
-	 NSButton*		Port1SetInputTaste;
-	 NSButton*		Port1ClearTaste;
-	 NSButton*		Port2SetInputTaste;
-	 NSButton*		Port2ClearTaste;
-	 NSButton*		Port3SetInputTaste;
-	 NSButton*		Port3ClearTaste;
-	 */
 	rADWandler*								ADWandler;
 	NSMutableArray*						EinkanalDaten;
 	NSDate*									DatenleseZeit;
@@ -92,7 +76,7 @@
 	int										TWIStatus;
 	
 	// Solar
-		int									lastSolarDataZeit;
+   int									lastSolarDataZeit;
 	NSTimer*									SolarDownloadTimer;
 
 }

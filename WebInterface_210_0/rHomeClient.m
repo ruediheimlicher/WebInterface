@@ -633,18 +633,33 @@ unsigned char h2int(char c)
 - (void)LocalStatusAktion:(NSNotification*)note
 {
    NSLog(@"HomeClient LocalStatusAktion note: %@",[[note userInfo]description]);
+   
+   int status = 0;
 
-   if ([[note userInfo]objectForKey:@"status"] && [[[note userInfo]objectForKey:@"status"]intValue]==1) // URL umschalten
+   if ([[note userInfo]objectForKey:@"status"])
    {
-      localNetz = YES;
-      HomeCentralURL = @"http://192.168.1.210";
-      //NSLog(@"LocalStatusAktion local: HomeCentralURL: %@",HomeCentralURL);
-   }
-   else
-   {
-      localNetz = NO;
-      HomeCentralURL = @"http://ruediheimlicher.dyndns.org";
-   //NSLog(@"LocalStatusAktion global: HomeCentralURL: %@",HomeCentralURL);
+      
+      status =  [[[note userInfo]objectForKey:@"status"]intValue]; // URL umschalten
+      if (status)
+      {
+         localNetz = YES;
+         if ([[note userInfo]objectForKey:@"localhostip"])
+         {
+            HomeCentralURL = [[note userInfo]objectForKey:@"localhostip"];
+         }
+         
+         //HomeCentralURL = @"http://192.168.1.210";
+         NSLog(@"LocalStatusAktion local: HomeCentralURL: %@",HomeCentralURL);
+      }
+      else
+      {
+         localNetz = NO;
+         if ([[note userInfo]objectForKey:@"localhostip"])
+         {
+            HomeCentralURL = [[note userInfo]objectForKey:@"localhostip"];
+         }
+         NSLog(@"LocalStatusAktion global: HomeCentralURL: %@",HomeCentralURL);
+      }
    }
    NSLog(@"HomeClient LocalStatusAktion HomeCentralURL: %@",HomeCentralURL);
 }
@@ -997,7 +1012,7 @@ unsigned char h2int(char c)
          // &wadr=0&lbyte=00&hbyte=00&data=80+f+0+0+7+f0+ff+ff
 			NSString* TWIStatusURLString =[NSString stringWithFormat:@"%@/twi?%@",HomeCentralURL, TWIStatusSuffix];
 			
-          NSLog(@"TWIStatusAktion Status > 1  TWIStatusURL: %@",TWIStatusURLString);
+         NSLog(@"TWIStatusAktion Status > 1  TWIStatusURL: %@",TWIStatusURLString);
 			
          NSURL *URL = [NSURL URLWithString:TWIStatusURLString];
          NSLog(@"TWIStatusAktion URL: %@",URL);
@@ -2487,7 +2502,7 @@ unsigned char h2int(char c)
     if (frame == [sender mainFrame])
 	 {
         NSString *provurl = [[[[frame provisionalDataSource] request] URL] absoluteString];
-		  //NSLog(@"HomeClient didStartProvisionalLoadForFrame: URL: %@",provurl);
+		  NSLog(@"HomeClient didStartProvisionalLoadForFrame: URL: %@",provurl);
        
        // URL: http://ruediheimlicher.dyndns.org/twi?pw=ideur00&rdata=10
        

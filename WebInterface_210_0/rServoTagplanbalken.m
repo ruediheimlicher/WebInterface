@@ -676,7 +676,6 @@ NSMutableDictionary* tempDic=(NSMutableDictionary*)[StundenArray objectAtIndex:d
 	[NotificationDic setObject:[NSNumber numberWithInt:Wochentag] forKey:@"wochentag"];
 	[NotificationDic setObject:[NSNumber numberWithInt:Objekt] forKey:@"objekt"];//
 	[NotificationDic setObject:[(rServoTagplanbalken*)[sender superview]Titel] forKey:@"titel"];//
-   
    [NotificationDic setObject:[NSNumber numberWithInt:0] forKey:@"permanent"];//
 
    int modKey=0;

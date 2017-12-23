@@ -1205,7 +1205,7 @@ unsigned char h2int(char c)
 
    WebTask = idle;
    
-   //NSLog(@"HomeClientWriteStandardAktion tagbalkentyp aus userinfo: %@", [[note userInfo]objectForKey:@"tagbalkentyp"]);
+   NSLog(@"HomeClientWriteStandardAktion tagbalkentyp aus userinfo: %@", [[note userInfo]objectForKey:@"tagbalkentyp"]);
    [SendEEPROMDataDic setObject:[[note userInfo]objectForKey:@"titel"] forKey:@"titel"];
    [SendEEPROMDataDic setObject:[[note userInfo]objectForKey:@"tagbalkentyp"] forKey:@"tagbalkentyp"];
 	
@@ -1224,6 +1224,8 @@ unsigned char h2int(char c)
       hbyte = [@"0" stringByAppendingString:hbyte];
    }
 
+   NSString*  permanent = [[note userInfo]objectForKey:@"permanent"];
+   
    //NSLog(@"HomeClientWriteStandardAktion lbyte als String: %@ hbyte als String: %@",lbyte,hbyte);
    [SendEEPROMDataDic setObject:hbyte forKey:@"hbyte"];
    [SendEEPROMDataDic setObject:lbyte forKey:@"lbyte"];
@@ -1245,6 +1247,10 @@ unsigned char h2int(char c)
 		// pw, Adresszusatz fuer das EEPROM (wadr) anfuegen
 		WriteDataSuffix = [NSString stringWithFormat:@"pw=%@&wadr=%@",pw,EEPROM_i2cAdresse_Zusatz];
 		
+      // permanent anfuegen
+      WriteDataSuffix = [NSString stringWithFormat:@"%@&permanent=%@",WriteDataSuffix,permanent];
+     
+      
 		// lbyte, hbyte anfuegen
 		WriteDataSuffix = [NSString stringWithFormat:@"%@&lbyte=%@&hbyte=%@",WriteDataSuffix,lbyte,hbyte];
 		//NSLog(@"HomeClientWriteStandardAktion WriteDataSuffix: %@",WriteDataSuffix);

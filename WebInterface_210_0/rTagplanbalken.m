@@ -612,7 +612,7 @@ NSMutableDictionary* tempDic=(NSMutableDictionary*)[StundenArray objectAtIndex:d
 		[NotificationDic setObject:[StundenArray valueForKey:@"code"] forKey:@"stundenarray"];
 		[NotificationDic setObject:[self StundenByteArray] forKey:@"stundenbytearray"];
 		
-		//NSLog(@"WriteTasteAktion  Standard Notific: %@",[NotificationDic description]);
+		NSLog(@"WriteTasteAktion  Standard Notific: %@",[NotificationDic description]);
       //NSLog(@"WriteTasteAktion  Standard: %@",[[self StundenByteArray] description]);
 			
 		// Notific an Wochenplan  und von dort an WriteStandardaktion in AVRClient schicken
@@ -632,7 +632,7 @@ NSMutableDictionary* tempDic=(NSMutableDictionary*)[StundenArray objectAtIndex:d
 	[NotificationDic setObject:[NSNumber numberWithInt:wochentag] forKey:@"wochentag"];
 	[NotificationDic setObject:[NSNumber numberWithInt:objekt] forKey:@"objekt"];//
 	[NotificationDic setObject:[(rTagplanbalken*)[sender superview]Titel] forKey:@"titel"];//
-   
+   [NotificationDic setObject:[NSNumber numberWithInt:TagbalkenTyp] forKey:@"tagbalkentyp"];//
    [NotificationDic setObject:[NSNumber numberWithInt:0] forKey:@"permanent"];//
 
    int modKey=0;
@@ -660,7 +660,7 @@ NSMutableDictionary* tempDic=(NSMutableDictionary*)[StundenArray objectAtIndex:d
 		[NotificationDic setObject:[StundenArray valueForKey:@"code"] forKey:@"stundenarray"];
 		[NotificationDic setObject:[self StundenByteArray] forKey:@"stundenbytearray"];
 		
-		//NSLog(@"WriteTasteAktion  Standard: %@",[NotificationDic description]);
+		NSLog(@"WriteTasteAktion  Standard: %@",[NotificationDic description]);
       
 		// Notific an Wochenplan  und von dort an WriteStandardaktion in AVRClient schicken
 		[nc postNotificationName:@"WriteStandard" object:self userInfo:NotificationDic];

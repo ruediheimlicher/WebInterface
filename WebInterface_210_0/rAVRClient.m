@@ -865,6 +865,7 @@
 	
 - (void)WriteStandardAktion:(NSNotification*)note
 {
+   NSLog(@"WriteStandardAktion note: %@",[[note userInfo]description]);
 if (Webserver_busy)
 	{
       NSLog(@"WriteStandardAktion Webserver_busy beep");
@@ -906,7 +907,9 @@ if (Webserver_busy)
       
 		int Wochentag=[[[note userInfo]objectForKey:@"wochentag"]intValue];
 		int Objekt=[[[note userInfo]objectForKey:@"objekt"]intValue];
-      int permanent = [[[note userInfo]objectForKey:@"permanent"]intValue];
+      
+      //int permanent = [[[note userInfo]objectForKey:@"permanent"]intValue];
+      
       //NSString* Titel = [[note userInfo]objectForKey:@"titel"];
 		NSArray* DatenArray=[[note userInfo]objectForKey:@"stundenbytearray"];
 		
@@ -926,6 +929,12 @@ if (Webserver_busy)
 		int ScannerErfolg=[theScanner scanHexInt:&EEPROM_i2cAdresse];
 		[HomeClientDic setObject:[NSNumber numberWithInt:EEPROM_i2cAdresse] forKey:@"eepromadresse"];
 		
+            // permanent anfuegen
+            
+      NSString* permanent = [[[note userInfo]objectForKey:@"permanent"]stringValue];
+      NSLog(@"WriteStandardAktion permanent: %@",permanent);
+      [HomeClientDic setObject:permanent forKey:@"permanent"];
+      
 		
 		uint16_t i2cStartadresse=Raum*RAUMPLANBREITE + Objekt*TAGPLANBREITE+ Wochentag*0x08;
 		//NSLog(@"i2cStartadresse: %04X",i2cStartadresse);
@@ -945,14 +954,14 @@ if (Webserver_busy)
 		NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
 		
       //NSLog(@"WriteStandardAktion: permanent: %d",permanent);
-      if (permanent) // schicken an EEPROM
+     // if (permanent) // schicken an EEPROM
       {
          //NSLog(@"AVRClient WriteStandardAktion mit permanent: %d ",permanent);
          [nc postNotificationName:@"HomeClientWriteStandard" object:self userInfo:HomeClientDic];
       }
-      else
+    //  else
       {
-         
+    //     [nc postNotificationName:@"HomeClientWriteStandard" object:self userInfo:HomeClientDic];
          // 
          
       }

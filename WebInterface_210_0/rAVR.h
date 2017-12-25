@@ -123,12 +123,16 @@ NSMutableArray*			WEBDATATabelle;
 IBOutlet	NSTableView*	WEBDATATable;
 rWEBDATA_DS*				WEBDATA_DS;
 
+volatile uint8_t        daySettingArray[8][8][8][8]; // 1 Zeile pro Tag, 8 Zeilen fuer raum, 6 bytes Data 
+   
+   
 //Simulation DataTransfer
 IBOutlet	 id            maxSimAnzahlFeld;
 NSTimer*                simTimer;
 NSTimer*                TimeoutTimer;
    
 NSTimer*                EEPROMUpdateTimer;
+   
    
    
 

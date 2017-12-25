@@ -192,7 +192,7 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
       NSAppleEventDescriptor *ipresult = [ipscript executeAndReturnError:&iperrorMessage];
       //NSLog(@"mount: %@",ipresult);
       NSString *scriptReturn = [ipresult stringValue];
-      NSLog(@"HomeData Found ping string: %@",scriptReturn);
+      NSLog(@"HomeData DataVonHeute Found ping string: %@",scriptReturn);
 
       if (scriptReturn == nil)
       {
@@ -1569,7 +1569,7 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
    //NSLog(@"EEPROMUpdateAktion");
    DataSuffix=@"eepromdaten/eepromupdatedaten.txt";
    NSURL* URLPfad=[NSURL URLWithString:[ServerPfad stringByAppendingPathComponent:DataSuffix]];
-   //NSLog(@"EEPROMUpdateAktion URLPfad: %@",URLPfad);
+   NSLog(@"EEPROMUpdateAktion URLPfad: %@",URLPfad);
    NSError* err;
    NSString* UpdateString = [NSString stringWithContentsOfURL:URLPfad encoding:NSUTF8StringEncoding error:&err];
    
@@ -1588,29 +1588,33 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
          // 115          2       0        3           04       24    204 0	3 0 2 2 255 255	0        3           130103
          
          NSArray* tempZeilenArray = [tempZeile componentsSeparatedByString:@"\t"];
+         NSLog(@"i: %d tempZeilenArray: %@",i,tempZeilenArray);
          int zeilennummer = [[tempZeilenArray objectAtIndex:0]intValue];
          [ZeilenIndex addIndex:zeilennummer];
-         NSArray* tempDataArray = [tempZeilenArray subarrayWithRange:NSMakeRange(6, 8)];
-         NSDictionary* tempDataDic = [NSDictionary dictionaryWithObjectsAndKeys:
-                                      [NSNumber numberWithInt:zeilennummer],@"zeilennummer",
-                                      tempZeile,@"zeile",
-                                      tempDataArray,@"data",
-                                      /*
-                                      [NSNumber numberWithInt:[[tempZeilenArray objectAtIndex:1]intValue]],@"raum",
-                                      [NSNumber numberWithInt:[[tempZeilenArray objectAtIndex:2]intValue]],@"objekt",
-                                      [NSNumber numberWithInt:[[tempZeilenArray objectAtIndex:3]intValue]],@"wochentag",
-                                      [NSNumber numberWithInt:[[tempZeilenArray objectAtIndex:4]intValue]],@"hbyte",
-                                      [NSNumber numberWithInt:[[tempZeilenArray objectAtIndex:5]intValue]],@"lbyte",
-                                      [NSNumber numberWithInt:[[tempZeilenArray objectAtIndex:14]intValue]],@"tagbalkentyp",
-                                      [NSNumber numberWithInt:[[tempZeilenArray objectAtIndex:15]intValue]],@"perm",
-                                      [NSNumber numberWithInt:[[tempZeilenArray objectAtIndex:16]intValue]],@"zeitstempel",
-                                       */
-                                      nil];
-         
-         [UpdateArray addObject:tempDataDic];
+         if ([tempZeilenArray count] >= (6+8))
+         {
+            NSArray* tempDataArray = [tempZeilenArray subarrayWithRange:NSMakeRange(6, 8)];
+            NSDictionary* tempDataDic = [NSDictionary dictionaryWithObjectsAndKeys:
+                                         [NSNumber numberWithInt:zeilennummer],@"zeilennummer",
+                                         tempZeile,@"zeile",
+                                         tempDataArray,@"data",
+                                         /*
+                                          [NSNumber numberWithInt:[[tempZeilenArray objectAtIndex:1]intValue]],@"raum",
+                                          [NSNumber numberWithInt:[[tempZeilenArray objectAtIndex:2]intValue]],@"objekt",
+                                          [NSNumber numberWithInt:[[tempZeilenArray objectAtIndex:3]intValue]],@"wochentag",
+                                          [NSNumber numberWithInt:[[tempZeilenArray objectAtIndex:4]intValue]],@"hbyte",
+                                          [NSNumber numberWithInt:[[tempZeilenArray objectAtIndex:5]intValue]],@"lbyte",
+                                          [NSNumber numberWithInt:[[tempZeilenArray objectAtIndex:14]intValue]],@"tagbalkentyp",
+                                          [NSNumber numberWithInt:[[tempZeilenArray objectAtIndex:15]intValue]],@"perm",
+                                          [NSNumber numberWithInt:[[tempZeilenArray objectAtIndex:16]intValue]],@"zeitstempel",
+                                          */
+                                         nil];
+            
+            [UpdateArray addObject:tempDataDic];
+         }
       }
    }
-   //NSLog(@"EEPROMUpdateAktion UpdateArray: %@",[UpdateArray description]);
+   NSLog(@"EEPROMUpdateAktion UpdateArray: %@",[UpdateArray description]);
   // NSLog(@"EEPROMUpdateAktion UpdateArray vor: %@",[[UpdateArray valueForKey:@"zeilennummer" ] description]);
   
    NSComparator sortByNumber = ^(id dict1, id dict2)

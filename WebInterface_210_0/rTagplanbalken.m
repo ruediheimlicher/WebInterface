@@ -315,7 +315,10 @@ NSMutableDictionary* tempDic=(NSMutableDictionary*)[StundenArray objectAtIndex:d
 
 - (void)setStundenArrayAusByteArray:(NSArray*)derStundenByteArray
 {
-	//NSLog(@"Tagplanbalken setStundenArrayAusByteArray derStundenByteArray: %@",[derStundenByteArray description]);
+   /*
+    
+    */
+	NSLog(@"Tagplanbalken setStundenArrayAusByteArray derStundenByteArray: %@",[derStundenByteArray description]);
 	
 	NSMutableArray* tempStundenArray=[[NSMutableArray alloc]initWithCapacity:0];
 	//NSArray* bitnummerArray=[NSArray arrayWithObjects: @"null", @"eins",@"zwei",@"drei",@"vier",@"fuenf",nil];
@@ -333,7 +336,7 @@ NSMutableDictionary* tempDic=(NSMutableDictionary*)[StundenArray objectAtIndex:d
       NSString* dezString = [NSString stringWithFormat:@"%d",tempByte];
 		
 		
-		//NSLog(@"i: %d tempString: %@ tempByte hex: %2.2X dez: %d dezString: %@",i,tempString,tempByte,tempByte,dezString);
+		NSLog(@"i: %d tempString: %@ tempByte hex: %2.2X dez: %d dezString: %@",i,tempString,tempByte,tempByte,dezString);
 		NSMutableArray* tempStundenCodeArray=[[NSMutableArray alloc]initWithCapacity:4];
 		for (k=0;k<4;k++)
 		{
@@ -658,10 +661,11 @@ NSMutableDictionary* tempDic=(NSMutableDictionary*)[StundenArray objectAtIndex:d
 		
 		[NotificationDic setObject:[NSNumber numberWithInt:modKey] forKey:@"mod"];
 		[NotificationDic setObject:[StundenArray valueForKey:@"code"] forKey:@"stundenarray"];
-		[NotificationDic setObject:[self StundenByteArray] forKey:@"stundenbytearray"];
+      [NotificationDic setObject:[self StundenByteArray] forKey:@"stundenbytearray"]; // array mit 6 werten: 1 Stundenbyte pro 4 Stunden
 		
-		NSLog(@"WriteTasteAktion  Standard: %@",[NotificationDic description]);
+		NSLog(@"TagPlanBalken WriteTasteAktion  Standard: %@",[NotificationDic description]);
       
+      // 
 		// Notific an Wochenplan  und von dort an WriteStandardaktion in AVRClient schicken
 		[nc postNotificationName:@"WriteStandard" object:self userInfo:NotificationDic];
       
@@ -733,9 +737,10 @@ return StundenArray;
 	int i, k=3;
 	uint8_t Stundenbyte=0;
 	NSString* StundenbyteString=[NSString string];
-	for (i=0;i<[StundenArray count];i++)
+	for (i=0;i<[StundenArray count];i++) // immer 4 Tasten ergeben 1 byte
 	{	
 		uint8_t Stundencode=[[[StundenArray objectAtIndex:i] objectForKey:@"code"]intValue];
+      
 		//NSLog(@"StundenByteArray i: %d Tag: %d Objekt: %d Stundencode: %02X",i,Wochentag, Objekt, Stundencode);
 		Stundencode=(Stundencode << 2*k);
 		//NSLog(@"Stundencode <<: %02X",Stundencode);

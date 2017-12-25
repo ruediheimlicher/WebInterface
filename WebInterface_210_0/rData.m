@@ -5730,6 +5730,7 @@ NSString* tempFehlerString=[IOWFehlerLog string];
 
 - (void)readTagplan:(int)i2cAdresse vonAdresse:(int)startAdresse anz:(int)anzDaten
 {
+   NSLog(@"rData readTagplan");
 	NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
 	
 	

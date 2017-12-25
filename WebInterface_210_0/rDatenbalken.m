@@ -590,7 +590,7 @@ NSMutableDictionary* tempDic=(NSMutableDictionary*)[StundenArray objectAtIndex:d
 
 - (IBAction)reportHeuteTaste:(id)sender
 {
-   NSLog(@"reportHeuteTaste  Raum: %d wochentag: %d",raum, wochentag);
+   NSLog(@"Datenbalken reportHeuteTaste  Raum: %d wochentag: %d",raum, wochentag);
    NSLog(@"reportHeuteTaste views: %@",[self subviews]);
    
     edit = !edit; // editable toggeln

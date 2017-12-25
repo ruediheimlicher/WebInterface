@@ -209,6 +209,7 @@
 
 - (IBAction)readEthTagplan:(id)sender
 {
+   NSLog(@"AVRClient readEthTagplan ");
    enum webtaskflag{idle, eepromread, eepromwrite,eepromreadwoche,eepromwritewoche}webtaskflag;
 
 	if (Webserver_busy || WriteWoche_busy)
@@ -865,7 +866,7 @@
 	
 - (void)WriteStandardAktion:(NSNotification*)note
 {
-   NSLog(@"WriteStandardAktion note: %@",[[note userInfo]description]);
+   NSLog(@"AVRClient WriteStandardAktion note: %@",[[note userInfo]description]);
 if (Webserver_busy)
 	{
       NSLog(@"WriteStandardAktion Webserver_busy beep");
@@ -911,7 +912,7 @@ if (Webserver_busy)
       //int permanent = [[[note userInfo]objectForKey:@"permanent"]intValue];
       
       //NSString* Titel = [[note userInfo]objectForKey:@"titel"];
-		NSArray* DatenArray=[[note userInfo]objectForKey:@"stundenbytearray"];
+		NSArray* StundenByteArray=[[note userInfo]objectForKey:@"stundenbytearray"];
 		
 		NSMutableDictionary* HomeClientDic=[[NSMutableDictionary alloc]initWithDictionary:[note userInfo]];
 		[HomeClientDic setObject:[[note userInfo]objectForKey:@"titel"] forKey:@"titel"];
@@ -936,17 +937,28 @@ if (Webserver_busy)
       [HomeClientDic setObject:permanent forKey:@"permanent"];
       
 		
+      // Adressberechnung:
+      
 		uint16_t i2cStartadresse=Raum*RAUMPLANBREITE + Objekt*TAGPLANBREITE+ Wochentag*0x08;
-		//NSLog(@"i2cStartadresse: %04X",i2cStartadresse);
-		uint8_t lb = i2cStartadresse & 0x00FF;
+		
+      NSLog(@"i2cStartadresse: hex: %04X int: %d",i2cStartadresse,i2cStartadresse);
+      NSLog(@"Raum: %d Objekt: %d Wochentag: %d",Raum,Objekt,Wochentag);
+      
+      // Kontrolle: Rueckwaertsberechnung im Master
+      uint8_t raum = i2cStartadresse / RAUMPLANBREITE;
+      uint8_t objekt = (i2cStartadresse % RAUMPLANBREITE)/ TAGPLANBREITE;
+      uint8_t wochentag = (i2cStartadresse % RAUMPLANBREITE %TAGPLANBREITE) / 0x08;
+
+      uint8_t lb = i2cStartadresse & 0x00FF;
 		[HomeClientDic setObject:[NSNumber numberWithInt:lb] forKey:@"lbyte"];
 		uint8_t hb = i2cStartadresse >> 8;
-		NSString* AdresseKontrollString = [NSString stringWithFormat:@"hbyte: %2X  lbyte: %2X",hb, lb];
+		
+      NSString* AdresseKontrollString = [NSString stringWithFormat:@"hbyte: %2X  lbyte: %2X",hb, lb];
 		[Adresse setStringValue:AdresseKontrollString];
 		
 		[HomeClientDic setObject:[NSNumber numberWithInt:hb] forKey:@"hbyte"];
-		[HomeClientDic setObject:DatenArray forKey:@"stundenbytearray"];
-      [Cmd setStringValue:[DatenArray componentsJoinedByString:@"\t"]];
+		[HomeClientDic setObject:StundenByteArray forKey:@"stundenbytearray"];
+      [Cmd setStringValue:[StundenByteArray componentsJoinedByString:@"\t"]];
 		//NSLog(@"WriteStandardAktion Raum: %d wochentag: %d Objekt: %d EEPROM: %02X lb: 0x%02X hb: 0x%02X ",Raum, Wochentag, Objekt,EEPROM_i2cAdresse,lb, hb);
 		
 		// Information an HomeClient schicken
@@ -954,17 +966,26 @@ if (Webserver_busy)
 		NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
 		
       //NSLog(@"WriteStandardAktion: permanent: %d",permanent);
-     // if (permanent) // schicken an EEPROM
+      if (permanent) // schicken an EEPROM
       {
          //NSLog(@"AVRClient WriteStandardAktion mit permanent: %d ",permanent);
-         [nc postNotificationName:@"HomeClientWriteStandard" object:self userInfo:HomeClientDic];
+        // [nc postNotificationName:@"HomeClientWriteStandard" object:self userInfo:HomeClientDic];
       }
-    //  else
+      else // data in daySettingArray einsetzen
       {
-    //     [nc postNotificationName:@"HomeClientWriteStandard" object:self userInfo:HomeClientDic];
+         //StundenbyteArray in daySettingArray festhalten
+         for (int dataindex=0;dataindex < 6; dataindex++)
+         {
+            daySettingArray[Raum][Objekt][Wochentag][dataindex] = [StundenByteArray[dataindex]intValue];
+          
+          }
+             daySettingArray[Raum][Objekt][Wochentag][7] = 1; // markierung temporaer
+    //     
          // 
          
       }
+      
+      [nc postNotificationName:@"HomeClientWriteStandard" object:self userInfo:HomeClientDic];
 		
 	}
 }
@@ -975,6 +996,8 @@ if (Webserver_busy)
 - (void)updatePListMitDicArray:(NSArray*)updateArray
 {
    /*
+    in reportFixTaste
+    
     
     */
    // PList anpassen
@@ -2007,7 +2030,7 @@ if (Webserver_busy)
       NSLog(@"PListFixArray: %@",[PListFixArray description]);
 
       NSLog(@"HomeServerFixArray count: %u",(unsigned int)[HomeServerFixArray count]);
-      NSLog(@"HomeServerFixArray: %@",[HomeServerFixArray description]);
+ //     NSLog(@"HomeServerFixArray: %@",[HomeServerFixArray description]);
       
       if ([PListFixArray count])
       {
@@ -2248,6 +2271,7 @@ if (Webserver_busy)
            [[NSSound soundNamed:@"Ping"] play];
             [Waitrad stopAnimation:NULL];
             [UpdateWaitrad stopAnimation:NULL];
+            
             
             WebTask=idle; // nichts tun
 				[StatusFeld setStringValue:@"Kontakt mit HomeCentral beendet"]; // TWI wieder aktiviert

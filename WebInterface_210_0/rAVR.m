@@ -428,9 +428,9 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
    
 	// Alternative Typen setzen
   // NSLog(@"1");
-	[self setTagbalkenTyp:2 forObjekt:1 forRaum:0]; // Mode
+   [self setTagbalkenTyp:2 forObjekt:1 forRaum:0]; // Heizung: Mode
 	
-	[self setTagbalkenTyp:0 forObjekt:2 forRaum:0]; // Servo
+   [self setTagbalkenTyp:0 forObjekt:2 forRaum:0]; // Heizung: Servo
 	
    [self setTagbalkenTyp:1 forObjekt:1 forRaum:1]; // Werkstatt
 	[self setTagbalkenTyp:1 forObjekt:1 forRaum:2]; // WoZi
@@ -633,9 +633,24 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
 			int tempAktiv=[[[[[tempWochenplanArray objectAtIndex:0]objectForKey:@"tagplanarray"]objectAtIndex:i]objectForKey:@"aktiv"]intValue];
 			[ObjektSeg setSelected:tempAktiv forSegment:i];
          
-		}
+ 		}
 		[ObjektSeg setEnabled:YES];
 		
+      // daySettingArray init
+      for (int wt = 0;wt < 8;wt++)
+      {
+         for (int objekt = 0;objekt<8;objekt++)
+         {
+            for (int dataindex = 0;dataindex < 8;dataindex++)
+            {
+               daySettingArray[raum][objekt][wt][dataindex] = 0;
+            }
+         }
+         
+      }
+         
+    
+      
 		
 		[[[WochenplanTab tabViewItemAtIndex:raum]view]addSubview:ObjektSeg];
       
@@ -651,6 +666,8 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
 		
 	}//	End for Raum
    //
+   
+   
    NSRect EEPROMScrollerFeld=[EEPROMUpdatefeld frame];
    if (!EEPROMScroller)
    {
@@ -1040,7 +1057,7 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
 									NSMutableDictionary* tempTagplanDic=(NSMutableDictionary*)[tempTagplanArray objectAtIndex:l];
 									if (![tempTagplanDic objectForKey:@"aktiv"])
 									{
-                              NSLog(@"noch kein aktiv");
+                              NSLog(@"noch kein Plan aktiv");
                               [tempTagplanDic setObject:[NSNumber numberWithInt:1] forKey:@"aktiv"];
 									}
                            
@@ -1230,7 +1247,7 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
 		
 		
 		[tempTagplanDic setObject:[NSNumber numberWithInt:1] forKey:@"aktiv"];
-		[tempTagplanDic setObject:[NSNumber numberWithInt:0] forKey:@"tagbalkentyp"];
+		[tempTagplanDic setObject:[NSNumber numberWithInt:0] forKey:@"tagbalkentyp"]; // default Typ
 		[tempTagplanArray addObject:tempTagplanDic];
 		NSMutableArray* tempStundenplanArray =[[NSMutableArray alloc]initWithCapacity:8];
 		[tempTagplanDic setObject:tempStundenplanArray forKey:@"stundenplanarray"];
@@ -1412,6 +1429,8 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
 
 - (void)setStundenplanArray:(NSMutableArray*)derStundenplanArray forWochentag:(int)derWochentag forObjekt:(int)dasObjekt forRaum:(int)derRaum
 {
+   // in updatePListMitDicArray
+   
    //NSLog(@"setStundenplanArray raum: %d objekt: %d wochentag: %d stundenplan: %@",derRaum,dasObjekt, derWochentag,[derStundenplanArray description]);
    
 	NSMutableArray* tempWochenplanArray=[HomebusArray valueForKey:@"wochenplanarray"];
@@ -2354,6 +2373,7 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
 
 - (void)readTagplan:(int)i2cAdresse vonAdresse:(int)startAdresse anz:(int)anzDaten
 {
+   NSLog(@"rAVR readTagplan ");
 	NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
 	NSMutableDictionary* readEEPROMDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 	NSMutableArray* i2cAdressArray=[[NSMutableArray alloc]initWithCapacity:0];
@@ -2907,7 +2927,7 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
 
 - (void)EEPROMbusycountAktion:(NSNotification*)note
 {
-   NSLog(@"AVR EEPROMbusycountAktion busycount: %d",[[note userInfo]objectForKey:@"busicount"]);
+   NSLog(@"AVR EEPROMbusycountAktion busycount: %d",[[[note userInfo]objectForKey:@"busicount"]intValue]);
 }
 
 - (IBAction)sendCmd:(id)sender
@@ -3039,7 +3059,7 @@ n=0;
      [RaumPop selectItemAtIndex:[[tabViewItem identifier]intValue] ];
      [self setObjektPopVonRaum:index];
   }
-   
+   writeEEPROManzeige.intValue = 0;
    
 }
 

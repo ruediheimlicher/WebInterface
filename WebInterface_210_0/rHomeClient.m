@@ -1167,7 +1167,7 @@ unsigned char h2int(char c)
 - (void)readEthTagplan:(int)i2cAdresse vonAdresse:(int)startAdresse anz:(int)anzahlDaten
 {
 	
-	NSLog(@"readEthTagplan i2cAdresse: %d startAdresse: %d anzDaten: %d",i2cAdresse,startAdresse,anzahlDaten);
+	NSLog(@"rHomeClient readEthTagplan i2cAdresse: %d startAdresse: %d anzDaten: %d",i2cAdresse,startAdresse,anzahlDaten);
 	//NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
 	//NSMutableDictionary* readEEPROMDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
 	//NSMutableArray* i2cAdressArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
@@ -1205,7 +1205,7 @@ unsigned char h2int(char c)
 
    WebTask = idle;
    
-   NSLog(@"HomeClientWriteStandardAktion tagbalkentyp aus userinfo: %@", [[note userInfo]objectForKey:@"tagbalkentyp"]);
+   NSLog(@"HomeClient WriteStandardAktion tagbalkentyp aus userinfo: %@", [[note userInfo]objectForKey:@"tagbalkentyp"]);
    [SendEEPROMDataDic setObject:[[note userInfo]objectForKey:@"titel"] forKey:@"titel"];
    [SendEEPROMDataDic setObject:[[note userInfo]objectForKey:@"tagbalkentyp"] forKey:@"tagbalkentyp"];
 	
@@ -1225,13 +1225,13 @@ unsigned char h2int(char c)
    }
 
    NSString*  permanent = [[note userInfo]objectForKey:@"permanent"];
-   
+   int permanentint = [[[note userInfo]objectForKey:@"permanent"]intValue];
    //NSLog(@"HomeClientWriteStandardAktion lbyte als String: %@ hbyte als String: %@",lbyte,hbyte);
    [SendEEPROMDataDic setObject:hbyte forKey:@"hbyte"];
    [SendEEPROMDataDic setObject:lbyte forKey:@"lbyte"];
    [SendEEPROMDataDic setObject:[NSNumber numberWithInt:1]forKey:@"adrload"];
    [SendEEPROMDataDic setObject:[NSNumber numberWithInt:0]forKey:@"dataload"];
-   [SendEEPROMDataDic setObject:[NSNumber numberWithInt:1]forKey:@"permanent"];
+   [SendEEPROMDataDic setObject:[NSNumber numberWithInt:permanentint] forKey:@"permanent"];
    
    
 	//NSString* EEPROM_i2cAdresseString=[I2CPop itemTitleAtIndex:I2CIndex];
@@ -1264,9 +1264,9 @@ unsigned char h2int(char c)
       {
          if (i<[DatenByteArray count])
          {
-            NSLog(@"DataString vor: %@ i: %d data: %d",DataString,i,[[DatenByteArray objectAtIndex:i]intValue]);
+            //NSLog(@"DataString vor: %@ i: %d data: %d",DataString,i,[[DatenByteArray objectAtIndex:i]intValue]);
             DataString= [NSString stringWithFormat:@"%@&d%d=%x",DataString,i,[[DatenByteArray objectAtIndex:i]intValue]];
-            NSLog(@"DataString nach: %@",DataString);
+            //NSLog(@"DataString nach: %@",DataString);
 
          }
          else // auffuellen mit 0xff
@@ -1777,7 +1777,7 @@ unsigned char h2int(char c)
                                    WEBSERVER_VHOST,
                                    CGI,
                                    PW,
-                                   [EEPROMDataDic objectForKey:@"permanent"],
+                                   [EEPROMDataDic objectForKey:@"permanent"], // in .pl mit key  perm gelesen
                                    [EEPROMDataDic objectForKey:@"hbyte"],
                                    [EEPROMDataDic objectForKey:@"lbyte"],
                                    [EEPROMDataDic objectForKey:@"eepromdatastring"],
@@ -1888,7 +1888,7 @@ unsigned char h2int(char c)
    //[self HomeClientWriteEEPROM:sendDic];
   //[self HomeClientWriteStandardAktion:(NSNotification*)sendDic];
    
-   int sendDelay=1.0;
+   int sendDelay=2.0;
    
    
    EEPROMUpdateTimer=[NSTimer scheduledTimerWithTimeInterval:sendDelay

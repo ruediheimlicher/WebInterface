@@ -776,7 +776,7 @@ HomeDataDownload
 
 
 */
-   //NSLog(@"HomeDataDownloadAktion userInfo: *%@*",[[note userInfo] objectForKey:@"lastdatazeit" ]);
+   NSLog(@"HomeDataDownloadAktion userInfo: *%@*",[[note userInfo] objectForKey:@"lastdatazeit" ]);
 	
 	
 	if ([AVR WriteWoche_busy]) // Woche wird noch geschrieben

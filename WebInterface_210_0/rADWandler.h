@@ -92,7 +92,7 @@ static __inline__ int SSRandomIntBetween(int a, int b)
 	
 }
 
-- (void)GitterZeichnen;
+//- (void)GitterZeichnen;
 
 - (IBAction)reportCancel:(id)sender;
 - (IBAction)reportClose:(id)sender;
@@ -124,7 +124,7 @@ static __inline__ int SSRandomIntBetween(int a, int b)
 - (void)printMehrkanalDaten:(id)sender;
 - (void)setEinkanalWahlTaste:(int)dieTaste;
 - (int)EinkanalWahlTastensegment;
-- (NSArray*)KanalSelektionArray;
+//- (NSArray*)KanalSelektionArray;
 - (NSArray*)MehrkanalTastenArray;
 - (void)setMehrkanalWahlTasteMitArray:(NSArray*)derTastenArray;
 - (int)lastInterfaceNummer;

@@ -17,7 +17,7 @@ NSCharacterSet*					HexSet;
 int mark;
 }
 - (id)initWithFrame:(NSRect)frame;
-- (void)setErgebnisView;
+//- (void)setErgebnisView;
 
 
 @end

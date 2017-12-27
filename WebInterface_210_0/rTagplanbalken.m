@@ -318,7 +318,7 @@ NSMutableDictionary* tempDic=(NSMutableDictionary*)[StundenArray objectAtIndex:d
    /*
     
     */
-	NSLog(@"Tagplanbalken setStundenArrayAusByteArray derStundenByteArray: %@",[derStundenByteArray description]);
+	//NSLog(@"Tagplanbalken setStundenArrayAusByteArray derStundenByteArray: %@",[derStundenByteArray description]);
 	
 	NSMutableArray* tempStundenArray=[[NSMutableArray alloc]initWithCapacity:0];
 	//NSArray* bitnummerArray=[NSArray arrayWithObjects: @"null", @"eins",@"zwei",@"drei",@"vier",@"fuenf",nil];
@@ -336,7 +336,7 @@ NSMutableDictionary* tempDic=(NSMutableDictionary*)[StundenArray objectAtIndex:d
       NSString* dezString = [NSString stringWithFormat:@"%d",tempByte];
 		
 		
-		NSLog(@"i: %d tempString: %@ tempByte hex: %2.2X dez: %d dezString: %@",i,tempString,tempByte,tempByte,dezString);
+		//NSLog(@"i: %d tempString: %@ tempByte hex: %2.2X dez: %d dezString: %@",i,tempString,tempByte,tempByte,dezString);
 		NSMutableArray* tempStundenCodeArray=[[NSMutableArray alloc]initWithCapacity:4];
 		for (k=0;k<4;k++)
 		{

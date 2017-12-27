@@ -14,9 +14,61 @@
 #define TAGPLANBREITE		0x40	// 64 Bytes, 2 page im EEPROM
 #define RAUMPLANBREITE		0x200	// 512 Bytes
 
+# define DAYSETTINGTIEFE   8
 
 @implementation rAVR
 
+- (uint8_t) freeDaySettingline
+{
+   for (int linie = 0;linie < DAYSETTINGTIEFE; linie++)
+   {
+      uint8_t byte = (const uint8_t )daySettingArray[linie][15];
+      uint8_t data = daySettingArray[linie][15];
+ //     NSLog(@"linie: %d byte: %hhu data: %s",linie, byte,daySettingArray[linie][15]);
+      if ((daySettingArray[linie][15] & 0x03) == 0)
+         return linie;
+   }
+   return 0xFF;
+}
+
+- (NSArray*)daySettingDataVon:(uint8_t)raum vonObjekt:(uint8_t)objekt anWochentag:(uint8_t)wochentag
+{
+   for (int linie = 0;linie < DAYSETTINGTIEFE; linie++)
+   {
+      if (daySettingArray[linie][15] == 1) // aktuell
+      {
+         uint8_t dayraum = ((const uint8_t )daySettingArray[linie][0] & 0xF0)>>4;
+         if (raum == dayraum) // raum stimmt
+         {
+            
+            uint8_t dayobjekt = ((const uint8_t )daySettingArray[linie][0] & 0x0F);
+            if (objekt == dayobjekt) // objekt stimmt
+            {
+               uint8_t daywochentag= ((const uint8_t )daySettingArray[linie][1] & 0xF0)>>4;
+               if (wochentag == daywochentag) // Wochentag stimmt
+               {
+                  uint8_t code = ((const uint8_t )daySettingArray[linie][1] & 0x0F);
+                  uint8_t data[6] = {};
+                  NSMutableArray * temparray = [[NSMutableArray alloc] initWithCapacity: 4];
+                  for (int i = 0; i < 6; i++) // datapaket hat 6 bytes mit Tagplandaten
+                  {
+                     uint8_t byte = (const uint8_t )daySettingArray[linie][i+4];
+                     NSLog(@"byte: %02X",byte);
+                     data[i] = byte;
+                     NSString* tempdatastring = [NSString stringWithFormat:@"%02X", byte];
+                     
+                     [temparray addObject: [NSString stringWithFormat:@"%02X", byte]];
+                  }
+                  //NSLog(@"temparray: %@",temparray);
+                  return temparray;
+               }
+            }
+         }
+         
+      }
+   }
+   return nil;
+}
 - (void)Alert:(NSString*)derFehler
 {
 /*
@@ -336,7 +388,72 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
 		NSLog(@"Neuer Homebus ok");
 	}
 	//NSLog(@"HomebusAnlegen 1");
-	n=0;
+   
+   // daySettingArray lesen
+	HomeDaySettingPfad = [HomedataPfad stringByAppendingPathComponent:@"daySetting"];
+   if ([Filemanager fileExistsAtPath:HomeDaySettingPfad])
+   {
+      SettingData=[NSMutableData dataWithContentsOfFile:HomeDaySettingPfad];
+   
+   }
+
+   if (SettingData)
+   {
+      NSLog(@"SettingData: %@",SettingData);
+   }
+   else
+   {
+      //daySettingArray[8][16]; 
+      for (uint8_t pos = 0;pos<8;pos++)
+      {
+         for (uint8_t byte=0;byte<16;byte++)
+         {
+            uint8_t code = (pos << 4) | byte;
+            NSLog(@"pos: %d byte %d code: %d %02X",pos,byte,code,code);
+            
+          //  uint8_t p = (code & 0xF0) >>4;
+          //  uint8_t b = code & 0x0F;
+          //  NSLog(@"p: %d b %d ",p,b);
+          //  daySettingArray[pos][byte] = (pos << 4) | byte;
+            daySettingArray[pos][byte] = 0;
+         }
+      }
+      //daySettingArray[3][15] = 0;
+      int l = 8*16;
+      SettingData = [NSMutableData dataWithBytes:daySettingArray length:l];
+      [SettingData writeToFile:HomeDaySettingPfad atomically:YES];
+   }
+   NSData* returndata = [NSData dataWithContentsOfFile:HomeDaySettingPfad];
+   NSLog(@"returndata: %@",returndata);
+   NSString* returndatastring = [returndata description];
+   NSLog(@"returndatastring: %@",returndatastring);
+   NSArray* returndataarray = [returndatastring componentsSeparatedByString:@" "];
+   //NSArray* temparray = [NSArray arrayWithBytes:returndata];
+   uint8_t           tempdaySettingArray[8][16]; // 1 Zeile pro Tag, 4 bytes code, 6 bytes Data 
+   int l = [returndata length];
+    
+   NSUInteger size = [returndata length] / sizeof(unsigned char);
+    
+   
+   // https://stackoverflow.com/posts/21489823/edit
+   NSMutableString *string = [NSMutableString stringWithCapacity:returndata.length * 3];
+   for (NSUInteger offset = 0; offset < l; ++offset) 
+   {
+      uint8_t byte = ((const uint8_t *)returndata.bytes)[offset];
+      uint8_t zeile =  offset/16;
+      uint8_t kolonne = offset%16;
+      daySettingArray[zeile][kolonne] = byte;
+      if (offset%16 == 0)
+      {
+         [string appendFormat:@"\n"];
+      }
+      [string appendFormat:@"%02X\t", byte];
+   }
+   
+   NSLog(@"string: \n%@",string);
+   
+  
+   n=0;
 	aktuellerTag=0;
 	IOW_busy=0;
 	aktuelleMark=NSNotFound;
@@ -350,6 +467,7 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
 
 - (void)awakeFromNib
 {
+   
 	//NSLog(@"AVR awake");
    char* u="80+f+0+0+7+f0+ff+ff";
    
@@ -637,13 +755,21 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
 		[ObjektSeg setEnabled:YES];
 		
       // daySettingArray init
+      /*
+       byte 0: raum | objekt
+       byte 1: wochentag | code: aktuell: bit0, delete: bit7
+       
+       
+       */
+       
+      
       for (int wt = 0;wt < 8;wt++)
       {
          for (int objekt = 0;objekt<8;objekt++)
          {
             for (int dataindex = 0;dataindex < 8;dataindex++)
             {
-               daySettingArray[raum][objekt][wt][dataindex] = 0;
+     //          daySettingArray[raum][objekt][wt][dataindex] = 0;
             }
          }
          
@@ -833,6 +959,22 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
    */
    writeEEPROManzeige.intValue = 0;
    //NSLog(@"AVR awake end");
+   
+   // check freeline in daysettingarray
+   uint8_t freielinie = self.freeDaySettingline;
+   NSLog(@"freeDaySettingline: %d",freielinie);
+   
+   NSArray* d = [self daySettingDataVon:0 vonObjekt:1 anWochentag:0];
+   if (d)
+   {
+      NSLog(@"d: %@",d);
+      
+   }
+   else
+   {
+      NSLog(@"keine Daten");
+   }
+   
 }
 - (void)LocalStatusAktion:(NSNotification*)note
 {
@@ -1020,6 +1162,7 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
 		if ([HomebusArray objectAtIndex:i])	// Raumdic fuer Raum i ist da
 		{
 			NSMutableDictionary* tempRaumDic=[HomebusArray objectAtIndex:i];
+         //NSLog(@"tempRaumDic: %@",tempRaumDic);
 			if (![tempRaumDic objectForKey:@"raumname"])
 		
          {
@@ -1039,7 +1182,7 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
 			{
 				for (k=0;k<[Wochentage count];k++) // 7 Tage
 				{
-					if ([[tempRaumDic objectForKey:@"wochenplanarray"]objectAtIndex:k]) // TagplanDic fuer Wchentag ist da
+					if ([[tempRaumDic objectForKey:@"wochenplanarray"]objectAtIndex:k]) // TagplanDic fuer Wochentag ist da
 					{
 						// WochenplanDic fuer Wo tag
 						NSMutableDictionary* tempWochenplanDic=(NSMutableDictionary*)[[tempRaumDic objectForKey:@"wochenplanarray"]objectAtIndex:k];
@@ -1047,6 +1190,9 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
 						{
 							// TagplanArray fuer Tag k 
 							NSMutableArray* tempTagplanArray=(NSMutableArray*)[tempWochenplanDic objectForKey:@"tagplanarray"];
+                     
+                     
+                     
 							for (l=0;l<8;l++) //8 Objekte
 							{
                         //NSLog(@"Raum: %d Tag: %d",i,k);
@@ -1055,6 +1201,7 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
                            //NSLog(@"Object ist da");
 									//TagplanDic fuer Woche i, Wochentag k, Objekt l
 									NSMutableDictionary* tempTagplanDic=(NSMutableDictionary*)[tempTagplanArray objectAtIndex:l];
+                           NSLog(@"tempTagplanDic: %@",tempTagplanDic);
 									if (![tempTagplanDic objectForKey:@"aktiv"])
 									{
                               NSLog(@"noch kein Plan aktiv");
@@ -1105,6 +1252,7 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
 									[tempTagplanDic setObject:[Raumnamen objectAtIndex:i] forKey:@"raumname"];
 									[tempTagplanDic setObject:[NSNumber numberWithInt:i] forKey:@"raum"];
 									[tempTagplanDic setObject:[Wochentage objectAtIndex:k] forKey:@"wochentag"];
+                           [tempTagplanDic setObject:[NSNumber numberWithInt:k] forKey:@"wt"];
 									[tempTagplanDic setObject:[NSString stringWithFormat:@"Objekt %d",l] forKey:@"objektname"];
 									[tempTagplanDic setObject:[self neuerStundenplan] forKey:@"stundenplanarray"];
 									[tempTagplanDic setObject:[NSNumber numberWithInt:1] forKey:@"aktiv"];
@@ -1217,6 +1365,7 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
 		[tempWochenplanDic setObject:[Raumnamen objectAtIndex:derRaum] forKey:@"raumname"];
 		[tempWochenplanDic setObject:[NSNumber numberWithInt:derRaum] forKey:@"raum"];
 		[tempWochenplanDic setObject:[Wochentage objectAtIndex:k] forKey:@"wochentag"];
+      [tempWochenplanDic setObject:[NSNumber numberWithInt:k] forKey:@"wt"];
 		
 		[tempWochenplanArray addObject:tempWochenplanDic];
 		NSMutableArray* tempTagplanArray =(NSMutableArray*)[self neuerTagplanForTag:k forRaum:derRaum];
@@ -1240,6 +1389,7 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
 		[tempTagplanDic setObject:[Raumnamen objectAtIndex:derRaum] forKey:@"raumname"];
 		[tempTagplanDic setObject:[NSNumber numberWithInt:derRaum] forKey:@"raum"];
 		[tempTagplanDic setObject:[Wochentage objectAtIndex:derWochentag] forKey:@"wochentag"];
+      [tempTagplanDic setObject:[NSNumber numberWithInt:derWochentag] forKey:@"wt"];
 		[tempTagplanDic setObject:[NSString stringWithFormat:@"Objekt %d",l] forKey:@"objektname"];
 		
 		// eingefügt 3.6.09

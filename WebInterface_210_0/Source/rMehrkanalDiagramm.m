@@ -247,7 +247,7 @@ StartwertX=x;
 }
 
 
-- (void)setOffsetY:(float)y
+- (void)setOffsetY:(int)y
 {
 
 

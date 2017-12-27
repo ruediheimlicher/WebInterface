@@ -119,7 +119,7 @@
 
 - (NSString*) nameForIOWarriorInterfaceType:(int) inType;
 - (BOOL) reportIdRequiredForWritingToInterfaceOfType:(int) inType;
-- (IOWarriorHIDDeviceInterface**) currentInterface;
+//- (IOWarriorHIDDeviceInterface**) currentInterface;
 - (int) currentInterfaceType;
 - (int) reportSizeForInterfaceType:(int) inType;
 

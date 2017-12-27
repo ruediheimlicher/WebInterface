@@ -123,8 +123,16 @@ NSMutableArray*			WEBDATATabelle;
 IBOutlet	NSTableView*	WEBDATATable;
 rWEBDATA_DS*				WEBDATA_DS;
 
-volatile uint8_t        daySettingArray[8][8][8][8]; // 1 Zeile pro Tag, 8 Zeilen fuer raum, 6 bytes Data 
-   
+uint8_t                 daySettingArray[8][16]; // 1 Zeile pro Tag, 4 bytes code, 6 bytes Data 
+NSMutableData*          SettingData;  
+NSString*               HomeDaySettingPfad;   
+/*
+ byte 0: raum | objekt
+ byte 1: wochentag | code: aktuell: bit0, delete: bit7
+ 
+ 
+ */
+volatile uint8_t lastwd;
    
 //Simulation DataTransfer
 IBOutlet	 id            maxSimAnzahlFeld;
@@ -156,6 +164,11 @@ NSTimer*                EEPROMUpdateTimer;
    IBOutlet NSLevelIndicator* writeEEPROManzeige;
 
 }
+
+- (uint8_t)freeDaySettingline;
+- (NSArray*)daySettingDataVon:(uint8_t)raum vonObjekt:(uint8_t)objekt anWochentag:(uint8_t)wochentag;
+
+
 - (void)setLocalStatus;
 - (NSArray*)StundenArrayAusByteArray:(NSArray*)derStundenByteArray;
 - (NSArray*)StundenArrayAusDezArray:(NSArray*)derStundenByteArray;
@@ -192,7 +205,7 @@ NSTimer*                EEPROMUpdateTimer;
 - (int)sendData:(NSArray*)dieDaten;
 - (IBAction)readTagplan:(id)sender;
 - (void)readTagplan:(int)i2cAdresse vonAdresse:(int)startAdresse anz:(int)anzDaten;
-- (void)readEthTagplan:(int)i2cAdresse vonAdresse:(int)startAdresse anz:(int)anzDaten;
+//- (void)readEthTagplan:(int)i2cAdresse vonAdresse:(int)startAdresse anz:(int)anzDaten;
 
 
 - (IBAction)writeWochenplan:(id)sender;
@@ -216,6 +229,8 @@ NSTimer*                EEPROMUpdateTimer;
 
 @interface rAVR(rAVRClient)
 - (IBAction)readEthTagplan:(id)sender;
+- (void)readEthTagplan:(int)i2cAdresse vonAdresse:(int)startAdresse anz:(int)anzDaten;
+
 - (void)readEthTagplanVonTag:(int)wochentag;
 - (void)readEthTagplanVonRaum:(int)raum vonObjekt: (int)objekt vonTag:(int)wochentag;
 - (IBAction)readWochenplan:(id)sender;

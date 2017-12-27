@@ -966,26 +966,61 @@ if (Webserver_busy)
 		NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
 		
       //NSLog(@"WriteStandardAktion: permanent: %d",permanent);
-      if (permanent) // schicken an EEPROM
+      if ([permanent intValue]) // schicken an EEPROM
       {
          //NSLog(@"AVRClient WriteStandardAktion mit permanent: %d ",permanent);
-        // [nc postNotificationName:@"HomeClientWriteStandard" object:self userInfo:HomeClientDic];
+         [nc postNotificationName:@"HomeClientWriteStandard" object:self userInfo:HomeClientDic];
       }
       else // data in daySettingArray einsetzen
       {
          //StundenbyteArray in daySettingArray festhalten
-         for (int dataindex=0;dataindex < 6; dataindex++)
-         {
-            daySettingArray[Raum][Objekt][Wochentag][dataindex] = [StundenByteArray[dataindex]intValue];
+         //daySettingArray[pos][byte]
+         /*
+          byte 0: raum | objekt
+          byte 1: wochentag | code: aktuell: bit0, delete: bit7
           
-          }
-             daySettingArray[Raum][Objekt][Wochentag][7] = 1; // markierung temporaer
-    //     
+          
+          */
+
+         uint8_t freielinie = self.freeDaySettingline;
+         
+         //printf("freielinie: %s\n",freielinie);
+         NSLog(@"freielinie:: %d StundenByteArray: %@",freielinie,StundenByteArray);
+         if (freielinie < 0xFF)
+         {
+            
+            daySettingArray[freielinie][0] = (Raum<<4) | Objekt;
+            
+            uint8_t code = 0x01; // bit 0 gesetzt, data ist aktuell
+            
+            daySettingArray[freielinie][1] = (Wochentag<<4) | code;
+            
+            for (int dataindex=0;dataindex < 6; dataindex++)
+            {
+               
+               daySettingArray[freielinie][4 + dataindex] = [StundenByteArray[dataindex]intValue];
+               //    daySettingArray[Raum][Objekt][Wochentag][dataindex] = [StundenByteArray[dataindex]intValue];
+               
+            }
+            daySettingArray[freielinie][15] = 1;
+            //            daySettingArray[Raum][Objekt][Wochentag][7] = 1; // markierung temporaer
+            //   
+            int l = 8*16;
+            SettingData = [NSMutableData dataWithBytes:daySettingArray length:l];
+            [SettingData writeToFile:HomeDaySettingPfad atomically:YES];
+
+         }
          // 
+         for (int i=0;i<8;i++)
+         {
+            printf("daySettingArray i: %d data: %s",i,daySettingArray[i]);
+            printf("\n");
+         }
          
       }
       
-      [nc postNotificationName:@"HomeClientWriteStandard" object:self userInfo:HomeClientDic];
+      //NSLog(@"daySettingArray: %s",daySettingArray);
+      //[nc postNotificationName:@"HomeClientWriteStandard" object:self userInfo:HomeClientDic];
 		
 	}
 }

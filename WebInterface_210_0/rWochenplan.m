@@ -90,7 +90,7 @@
 		NSArray* tempTagplanArray=[[derWochenplanArray objectAtIndex:wd]objectForKey:@"tagplanarray"];
       if (wd == 0)
       {
-         //NSLog(@"Tag: %d tempTagplanArray: %@",wd, [tempTagplanArray  description]);
+         NSLog(@"Tag: %d tempTagplanArray: %@",wd, [tempTagplanArray  description]);
       }
 		// Sammel-Array mit StundenplanDicArrays des Tages wd:
 		NSMutableArray* aktivStundenplanDicArray=[[NSMutableArray alloc]initWithCapacity:0]; 

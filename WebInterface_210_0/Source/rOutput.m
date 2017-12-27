@@ -59,7 +59,7 @@ NSLog(@"Output SendTastenAktion: start");
 	//NSLog(@"SendTastenAktion:  HexDatenArray: %@",[HexDatenArray description]);
 	//[self WriteHexStringArray:HexDatenArray];
 }
-
+/*
  - (void)writeDigit:(id)sender
  {
 	//NSString* hexString=[HexEingabe0 HexFeld];
@@ -82,7 +82,7 @@ NSLog(@"Output SendTastenAktion: start");
 	[self WriteHexStringArray:TastenArray];
 
  }
- 
+ */
 - (void)EinzelTastenAktion:(NSNotification*)note
 {
 	NSLog(@"EinzelTastenAktion note: %@",[[note userInfo]description]);

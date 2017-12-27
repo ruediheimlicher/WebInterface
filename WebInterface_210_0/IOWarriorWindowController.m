@@ -108,8 +108,11 @@ void IOWarriorCallback ()
    
    NSString* ASString = @"return do shell script \"curl http://checkip.dyndns.org/\"";
    NSAppleScript* IP_appleScript = [[NSAppleScript alloc] initWithSource: ASString];
-   //DLog(@"IP_appleScript: %@ ",[IP_appleScript description]);
-   
+   NSLog(@"IP_appleScript: %@ ",[IP_appleScript description]);
+   NSDictionary *iperrorMessage = nil;
+   NSAppleEventDescriptor *ipresult = [IP_appleScript executeAndReturnError:&iperrorMessage];
+   NSString *scriptReturn = [ipresult stringValue];
+   NSLog(@"checkIP: %@",scriptReturn);
    NSDictionary* IPErr=nil;
    NSNotificationCenter * nc;
    nc=[NSNotificationCenter defaultCenter];

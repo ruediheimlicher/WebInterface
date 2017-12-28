@@ -9,6 +9,7 @@
 #import <Cocoa/Cocoa.h>
 #import "rTagplan.h"
 
+extern NSMutableArray *daySettingStringArray;
 @interface rWochenplan : NSView 
 {
 int Raum;
@@ -17,6 +18,7 @@ NSButton* heuteTaste;
 
 NSMutableArray*		aktivObjektArray;
 NSMutableArray*		TagplanArray;
+   NSMutableArray *   daySettingStringArray;
    
 }
 - (void)setTagplanVonObjekt:(int)dasObjekt;

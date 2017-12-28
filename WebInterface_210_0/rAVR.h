@@ -124,7 +124,8 @@ IBOutlet	NSTableView*	WEBDATATable;
 rWEBDATA_DS*				WEBDATA_DS;
 
 uint8_t                 daySettingArray[8][16]; // 1 Zeile pro Tag, 4 bytes code, 6 bytes Data 
-NSMutableData*          SettingData;  
+   NSMutableArray *daySettingStringArray; // NSArray fuer daysettings
+   NSMutableData*          SettingData;  
 NSString*               HomeDaySettingPfad;   
 /*
  byte 0: raum | objekt

@@ -437,21 +437,37 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
    
    // https://stackoverflow.com/posts/21489823/edit
    NSMutableString *string = [NSMutableString stringWithCapacity:returndata.length * 3];
+   NSMutableArray *zeilenarray = [[NSMutableArray alloc]initWithCapacity:0];
+   daySettingStringArray = [[NSMutableArray alloc]initWithCapacity:DAYSETTINGTIEFE];
+   for (int zeile=0;zeile<DAYSETTINGTIEFE;zeile++)
+   {
+      [daySettingStringArray addObject:[[NSMutableArray alloc]initWithCapacity:0]];
+   }
+   //NSMutableArray* daySettingStringArray = [[NSMutableArray alloc]initWithCapacity:DAYSETTINGTIEFE];
    for (NSUInteger offset = 0; offset < l; ++offset) 
    {
+      
       uint8_t byte = ((const uint8_t *)returndata.bytes)[offset];
       uint8_t zeile =  offset/16;
       uint8_t kolonne = offset%16;
       daySettingArray[zeile][kolonne] = byte;
-      if (offset%16 == 0)
+      [[daySettingStringArray objectAtIndex:(offset/16)]addObject: [NSString stringWithFormat:@"%02X", byte]];
+      [zeilenarray addObject: [NSString stringWithFormat:@"%02X", byte]];
+      
+      if (offset && (offset%16 == 0))
       {
+        // [daySettingStringArray addObject:[zeilenarray subarrayWithRange:NSMakeRange((offset/16-1)*16,16)]];
+         
          [string appendFormat:@"\n"];
+      
       }
       [string appendFormat:@"%02X\t", byte];
    }
    
-   NSLog(@"string: \n%@",string);
-   
+   NSArray* tempArray = [NSArray  arrayWithArray:[string componentsSeparatedByString:@"\n"]];
+   NSLog(@"string: \n%@ \ndaySettingStringArray: %@",string,daySettingStringArray);
+   NSDictionary* daySettingDic = [NSDictionary dictionaryWithObject:daySettingStringArray forKey:@"daysettingarray"];
+   [nc postNotificationName:@"daysetting" object:self userInfo:daySettingDic];
   
    n=0;
 	aktuellerTag=0;
@@ -467,7 +483,8 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
 
 - (void)awakeFromNib
 {
-   
+   NSNotificationCenter * nc =[NSNotificationCenter defaultCenter];
+
 	//NSLog(@"AVR awake");
    char* u="80+f+0+0+7+f0+ff+ff";
    
@@ -967,7 +984,8 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
    NSArray* d = [self daySettingDataVon:0 vonObjekt:1 anWochentag:0];
    if (d)
    {
-      NSLog(@"d: %@",d);
+     
+      NSLog(@"d: %@ stundenparray: %@",d,[self StundenArrayAusByteArray:d]);
       
    }
    else
@@ -975,6 +993,9 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
       NSLog(@"keine Daten");
    }
    
+   NSDictionary* daySettingDic = [NSDictionary dictionaryWithObject:daySettingStringArray forKey:@"daysettingarray"];
+   [nc postNotificationName:@"daysetting" object:self userInfo:daySettingDic];
+
 }
 - (void)LocalStatusAktion:(NSNotification*)note
 {
@@ -1201,7 +1222,7 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
                            //NSLog(@"Object ist da");
 									//TagplanDic fuer Woche i, Wochentag k, Objekt l
 									NSMutableDictionary* tempTagplanDic=(NSMutableDictionary*)[tempTagplanArray objectAtIndex:l];
-                           NSLog(@"tempTagplanDic: %@",tempTagplanDic);
+                          // NSLog(@"tempTagplanDic: %@",tempTagplanDic);
 									if (![tempTagplanDic objectForKey:@"aktiv"])
 									{
                               NSLog(@"noch kein Plan aktiv");

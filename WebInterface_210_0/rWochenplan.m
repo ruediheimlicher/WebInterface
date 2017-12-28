@@ -36,6 +36,10 @@
 			   name:@"WriteWochenplanModifier"
 			 object:nil];
 			 
+      [nc addObserver:self
+             selector:@selector(daySettingAktion:)
+                 name:@"daysetting"
+               object:nil];
 			 
 
 
@@ -44,6 +48,11 @@
     return self;
 }
 
+- (void)daySettingAktion:(NSNotification*)note
+{
+   NSLog(@"Wochenplan daySettingAktion: %@",[[note userInfo]description]);
+   daySettingStringArray = [[note userInfo]objectForKey:@"daysettingarray"];
+}
 
 - (NSArray*)setWochenplanForRaum:(int)derRaum mitWochenplanArray:(NSArray*)derWochenplanArray
 {
@@ -90,7 +99,7 @@
 		NSArray* tempTagplanArray=[[derWochenplanArray objectAtIndex:wd]objectForKey:@"tagplanarray"];
       if (wd == 0)
       {
-         NSLog(@"Tag: %d tempTagplanArray: %@",wd, [tempTagplanArray  description]);
+         //NSLog(@"Tag: %d tempTagplanArray: %@",wd, [tempTagplanArray  description]);
       }
 		// Sammel-Array mit StundenplanDicArrays des Tages wd:
 		NSMutableArray* aktivStundenplanDicArray=[[NSMutableArray alloc]initWithCapacity:0]; 
@@ -123,6 +132,10 @@
 				//Dic mit Namen und Stundenplanarray eines aktiven Objekts
 				
 				// Stundenplanarray anfuegen
+            
+            // daySettings abfragen
+   //         NSArray* tempSettingArray = [self 
+            
 				[tempaktivObjektDic setObject:[[tempTagplanArray objectAtIndex:obj]objectForKey:@"stundenplanarray"] forKey:@"stundenplanarray"];
 				[tempaktivObjektDic setObject:[[tempTagplanArray objectAtIndex:obj]objectForKey:@"objektname"] forKey:@"objektname"];
 				[tempaktivObjektDic setObject:[[tempTagplanArray objectAtIndex:obj]objectForKey:@"objekt"] forKey:@"objekt"];

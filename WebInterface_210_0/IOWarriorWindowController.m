@@ -87,6 +87,15 @@ void IOWarriorCallback ()
 /*" Invoked when the nib file including the window has been loaded. "*/
 - (void) awakeFromNib
 {
+   
+   uint16_t impulsmittelwert = 920;
+   uint8_t lb = impulsmittelwert & 0xFF;
+   uint8_t hb = (impulsmittelwert>>8) & 0xFF;
+  uint8_t hb2 = ((impulsmittelwert & 0xFF00)>>8) & 0xFF;
+   
+   uint16_t result = lb + 0xff*hb;
+   uint16_t resul2t = lb | (hb <<8);
+
    //Reachability* reachability = [[Reachability reachabilityWithHostName: @"www.apple.com"];
    //NetworkStatus netStatus = [reachability currentReachabilityStatus];
    
@@ -129,6 +138,8 @@ void IOWarriorCallback ()
    oldHour = components.hour;
    
    //oldHour=[[NSCalendarDate date]hourOfDay];
+   
+    
    
    daySaved=NO;
    int adresse=0xABCD;

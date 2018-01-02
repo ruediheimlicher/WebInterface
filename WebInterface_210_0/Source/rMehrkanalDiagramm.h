@@ -39,7 +39,7 @@
 	NSString*					Einheit;
 	NSMutableArray*			EinheitenYArray;
 	NSMutableArray*			DatenTitelArray;
-	NSDate*                 DatenserieStartZeit;
+	NSCalendar*                 DatenserieStartZeit;
 
 	int							OffsetY;
 	

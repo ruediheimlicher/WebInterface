@@ -167,7 +167,7 @@ DatenserieStartZeit = dasDatum;
 	//NSLog(@"StartAktion note: %@",[[note userInfo]description]);
 	if ([[note userInfo]objectForKey:@"datenseriestartzeit"])
 	{
-		DatenserieStartZeit= (NSCalendarDate*)[[note userInfo]objectForKey:@"datenseriestartzeit"];
+		DatenserieStartZeit= (NSCalendar*)[[note userInfo]objectForKey:@"datenseriestartzeit"];
 		//NSLog(@"MehrkanalDiagramm DatenserieStartZeit %@",DatenserieStartZeit);
 		
 	}

@@ -85,12 +85,11 @@ extern NSMutableArray* DatenplanTabelle;
 - (void)Alert:(NSString*)derFehler
 {
 	
-	NSAlert * DebugAlert=[NSAlert alertWithMessageText:@"Debugger!" 
-										 defaultButton:NULL 
-									   alternateButton:NULL 
-										   otherButton:NULL 
-							 informativeTextWithFormat:@"Mitteilung: \n%@",derFehler];
-	[DebugAlert runModal];
+   NSAlert * DebugAlert=[[NSAlert alloc]init];
+   DebugAlert.messageText= @"Debugger!";
+   DebugAlert.informativeText = [NSString stringWithFormat:@"Mitteilung: \n%@",derFehler];
+   
+   [DebugAlert runModal];
 	
 }
 
@@ -310,9 +309,12 @@ extern NSMutableArray* DatenplanTabelle;
 	
 	//[StdCell selectSegmentWithTag:1];
 	//NSRect r=[[StdCell contentView] frame];
-	DatenserieStartZeit=[NSCalendarDate calendarDate];
-	SimDatenserieStartZeit=[NSCalendarDate calendarDate];
-	
+	//DatenserieStartZeit=[NSCalendarDate calendarDate];
+   DatenserieStartZeit=[NSCalendar currentCalendar];
+	//SimDatenserieStartZeit=[NSCalendarDate calendarDate];
+   SimDatenserieStartZeit=[NSCalendar currentCalendar];
+
+   
 	[Kalender setCalendar:[NSCalendar currentCalendar]];
 	[Kalender setDateValue: [NSDate date]];
 
@@ -4792,7 +4794,8 @@ if ([[note userInfo]objectForKey:@"err"])
 		
 		if ((AnzDaten %23 == 0)&& (simDaySaved==0))
 		{
-			[DatenserieStartZeit dateByAddingTimeInterval:84600];
+	//		[DatenserieStartZeit dateByAddingTimeInterval:84600];
+         [DatenserieStartZeit dateByAddingUnit: kCFCalendarUnitSecond value:84600 toDate:DatenserieStartZeit options:NSCalendarWrapComponents];
 			NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 			[NotificationDic setObject:@"saveganz"forKey:@"data"];
 			//[NotificationDic setObject:@"savepart"forKey:@"data"];

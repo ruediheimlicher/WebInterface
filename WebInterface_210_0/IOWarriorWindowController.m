@@ -69,7 +69,7 @@ void IOWarriorCallback ()
 
 - (void)Alert:(NSString*)derFehler
 {
-   NSAlert * DebugAlert=[[NSAlert alloc]init];
+    NSAlert * DebugAlert=[[NSAlert alloc]init];
    DebugAlert.messageText= @"Debugger!";
    DebugAlert.informativeText = [NSString stringWithFormat:@"Mitteilung: \n%@",derFehler];
 
@@ -983,7 +983,7 @@ HomeDataDownload
 			}
 			else
 			{
-				[self DruckDatenSchreibenMitDatum:[NSCalendarDate date] ganzerTag:YES];
+				[self DruckDatenSchreibenMitDatum:[NSCalendar currentCalendar] ganzerTag:YES];
 			}
 			[Data clearData];
 		}
@@ -2396,7 +2396,7 @@ return;
 	//return YES;
 }
 
--(void)DruckDatenSchreibenMitDatum:(NSCalendarDate*)dasDatum ganzerTag:(int)ganz
+-(void)DruckDatenSchreibenMitDatum:(NSCalendar*)dasDatum ganzerTag:(int)ganz
 {
 	BOOL USBDatenDa=NO;
 	BOOL istOrdner;
@@ -2436,8 +2436,11 @@ return;
 	
 	//NSString* monatString=[[NSNumber numberWithInt:monat]stringValue];
 	
-	int tagdesmonats=[dasDatum dayOfMonth];
-	
+//	int tagdesmonats=[dasDatum dayOfMonth];
+   NSCalendar *calendar = [[NSCalendar alloc]
+                           initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+   int tagdesmonats=[calendar ordinalityOfUnit:NSCalendarUnitDay
+                       inUnit:NSCalendarUnitDay forDate:dasDatum];
 	//	Test
 	/*
 	if (ganz)

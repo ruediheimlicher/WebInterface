@@ -16,7 +16,6 @@
 		int					Teile;
 		int					LinieOK;
 		rLegende*			Legende;
-//		NSCalendarDate*		DatenserieStartZeit;
 		int					StartStunde;
 		int					StartMinute;
 }

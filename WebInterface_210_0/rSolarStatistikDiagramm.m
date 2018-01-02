@@ -362,6 +362,17 @@ return dayOfYear;
 		
 		if ([[derWerteArray objectAtIndex:i]objectForKey:@"calenderdatum"])
 		{
+         NSCalendar *currentCalendar = [NSCalendar currentCalendar];
+         NSCalendar *usersCalendar = [[NSLocale currentLocale] objectForKey:NSLocaleCalendar];
+         
+         
+         NSDate *today = [NSDate date];
+         NSCalendar *gregorian = [[NSCalendar alloc]
+                                  initWithCalendarIdentifier:NSGregorianCalendar];
+         NSDateComponents *weekdayComponents =
+         [gregorian components:(NSDayCalendarUnit | NSWeekdayCalendarUnit) fromDate:today];
+         NSInteger day = [weekdayComponents day];
+         
 			NSCalendarDate* aktDatum=[[derWerteArray objectAtIndex:i]objectForKey:@"calenderdatum"];
 	//		TagDesMonats = [aktDatum dayOfMonth];
 	//		Monat = [aktDatum monthOfYear];

@@ -44,6 +44,12 @@ enum downloadflag{downloadpause, heute, last, datum}downloadFlag;
 	SolarDataSuffix=[NSString string];
 	prevSolarDataString=[NSString string];
 
+   // Strom
+   lastStromDataZeit=0;
+   StromDataSuffix=[NSString string];
+   prevStromDataString=[NSString string];
+  
+   
 	NSNotificationCenter * nc;
 	nc=[NSNotificationCenter defaultCenter];
 	
@@ -83,11 +89,40 @@ enum downloadflag{downloadpause, heute, last, datum}downloadFlag;
    [components setYear:jahr];
    NSDate *tagdatum = [tagcalendar dateFromComponents:components];
    //NSLog(@"tagdatum: %@",[tagdatum description]);
-   NSCalendar *gregorian =[[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
-   int dayOfYear =[gregorian ordinalityOfUnit:NSDayCalendarUnit
-                                       inUnit:NSYearCalendarUnit forDate:tagdatum];
+   NSCalendar *gregorian =[[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+   int dayOfYear =(int)[gregorian ordinalityOfUnit:NSCalendarUnitDay
+                                       inUnit:NSCalendarUnitYear forDate:tagdatum];
    return dayOfYear;
 }
+
+- (NSDate*)DatumvonJahr:(int)jahr Monat:(int)monat Tag:(int)tag
+{
+   // http://stackoverflow.com/questions/7664786/generate-nsdate-from-day-month-and-year
+   NSCalendar *tagcalendar = [NSCalendar currentCalendar];
+   NSDateComponents *components = [[NSDateComponents alloc] init];
+   [components setDay:tag];
+   [components setMonth:monat];
+   [components setYear:jahr];
+   NSDate *tagdatum = [tagcalendar dateFromComponents:components];
+   //NSLog(@"tagdatum: %@",[tagdatum description]);
+   NSCalendar *gregorian =[[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+   int dayOfYear =(int)[gregorian ordinalityOfUnit:NSCalendarUnitDay
+                                            inUnit:NSCalendarUnitYear forDate:tagdatum];
+   return tagdatum;
+}
+
+NSUInteger dayOfYearForDate(NSDate *dasDatum)
+{
+   NSTimeZone *gmtTimeZone = [NSTimeZone timeZoneForSecondsFromGMT:0];
+   NSCalendar *calendar = [[NSCalendar alloc]
+                           initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+   [calendar setTimeZone:gmtTimeZone];
+   
+   NSUInteger day = [calendar ordinalityOfUnit:NSCalendarUnitDay
+                                        inUnit:NSCalendarUnitYear forDate:dasDatum];
+   return day;
+}
+
 
 
 -(void)awakeFromNib
@@ -1564,6 +1599,130 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 	return KollektorTemperaturArray;
 }
 
+#pragma mark Strom
+
+- (NSString*)StromDataVonHeute
+{
+   NSString* returnString=[NSString string];
+   if (isDownloading)
+   {
+      [self cancel];
+   }
+   else
+   {
+      
+      if (localNetz == YES)
+      {
+         return returnString;
+      }
+      
+      
+      StromDataSuffix=@"StromDaten.txt";
+      //NSLog(@"StromDataVonHeute URLPfad: %@",URLPfad);
+      //NSLog(@"StromDataVonHeute  DownloadPfad: %@ DataSuffix: %@",ServerPfad,SolarDataSuffix);
+      NSURL *URL = [NSURL URLWithString:[ServerPfad stringByAppendingPathComponent:SolarDataSuffix]];
+      //NSLog(@"StromDataVonHeute URL: %@",URL);
+      //NSURL *URL = [NSURL URLWithString:@"http://www.schuleduernten.ch/blatt/cgi-bin/HomeDaten.txt"];
+      //www.schuleduernten.ch/blatt/cgi-bin/HomeDaten/HomeDaten090730.txt
+      
+      if (localNetz == YES)
+      {
+         return returnString;
+      }
+      
+      NSStringEncoding *  enc=0;
+      NSCharacterSet* CharOK=[NSCharacterSet alphanumericCharacterSet];
+      NSError* WebFehler=NULL;
+      NSString* DataString=[NSString stringWithContentsOfURL:URL usedEncoding: enc error:&WebFehler];
+      
+      //NSLog(@"StromDataVonHeute WebFehler: :%@",[[WebFehler userInfo]description]);
+      if (WebFehler)
+      {
+         //NSLog(@"StromDataVonHeute WebFehler: :%@",[[WebFehler userInfo]description]);
+         
+         //NSLog(@"StromDataVonHeute WebFehler: :%@",[[WebFehler userInfo]objectForKey:@"NSUnderlyingError"]);
+         //NSLog(@"StromDataVonHeute WebFehler: :%@",[[WebFehler userInfo]objectForKey:@"NSUnderlyingError"]);
+         //ERROR: 503
+         NSArray* ErrorArray=[[[[WebFehler userInfo]objectForKey:@"NSUnderlyingError"]description]componentsSeparatedByString:@","];
+         NSLog(@"StromDataVonHeute ErrorArray: %@",[ErrorArray description]);
+         NSAlert *Warnung = [[NSAlert alloc] init];
+         [Warnung addButtonWithTitle:@"OK"];
+         //   [Warnung addButtonWithTitle:@""];
+         //   [Warnung addButtonWithTitle:@""];
+         //   [Warnung addButtonWithTitle:@"Abbrechen"];
+         NSString* MessageText= NSLocalizedString(@"Error in Download",@"SolarDataVonHeute\nDownload misslungen");
+         [Warnung setMessageText:[NSString stringWithFormat:@"%@",MessageText]];
+         
+         NSString* s1=[NSString stringWithFormat:@"URL: \n%@",URL];
+         NSString* s2=[ErrorArray objectAtIndex:2];
+         int AnfIndex=[[[[WebFehler userInfo]objectForKey:@"NSUnderlyingError"]description]rangeOfString:@"\""].location;
+         NSString* s3=[[[[WebFehler userInfo]objectForKey:@"NSUnderlyingError"]description]substringFromIndex:AnfIndex];
+         NSString* InformationString=[NSString stringWithFormat:@"%@\n%@\nFehler: %@",s1,s2,s3];
+         [Warnung setInformativeText:InformationString];
+         [Warnung setAlertStyle:NSWarningAlertStyle];
+         
+         int antwort=[Warnung runModal];
+         return returnString;
+      }
+      if ([DataString length])
+      {
+         
+         char first=[DataString characterAtIndex:0];
+         
+         // eventuellen Leerschlag am Anfang entfernen
+         
+         if (![CharOK characterIsMember:first])
+         {
+            //NSLog(@"StromDataVonHeute: String korrigieren");
+            DataString=[DataString substringFromIndex:1];
+         }
+         //NSLog(@"StromDataVonHeute DataString: \n%@",DataString);
+         lastDataZeit=[self lastDataZeitVon:DataString];
+         //NSLog(@"SolarDataVonHeute lastDataZeit: %d",lastDataZeit);
+         
+         // Auf WindowController Timer auslösen
+         downloadFlag=heute;
+         //NSLog(@"StromDataVonHeute downloadFlag: %d",downloadFlag);
+         NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
+         [NotificationDic setObject:[NSNumber numberWithInt:downloadFlag] forKey:@"downloadflag"];
+         [NotificationDic setObject:[NSNumber numberWithInt:lastDataZeit] forKey:@"lastdatazeit"];
+         [NotificationDic setObject:DataString forKey:@"datastring"];
+         NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
+         [nc postNotificationName:@"StromDataDownload" object:self userInfo:NotificationDic];
+         //NSLog(@"Daten OK");
+         
+         //      NSArray* StatistikArray=[self SolarErtragVonHeute];
+         
+         return DataString;
+         
+      }
+      else
+      {
+         NSLog(@"Keine Daten");
+         [self setErrString:@"DataVonHeute: keine Daten"];
+      }
+      
+      /*
+       NSLog(@"DataVon URL: %@ DataString: %@",URL,DataString);
+       if (URL) 
+       {
+       download = [[WebDownload alloc] initWithRequest:[NSURLRequest requestWithURL:URL] delegate:self];
+       downloadFlag=heute;
+       
+       }
+       if (!download) 
+       {
+       
+       NSBeginAlertSheet(@"Invalid or unsupported URL", nil, nil, nil, [self window], nil, nil, nil, nil,
+       @"The entered URL is either invalid or unsupported.");
+       }
+       */
+      
+   }
+   return returnString;
+}
+
+#pragma mark EEPROM
 - (void)EEPROMUpdateAktion:(NSNotification*)note
 {
    //NSLog(@"EEPROMUpdateAktion");
@@ -1679,6 +1838,7 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 			
 			if (n==3)
 			{
+            
 				NSCalendarDate* Datum=[NSCalendarDate dateWithString:[tempDatenArray objectAtIndex:0] calendarFormat:@"%d.%m.%y"];
 				int TagDesJahres = [Datum dayOfYear];
 				int Jahr=[Datum yearOfCommonEra];

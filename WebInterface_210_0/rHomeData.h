@@ -33,6 +33,8 @@
 	NSString* DataSuffix;
 	
 	NSString* SolarDataSuffix;
+   
+   
 
 	
 	//rHomeData * HomeData;
@@ -52,6 +54,14 @@
    float                         elektroleistungsfaktor;
    float                         fluidleistungsfaktor;
 	
+   // Strom
+   int lastStromDataZeit;
+   NSString*               prevStromDataString;
+   NSURLRequest *          StromCentralRequest;
+   NSMutableData *         StromCentralData;
+   NSString* StromDataSuffix;
+   
+   
 }
 - (IBAction)downloadOrCancel:(id)sender;
 - (void)cancel;

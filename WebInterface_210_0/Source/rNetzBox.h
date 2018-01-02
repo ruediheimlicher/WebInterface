@@ -23,7 +23,7 @@
 
 }
 - (id)initWithFrame:(NSRect)frame;
-- (void)setKolonnenVektor:(NSArray*)derVektor;
+//- (void)setKolonnenVektor:(NSArray*)derVektor;
 - (void)setNetzBox;
 - (NSArray*)TastenArrayAnEcke:(NSPoint)dieEcke
 					mitHoehe:(float)dieHoehe

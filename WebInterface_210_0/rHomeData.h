@@ -94,4 +94,6 @@
 -(void)setPumpeLeistungsfaktor:(float)faktor;
 -(void)setElektroLeistungsfaktor:(float)faktor;
 -(void)setFluidLeistungsfaktor:(float)faktor;
+
+- (NSString*)StromDataVonHeute;
 @end

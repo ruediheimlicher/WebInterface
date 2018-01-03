@@ -235,7 +235,41 @@ NSMutableArray*					SolarStatistikElektroKanalArray;
 rTagGitterlinien*					SolarTagGitterlinien;
 rTagGitterlinien*             SolarStatistikTagGitterlinien;
 
-
+   // StromTab
+   IBOutlet NSScrollView*                     StromDiagrammScroller;
+   rSolarDiagramm*               StromDiagramm;
+   rDiagrammGitterlinien*         StromGitterlinien;
+   rSolarEinschaltDiagramm*      StromEinschaltDiagramm;
+   rLegende*                     StromEinschaltLegende;
+   IBOutlet id                     StromDatenFeld;
+   IBOutlet id                     LastStromDataFeld;
+   IBOutlet id                     LastStromDatazeitFeld;
+   rOrdinate*                     StromOrdinate;
+   
+   NSDate*                       StromDatenserieStartZeit;
+   
+   int                           LastStromLoadzeit;
+   int                           AnztromDaten;
+   int                           anzstromLoads;
+   IBOutlet   id                     AnzahlstromDatenFeld;
+   IBOutlet   id                     StromWertFeld;
+   IBOutlet id                     stromZaehlerFeld;
+   IBOutlet   id                     stromLaufzeitFeld;
+   IBOutlet   id                     stromZeitKompressionTaste;
+   float                           stromZeitKompression;
+   IBOutlet id                     stromLoadtimeFeld;
+   IBOutlet id                     stromLoadMark;
+   IBOutlet id                     stromStartzeitFeld;
+   NSDate*                       stromDatenserieStartZeit;
+   IBOutlet NSDatePicker *       StromKalender;
+   int                           StromHeuteblocker;
+   int                           StromKalenderblocker;
+   NSMutableArray*               StromKanalArray;
+    
+   NSMutableArray*               StromTemperaturKanalArray;
+   NSMutableArray*               StromStatusKanalArray;
+   
+   
 
 
 

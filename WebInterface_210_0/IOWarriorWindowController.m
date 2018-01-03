@@ -504,9 +504,24 @@ void IOWarriorCallback ()
    {
       NSLog(@"awake Kein SolarInput");
    }
-   
    //NSLog(@"end SolarDatenVonHeute");
    
+   NSString* AktuelleStromDaten=[HomeData StromDataVonHeute];
+   
+   
+   
+   if (AktuelleStromDaten &&[AktuelleStromDaten length])
+   {
+      //NSLog(@"awake openWithSolarString\n\n");
+      [self openWithStromString:AktuelleStromDaten];
+      
+     // [self setSolarStatistikDaten];
+   }
+   else
+   {
+      NSLog(@"awake Kein Strom6Input");
+   }
+
    
    
    //[Data showWindow:self];
@@ -1682,6 +1697,224 @@ return;
 }
 
 #pragma mark end solar
+
+#pragma mark strom
+-(void)openWithStromString:(NSString*)derDatenString
+{
+   //NSLog(@"openWithStromString DatenString length: %d", [derDatenString length]);
+   NSArray* rohDatenArray = [NSArray array];
+   NSString* TagString = [NSString string];
+   int Tag=0;
+   int Monat=0;
+   int Jahr=0;
+   
+   NSString* ZeitString = [NSString string];
+   NSString* StartDatumString=[NSString string];
+   //NSCalendarDate* StartZeit= [NSCalendarDate date];
+   NSString* StartZeitString;
+   NSCharacterSet* CharOK=[NSCharacterSet alphanumericCharacterSet];
+   char last=[derDatenString characterAtIndex:[derDatenString length]-1];
+   //NSLog(@"Letzter Char: %c",last);
+   // eventuelle Zeilenschaltung am Ende entfernen
+   
+   if (![CharOK characterIsMember:last])
+   {
+      derDatenString=[derDatenString substringToIndex:[derDatenString length]-1];
+   }
+   
+   if ([derDatenString length])
+   {
+      //NSLog(@"openWithString DatenString: \n%@",[derDatenString substringToIndex:150]);
+      NSArray* tempDatenArray= [derDatenString componentsSeparatedByString:@"\n"];
+      //   NSArray* tempDatenArray= [DatenString componentsSeparatedByString:@"\r"];
+      
+      //NSLog(@"openWithString tempDatenArray count: %d",[tempDatenArray count]);
+      int DataOffset=12;
+      if ([tempDatenArray count] >DataOffset)   // mindestens 1 Data
+      {
+         
+         // Tabellenkopf entfernen: Zeile mit Datum suchen
+         DataOffset=0;
+         NSEnumerator* DataEnum=[tempDatenArray objectEnumerator];
+         id eineZeile;
+         while (eineZeile=[DataEnum nextObject])
+         {
+            DataOffset++;
+            //NSLog(@"eineZeile: %@",eineZeile);
+            NSRange r=[eineZeile rangeOfString:@"Startzeit:"];
+            
+            if (!(NSEqualRanges(r,NSMakeRange(NSNotFound,0))))
+            {
+               //NSLog(@"openWithString bingo: %@",eineZeile);
+               break;
+            }
+         }//while
+         //NSLog(@"DataOffset: %d",DataOffset);
+         
+         //      DataOffset += 3; // Zeile mit Startzeit
+         //      DatenArray = [[tempDatenArray subarrayWithRange:NSMakeRange(DataOffset,[tempDatenArray count]-DataOffset)]retain];
+         
+         NSString* DatumString= [tempDatenArray objectAtIndex:DataOffset-1];
+         
+         // Eventuellen Leerschlag am Anfang entfernen
+         char first=[DatumString characterAtIndex:0];
+         if (![CharOK characterIsMember:first])
+         {
+            DatumString=[DatumString substringFromIndex:1];
+         }
+         
+         
+         NSArray* tempDatumArray= [DatumString componentsSeparatedByString:@" "];
+         //NSLog(@"openWithSolarString tempDatumArray: %@ count: %d",[tempDatumArray description], [tempDatumArray count]);
+         
+         switch ([tempDatumArray count])
+         {
+            case 4:
+            {
+               TagString=[tempDatumArray objectAtIndex:1];
+               //NSLog(@"TagString: %@",TagString);
+               NSArray* tempTagArray= [TagString componentsSeparatedByString:@"-"];
+               
+               ZeitString=[[tempDatumArray objectAtIndex:2]substringWithRange:NSMakeRange(0,5)];
+               //NSLog(@"ZeitString: %@",ZeitString);
+               NSArray* tempZeitArray= [ZeitString componentsSeparatedByString:@":"];
+               
+               StartDatumString= [[tempDatenArray objectAtIndex:DataOffset-1]substringFromIndex:11];
+               //NSLog(@"StartDatumString: %@",StartDatumString);
+               
+               StartZeitString = [StartDatumString substringWithRange:NSMakeRange(0,[StartDatumString length])];
+               //NSLog(@"StartZeitString: %@",StartZeitString);
+               NSArray* tempStartZeitArray= [StartZeitString componentsSeparatedByString:@" "];
+               if ([[tempStartZeitArray objectAtIndex:0]length]==0)
+               {
+                  tempStartZeitArray = [tempStartZeitArray subarrayWithRange:NSMakeRange(1,[tempStartZeitArray count]-1)];
+               }
+               //NSLog(@"tempStartZeitArray: %@",tempStartZeitArray);
+               NSString* zeitstring = [NSString stringWithFormat:@"%@T%@ %@",[tempStartZeitArray objectAtIndex:0],[tempStartZeitArray objectAtIndex:1],@"+0000"];
+               //NSLog(@"zeitstring: %@",zeitstring);
+               NSDateFormatter * DateFormatter = [[NSDateFormatter alloc] init];
+               DateFormatter.dateFormat = @"yyyy-MM-dd'T'HH:mm:ssZZZZZ";
+               // NSString *string = @"1996-12-19T16:39:57-08:00";
+               NSString *string =  @"2017-03-12T00:00:48 +0100";
+               NSDate* StartZeit = [DateFormatter dateFromString:zeitstring];
+               
+               
+               
+               //NSString* Kalenderformat=[[NSCalendarDate date]calendarFormat];
+               
+               //StartZeit=[NSCalendarDate dateWithString:StartDatumString calendarFormat:Kalenderformat];
+               
+               //NSLog(@"openWithSolarString Format: %@ StartZeit: %@",Kalenderformat,[StartZeit description]);
+               
+               //NSLog(@"openWithSolarString StartZeit: %@ StartZeit desc: %@",StartZeit,[[StartZeit copy ]description]);
+               
+               
+               Tag=[[tempTagArray objectAtIndex: 2]intValue];
+               Monat=[[tempTagArray objectAtIndex: 1]intValue];
+               Jahr=[[tempTagArray objectAtIndex: 0]intValue];
+               //NSLog(@"openWithSolarString case 4 StartZeit: %@ tag: %d monat: %d Jahr: %d",[StartZeit description],Tag, Monat, Jahr);
+               
+            }break;
+               
+            case 5: // ab 12.3.09
+            {
+               TagString=[tempDatumArray objectAtIndex:2];
+               ZeitString=[[tempDatumArray objectAtIndex:4]substringWithRange:NSMakeRange(0,5)];
+               StartDatumString= [[tempDatenArray objectAtIndex:10]substringFromIndex:11];
+               int l=[StartDatumString length];
+               StartDatumString= [StartDatumString substringToIndex:l-1];
+               NSLog(@"openWithString case 5 StartDatumString 5: *%@*",StartDatumString);
+               //   NSString* Kalenderformat=[[NSCalendarDate date]calendarFormat];
+               
+               //   StartZeit=[NSCalendarDate dateWithString:StartDatumString calendarFormat:Kalenderformat];
+               //NSLog(@"Format: %@ StartZeit: %@",Kalenderformat,[StartZeit description]);
+               //NSLog(@"StartZeit: %@ tag: %d",[StartZeit description],[StartZeit dayOfMonth]);
+               
+               
+            }break;
+               
+            case 6:   //   vor 12.3.09
+            {
+               TagString=[tempDatumArray objectAtIndex:3];
+               ZeitString=[[tempDatumArray objectAtIndex:5]substringWithRange:NSMakeRange(0,5)];
+               
+            }break;
+               
+               
+         }   //   switch count
+         
+         
+         //NSLog(@"tempDatenArray count: %d",[tempDatenArray count]);
+         //NSLog(@"Tag: %@ Zeit: %@",TagString, ZeitString);
+         //NSLog(@"tempDatenArray: %@",[tempDatenArray description]);
+         
+         
+         //         DataOffset += 2; // Zeile mit Startzeit
+         
+         rohDatenArray = [tempDatenArray subarrayWithRange:NSMakeRange(DataOffset,[tempDatenArray count]-DataOffset)];
+         NSMutableArray* DatenArray=[[NSMutableArray alloc]initWithCapacity:0];
+         //NSLog(@"openWithSolarString rohDatenArray count: %d",[rohDatenArray count]);
+         int i=0;
+         /*
+          for (i=0;i<10;i++)
+          
+          {
+          NSString* tempRohdatenString=[rohDatenArray objectAtIndex:i];
+          NSLog(@"i: %d tempRohdatenString: %@",i,tempRohdatenString);
+          }
+          */
+         for (i=0;i<[rohDatenArray count];i++)
+         {
+            NSMutableArray* tempDatenArray=[[NSMutableArray alloc]initWithCapacity:0];
+            NSString* tempRohdatenString=[rohDatenArray objectAtIndex:i];
+            //NSLog(@"tempRohdatenString: %@",tempRohdatenString);
+            if ([[rohDatenArray objectAtIndex:i]length])
+            { 
+               tempDatenArray = (NSMutableArray*) [[rohDatenArray objectAtIndex:i]componentsSeparatedByString:@"\t"];
+               //NSLog(@"tempDatenArray vor add: %@",[tempDatenArray description]);
+               while ([tempDatenArray count]<9)
+               {
+                  [tempDatenArray addObject: [NSNumber numberWithInt:0]];
+               }
+               //NSLog(@"tempDatenArray: %@",[tempDatenArray description]);
+               NSString* tempZeilenString= [tempDatenArray componentsJoinedByString:@"\r"];
+               if (i==0)
+               {
+                  //NSLog(@"openWithSolarString erster tempZeilenString : \n%@",tempZeilenString);
+               }
+               [DatenArray addObject:tempZeilenString];
+            }
+         }
+         
+         if ([DatenArray count])
+         {
+            //NSLog(@"openWithSolarString DatenArray sauber: %@",[DatenArray description]);
+            //NSLog(@"openWithSolarString DatenArray sauber length: %d",[DatenArray count]);
+            //NSLog(@"openWithSolarString DatenArray first: %@",[[DatenArray objectAtIndex:0]description]);
+            NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
+            [NotificationDic setObject:[NSNumber numberWithInt:Tag] forKey:@"datumtag"];
+            [NotificationDic setObject:[NSNumber numberWithInt:Monat] forKey:@"datummonat"];
+            [NotificationDic setObject:[NSNumber numberWithInt:Jahr] forKey:@"datumjahr"];
+            [NotificationDic setObject:[ZeitString copy]forKey:@"datumzeit"];
+            //[NotificationDic setObject:[[StartZeit description] copy]forKey:@"startzeit"];
+            [NotificationDic setObject:StartZeitString forKey:@"startzeit"];
+            [NotificationDic setObject:[DatenArray copy] forKey:@"datenarray"];
+            NSLog(@"openWithSolarString NotificationDic: %@",[NotificationDic objectForKey:@"startzeit"] );
+            NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
+            [nc postNotificationName:@"externestromdaten" object:self userInfo:NotificationDic];
+            
+         }   // if [DatenArray count]
+         
+      }   // [tempDatenArray count] >11
+      
+   }
+   
+   //NSLog(@"openWithSolarString end");
+   
+   //} // if count
+   
+}
+
 
 - (void)read:(NSTimer*) inTimer
 {

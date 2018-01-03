@@ -50,7 +50,7 @@
 
 - (void)daySettingAktion:(NSNotification*)note
 {
-   NSLog(@"Wochenplan daySettingAktion: %@",[[note userInfo]description]);
+   //NSLog(@"Wochenplan daySettingAktion: %@",[[note userInfo]description]);
    daySettingStringArray = [[note userInfo]objectForKey:@"daysettingarray"];
 }
 

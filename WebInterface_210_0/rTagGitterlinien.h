@@ -25,6 +25,6 @@
 - (void)setWerteArray:(NSArray*)derWerteArray mitKanalArray:(NSArray*)derKanalArray;
 
 - (void)setZeitKompression:(float)dieKompression mitAbszissenArray:(NSArray*)derArray;
-- (void)senkrechteLinienZeichnen;
+//- (void)senkrechteLinienZeichnen;
 - (void)clean;
 @end

@@ -82,15 +82,23 @@ extern NSMutableArray* DatenplanTabelle;
 	NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f",r.origin.x, r.origin.y, r.size.height, r.size.width);
 }
 
+- (NSString *) stringFromDate:(NSDate *)date  
+{   
+   NSDateFormatter *formatter =[[NSDateFormatter alloc] init]; 
+   
+   [formatter setDateFormat:@"dd.MM.yyyy hh꞉mm:ss"];    
+   return [formatter stringFromDate:date]; 
+}
+
+
 - (void)Alert:(NSString*)derFehler
 {
 	
-	NSAlert * DebugAlert=[NSAlert alertWithMessageText:@"Debugger!" 
-										 defaultButton:NULL 
-									   alternateButton:NULL 
-										   otherButton:NULL 
-							 informativeTextWithFormat:@"Mitteilung: \n%@",derFehler];
-	[DebugAlert runModal];
+   NSAlert * DebugAlert=[[NSAlert alloc]init];
+   DebugAlert.messageText= @"Debugger!";
+   DebugAlert.informativeText = [NSString stringWithFormat:@"Mitteilung: \n%@",derFehler];
+   
+   [DebugAlert runModal];
 	
 }
 
@@ -138,8 +146,26 @@ extern NSMutableArray* DatenplanTabelle;
    NSDateComponents *components = [kalender components:( NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay | NSCalendarUnitWeekday | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond ) fromDate:now];
    components.weekday = components.weekday-1;
    return components;
+   
 }
 
+- (NSDate*)DatumvonJahr:(int)jahr Monat:(int)monat Tag:(int)tag
+{
+   // http://stackoverflow.com/questions/7664786/generate-nsdate-from-day-month-and-year
+   NSCalendar *tagcalendar = [NSCalendar currentCalendar];
+   [tagcalendar setTimeZone:[NSTimeZone localTimeZone]];
+   [tagcalendar setLocale:[NSLocale currentLocale]];
+
+   NSDateComponents *components = [[NSDateComponents alloc] init];
+   [components setDay:tag];
+   [components setMonth:monat];
+   [components setYear:jahr];
+   NSDate *tagdatum = [tagcalendar dateFromComponents:components];
+   NSLog(@"tagdatum: %@",[tagdatum description]);
+ //  NSCalendar *gregorian =[[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+  // int dayOfYear =(int)[gregorian ordinalityOfUnit:NSCalendarUnitDay inUnit:NSCalendarUnitYear forDate:tagdatum];
+   return tagdatum;
+}
 
 
 - (int)tagdesjahresvonJahr:(int)jahr Monat:(int)monat Tag: (int)tagdesmonats
@@ -152,12 +178,25 @@ extern NSMutableArray* DatenplanTabelle;
    [components setMonth:jahr];
    NSDate *tagdatum = [tagcalendar dateFromComponents:components];
    
-   NSCalendar *gregorian =[[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
+   NSCalendar *gregorian =[[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
    
    
-   int dayOfYear =[gregorian ordinalityOfUnit:NSDayCalendarUnit
-                        inUnit:NSYearCalendarUnit forDate:tagdatum];
+   int dayOfYear =[gregorian ordinalityOfUnit:NSCalendarUnitDay
+                        inUnit:NSCalendarUnitYear forDate:tagdatum];
       return dayOfYear;
+}
+
+
+- (NSDate*)Datumvonheute
+{
+   // http://stackoverflow.com/questions/7664786/generate-nsdate-from-day-month-and-year
+   NSDate *now = [[NSDate alloc] init];
+   NSCalendar *tagcalendar = [NSCalendar currentCalendar];
+    [tagcalendar setFirstWeekday:2];
+   NSDateComponents *components = [tagcalendar components:( NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay | NSCalendarUnitWeekday | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond ) fromDate:now];
+   NSDate *tagdatum = [tagcalendar dateFromComponents:components];
+   NSLog(@"tagdatum: %@",[tagdatum description]);
+   return tagdatum;
 }
 
 - (id) init
@@ -310,8 +349,15 @@ extern NSMutableArray* DatenplanTabelle;
 	
 	//[StdCell selectSegmentWithTag:1];
 	//NSRect r=[[StdCell contentView] frame];
-	DatenserieStartZeit=[NSCalendarDate calendarDate];
-	SimDatenserieStartZeit=[NSCalendarDate calendarDate];
+   
+   
+   NSDate* heute = [NSDate date];
+   NSCalendar *tagcalendar = [[NSCalendar alloc]  initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+   tagcalendar.firstWeekday = 2;
+
+	DatenserieStartZeit=heute;
+   //[NSCalendarDate date] > [NSCalendar currentCalendar]
+	SimDatenserieStartZeit=heute;
 	
 	[Kalender setCalendar:[NSCalendar currentCalendar]];
 	[Kalender setDateValue: [NSDate date]];
@@ -343,7 +389,7 @@ extern NSMutableArray* DatenplanTabelle;
 	//NSLog(@"tag: %d jahr: %d",tag,jahr);
 	
 	
-	[TemperaturDaten setObject:[NSCalendarDate calendarDate] forKey:@"datenseriestartzeit"];
+	[TemperaturDaten setObject:heute forKey:@"datenseriestartzeit"];
 	
 	NSMutableArray* tempStartWerteArray=[[NSMutableArray alloc]initWithCapacity:8];
 	int i;
@@ -704,8 +750,8 @@ extern NSMutableArray* DatenplanTabelle;
    NSInteger tagdesmonats = [heutecomponents day];
    NSInteger monat = [heutecomponents month];
    NSInteger jahr = [heutecomponents year];
-    NSInteger stunde = [heutecomponents hour];
-    NSInteger minute = [heutecomponents minute];
+   NSInteger stunde = [heutecomponents hour];
+   NSInteger minute = [heutecomponents minute];
    NSInteger sekunde = [heutecomponents second];
    jahr-=2000;
    NSString* StartZeit = [NSString stringWithFormat:@"%02ld.%02ld.%02ld",(long)tagdesmonats,(long)monat,(long)jahr];
@@ -714,6 +760,8 @@ extern NSMutableArray* DatenplanTabelle;
    NSString* StartZeitFull = [NSString stringWithFormat:@"%02ld.%02ld.%02ld %02ld:%02ld:%02ld",(long)tagdesmonats,(long)monat,(long)jahr,(long)stunde,(long)minute,(long)sekunde];
 
    NSLog(@"awake StartZeit: %@ StartZeitFull: %@",StartZeit, StartZeitFull);
+   
+   
    
    
 //	NSCalendarDate* StartZeit=[NSCalendarDate calendarDate];
@@ -1568,7 +1616,7 @@ extern NSMutableArray* DatenplanTabelle;
    }
    else
    {
-      [LastDatazeitFeld setStringValue:@"keine Zeitangabe"];
+      [LastDatazeitFeld setStringValue:@"--"];
    }
    
    anzLoads++;
@@ -1592,7 +1640,7 @@ extern NSMutableArray* DatenplanTabelle;
       //tempString= [[[[NSNumber numberWithInt:anzLoads]stringValue]stringByAppendingString:@": "]stringByAppendingString:tempString];
       NSArray *dataArray =  [[[note userInfo]objectForKey:@"datastring"]componentsSeparatedByString:@"\n"];
       //NSLog(@"dataArray: %@",dataArray);
-      int anz = [dataArray count];
+      int anz = (int)[dataArray count];
       if (anz > 2)
       {
          NSLog(@"dataArray last: %@ anz: %ld",[dataArray objectAtIndex:[dataArray count]-2],[dataArray count]);
@@ -1686,17 +1734,73 @@ extern NSMutableArray* DatenplanTabelle;
 		//NSString* StartzeitString = [[note userInfo]objectForKey:@"startzeit"];
 		//NSLog(@"ExterneDatenAktion: Startzeit: *%@* StartzeitString: *%@*",[[note userInfo]objectForKey:@"startzeit"],StartzeitString);
 		
-		NSString* Kalenderformat=[[NSCalendarDate calendarDate]calendarFormat];
-		DatenserieStartZeit=[NSCalendarDate dateWithString:[[note userInfo]objectForKey:@"startzeit"] calendarFormat:Kalenderformat];
-		//int tag=[DatenserieStartZeit dayOfMonth];
+	//	NSString* Kalenderformat=[[NSCalendarDate calendarDate]calendarFormat];
+	//	DatenserieStartZeit=[NSCalendarDate dateWithString:[[note userInfo]objectForKey:@"startzeit"] calendarFormat:Kalenderformat];
 		
+      //int tag=[DatenserieStartZeit dayOfMonth];
+      //DatenserieStartZeit=(NSDate*)[[note userInfo]objectForKey:@"startzeit"] ;
+       
+      NSString *formatString = @"yyyy-mm-dd hh:mm:ss";  
+      NSString* datumstring = [[note userInfo]objectForKey:@"startzeit"];
+      NSString* datumteil = [[datumstring componentsSeparatedByString:@" "]objectAtIndex:0];
+      NSString* zeitteil = [[datumstring componentsSeparatedByString:@" "]objectAtIndex:1];
+      int jr = [[[datumteil componentsSeparatedByString:@"-"]objectAtIndex:0]intValue];
+      int mon = [[[datumteil componentsSeparatedByString:@"-"]objectAtIndex:1]intValue];
+      int tg = [[[datumteil componentsSeparatedByString:@"-"]objectAtIndex:2] intValue];
+      
+      DatenserieStartZeit = [self DatumvonJahr:jr Monat:mon Tag: tg];
+      
+ 
 		NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 		[NotificationDic setObject:@"datastart"forKey:@"data"];
-		[NotificationDic setObject:DatenserieStartZeit forKey:@"datenseriestartzeit"];
+		//[NotificationDic setObject:DatenserieStartZeit forKey:@"datenseriestartzeit"];
+      [NotificationDic setObject:DatenserieStartZeit forKey:@"extDataString"];
+    
 		
-		NSCalendarDate* AnzeigeDatum= [DatenserieStartZeit copy];
-		[AnzeigeDatum setCalendarFormat:@"%d.%m.%y %H:%M"];
-		[StartzeitFeld setStringValue:[AnzeigeDatum description]];
+      //NSString * str = @"20160522115200";
+      NSString * str = @"2018-01-02 00:00:50";
+      NSDateFormatter * d1 = [[NSDateFormatter alloc] init];
+      d1.dateFormat = @"yyyy-MM-dd hh:mm:ss";
+      NSDate * date = [d1 dateFromString: datumstring];
+      d1.dateFormat = @"yyyy-MM-dd hh:mm:ss";
+      str = [d1 stringFromDate: date];
+      
+		//NSCalendarDate* AnzeigeDatum= [DatenserieStartZeit copy];
+		//[AnzeigeDatum setCalendarFormat:@"%d.%m.%y %H:%M"];
+      
+      //NSDateFormatter *dateformat = [[NSDateFormatter alloc] init];
+     // [dateformat setDateFormat:@"%d.%m.%y %H:%M"];
+    //  NSString *AnzeigeDatum  = [dateformat stringFromDate:DatenserieStartZeit];
+      //[StartzeitFeld setStringValue:[AnzeigeDatum description]];
+      NSCalendar *tagcalendar = [NSCalendar currentCalendar];
+      [tagcalendar setFirstWeekday:2];
+      NSDateComponents *heutecomponents = [[NSCalendar currentCalendar] components:NSCalendarUnitDay | NSCalendarUnitMonth | NSCalendarUnitYear |NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond fromDate:DatenserieStartZeit];
+      NSInteger tagdesmonats = [heutecomponents day];
+      NSInteger monat = [heutecomponents month];
+      NSInteger jahr = [heutecomponents year];
+      NSInteger stunde = [heutecomponents hour];
+      NSInteger minute = [heutecomponents minute];
+      NSInteger sekunde = [heutecomponents second];
+      jahr-=2000;
+      NSString* StartZeit = [NSString stringWithFormat:@"%02ld.%02ld.%02ld",(long)tagdesmonats,(long)monat,(long)jahr];
+      
+      
+      NSString* StartZeitFull = [NSString stringWithFormat:@"%02ld.%02ld.%02ld %02ld:%02ld:%02ld",(long)tagdesmonats,(long)monat,(long)jahr,(long)stunde,(long)minute,(long)sekunde];
+
+      NSString* StartZeitString = [NSString stringWithFormat:@"%02ld.%02ld.%02ld %02ld:%02ld",(long)tagdesmonats,(long)monat,(long)jahr,(long)stunde,(long)minute];
+
+      
+      NSDateFormatter *dateformat = [[NSDateFormatter alloc] init];
+      //[dateformat setDateFormat:@"%d.%m.%y %H:%M"];
+      dateformat.dateStyle = NSDateFormatterLongStyle;
+      dateformat.timeStyle = NSDateFormatterMediumStyle;
+      NSString *dateString  = [dateformat stringFromDate:DatenserieStartZeit];
+      
+      [StartzeitFeld setStringValue:dateString];
+
+		
+      [StartzeitFeld setStringValue:StartZeitString];
+      
 		NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
 		[nc postNotificationName:@"data" object:NULL userInfo:NotificationDic];
 		
@@ -1855,9 +1959,9 @@ extern NSMutableArray* DatenplanTabelle;
 			}
 			
 		}	// while
-		AnzDaten=[tempDatenArray count];
+		AnzDaten= (int)[tempDatenArray count];
 		//NSLog(@"ExterneDatenAktion AnzDaten: %d",AnzDaten);
-		[AnzahlDatenFeld setIntValue:[tempDatenArray count]];
+		[AnzahlDatenFeld setIntValue:(int)[tempDatenArray count]];
 		
 		[TemperaturDatenFeld setString:TemperaturDatenString];
 		NSRange insertAtEnd=NSMakeRange([[TemperaturDatenFeld textStorage] length],0);
@@ -2287,7 +2391,7 @@ extern NSMutableArray* DatenplanTabelle;
 					*/
 					
 					//NSLog(@"Report: (Null-basiert): %d		Data: %X	%X",AnzReports,[[DataArray objectAtIndex:1]intValue] ,[[DataArray objectAtIndex:2]intValue]);
-					if ([DataArray objectAtIndex:1]==0xFF && [DataArray objectAtIndex:2]==0xFF)	// Wahrscheinlich Fehler
+               if ([[DataArray objectAtIndex:1]intValue]==0xFF && [[DataArray objectAtIndex:2]intValue]==0xFF)	// Wahrscheinlich Fehler:  intValue 180103
 					{
 						ReportErrIndex=AnzReports;
 						NSLog(@"Fehler: ReportErrIndex: %d",ReportErrIndex);
@@ -2298,7 +2402,7 @@ extern NSMutableArray* DatenplanTabelle;
 						[tempWerteArray addObject:[DataArray objectAtIndex:1]];			// von PORTB
 						
 						// Experimente
-						NSString* tempWertStringB=[NSString stringWithFormat:@"%2.1f",[self HexStringZuInt:[DataArray objectAtIndex:1]]];
+                  NSString* tempWertStringB=[NSString stringWithFormat:@"%2.1d",[self HexStringZuInt:[DataArray objectAtIndex:1]]];
 						//NSString* tempWertStringB=[NSString stringWithFormat:@"%d",[self HexStringZuInt:[DataArray objectAtIndex:1]]];
 						//NSLog(@"***  tempWertStringB: %@",tempWertStringB);
 						tempWertString=[tempWertString stringByAppendingString:tempWertStringB];
@@ -2308,7 +2412,7 @@ extern NSMutableArray* DatenplanTabelle;
 						//[TemperaturZeilenString appendFormat:@"\t%@",tempWertStringB];			
 						
 						[tempWerteArray addObject:[DataArray objectAtIndex:2]];			// von PORTD
-						NSString* tempWertStringD=[NSString stringWithFormat:@"%2.1f",[self HexStringZuInt:[DataArray objectAtIndex:2]]];
+                  NSString* tempWertStringD=[NSString stringWithFormat:@"%2.1d",[self HexStringZuInt:[DataArray objectAtIndex:2]]];
 						//NSLog(@"tempWertStringD: %@",tempWertStringD);
 						tempWertString=[tempWertString stringByAppendingString:tempWertStringD];
 						//[TemperaturZeilenString appendFormat:@"\t%@",tempWertStringD];				
@@ -2372,8 +2476,13 @@ extern NSMutableArray* DatenplanTabelle;
 	NSString* StartDatenString=[[[TemperaturDatenFeld string]componentsSeparatedByString:@"\r"]objectAtIndex:0];
 	
    //NSLog(@"LastDatenAktion StartDatenString: *%@*",StartDatenString);
-	NSString* Kalenderformat=[[NSCalendarDate calendarDate]calendarFormat];
+	//NSString* Kalenderformat=[[NSCalendarDate calendarDate]calendarFormat];
 	DLog(@"LastDatenaktion note: %@",[[note userInfo]description]);
+   
+   NSDateFormatter *dateformat = [[NSDateFormatter alloc] init];
+   [dateformat setDateFormat:@"%d.%m.%y %H:%M"];
+   NSString *AnzeigeDatum  = [dateformat stringFromDate:DatenserieStartZeit];
+
    
    if ([[note userInfo]objectForKey:@"lastdatenarray"])
    {
@@ -2383,8 +2492,10 @@ extern NSMutableArray* DatenplanTabelle;
    }
 	if ([[note userInfo]objectForKey:@"startzeit"])
 	{
-		DatenserieStartZeit=[NSCalendarDate dateWithString:[[note userInfo]objectForKey:@"startzeit"] calendarFormat:Kalenderformat];
-	}
+      
+		//DatenserieStartZeit=[NSCalendarDate dateWithString:[[note userInfo]objectForKey:@"startzeit"] calendarFormat:Kalenderformat];
+      DatenserieStartZeit = [[note userInfo]objectForKey:@"startzeit"];
+   }
 	//int firsttag=[DatenserieStartZeit dayOfMonth];
 	int firstZeit=0;
 	if (StartDatenString && [StartDatenString length])
@@ -2769,15 +2880,15 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
 
 
 	[self clearSolarData];
-	NSCalendarDate* StartZeit=[NSCalendarDate calendarDate];
-	[StartZeit setCalendarFormat:@"%d.%m.%y %H:%M"];
+	NSCalendar* StartZeit=[NSCalendar currentCalendar];
+	//[StartZeit setCalendarFormat:@"%d.%m.%y %H:%M"];
 //	[StartzeitFeld setStringValue:[StartZeit description]];
 
 	[SolarStartzeitFeld setStringValue:@""];
 
 	NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 	[NotificationDic setObject:@"clear"forKey:@"data"];
-	SolarDatenserieStartZeit=[NSCalendarDate calendarDate];
+	SolarDatenserieStartZeit=[NSDate date];
 	[NotificationDic setObject:DatenserieStartZeit forKey:@"datenseriestartzeit"];
 //	NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
 //	[nc postNotificationName:@"data" object:NULL userInfo:NotificationDic];
@@ -2811,26 +2922,47 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
 	Quelle=1;
 	if ([[note userInfo]objectForKey:@"startzeit"])
 	{
-		NSString* StartzeitString = [[note userInfo]objectForKey:@"startzeit"];
+		NSString* datumstring = [[note userInfo]objectForKey:@"startzeit"];
 		//NSLog(@"ExterneSolarDatenAktion: Startzeit: *%@* StartzeitString: *%@*",[[note userInfo]objectForKey:@"startzeit"],StartzeitString);
+      
+      NSString* datumteil = [[datumstring componentsSeparatedByString:@" "]objectAtIndex:0];
+      NSString* zeitteil = [[datumstring componentsSeparatedByString:@" "]objectAtIndex:1];
+      int jr = [[[datumteil componentsSeparatedByString:@"-"]objectAtIndex:0]intValue];
+      int mon = [[[datumteil componentsSeparatedByString:@"-"]objectAtIndex:1]intValue];
+      int tg = [[[datumteil componentsSeparatedByString:@"-"]objectAtIndex:2] intValue];
+      
+      SolarDatenserieStartZeit = [self DatumvonJahr:jr Monat:mon Tag: tg];
+      
+      NSCalendar *tagcalendar = [NSCalendar currentCalendar];
+      [tagcalendar setFirstWeekday:2];
+      NSDateComponents *heutecomponents = [[NSCalendar currentCalendar] components:NSCalendarUnitDay | NSCalendarUnitMonth | NSCalendarUnitYear |NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond fromDate:SolarDatenserieStartZeit];
+      NSInteger tagdesmonats = [heutecomponents day];
+      NSInteger monat = [heutecomponents month];
+      NSInteger jahr = [heutecomponents year];
+      NSInteger stunde = [heutecomponents hour];
+      NSInteger minute = [heutecomponents minute];
+      NSInteger sekunde = [heutecomponents second];
+      jahr-=2000;
+
+      
       NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
       // @"YYYY-MM-dd\'T\'HH:mm:ssZZZZZ"
       [dateFormat setDateFormat:@"YYYY.MM.dd  HH:mm:ss"];
       
-		NSString* Kalenderformat=[[NSCalendarDate calendarDate]calendarFormat];
-		SolarDatenserieStartZeit=[NSCalendarDate dateWithString:[[note userInfo]objectForKey:@"startzeit"] calendarFormat:Kalenderformat];
+      NSString* StartZeitString = [NSString stringWithFormat:@"%02ld.%02ld.%02ld %02ld:%02ld",(long)tagdesmonats,(long)monat,(long)jahr,(long)stunde,(long)minute];
+
+	//	NSString* Kalenderformat=[[NSCalendarDate calendarDate]calendarFormat];
+	//	SolarDatenserieStartZeit=[NSCalendarDate dateWithString:[[note userInfo]objectForKey:@"startzeit"] calendarFormat:Kalenderformat];
       
       
-      long tag = [[NSCalendar currentCalendar] component:NSCalendarUnitDay  fromDate:SolarDatenserieStartZeit];
-		//long tag=[SolarDatenserieStartZeit dayOfMonth];
-		
-		NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
+ 		NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 		[NotificationDic setObject:@"datastart"forKey:@"data"];
 		[NotificationDic setObject:SolarDatenserieStartZeit forKey:@"datenseriestartzeit"];
 		
-		NSCalendarDate* AnzeigeDatum= [SolarDatenserieStartZeit copy];
-		[AnzeigeDatum setCalendarFormat:@"%d.%m.%y %H:%M"];
-		[SolarStartzeitFeld setStringValue:[AnzeigeDatum description]];
+ //		NSCalendarDate* AnzeigeDatum= [SolarDatenserieStartZeit copy];
+//		[AnzeigeDatum setCalendarFormat:@"%d.%m.%y %H:%M"];
+      NSString* SolarAnzeigeString = [self stringFromDate:SolarDatenserieStartZeit];
+		[SolarStartzeitFeld setStringValue:StartZeitString];
 		NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
 		
 		[nc postNotificationName:@"data" object:NotificationDic userInfo:NotificationDic];
@@ -3139,11 +3271,13 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
       //NSString* StartDatenString=[[[SolarDatenFeld string]componentsSeparatedByString:@"\r"]objectAtIndex:1];
       NSString* StartDatenString=[StartDatenArray objectAtIndex:0];
       //	NSLog(@"LastSolarDatenAktion StartDatenString: %@",StartDatenString);
-      NSString* Kalenderformat=[[NSCalendarDate calendarDate]calendarFormat];
+      //NSString* Kalenderformat=[[NSCalendarDate calendarDate]calendarFormat];
       //NSLog(@"LastSolarDatenaktion note: %@",[[note userInfo]description]);
       if ([[note userInfo]objectForKey:@"startzeit"])
       {
-         SolarDatenserieStartZeit=[NSCalendarDate dateWithString:[[note userInfo]objectForKey:@"startzeit"] calendarFormat:Kalenderformat];
+         //SolarDatenserieStartZeit=[NSCalendarDate dateWithString:[[note userInfo]objectForKey:@"startzeit"] calendarFormat:Kalenderformat];
+         SolarDatenserieStartZeit= [[note userInfo]objectForKey:@"startzeit"];
+         NSString* n = [self stringFromDate:[[note userInfo]objectForKey:@"startzeit"]];
       }
       //int firsttag=[SolarDatenserieStartZeit dayOfMonth];
       
@@ -3420,17 +3554,25 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
 	NSLog(@"clearSolarData");
 	[SolarDatenFeld setString:[NSString string]];
 	AnzDaten=0;
-	SolarDatenserieStartZeit=[NSCalendarDate calendarDate];
+	//SolarDatenserieStartZeit=[NSCalendarDate calendarDate];
 	//NSDictionary* DatumDic=[NSDictionary dictionaryWithObject:DatenserieStartZeit forKey:@"datenseriestartzeit"];
 	
 	NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 	[NotificationDic setObject:@"datastart"forKey:@"data"];
 	[NotificationDic setObject:SolarDatenserieStartZeit forKey:@"datenseriestartzeit"];
 	
-	NSCalendarDate* AnzeigeDatum= [SolarDatenserieStartZeit copy];
-	[AnzeigeDatum setCalendarFormat:@"%d.%m.%y %H:%M"];
-	[StartzeitFeld setStringValue:[AnzeigeDatum description]];
-	[AnzahlSolarDatenFeld setStringValue:@""];
+	//NSCalendarDate* AnzeigeDatum= [SolarDatenserieStartZeit copy];
+	//[AnzeigeDatum setCalendarFormat:@"%d.%m.%y %H:%M"];
+	//[StartzeitFeld setStringValue:[AnzeigeDatum description]];
+	
+   NSDateFormatter *dateformat = [[NSDateFormatter alloc] init];
+   [dateformat setDateFormat:@"%d%m%y_%H%M"];
+   NSString *dateString  = [dateformat stringFromDate:SolarDatenserieStartZeit];
+   
+   [StartzeitFeld setStringValue:dateString];
+
+   
+   [AnzahlSolarDatenFeld setStringValue:@""];
 	[LastSolarDataFeld setStringValue:@""];
 	[LastSolarDatazeitFeld setStringValue:@""];
 	NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
@@ -3723,57 +3865,22 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
 - (NSTextView*)DruckDatenView
 {
 	//NSLog(@"Data DruckDatenView");
-	NSCalendarDate* SaveDatum=[NSCalendarDate date];
-	int jahr=[SaveDatum yearOfCommonEra];
-	NSRange jahrRange=NSMakeRange(2,2);
-	NSString* jahrString=[[[NSNumber numberWithInt:jahr]stringValue]substringWithRange:jahrRange];
-	int monat=[SaveDatum monthOfYear];
-	NSString* monatString;
-	if (monat<10)
-	{
-		monatString=[NSString stringWithFormat:@"0%d",monat];;
-	}
-	else
-	{
-		monatString=[NSString stringWithFormat:@"%d",monat];;
-	}
-	int tag=[SaveDatum dayOfMonth];
-	
-	NSString* tagString;
-	if (tag<10)
-	{
-		tagString=[NSString stringWithFormat:@"0%d",tag];
-	}
-	else
-	{
-		tagString=[NSString stringWithFormat:@"%d",tag];
-	}
-	
-	int stunde=[SaveDatum hourOfDay];
-	NSString* stundeString;
-	if (stunde<10)
-	{
-		stundeString=[NSString stringWithFormat:@"0%d",stunde];
-	}
-	else
-	{
-		stundeString=[NSString stringWithFormat:@"%d",stunde];
-	}
-	
-	
-	int minute=[SaveDatum minuteOfHour];
-	NSString* minuteString;
-	if (minute<10)
-	{
-		minuteString=[NSString stringWithFormat:@"0%d",minute];
-	}
-	else
-	{
-		minuteString=[NSString stringWithFormat:@"%d",minute];
-	}
-	
+	NSCalendar* tagcalendar=[NSCalendar currentCalendar];
+   [tagcalendar setFirstWeekday:2];
+   NSDateComponents *heutecomponents = [[NSCalendar currentCalendar] components:NSCalendarUnitDay | NSCalendarUnitMonth | NSCalendarUnitYear |NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond fromDate:DatenserieStartZeit];
+   NSInteger tagdesmonats = [heutecomponents day];
+   NSInteger monat = [heutecomponents month];
+   NSInteger jahr = [heutecomponents year];
+   NSInteger stunde = [heutecomponents hour];
+   NSInteger minute = [heutecomponents minute];
+   NSInteger sekunde = [heutecomponents second];
+   jahr-=2000;
+
+ 	
 	NSString* TitelString=@"HomeCentral\rFalkenstrasse 20\r8630 Rueti\rDatum: ";
-	NSString* DatumString=[NSString stringWithFormat:@"%@.%@.%@  %@:%@",tagString,monatString,jahrString,stundeString,minuteString];
+//	NSString* DatumString=[NSString stringWithFormat:@"%@.%@.%@  %@:%@",tagString,monatString,jahrString,stundeString,minuteString];
+   NSString* DatumString = [NSString stringWithFormat:@"%02ld.%02ld.%02ld %02ld:%02ld",(long)tagdesmonats,(long)monat,(long)jahr,(long)stunde,(long)minute];
+
 	NSArray* tempZeilenArray=[[TemperaturDatenFeld string]componentsSeparatedByString:@"\r"];
 	NSMutableArray* tempNeuerZeilenArray=[[NSMutableArray alloc]initWithCapacity:0];
 	
@@ -3809,22 +3916,24 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
 	return Quelle;
 }
 
-- (NSCalendarDate*)DatenserieStartZeit
+- (NSDate*)DatenserieStartZeit
 {
 	return DatenserieStartZeit;
 }
 
 - (void)ErrStringAktion:(NSNotification*)note
 {
-if ([[note userInfo]objectForKey:@"err"])
-{
-	NSString* tempErrString=[[note userInfo]objectForKey:@"err"];
-	NSCalendarDate* errZeit=[NSCalendarDate calendarDate];
-	[errZeit setCalendarFormat:@"%H:%M"];
-
-	errString =[NSString stringWithFormat:@"%@\n%@: %@",errString,errZeit,tempErrString];
-	
-}
+   if ([[note userInfo]objectForKey:@"err"])
+   {
+      NSString* tempErrString=[[note userInfo]objectForKey:@"err"];
+      NSDate *errdate         = [NSDate date];
+      NSDateFormatter *dateformat = [[NSDateFormatter alloc] init];
+      [dateformat setDateFormat:@"%H:%M"];
+      NSString *dateString  = [dateformat stringFromDate:errdate];
+      
+      errString =[NSString stringWithFormat:@"%@\n%@: %@",errString,dateString,tempErrString];
+      
+   }
 }
 
 - (BOOL)saveErrString
@@ -3836,8 +3945,8 @@ if ([[note userInfo]objectForKey:@"err"])
 	{
 		//NSLog(@"saveErrString da");
 		//NSLog(@"saveErrString errString: %@" ,errString);
-		
-		BOOL errWriteOK=[errString writeToFile:errPfad atomically:YES];
+      NSError* err;
+      BOOL errWriteOK=[errString writeToFile:errPfad atomically:YES encoding:NSUTF8StringEncoding error:&err];
 		
 		//NSLog(@"saveErrString errWriteOK: %d",errWriteOK);
 		return errWriteOK;
@@ -3863,17 +3972,22 @@ if ([[note userInfo]objectForKey:@"err"])
 	AnzDaten=0;
 	ErrZuLang=0;
 	ErrZuKurz=0;
-	DatenserieStartZeit=[NSCalendarDate calendarDate];
+	//DatenserieStartZeit=[NSCalendarDate calendarDate];
 	//NSDictionary* DatumDic=[NSDictionary dictionaryWithObject:DatenserieStartZeit forKey:@"datenseriestartzeit"];
 	
 	NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 	[NotificationDic setObject:@"datastart"forKey:@"data"];
 	[NotificationDic setObject:DatenserieStartZeit forKey:@"datenseriestartzeit"];
 	
-	NSCalendarDate* AnzeigeDatum= [DatenserieStartZeit copy];
-	[AnzeigeDatum setCalendarFormat:@"%d.%m.%y %H:%M"];
-	[StartzeitFeld setStringValue:[AnzeigeDatum description]];
-	[BrenndauerFeld setStringValue:@"0:00:00"];
+	
+   NSDateFormatter *dateformat = [[NSDateFormatter alloc] init];
+   [dateformat setDateFormat:@"%d%m%y_%H%M"];
+   NSString *dateString  = [dateformat stringFromDate:DatenserieStartZeit];
+   
+   [StartzeitFeld setStringValue:dateString];
+
+   
+   [BrenndauerFeld setStringValue:@"0:00:00"];
 	[AnzahlDatenFeld setStringValue:@""];
 	//[StartzeitFeld setStringValue:@""];
 	NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
@@ -3933,20 +4047,20 @@ if ([[note userInfo]objectForKey:@"err"])
 
 - (NSString*)DruckDatenString
 {
-	NSCalendarDate* SaveDatum=[NSCalendarDate date];
-	int jahr=[SaveDatum yearOfCommonEra];
-	NSRange jahrRange=NSMakeRange(2,2);
-	NSString* jahrString=[[[NSNumber numberWithInt:jahr]stringValue]substringWithRange:jahrRange];
-	int monat=[SaveDatum monthOfYear];
-	NSString* monatString=[[NSNumber numberWithInt:monat]stringValue];
-	int wtag=[SaveDatum dayOfMonth];
-	NSString* tagString=[[NSNumber numberWithInt:wtag]stringValue];
-	int stunde=[SaveDatum hourOfDay];
-	NSString* stundeString=[[NSNumber numberWithInt:stunde]stringValue];
-	int minute=[SaveDatum minuteOfHour];
-	NSString* minuteString=[[NSNumber numberWithInt:minute]stringValue];
+   
+   NSCalendar *tagcalendar = [NSCalendar currentCalendar];
+   [tagcalendar setFirstWeekday:2];
+   NSDateComponents *heutecomponents = [[NSCalendar currentCalendar] components:NSCalendarUnitDay | NSCalendarUnitMonth | NSCalendarUnitYear |NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond fromDate:SolarDatenserieStartZeit];
+   NSInteger tagdesmonats = [heutecomponents day];
+   NSInteger monat = [heutecomponents month];
+   NSInteger jahr = [heutecomponents year];
+   NSInteger stunde = [heutecomponents hour];
+   NSInteger minute = [heutecomponents minute];
+   NSInteger sekunde = [heutecomponents second];
+   jahr-=2000;
+
 	NSString* TitelString=@"HomeCentral\rFalkenstrasse 20\r8630 Rueti\rDaten vom: ";
-	NSString* DatumString=[NSString stringWithFormat:@"%@.%@.%@  %@:%@",tagString,monatString,jahrString,stundeString,minuteString];
+	NSString* DatumString=[NSString stringWithFormat:@"%02ld.%02ld.%02ld %02ld:%02ld",(long)tagdesmonats,(long)monat,(long)jahr,(long)stunde,(long)minute];
 	
 	NSString* TemperaturDatenString=[NSString stringWithFormat:@"%@ %@\r\r%@",TitelString,DatumString,[TemperaturDatenFeld string]];
 	return TemperaturDatenString;
@@ -4740,7 +4854,7 @@ if ([[note userInfo]objectForKey:@"err"])
 		 //NSLog(@"t: %X hb: %X lb: %X e: %X",t,hb,lb,e);
 		 */
 		//	int tempSimZeit=10*[[NSCalendarDate calendarDate] timeIntervalSinceDate:DatenserieStartZeit];//*ZeitKompression;
-		int tempSimZeit=10*[[NSCalendarDate calendarDate] timeIntervalSinceDate:DatenserieStartZeit];//*ZeitKompression;
+		int tempSimZeit=10*[[NSDate date] timeIntervalSinceDate:DatenserieStartZeit];//*ZeitKompression;
 		
 		[DatenpaketArray addObject:[NSNumber numberWithInt:tempSimZeit]]; // Zeitstempel
 		tempSimZeit*=ZeitKompression;
@@ -4864,19 +4978,35 @@ if ([[note userInfo]objectForKey:@"err"])
 - (IBAction)reportSimStart:(id)sender 
 {
 	int Stunde,Minute;
-	SimDatenserieStartZeit=[NSCalendarDate calendarDate];
-	NSCalendarDate *StartZeit = [NSCalendarDate calendarDate];
+	SimDatenserieStartZeit=[NSDate date];
+	NSCalendar *StartZeit = [NSCalendar currentCalendar];
 	//dateWithString:@"Friday, 1 July 2001, 11:45"
 	//calendarFormat:@"%A, %d %B %Y, %I:%M"];
 	//NSLog(@"reportSimStart: heute: %@",[StartZeit description]);
-	Stunde =[StartZeit hourOfDay];
-	Minute =[StartZeit minuteOfHour];
-	//NSLog(@"h: %d min: %d",Stunde, Minute);
-	[StartZeit setCalendarFormat:@"%d.%m.%y %H:%M"];
-	[StartzeitFeld setStringValue:[StartZeit description]];
+   NSCalendar *tagcalendar = [NSCalendar currentCalendar];
+   [tagcalendar setFirstWeekday:2];
+   NSDateComponents *heutecomponents = [[NSCalendar currentCalendar] components:NSCalendarUnitDay | NSCalendarUnitMonth | NSCalendarUnitYear |NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond fromDate:SolarDatenserieStartZeit];
+   NSInteger tagdesmonats = [heutecomponents day];
+   NSInteger monat = [heutecomponents month];
+   NSInteger jahr = [heutecomponents year];
+   NSInteger stunde = [heutecomponents hour];
+   NSInteger minute = [heutecomponents minute];
+   NSInteger sekunde = [heutecomponents second];
+   jahr-=2000;
+   NSString* StartZeitString = [NSString stringWithFormat:@"%02ld.%02ld.%02ld %02ld:%02ld",(long)tagdesmonats,(long)monat,(long)jahr,(long)stunde,(long)minute];
+
+   
+   NSDate *startdatum        = [NSDate date];
+   NSDateFormatter *dateformat = [[NSDateFormatter alloc] init];
+   [dateformat setDateFormat:@"%d%m%y_%H%M"];
+   NSString *dateString  = [dateformat stringFromDate:startdatum];
+   
+   [StartzeitFeld setStringValue:dateString];
+
+   
 	NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 	[NotificationDic setObject:@"datastart"forKey:@"data"];
-	[NotificationDic setObject:[NSCalendarDate date]forKey:@"datenseriestartzeit"];
+	[NotificationDic setObject:SimDatenserieStartZeit forKey:@"datenseriestartzeit"];
 	NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
 	[nc postNotificationName:@"data" object:NULL userInfo:NotificationDic];
 	[StopTaste setEnabled:YES];
@@ -4931,12 +5061,36 @@ if ([[note userInfo]objectForKey:@"err"])
 	 calendarFormat:@"%m.%d.%y %H:%M %Z"];
 	 */
 	NSLog(@"Data reportStart");
-	NSCalendarDate* StartZeit=[NSCalendarDate calendarDate];
-	[StartZeit setCalendarFormat:@"%d.%m.%y %H:%M"];
-	errString=[NSString stringWithFormat:@"Logfile vom: %@\r",[StartZeit description]];
-	[StartzeitFeld setStringValue:[StartZeit description]];
-	[StartZeit setCalendarFormat:@"%d%m%y_%H%M"];
+   DatenserieStartZeit=[NSDate date];
+   NSCalendar *tagcalendar = [NSCalendar currentCalendar];
+   [tagcalendar setFirstWeekday:2];
+   NSDateComponents *heutecomponents = [[NSCalendar currentCalendar] components:NSCalendarUnitDay | NSCalendarUnitMonth | NSCalendarUnitYear |NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond fromDate:SolarDatenserieStartZeit];
+   NSInteger tagdesmonats = [heutecomponents day];
+   NSInteger monat = [heutecomponents month];
+   NSInteger jahr = [heutecomponents year];
+   NSInteger stunde = [heutecomponents hour];
+   NSInteger minute = [heutecomponents minute];
+   NSInteger sekunde = [heutecomponents second];
+   jahr-=2000;
+   NSString* StartZeitString = [NSString stringWithFormat:@"%02ld.%02ld.%02ld %02ld:%02ld",(long)tagdesmonats,(long)monat,(long)jahr,(long)stunde,(long)minute];
+
+	//NSCalendarDate* StartZeit=[NSCalendarDate calendarDate];
+	//[StartZeit setCalendarFormat:@"%d.%m.%y %H:%M"];
+   
+   
+	errString=[NSString stringWithFormat:@"Logfile vom: %@\r",StartZeitString];
+   
+   NSDate *startdatum        = [NSDate date];
+   NSDateFormatter *dateformat = [[NSDateFormatter alloc] init];
+   [dateformat setDateFormat:@"%d%m%y_%H%M"];
+   NSString *dateString  = [dateformat stringFromDate:startdatum];
+
+   //[StartzeitFeld setStringValue:[StartZeit description]];
+	[StartzeitFeld setStringValue:dateString];
 	
+  // [StartZeit setCalendarFormat:@"%d%m%y_%H%M"];
+	
+   
 	// Pfad fuer Logfile einrichten
 	BOOL FileOK=NO;
 	BOOL istOrdner;
@@ -4956,17 +5110,18 @@ if ([[note userInfo]objectForKey:@"err"])
 	}
 	if (FileOK)
 	{
-		errPfad=[NSString stringWithFormat:@"%@/errString_%@.txt",[USBPfad stringByAppendingPathComponent:@"Logs"],StartZeit];
+		errPfad=[NSString stringWithFormat:@"%@/errString_%@.txt",[USBPfad stringByAppendingPathComponent:@"Logs"],StartZeitString];
 
 		NSLog(@"reportStart errPfad: %@",errPfad);
 
 	}
 	
 	
-	DatenserieStartZeit= [NSCalendarDate calendarDate];
-	NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
+	//DatenserieStartZeit= [NSCalendarDate calendarDate];
+   DatenserieStartZeit= [NSDate date];
+   NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 	[NotificationDic setObject:@"datastart"forKey:@"data"];
-	[NotificationDic setObject:[NSCalendarDate calendarDate]forKey:@"datenseriestartzeit"];
+	[NotificationDic setObject:DatenserieStartZeit forKey:@"datenseriestartzeit"];
 	NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
 	[nc postNotificationName:@"data" object:NULL userInfo:NotificationDic];
 	[StopTaste setEnabled:YES];
@@ -4993,15 +5148,16 @@ if ([[note userInfo]objectForKey:@"err"])
 	NSLog(@"reportClear");
 	
 	[self clearData];
-	NSCalendarDate* StartZeit=[NSCalendarDate calendarDate];
-	[StartZeit setCalendarFormat:@"%d.%m.%y %H:%M"];
+//	NSCalendarDate* StartZeit=[NSCalendarDate calendarDate];
+//	[StartZeit setCalendarFormat:@"%d.%m.%y %H:%M"];
 //	[StartzeitFeld setStringValue:[StartZeit description]];
+
 
 	[StartzeitFeld setStringValue:@""];
 
 	NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 	[NotificationDic setObject:@"clear"forKey:@"data"];
-	DatenserieStartZeit=[NSCalendarDate calendarDate];
+	DatenserieStartZeit=[NSDate date];
 	[NotificationDic setObject:DatenserieStartZeit forKey:@"datenseriestartzeit"];
 	NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
 	[nc postNotificationName:@"data" object:NULL userInfo:NotificationDic];
@@ -5337,14 +5493,14 @@ if ([[note userInfo]objectForKey:@"err"])
 	if ([tempDatenArray count])//schon Daten im Array
 	{
 		//NSLog(@"ADWandler setEinkanalDaten tempDatenArray: %@",[tempDatenArray description]);
-		tempZeit=[[NSCalendarDate calendarDate] timeIntervalSinceDate:DatenserieStartZeit];//*ZeitKompression;
+		tempZeit=[[NSDate date] timeIntervalSinceDate:DatenserieStartZeit];//*ZeitKompression;
 		
 	}
 	else //Leerer Datenarray
 	{
 		//NSLog(@"ADWandler setEinkanalDaten                    leer  tempDatenArray: %@",[tempDatenArray description]);
 		
-		DatenserieStartZeit=[NSCalendarDate calendarDate];
+		DatenserieStartZeit=[NSDate date];
 		[TemperaturDaten setObject:[NSDate date] forKey:@"datenseriestartzeit"];
 		NSMutableArray* tempStartWerteArray=[[NSMutableArray alloc]initWithCapacity:8];
 		
@@ -5594,7 +5750,7 @@ if ([[note userInfo]objectForKey:@"err"])
 {
 NSLog(@"Data writeIOWLog: %@",derFehler);
 NSString* tempFehlerString=[IOWFehlerLog string];
-[IOWFehlerLog setString:[NSString stringWithFormat:@"%@\n%@  Zeit: %@",tempFehlerString, derFehler,[NSCalendarDate calendarDate]]];
+[IOWFehlerLog setString:[NSString stringWithFormat:@"%@\n%@  Zeit: %@",tempFehlerString, derFehler,[NSCalendar currentCalendar]]];
 
 }
 

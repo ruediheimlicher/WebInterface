@@ -835,12 +835,20 @@ unsigned char h2int(char c)
                       //Status 1 setzen
                       NSURL* statusURL = [NSURL URLWithString:@"http://192.168.1.210/twi?pw=ideur00&status=1"];
                       [self loadURL:statusURL];
+                     /*
                      NSAlert * LoadAlert=[NSAlert alertWithMessageText:@"Load OK"
                                                           defaultButton:NULL
                                                         alternateButton:NULL
                                                             otherButton:NULL 
                                               informativeTextWithFormat:@"Mitteilung:\n%@",@"alles OK"];
                      [LoadAlert runModal];
+                     */
+                     NSAlert * LoadAlert=[[NSAlert alloc]init];
+                     LoadAlert.messageText= @"Load OK";
+                     LoadAlert.informativeText = [NSString stringWithFormat:@"Mitteilung: \n%@",@"alles OK"];
+                     
+                     [LoadAlert runModal];
+
 
                      anz=10;
                   }
@@ -852,11 +860,18 @@ unsigned char h2int(char c)
                {
                   NSURL* statusURL = [NSURL URLWithString:@"http://192.168.1.210/twi?pw=ideur00&status=1"];
                   [self loadURL:statusURL];
+                  /*
                   NSAlert * LoadAlert=[NSAlert alertWithMessageText:@"Load Fehler"
                                                       defaultButton:NULL
                                                     alternateButton:NULL
                                                         otherButton:NULL
                                           informativeTextWithFormat:@"Mitteilung:\n%@",@"Fehler beim Laden"];
+                   */
+                  NSAlert * LoadAlert=[[NSAlert alloc]init];
+                  LoadAlert.messageText= @"Load Fehler";
+                  LoadAlert.informativeText = [NSString stringWithFormat:@"Mitteilung: \n%@",@"Fehler beim Laden"];
+                  
+
                   [LoadAlert runModal];
 
                }

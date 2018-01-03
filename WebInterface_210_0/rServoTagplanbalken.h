@@ -21,7 +21,7 @@ int					Wochentag;
 
 }
 - (void)BalkenAnlegen;
-- (void)setWochenplan:(NSArray*)derStundenArray forTag:(int)derTag;
+//- (void)setWochenplan:(NSArray*)derStundenArray forTag:(int)derTag;
 - (void)setNullpunkt:(NSPoint)derPunkt;
 - (void)setTagplan:(NSArray*)derStundenArray forTag:(int)derTag;
 - (void)setStundenarraywert:(int)derWert vonStunde:(int)dieStunde forKey:(NSString*)derKey;
@@ -43,6 +43,6 @@ int					Wochentag;
 //- (NSArray*)StundenByteArray;
 - (void)setStundenArrayAusByteArray:(NSArray*)derStundenByteArray;
 
-- (int)tag;
+- (NSInteger)tag;
 - (NSString*)Titel;
 @end

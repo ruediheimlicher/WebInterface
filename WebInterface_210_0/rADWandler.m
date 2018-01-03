@@ -314,7 +314,7 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
 
 -(void)TastenArrayAktion:(id)sender
 {
-NSLog(@"TastenArrayAktion: i: %d state: %d",[sender tag],[sender state]);
+//NSLog(@"TastenArrayAktion: i: %d state: %d",[sender tag],[sender state]);
 }
 
 - (IBAction)reportCancel:(id)sender
@@ -340,7 +340,7 @@ NSLog(@"ADWandler reportCancel");
 
 - (IBAction)reportRead1Kanal:(id)sender
 {
-	NSLog(@"ADWandler reportRead1Kanal: %d",[KanalWahlTaste selectedSegment]);
+	//NSLog(@"ADWandler reportRead1Kanal: %d",[KanalWahlTaste selectedSegment]);
 	if (Track1KanalTimer)
 	{
 		[Track1KanalTimer invalidate];
@@ -374,7 +374,7 @@ NSLog(@"ADWandler reportCancel");
 	[Track8KanalTimer invalidate];
 	}
 
-	NSLog(@"ADWandler reportTrack1Kanal state: %d",[sender state]);
+	//NSLog(@"ADWandler reportTrack1Kanal state: %d",[sender state]);
 	float Trackdauer=[[TrackZeitTaste titleOfSelectedItem]floatValue];
 	NSLog(@"Trackdauer: %2.2f",Trackdauer);
 	int Kanal=[KanalWahlTaste selectedSegment];
@@ -672,7 +672,7 @@ NSLog(@"reportRead8Kanal");
 	[Track8KanalTimer invalidate];
 	}
 
-	NSLog(@"ADWandler reportTrack8Kanal state: %d",[sender state]);
+	//NSLog(@"ADWandler reportTrack8Kanal state: %d",[sender state]);
 	float Trackdauer=[[MehrkanalTrackZeitTaste titleOfSelectedItem]floatValue];
 	NSLog(@"Trackdauer: %2.2f",Trackdauer);
 	int Kanal=[MehrkanalWahlTaste selectedSegment];
@@ -1182,7 +1182,7 @@ NSLog(@"reportClear8Kanal");
 	
 	[tempVorgabenDic setObject:[NSNumber numberWithFloat:ZeitKompression] forKey:@"faktorx"];
 	NSScanner *scanner;
-	int tempWert;
+	uint tempWert; // 180103 von int
 	scanner = [NSScanner scannerWithString:dieDaten];
 	[scanner scanHexInt:&tempWert];
 	float y=(float)tempWert;//Momentanwert fuer y
@@ -1388,7 +1388,7 @@ NSLog(@"reportClear8Kanal");
 	float y=	(float)random() / RAND_MAX * (255);
 	float tempZeit=0.0;
 	int Kanal=[KanalWahlTaste selectedSegment];
-	NSLog(@"reportRead1RandomKanal: %d",[KanalWahlTaste selectedSegment]);
+	NSLog(@"reportRead1RandomKanal: %d",(long)[KanalWahlTaste selectedSegment]);
 	if (Kanal<0)//kein Kanal
 	{
 		NSAlert *Warnung = [[NSAlert alloc] init];

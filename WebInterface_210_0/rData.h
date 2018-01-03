@@ -266,7 +266,7 @@ rTagGitterlinien*             SolarStatistikTagGitterlinien;
 - (NSString*)IntToBin:(int)dieZahl;
 - (NSString*)stringAusZeit:(NSTimeInterval) dieZeit;
 - (NSTextView*)DruckDatenView;
-- (NSCalendarDate*)DatenserieStartZeit;
+- (NSDate*)DatenserieStartZeit;
 - (NSString*)DatumSuffixVonDate:(NSDate*)dasDatum;
 - (void)setKalenderBlocker:(int)derStatus;
 - (NSString*)DruckDatenString;

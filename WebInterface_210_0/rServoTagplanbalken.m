@@ -170,7 +170,7 @@
 
 }
 
-- (void)setTag:(int)tagwert
+- (void)setTag:(NSInteger)tagwert
 {
 //tag=tagwert;
 mark=tagwert;
@@ -781,7 +781,7 @@ return StundenArray;
 	return tempByteArray;
 }
 
-- (long)tag
+- (NSInteger)tag
 {
 //NSLog(@"rServoTagplanbalken tag: %d",mark);
 return mark;

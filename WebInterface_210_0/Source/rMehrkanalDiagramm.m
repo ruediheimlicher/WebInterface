@@ -155,10 +155,22 @@ void r_itoa(int32_t zahl, char* string)
 	[GraphFarbeArray replaceObjectAtIndex:derKanal withObject:dieFarbe];
 }
 
-- (void)setStartZeit:(NSCalendar*)dasDatum
+- (void)setStartZeit:(NSDate*)dasDatum
 {
 DatenserieStartZeit = dasDatum;
 
+}
+
+- (int)tagDesJahres
+{
+   NSDate *now = [[NSDate alloc] init];
+   NSCalendar *tagcalendar = [[NSCalendar alloc]  initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+   tagcalendar.firstWeekday = 2;
+   
+   NSDateComponents *components = [tagcalendar components:( NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay | NSCalendarUnitWeekday | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond ) fromDate:now];
+   //int stunde = components.hour;
+   //int minute = components.minute;
+   return (int)components.day;
 }
 
 
@@ -167,7 +179,7 @@ DatenserieStartZeit = dasDatum;
 	//NSLog(@"StartAktion note: %@",[[note userInfo]description]);
 	if ([[note userInfo]objectForKey:@"datenseriestartzeit"])
 	{
-		DatenserieStartZeit= (NSCalendarDate*)[[note userInfo]objectForKey:@"datenseriestartzeit"];
+		DatenserieStartZeit= (NSDate*)[[note userInfo]objectForKey:@"datenseriestartzeit"];
 		//NSLog(@"MehrkanalDiagramm DatenserieStartZeit %@",DatenserieStartZeit);
 		
 	}

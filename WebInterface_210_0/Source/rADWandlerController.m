@@ -3,6 +3,7 @@
 
 
 @implementation IOWarriorWindowController(rADWandlerController)
+/*
 - (void)Alert:(NSString*)derFehler
 {
     NSAlert * DebugAlert=[[NSAlert alloc]init];
@@ -12,7 +13,7 @@
 		[DebugAlert runModal];
 
 }
-
+*/
 - (void)drawRect:(NSRect)rect 
 {
 NSLog(@"drawRect");

@@ -59,14 +59,14 @@
     return self;
 }
 
-
+/*
 - (int)tagDesJahres
 {
 NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
 int dayOfYear = [gregorian ordinalityOfUnit:NSDayCalendarUnit inUnit:NSYearCalendarUnit forDate:[NSDate date]];
 return dayOfYear;
 }
-
+*/
 /*
 - (void)setOffsetX:(float)x
 {

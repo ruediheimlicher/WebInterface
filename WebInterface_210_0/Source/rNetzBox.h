@@ -49,5 +49,5 @@
 - (void)setHexDaten:(NSString*)dieDaten forKanal:(int)derKanal;
 - (void)setIntDaten:(NSString*)dieDaten forKanal:(int)derKanal;
 - (void)setAnzeigeDaten:(NSString*)dieDaten forKanal:(int)derKanal;
-- (void)setTag:(int)derTag;
+//- (void)setTag:(int)derTag;
 @end

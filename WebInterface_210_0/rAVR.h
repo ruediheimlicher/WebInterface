@@ -197,10 +197,10 @@ NSTimer*                EEPROMUpdateTimer;
 - (int)saveHomeDic;
 - (NSArray*)HomebusArray;
 
-- (void)setTWIStatus:(int)derStatus;
+//- (void)setTWIStatus:(int)derStatus;
 - (void)setI2CStatus:(int)derStatus;
-- (void)writeTagplan:(id)sender;
-- (void)setWochenplan:(NSArray*) derWochenplan;
+//- (void)writeTagplan:(id)sender;
+//- (void)setWochenplan:(NSArray*) derWochenplan;
 - (IBAction)sendCmd:(id)sender;
 - (int)sendCmd:(NSString*)derBefehl mitDaten:(NSArray*)dieDaten;
 - (int)sendData:(NSArray*)dieDaten;

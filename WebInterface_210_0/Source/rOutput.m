@@ -158,7 +158,7 @@ NSLog(@"Output SendTastenAktion: start");
 		NSLog(@"writeDigit: charString: %@",charString);
 		NSArray*charArray=[NSArray arrayWithObjects:[charString substringToIndex:1],[charString substringFromIndex:1],nil];
 		NSLog(@"writeDigit: charArray: %@",[charArray description]);
-		[self WriteHexStringArray:charArray];
+		//[self WriteHexStringArray:charArray];
 	}
 }
 
@@ -200,6 +200,7 @@ NSNumber* number = [NSNumber numberWithInt:tempInt];
 return number;
 }
 
+/*
 - (void)WriteHexStringArray:(NSArray*)derHexStringArray
 {
     char*                           buffer;
@@ -280,8 +281,8 @@ return number;
     }
     free (buffer);
 }
-
-
+*/
+/*
 - (void)WriteHexArray:(NSArray*)derHexArray
 {
     char*                           buffer;
@@ -291,15 +292,7 @@ return number;
     int                             reportSize;
 	int								reportID;
 	//NSLog(@"WriteHexArray derHexArray: %@",[derHexArray description]);
-   /*
-	  if (NO == IOWarriorIsPresent ())
-    {
-        NSRunAlertPanel (@"Kein IOWarrior gefunden", @"Es ist kein Interface eingesteckt.", @"OK", nil, nil);
-        [NSApp terminate:self];
-		return;
-    }
-	 */
-    reportSize = [self reportSizeForInterfaceType:[self currentInterfaceType]];
+     reportSize = [self reportSizeForInterfaceType:[self currentInterfaceType]];
 	reportID=[[derHexArray objectAtIndex:0]intValue];
 	//NSLog(@"WriteHexArray: reportSize: %d",reportSize);
     buffer = malloc (reportSize+1);
@@ -345,4 +338,5 @@ return number;
     }//if listNode
     free (buffer);
 }
+*/
 @end

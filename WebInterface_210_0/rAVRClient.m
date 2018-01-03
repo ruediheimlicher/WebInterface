@@ -94,7 +94,7 @@
 
 - (IBAction)reportLocalTaste:(id)sender;
 {
-   NSLog(@"AVRClient reportLocalTaste: state: %d",[sender state]);
+   NSLog(@"AVRClient reportLocalTaste: state: %d",(long)[sender state]);
    NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
 	NSMutableDictionary* localStatusDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 	[localStatusDic setObject:[NSNumber numberWithInt:[sender state]]forKey:@"status"];

@@ -11,4 +11,7 @@
 - (int)tagdesjahresvonJahr:(int)jahr Monat:(int)monat Tag:(int)tag;
 - (NSUInteger) dayOfYearForDate:(NSDate *)dasDatum;
 - (NSDate*)DatumvonJahr:(int)jahr Monat:(int)monat Tag:(int)tag;
+- (int)minuteVonDatum:(NSDate*)dasDatum;
+- (int)stundeVonDatum:(NSDate*)dasDatum;
+- (int)wochentagVonDatum:(NSDate*)dasDatum;
 @end

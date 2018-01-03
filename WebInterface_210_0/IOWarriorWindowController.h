@@ -86,7 +86,7 @@
 
 /*" Actions methods"*/
 - (IBAction)doRead:(id)sender;
-- (IBAction)doWrite:(id)sender;
+//- (IBAction)doWrite:(id)sender;
 - (IBAction)interfacePopupChanged:(id)sender;
 - (IBAction)clearLogEntries:(id)sender;
 - (IBAction)macroPopupChanged:(id)sender;
@@ -96,7 +96,7 @@
 - (IBAction)duplicateCheckboxClicked:(id)sender;
 
 /*" Interface validation "*/
-- (void) populateInterfacePopup;
+//- (void) populateInterfacePopup;
 - (void) updateMacroPopup;
 
 /*" Logging "*/
@@ -117,16 +117,16 @@
 - (void) setNewDump;
 /*" Misc stuff "*/
 
-- (NSString*) nameForIOWarriorInterfaceType:(int) inType;
+//- (NSString*) nameForIOWarriorInterfaceType:(int) inType;
 - (BOOL) reportIdRequiredForWritingToInterfaceOfType:(int) inType;
 //- (IOWarriorHIDDeviceInterface**) currentInterface;
 - (int) currentInterfaceType;
 - (int) reportSizeForInterfaceType:(int) inType;
 
-- (IBAction)showADWandler:(id)sender;
+//- (IBAction)showADWandler:(id)sender;
 - (void)readPList;
 - (IBAction)terminate:(id)sender;
--(void)DruckDatenSchreibenMitDatum:(NSCalendar*)dasDatum ganzerTag:(int)ganz;
+-(void)DruckDatenSchreibenMitDatum:(NSDate*)dasDatum ganzerTag:(int)ganz;
 /* HomeDAta */
 -(void)openWithString:(NSString*)derDatenString;
 -(void)openWithSolarString:(NSString*)derDatenString;
@@ -134,8 +134,8 @@
 @end
 
 @interface IOWarriorWindowController(rOutput)
-- (void)WriteHexStringArray:(NSArray*)derHexStringArray;
-- (void)WriteHexArray:(NSArray*)derHexArray;
+//- (void)WriteHexStringArray:(NSArray*)derHexStringArray;
+//- (void)WriteHexArray:(NSArray*)derHexArray;
 - (void)writeDigiVonString:(NSString*)derString;
 - (NSString*)DigiStringAusChar:(unichar)derChar;
 - (NSNumber*)NumberAusHex: (NSString*)derHexString;
@@ -148,7 +148,7 @@
 - (void)setPortBox:(NSArray*)derPortArray;
 - (void) stopTracking;
 - (void) startTracking;
-- (void)trackRead:(NSTimer*) inTimer;
+//- (void)trackRead:(NSTimer*) inTimer;
 - (void) setLastDataRead:(NSData*) inData;
 @end
 
@@ -160,7 +160,7 @@
 
 @interface IOWarriorWindowController(rAVRController)
 - (IBAction)showAVR:(id)sender;
-- (IBAction)InitI2C:(id)sender;
+//- (IBAction)InitI2C:(id)sender;
 - (IBAction)ResetI2C:(id)sender;
 - (void)setBrennerDatenFor:(int)dasJahr;
 - (void)setStatistikDaten;
@@ -172,7 +172,7 @@
 - (void)setRaumData:(NSDictionary*) derDataDic;
 
 - (IBAction)InitI2C:(id)sender;
-- (IBAction)ResetI2C:(id)sender;
+//- (IBAction)ResetI2C:(id)sender;
 @end
 
 @interface IOWarriorWindowController(rHomeDataController)

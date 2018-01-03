@@ -776,7 +776,7 @@ return StundenArray;
 }
 
 
-- (int)tag
+- (NSInteger)tag
 {
 //NSLog(@"Tagplanbalken tag: %d",mark);
 return tag;

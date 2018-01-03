@@ -142,7 +142,12 @@
 {
 
 }
-
+/*
+- (void)waagrechteLinienZeichnen
+{
+   NSLog(@"TemperaturMKDiagramm waagrechteLinienZeichnen");
+}
+*/
 - (void)drawRect:(NSRect)rect
 {
    

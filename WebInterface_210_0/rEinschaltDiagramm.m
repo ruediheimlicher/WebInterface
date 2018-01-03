@@ -1078,7 +1078,7 @@
 	NSPoint ZielPunkt=rechtsunten;
 	[WaagrechteLinie moveToPoint:MarkPunkt];
 	[WaagrechteLinie lineToPoint:ZielPunkt];
-//	[WaagrechteLinie stroke];
+	[WaagrechteLinie stroke];
 
 	//NSRect Zahlfeld=NSMakeRect(links.x-40,links.y-2,30,10);
 	//NSLog(@"BrennerDiagramm	delta: %2.2f",delta);

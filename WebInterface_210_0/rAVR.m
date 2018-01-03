@@ -384,6 +384,7 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
 		HomeDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 		NSLog(@"Neuer Homebus");
 		[self HomebusAnlegen];		
+      NSError* err;
 		BOOL writeOL=[HomeDic writeToFile:HomePListPfad atomically:YES];
 		NSLog(@"Neuer Homebus ok");
 	}
@@ -421,7 +422,7 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
       //daySettingArray[3][15] = 0;
       int l = 8*16;
       SettingData = [NSMutableData dataWithBytes:daySettingArray length:l];
-      [SettingData writeToFile:HomeDaySettingPfad atomically:YES];
+      [SettingData writeToFile:HomeDaySettingPfad atomically:YES ];
    }
    NSData* returndata = [NSData dataWithContentsOfFile:HomeDaySettingPfad];
    NSLog(@"returndata: %@",returndata);
@@ -465,7 +466,8 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
    }
    
    NSArray* tempArray = [NSArray  arrayWithArray:[string componentsSeparatedByString:@"\n"]];
-   NSLog(@"string: \n%@ \ndaySettingStringArray: %@",string,daySettingStringArray);
+   //NSLog(@"string: \n%@ \ndaySettingStringArray: %@",string,daySettingStringArray);
+   NSLog(@"string: \n%@ ",string);
    NSDictionary* daySettingDic = [NSDictionary dictionaryWithObject:daySettingStringArray forKey:@"daysettingarray"];
    [nc postNotificationName:@"daysetting" object:self userInfo:daySettingDic];
   
@@ -985,7 +987,7 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
    if (d)
    {
      
-      NSLog(@"d: %@ stundenparray: %@",d,[self StundenArrayAusByteArray:d]);
+      //NSLog(@"d: %@ stundenparray: %@",d,[self StundenArrayAusByteArray:d]);
       
    }
    else

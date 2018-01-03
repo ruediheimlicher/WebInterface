@@ -46,14 +46,14 @@
 //	NSArray* HexStringArray=[NSArray arrayWithObjects:@"9F",@"FF",nil];
 
       
-	[self WriteHexStringArray: HexStringArray];
+	//[self WriteHexStringArray: HexStringArray];
 	
 	}
 
 }
 
 
-
+/*
 - (IBAction)InitI2C:(id)sender
 
 {
@@ -65,14 +65,6 @@
 	int                             reportSize;
 	NSString*	kReportDirectionIn=@"R";
 	NSString*	kReportDirectionOut=@"W";
-	/*
-	if (NO == IOWarriorIsPresent ())
-	{
-		NSRunAlertPanel (@"Kein IOWarrior gefunden", @"Es ist kein Interface eingesteckt.", @"OK", nil, nil);
-		[NSApp terminate:self];
-		return;
-	}
-	*/
 	[interfacePopup selectItemAtIndex:1];
 	[self interfacePopupChanged:self];
 	reportSize = [self reportSizeForInterfaceType:[self currentInterfaceType]];
@@ -84,12 +76,6 @@
 	{
 		buffer[i]=0x00;
 	}
-	/*
-	 for (i = 0 ; i < reportSize ; i++)
-	 {
-	 NSLog(@" buffer: %x",buffer[i]);
-	 }
-	 */
 	[self startReading];
 	listNode = IOWarriorInterfaceListNodeAtIndex ([interfacePopup indexOfSelectedItem]);
 	//NSLog(@"doWrite listNode: %d",listNode);
@@ -118,120 +104,10 @@
 	free (buffer);
 	
 }
-
+*/
 
 - (IBAction)ResetI2C:(id)sender
-{
-    char*                           buffer;
-    int                             i;
-    int                             result = 0;
-    int                             reportID = 1;
-    IOWarriorListNode*              listNode;
-    int                             reportSize;
-	NSString*	kReportDirectionIn=@"R";
-	NSString*	kReportDirectionOut=@"W";
-	/*
-    if (NO == IOWarriorIsPresent ())
-    {
-        NSRunAlertPanel (@"Kein IOWarrior gefunden", @"Es ist kein Interface eingesteckt.", @"OK", nil, nil);
-		[NSApp terminate:self];
-		return;
-    }
-	 */
-	[interfacePopup selectItemAtIndex:1];
-	[self interfacePopupChanged:self];
-    reportSize = [self reportSizeForInterfaceType:[self currentInterfaceType]];
-	//NSLog(@"resetI2C: reportSize: %d",reportSize);
-    buffer = malloc (reportSize);
-	buffer[0]=0x01;
-	buffer[1]=0x00;
-	for (i = 2 ; i < reportSize ; i++)
-	{
-		buffer[i]=0x00;
-	}
-	for (i = 0 ; i < reportSize ; i++)
-	{
-		//NSLog(@" buffer: %d",buffer[i]);
-	}
-	
-    listNode = IOWarriorInterfaceListNodeAtIndex ([interfacePopup indexOfSelectedItem]);
-	//NSLog(@"doWrite listNode: %d",listNode);
-	if (listNode)
-    {
-		
-		result = IOWarriorWriteToInterface (listNode->ioWarriorHIDInterface, reportSize+1, buffer);
-		if (0 != result)
-		{
-            NSRunAlertPanel (@"IOWarrior Error in ResetI2C", @"An error occured while trying to write to the selected IOWarrior device.", @"OK", nil, nil);
-			[NSApp terminate:self];
-			return;
-		}
-        else
-        {
-			//NSLog(@"resetI2C: ");
-            [self addLogEntryWithDirection:kReportDirectionOut
-								  reportID:reportID
-                                reportSize:reportSize
-                                reportData:buffer];
-        }
-		
-		
-	}
-	
-    free (buffer);
-}
-
-- (void)twiStatusAktion:(NSNotification*)note
-{
-	NSLog(@"AVRController twiStatusAktion note: %@",[[note userInfo]description]);
-	if ([[note userInfo]objectForKey:@"status"])
-	{
-		switch ([[[note userInfo]objectForKey:@"status"] intValue]) 
-		{
-			case 0: //	TWI wird ausgeschaltet
-			{
-				//	Port 0: Bit 0-3 auf FF setzen (Eingaenge). 
-				//	Bit 7 auf L setzen: AVR anzeigen, das TWI ausgeschaltet werden soll 
-				//	Bit 6 auf H setzen: warten bis AVR das Bit auf L zieht (TWI ausgeschaltet)
-				//	Port 1: FF setzen (Eingaenge)
-				NSArray* startHexStringArray=[NSArray arrayWithObjects:@"4F",@"FF",nil];//27.10.08
-//				NSArray* startHexStringArray=[NSArray arrayWithObjects:@"1F",@"FF",nil];
-				[self WriteHexStringArray:startHexStringArray];
-				
-				NSMutableDictionary* twiInfoDic=[[NSMutableDictionary alloc]initWithCapacity:0];
-				
-				//[twiInfoDic setObject:tempEEPROMArray forKey:@"pagearray"];
-				
-				// Timer fuer die Reaktion des AVR auf das Setzen des TWI-Bits
-				
-				NSDate *now = [[NSDate alloc] init];
-				NSTimer* TWITimer =[[NSTimer alloc] initWithFireDate:now
-															interval:0.1
-															  target:self 
-															selector:@selector(twiStatusTimerAktion:) 
-															userInfo:twiInfoDic
-															 repeats:YES];
-				
-//				NSRunLoop *runLoop = [NSRunLoop currentRunLoop];
-//				[runLoop addTimer:TWITimer forMode:NSDefaultRunLoopMode];
-				
-				
-				
-			}break;
-				
-			case 1: //TWI wird wieder eingeschaltet
-			{
-				[self ResetI2C:NULL];
-				[interfacePopup selectItemAtIndex:0];
-				[self interfacePopupChanged:self];
-				NSArray* startHexStringArray=[NSArray arrayWithObjects:@"CF",@"FF",nil];
-				[self WriteHexStringArray:startHexStringArray];
-				
-				
-			}break;
-		}//switch
-	} // if note
-}
+{}
 
 - (void)twiStatusTimerAktion:(NSTimer*)derTimer
 {
@@ -268,14 +144,14 @@ NSLog(@"lastDataRead: %@",lastDataRead);
 		NSMutableArray* HexArray=[[NSMutableArray alloc]initWithArray:[[note userInfo]objectForKey:@"adressarray"]];
 		//NSLog(@"i2cEEPROMReadReportAktion HexArray: %@",[HexArray description]);
 
-		[self WriteHexArray: HexArray];		
+	//	[self WriteHexArray: HexArray];		
 	}
 	if ([[note userInfo]objectForKey:@"cmdarray"])
 	{
 		
 		NSMutableArray* HexArray=[[NSMutableArray alloc]initWithArray:[[note userInfo]objectForKey:@"cmdarray"]];
 		
-		[self WriteHexArray: HexArray];
+	//	[self WriteHexArray: HexArray];
 		[self setNewDump];
 	}
 	
@@ -300,7 +176,7 @@ NSLog(@"lastDataRead: %@",lastDataRead);
 		
 		
 //		[self setWriteDump:HexArray];
-		[self WriteHexArray: HexArray];
+	//	[self WriteHexArray: HexArray];
 		
 		
 	}
@@ -326,7 +202,7 @@ NSLog(@"lastDataRead: %@",lastDataRead);
 		NSMutableArray* HexArray=[[NSMutableArray alloc]initWithArray:[[note userInfo]objectForKey:@"adressarray"]];
 		//NSLog(@"i2cEEPROMReadReportAktion HexArray: %@",[HexArray description]);
 
-		[self WriteHexArray: HexArray];		
+	//	[self WriteHexArray: HexArray];		
 	}
 	
 	if ([[note userInfo]objectForKey:@"cmdarray"])
@@ -373,7 +249,7 @@ NSLog(@"lastDataRead: %@",lastDataRead);
 	if ([[derTimer userInfo] objectForKey:@"cmdarray"])
 	{
 		NSArray* AVRArray=[[derTimer userInfo] objectForKey:@"cmdarray"];
-		[self WriteHexArray: AVRArray];
+		//[self WriteHexArray: AVRArray];
 		}
 		[derTimer invalidate];
 		

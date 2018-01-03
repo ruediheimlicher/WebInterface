@@ -85,15 +85,23 @@
 
 - (void)StartAktion:(NSNotification*)note
 {
-	[super StartAktion:note];
-	//NSLog(@"DiagrammGitterlinien StartAktion note: %@",[[note userInfo]description]);
-   StartStunde=[[NSCalendar currentCalendar] component:NSCalendarUnitHour  fromDate:DatenserieStartZeit];
-   StartMinute=[[NSCalendar currentCalendar] component:NSCalendarUnitMinute fromDate:DatenserieStartZeit];
-
-	//NSLog(@"DiagrammGitterlinien StartStunde: %d StartMinute: %d",StartStunde, StartMinute);
-	
-	
-	
+   [super StartAktion:note];
+   //NSLog(@"DiagrammGitterlinien StartAktion note: %@",[[note userInfo]description]);
+   NSTimeZone *gmtTimeZone = [NSTimeZone timeZoneForSecondsFromGMT:0];
+   NSCalendar *startcalendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+   startcalendar.firstWeekday = 2;
+   [startcalendar setTimeZone:gmtTimeZone];
+   NSDateComponents *components = [startcalendar components:( NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay | NSCalendarUnitWeekday | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond ) fromDate:DatenserieStartZeit];
+   int wd = components.weekday;
+   int stunde = components.hour;
+   int minute = components.minute;
+   StartStunde = components.hour; //
+   StartMinute = components.minute;
+   
+   //NSLog(@"DiagrammGitterlinien StartStunde: %d StartMinute: %d",StartStunde, StartMinute);
+   
+   
+   
 }
 
 
@@ -133,14 +141,25 @@ NSLog(@"TagGitterlinien setEinheitenDicY: Intervall: %d  ",Intervall );
 				
 				//NSLog(@"***			Gitterlinien setWerteArray:	tagdesjahres: %d",[[derWerteArray objectAtIndex:0]intValue]);
 				NSPoint neuerPunkt=DiagrammEcke;
+            
 				int TagDesJahres=[[derWerteArray objectAtIndex:0]intValue]; //tagdesjahres, Abszisse
-				int Minute=0;
-				NSCalendarDate* Calenderdatum=(NSCalendarDate*)[derWerteArray objectAtIndex:1];
-				int TagDesMonats=[Calenderdatum dayOfMonth];
-				int TagDerWoche=[Calenderdatum dayOfWeek];
-				int Monat=[Calenderdatum monthOfYear];
-				//NSLog(@"TagDesMonats: %d TagDerWoche: %d Monat: %d",TagDesMonats,TagDerWoche,Monat);
-				int Art=0;	// Linie fuer Intervall
+				//int Minute=0;
+				//NSCalendarDate* Calenderdatum=(NSCalendarDate*)[derWerteArray objectAtIndex:1];
+				//int TagDesMonats=[Calenderdatum dayOfMonth];
+				//int TagDerWoche=[Calenderdatum dayOfWeek];
+				//int Monat=[Calenderdatum monthOfYear];
+				
+            NSCalendar *tagcalendar = [[NSCalendar alloc]  initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+            tagcalendar.firstWeekday = 2;
+            NSDate * Kalenderdatum = [derWerteArray objectAtIndex:1];
+              NSDateComponents *components = [tagcalendar components:( NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay | NSCalendarUnitWeekday | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond ) fromDate:Kalenderdatum];
+            int TagDesMonats = (int)components.day;
+            int TagDerWoche = (int)components.weekday;
+            int Monat = (int)components.month;
+            //NSLog(@"TagDesMonats: %d TagDerWoche: %d Monat: %d",TagDesMonats,TagDerWoche,Monat);
+				
+            
+            int Art=0;	// Linie fuer Intervall
 				LinieOK=0;
 											neuerPunkt.x=([[derWerteArray objectAtIndex:0]floatValue]-StartwertX)*ZeitKompression+0.1;	//	aktueller Tag, x-Wert, erster Wert im Array
 

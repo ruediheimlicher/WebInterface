@@ -56,7 +56,7 @@
 - (float)GrundlinienOffset;
 - (void)setMaxOrdinate:(int)laenge;
 - (void)setMaxEingangswert:(int)maxEingang;
-
+- (int)tagDesJahres;
 
 - (void)setWert:(NSPoint)derWert  forKanal:(int)derKanal;
 - (void)setEinheitenDicY:(NSDictionary*)derEinheitenDic;
@@ -73,5 +73,6 @@
 - (void)clean;
 - (void)logRect:(NSRect)r;
 - (void)clear8Kanal;
+- (void)waagrechteLinienZeichnen;
 void r_itoa(int32_t zahl, char* string);
 @end

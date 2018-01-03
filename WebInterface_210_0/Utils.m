@@ -36,7 +36,7 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
    NSString* ResourcenPfad=[[[NSBundle mainBundle]bundlePath]stringByAppendingPathComponent:@"Contents/Resources"];
    //NSLog(@"ResourcenPfad: %@",ResourcenPfad);
    NSString* PasswortTabellePfad=[[[NSBundle mainBundle]bundlePath]stringByAppendingPathComponent:@"Contents/Resources/Passwort.txt"];
-   NSString* PasswortTabelleString = [NSString stringWithContentsOfFile:PasswortTabellePfad];
+   NSString* PasswortTabelleString = [NSString stringWithContentsOfFile:PasswortTabellePfad encoding:NSMacOSRomanStringEncoding error:NULL];
    
    NSLog(@"PasswortString: \n%@",PasswortTabelleString);
    NSArray* PasswortTabelle = [PasswortTabelleString componentsSeparatedByString:@"\n"];

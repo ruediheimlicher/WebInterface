@@ -22,96 +22,13 @@ static NSString* kReportDirectionOut = @"W";
 
 
 
-- (NSArray*)ReadHexStringArray
-{
-	//[readTimer				invalidate];
-	IOWarriorListNode*		listNode;
-	
-	UInt8*					buffer;
-    int						result = 0;
-    int						reportID = -1;
-    NSData*					dataRead;
-    int						reportSize;
-	
-	NSLog(@"ReadHexStringArray: kReportDirectionIn: %@",kReportDirectionIn);
-	
-	NSMutableArray*	InputArray=[[NSMutableArray alloc]initWithCapacity:0];
-	int i;
-	for (i=0;i<4;i++)
-	{
-	[InputArray addObject:@"00"];
-	}
-	listNode = IOWarriorInterfaceListNodeAtIndex ([interfacePopup indexOfSelectedItem]);
-	if (nil == listNode) // if there is no interface, exit and don't invoke timer again
-		return InputArray;
-
-	if (listNode->interfaceType == kIOWarrior24Interface0 ||
-		listNode->interfaceType == kIOWarrior40Interface0)
-	{
-		// if user has selected some kind of interface0, read every 0.05 seconds using getReport request
-		[self setLastDataRead:nil];
-		// read immediatly
-		
-	    reportSize = [self reportSizeForInterfaceType:listNode->interfaceType];
-		if (listNode->interfaceType == kIOWarrior24Interface0 ||
-			listNode->interfaceType == kIOWarrior40Interface0)
-		{
-			//NSLog(@"ReadHexStringArray: reportSize: %d",reportSize);
-			buffer = malloc (reportSize);
-			
-			result = IOWarriorReadFromInterface (listNode->ioWarriorHIDInterface, 0, reportSize, buffer);
-			
-			if (result != 0)
-			{
-				NSRunAlertPanel (@"IOWarrior Error", @"An error occured while trying to read from the selected IOWarrior device.", @"OK", nil, nil);
-				[self doRead:self]; // invalidates timer
-				return InputArray;
-			}
-			dataRead = [NSData dataWithBytes:buffer length:reportSize];
-			
-			
-			int k;
-			for (k=0;k<reportSize;k++)
-			{
-				NSString* InputString =[NSString stringWithFormat:@"%X",  buffer[k]];
-				if (InputString)
-				{
-					if ([InputString length]==1)//vorstehende Null fehlt
-					{
-					InputString=[@"0" stringByAppendingString:InputString];
-					}
-					//NSLog(@" index: %d InputString: %@",k,InputString);
-					[InputArray replaceObjectAtIndex:k withObject:InputString];
-				}
-			}
-			
-			
-			
-			free (buffer);
-		}
-	
-	
-	}
-	/*
-	Notificaton in ReadIntf
-	NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
-	[NotificationDic setObject:[NSNumber numberWithInt:reportSize] forKey:@"reportsize"];
-	[NotificationDic setObject:InputArray forKey:@"inputarray"];
-	NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
-	//[nc postNotificationName:@"InputArray" object:self userInfo:NotificationDic];
-	*/
-	//NSLog(@"ReadHexStringArray:	InputArray: %@",[InputArray description]);
-	return InputArray;
-}
-
 
 - (IBAction)ReadIntf:(id)sender
 {
 //NSLog(@"ReadIntf:	Start");
 
-NSArray* InputArray=[self ReadHexStringArray];
+//NSArray* InputArray=[self ReadHexStringArray];
 
-NSLog(@"ReadIntf:	InputArray: %@",[InputArray description]);
 //NSLog(@"ReadIntf:	HexDatenArray: %@",[HexDatenArray description]);
 //[HexDatenArray retain];
 //[HexDatenArray setArray:InputArray];
@@ -134,7 +51,7 @@ NSLog(@"ReadIntf:	InputArray: %@",[InputArray description]);
 return;
 
 //[HexDatenArray setArray:InputArray];
-[self setPortBox:InputArray];
+
 
 }
 
@@ -144,7 +61,7 @@ return;
 //	NSLog(@"InputAktion note: %@",[[note userInfo]description]);
 //	NSLog(@"InputAktion Zeit: %2.4f",[[NSDate date]timeIntervalSinceDate:[[note userInfo] objectForKey:@"startzeit"]]);
 //	NSLog(@"InputAktion Zeitkompression: %2.2f",[[[note userInfo] objectForKey:@"zeitkompression"]floatValue]);
-	NSArray* InputArray=[self ReadHexStringArray];
+   NSArray* InputArray;//=[self ReadHexStringArray];
 	DatenleseZeit=[NSDate date];
 	int tempKanalNummer=[[[note userInfo]objectForKey:@"kanalnummer"]intValue];
 //	NSLog(@"\n");
@@ -216,7 +133,7 @@ NSLog(@"TrackIntf: isTracking: %d",isTracking);
         [self setLastDataRead:nil];
 
         // read immediatly
-        [self trackRead:nil];
+       // [self trackRead:nil];
         // activate timer
 		if ([trackTimer isValid])
 		{
@@ -238,7 +155,7 @@ NSLog(@"TrackIntf: isTracking: %d",isTracking);
 }
 
 
-
+/*
 - (void)trackRead:(NSTimer*) inTimer
 {
     UInt8*		buffer;
@@ -317,7 +234,7 @@ NSLog(@"TrackIntf: isTracking: %d",isTracking);
         free (buffer);
     }
 }
-
+*/
 - (void) setLastDataRead:(NSData*) inData
 {
     lastDataRead = inData;

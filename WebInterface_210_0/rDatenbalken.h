@@ -16,7 +16,7 @@
    BOOL edit;
 }
 - (void)BalkenAnlegen;
-- (void)setWochenplan:(NSArray*)derStundenArray forTag:(int)derTag;
+//- (void)setWochenplan:(NSArray*)derStundenArray forTag:(int)derTag;
 - (void)setNullpunkt:(NSPoint)derPunkt;
 - (void)setTagplan:(NSArray*)derStundenArray forTag:(int)derTag;
 - (void)setStundenarraywert:(int)derWert vonStunde:(int)dieStunde forKey:(NSString*)derKey;
@@ -35,7 +35,7 @@
 - (int)typ;
 
 
-- (void)setStundenByteArray:(NSArray*)derStundenArray;
+//- (void)setStundenByteArray:(NSArray*)derStundenArray;
 
 
 

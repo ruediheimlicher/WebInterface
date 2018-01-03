@@ -93,14 +93,20 @@
     return self;
 }
 
-
+/*
 - (int)tagDesJahres
 {
-NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
-int dayOfYear = [gregorian ordinalityOfUnit:NSDayCalendarUnit inUnit:NSYearCalendarUnit forDate:[NSDate date]];
-return dayOfYear;
+   
+   NSDate *now = [[NSDate alloc] init];
+   NSCalendar *tagcalendar = [[NSCalendar alloc]  initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+   tagcalendar.firstWeekday = 2;
+   
+   NSDateComponents *components = [tagcalendar components:( NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay | NSCalendarUnitWeekday | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond ) fromDate:now];
+   //int stunde = components.hour;
+   //int minute = components.minute;
+   return components.day;
 }
-
+*/
 /*
 - (void)setOffsetX:(float)x
 {
@@ -273,7 +279,7 @@ return dayOfYear;
 		
 		if ([[derWerteArray objectAtIndex:i]objectForKey:@"calenderdatum"])
 		{
-			NSCalendarDate* aktDatum=[[derWerteArray objectAtIndex:i]objectForKey:@"calenderdatum"];
+	//		NSCalendarDate* aktDatum=[[derWerteArray objectAtIndex:i]objectForKey:@"calenderdatum"];
 	//		TagDesMonats = [aktDatum dayOfMonth];
 	//		Monat = [aktDatum monthOfYear];
 	//		Jahr = [aktDatum yearOfCommonEra];

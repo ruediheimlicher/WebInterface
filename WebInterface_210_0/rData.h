@@ -22,7 +22,7 @@
 #import "rSolarEinschaltDiagramm.h"
 #import "rSolarStatistikDiagramm.h"
 #import "rElektroStatistikDiagramm.h"
-
+#import "rStromDiagramm.h"
 #import "datum.c"
 #import "version.c"
 
@@ -57,7 +57,7 @@ int						IOW_busy;
 rData_DS*					Data_DS;
 NSArray*						Raumnamen;
 NSMutableDictionary*		TemperaturDaten;
-IBOutlet	NSScrollView*					TemperaturDiagrammScroller;
+IBOutlet	NSScrollView*	TemperaturDiagrammScroller;
 rTemperaturMKDiagramm*	TemperaturMKDiagramm;
 
 rOrdinate*					TemperaturOrdinate;
@@ -237,7 +237,7 @@ rTagGitterlinien*             SolarStatistikTagGitterlinien;
 
    // StromTab
    IBOutlet NSScrollView*                     StromDiagrammScroller;
-   rSolarDiagramm*               StromDiagramm;
+   rStromDiagramm*               StromDiagramm;
    rDiagrammGitterlinien*         StromGitterlinien;
    rSolarEinschaltDiagramm*      StromEinschaltDiagramm;
    rLegende*                     StromEinschaltLegende;
@@ -246,21 +246,20 @@ rTagGitterlinien*             SolarStatistikTagGitterlinien;
    IBOutlet id                     LastStromDatazeitFeld;
    rOrdinate*                     StromOrdinate;
    
-   NSDate*                       StromDatenserieStartZeit;
    
    int                           LastStromLoadzeit;
-   int                           AnztromDaten;
+   int                           AnzStromDaten;
    int                           anzstromLoads;
-   IBOutlet   id                     AnzahlstromDatenFeld;
+   IBOutlet   id                     AnzahlStromDatenFeld;
    IBOutlet   id                     StromWertFeld;
    IBOutlet id                     stromZaehlerFeld;
-   IBOutlet   id                     stromLaufzeitFeld;
-   IBOutlet   id                     stromZeitKompressionTaste;
-   float                           stromZeitKompression;
-   IBOutlet id                     stromLoadtimeFeld;
-   IBOutlet id                     stromLoadMark;
-   IBOutlet id                     stromStartzeitFeld;
-   NSDate*                       stromDatenserieStartZeit;
+   IBOutlet   id                     StromLaufzeitFeld;
+   IBOutlet   id                     StromZeitKompressionTaste;
+   float                           StromZeitKompression;
+   IBOutlet id                     StromLoadtimeFeld;
+   IBOutlet id                     StromLoadMark;
+   IBOutlet id                     StromStartzeitFeld;
+   NSDate*                       StromDatenserieStartZeit;
    IBOutlet NSDatePicker *       StromKalender;
    int                           StromHeuteblocker;
    int                           StromKalenderblocker;

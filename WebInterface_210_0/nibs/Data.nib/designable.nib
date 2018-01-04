@@ -472,7 +472,7 @@
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <clipView key="contentView" id="FzZ-qY-Vrk">
                                                 <rect key="frame" x="1" y="1" width="432" height="446"/>
-                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                <autoresizingMask key="autoresizingMask"/>
                                                 <subviews>
                                                     <customView id="989">
                                                         <rect key="frame" x="0.0" y="0.0" width="432" height="446"/>
@@ -872,7 +872,7 @@ AgEAAAAAAAAAVgAAAAAAAAAAAAAAAAAAAlo
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <clipView key="contentView" id="Bea-Sv-ZQ6">
                                                 <rect key="frame" x="1" y="1" width="471" height="377"/>
-                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                <autoresizingMask key="autoresizingMask"/>
                                                 <subviews>
                                                     <customView id="116">
                                                         <rect key="frame" x="0.0" y="0.0" width="471" height="377"/>

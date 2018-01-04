@@ -70,7 +70,8 @@
 			//NSLog(@"+++			Temperatur  setWerteArray: Kanal: %d	x: %2.2f",i,[[derWerteArray objectAtIndex:0]floatValue]);
 			NSPoint neuerPunkt=DiagrammEcke;
 			neuerPunkt.x+=[[derWerteArray objectAtIndex:0]floatValue]*ZeitKompression;	//	Zeit, x-Wert, erster Wert im Array
-			float InputZahl=[[derWerteArray objectAtIndex:i+1]floatValue];	// Input vom HC, 0-255
+			 //NSLog(@"solar setWerteArray neuerPunkt.x: %2.2f",neuerPunkt.x);
+         float InputZahl=[[derWerteArray objectAtIndex:i+1]floatValue];	// Input vom HC, 0-255
 			
 			switch (i)
 			{

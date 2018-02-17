@@ -38,7 +38,7 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
    NSString* PasswortTabellePfad=[[[NSBundle mainBundle]bundlePath]stringByAppendingPathComponent:@"Contents/Resources/Passwort.txt"];
    NSString* PasswortTabelleString = [NSString stringWithContentsOfFile:PasswortTabellePfad encoding:NSMacOSRomanStringEncoding error:NULL];
    
-   NSLog(@"PasswortString: \n%@",PasswortTabelleString);
+   //NSLog(@"PasswortString: \n%@",PasswortTabelleString);
    NSArray* PasswortTabelle = [PasswortTabelleString componentsSeparatedByString:@"\n"];
    //NSLog(@"PasswortArray: \n%@",PasswortTabelle  );
    //NSLog(@"PasswortArray 6: \n%@",[PasswortTabelle objectAtIndex:6] );
@@ -58,14 +58,14 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
    
    srand((unsigned int)time(NULL));   // should only be called once
    int randomnummer1 = rand()%63+1;
-   NSLog(@"Util passwortstring randomnummer 1: *%d* reminder: %d mantisse: %d",randomnummer1 ,randomnummer1%8,randomnummer1/8);
+   //NSLog(@"Util passwortstring randomnummer 1: *%d* reminder: %d mantisse: %d",randomnummer1 ,randomnummer1%8,randomnummer1/8);
    int randomzeile = randomnummer1%8;
    int randomkolonne = randomnummer1/8;
-   NSLog(@"passwortstring randomnummer 1: *%d* randomzeile: %d randomkolonne: %d",randomnummer1 ,randomzeile,randomkolonne);
+   //NSLog(@"passwortstring randomnummer 1: *%d* randomzeile: %d randomkolonne: %d",randomnummer1 ,randomzeile,randomkolonne);
    NSString* passwort1 = [[[PasswortTabelle objectAtIndex:randomzeile]componentsSeparatedByString:@"\t"]objectAtIndex:randomkolonne];
 
    int randomnummer2 = rand()%63+1;
-   NSLog(@"Util passwortstring randomnummer 1: *%d* reminder: %d mantisse: %d",randomnummer2 ,randomnummer2%8,randomnummer2/8);
+   //NSLog(@"Util passwortstring randomnummer 1: *%d* reminder: %d mantisse: %d",randomnummer2 ,randomnummer2%8,randomnummer2/8);
    randomzeile = randomnummer2%8;
    randomkolonne = randomnummer2/8;
    NSString* passwort2 = [[[PasswortTabelle objectAtIndex:randomzeile]componentsSeparatedByString:@"\t"]objectAtIndex:randomkolonne];

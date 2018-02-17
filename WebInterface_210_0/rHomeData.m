@@ -197,6 +197,25 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 	return lastZeit;
 }
 
+- (int)lastStromDataZeitVon:(NSString*)derDatenString // Aufbau bei Strom ist anders: jahr, monat, tagdesmonats,stunde, minute, sekunde
+{
+   int lastZeit=0;
+   //NSLog(@"DataString: %@",derDatenString);
+   
+   NSArray* DataArray=[derDatenString componentsSeparatedByString:@"\n"];
+   if ([[DataArray lastObject]isEqualToString:@""])
+   {
+      DataArray=[DataArray subarrayWithRange:NSMakeRange(0,[DataArray count]-1)];
+   }
+   //NSLog(@"DataArray: %@",[DataArray description]);
+   
+   //NSLog(@"lastDataZeitVon: letzte Zeile: %@",[DataArray lastObject]);
+   NSArray* lastZeilenArray=[[DataArray lastObject]componentsSeparatedByString:@"\t"];
+   lastZeit = [[lastZeilenArray objectAtIndex:3]intValue] * 3600 + [[lastZeilenArray objectAtIndex:4]intValue]*60 + [[lastZeilenArray objectAtIndex:5]intValue];
+   
+   return lastZeit;
+}
+
 
 - (void)DatenVonHeuteAktion:(NSNotification*)note
 {
@@ -227,7 +246,7 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
       NSAppleEventDescriptor *ipresult = [ipscript executeAndReturnError:&iperrorMessage];
       //NSLog(@"mount: %@",ipresult);
       NSString *scriptReturn = [ipresult stringValue];
-      NSLog(@"HomeData DataVonHeute Found ping string: %@",scriptReturn);
+     // NSLog(@"HomeData DataVonHeute Found ping string: %@",scriptReturn);
 
       if (scriptReturn == nil)
       {
@@ -722,7 +741,7 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
       
    
 	NSString* DataString=[NSString stringWithContentsOfURL:URL usedEncoding: enc error:NULL];
-	NSLog(@"IP von Server: %@",DataString);
+	//NSLog(@"IP von Server: %@",DataString);
    NSArray* IP_Array = [DataString componentsSeparatedByString:@"\r\n"];
    //NSLog(@"IP von Server IP_Array: %@",IP_Array);
    
@@ -733,7 +752,7 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
    NSAppleEventDescriptor *ipresult = [ipscript executeAndReturnError:&iperrorMessage];
    //NSLog(@"mount: %@",ipresult);
    NSString *scriptReturn = [ipresult stringValue];
-   NSLog(@"HomeData Found utxt string: %@",scriptReturn);
+   //NSLog(@"HomeData Found utxt string: %@",scriptReturn);
    if (scriptReturn == NULL)
    {
       NSAlert *Warnung = [[NSAlert alloc] init];
@@ -1617,10 +1636,10 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
       }
       
       
-      StromDataSuffix=@"StromDaten.txt";
+      StromDataSuffix=@"StromDaten/StromDaten.txt";
       //NSLog(@"StromDataVonHeute URLPfad: %@",URLPfad);
       //NSLog(@"StromDataVonHeute  DownloadPfad: %@ DataSuffix: %@",ServerPfad,SolarDataSuffix);
-      NSURL *URL = [NSURL URLWithString:[ServerPfad stringByAppendingPathComponent:SolarDataSuffix]];
+      NSURL *URL = [NSURL URLWithString:[ServerPfad stringByAppendingPathComponent:StromDataSuffix]];
       //NSLog(@"StromDataVonHeute URL: %@",URL);
       //NSURL *URL = [NSURL URLWithString:@"http://www.schuleduernten.ch/blatt/cgi-bin/HomeDaten.txt"];
       //www.schuleduernten.ch/blatt/cgi-bin/HomeDaten/HomeDaten090730.txt
@@ -1677,8 +1696,13 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
             DataString=[DataString substringFromIndex:1];
          }
          //NSLog(@"StromDataVonHeute DataString: \n%@",DataString);
-         lastDataZeit=[self lastDataZeitVon:DataString];
-         //NSLog(@"SolarDataVonHeute lastDataZeit: %d",lastDataZeit);
+         int lastZeit=0;
+         //NSLog(@"DataString: %@",derDatenString);
+         
+        //     lastDataZeit
+         lastDataZeit=[self lastStromDataZeitVon:DataString];
+         
+         //NSLog(@"StromDataVonHeute lastDataZeit: %d",lastDataZeit);
          
          // Auf WindowController Timer auslösen
          downloadFlag=heute;
@@ -1722,6 +1746,186 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
    return returnString;
 }
 
+
+- (NSString*)LastStromData
+{
+   //NSLog(@"LastStromData");
+   NSString* returnString = [NSString string];
+   NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
+   StromDataSuffix=@"/StromDaten/stromstatus.txt";
+   downloadFlag=last;
+   
+   if (isDownloading) 
+   {
+      [NotificationDic setObject:@"busy" forKey:@"erfolg"];
+      NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
+      [nc postNotificationName:@"StromDataDownload" object:self userInfo:NotificationDic];
+      [self cancel];
+   } 
+   else 
+   {
+      [[NSURLCache sharedURLCache] setMemoryCapacity:0]; 
+      [[NSURLCache sharedURLCache] setDiskCapacity:0]; 
+      //   WebPreferences *prefs = [webView preferences]; 
+      //[prefs setUsesPageCache:NO]; 
+      //[prefs setCacheModel:WebCacheModelDocumentViewer];
+      
+      NSURL *URL = [NSURL URLWithString:[ServerPfad stringByAppendingPathComponent:StromDataSuffix]];
+      //NSLog(@"LastStromData: URL: %@",URL);
+      [NotificationDic setObject:@"ready" forKey:@"erfolg"];
+      NSCharacterSet* CharOK=[NSCharacterSet alphanumericCharacterSet];
+      
+      //NSURLRequestUseProtocolCachePolicy
+      NSDate* ZeitVor=[NSDate date];
+      NSError* WebFehler;
+      int NSURLRequestReloadIgnoringLocalCacheData = 1;
+      int NSURLRequestReloadIgnoringLocalAndRemoteCacheData=4;
+      
+      
+      //ruediheimlicher
+      //      NSURL *lastTimeURL = [NSURL URLWithString:@"https://www.ruediheimlicher.ch/Data/HomeCentralPrefs.txt"];
+      NSURL *lastTimeURL = [NSURL URLWithString:@"http://www.ruediheimlicher.ch/Data/HomeCentralPrefs.txt"];
+      
+      
+      
+      //NSURLRequest* lastTimeRequest=[ [NSURLRequest alloc] initWithURL: lastTimeURL cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:30.0];
+      NSURLRequest* lastTimeRequest=[ [NSURLRequest alloc] initWithURL: lastTimeURL cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData timeoutInterval:10.0];
+      //NSLog(@"Cache mem: %d",[[NSURLCache sharedURLCache]memoryCapacity]);
+      
+      //   [[NSURLCache sharedURLCache] removeCachedResponseForRequest:lastTimeRequest];
+      
+      NSError* syncErr=NULL;
+      NSData* lastTimeData=[ NSURLConnection sendSynchronousRequest:lastTimeRequest returningResponse: nil error: &syncErr ];
+      if (syncErr)
+      {
+         NSLog(@"LastStromData syncErr: :%@",syncErr);
+         //ERROR: 503
+      }
+      NSString *lastTimeString = [[NSString alloc] initWithBytes: [lastTimeData bytes] length:[lastTimeData length] encoding: NSUTF8StringEncoding];
+      
+      //NSStringEncoding *  enc=0;//NSUTF8StringEncoding;
+      //NSString* lastTimeString=[NSString stringWithContentsOfURL:lastTimeURL usedEncoding: enc error:NULL];
+      //[lastTimeString retain];
+      //NSString* newlastTimeString=[NSString stringWithContentsOfURL:lastTimeURL usedEncoding: enc error:NULL];
+      //NSLog(@"newlastTimeString: %@",newlastTimeString);
+      //if ([newlastTimeString length] < 7)
+      //{
+      //   NSLog(@"newlastTimestring zu kurz");
+      //   
+      //}
+      
+      if ([lastTimeString length] < 7)
+      {
+         NSLog(@"LastSolarData lastTimestring zu kurz");
+         return returnString;
+      }
+      
+      NSString* lastDatumString = [lastTimeString substringFromIndex:7];
+      //NSLog(@"lastSolarDatumString: %@",lastDatumString);
+      [NotificationDic setObject:lastDatumString forKey:@"lasttimestring"];
+      
+      
+      
+      
+      //NSString* aStr;
+      //aStr = [[NSString alloc] initWithData:aData encoding:NSASCIIStringEncoding];
+      
+      
+      StromCentralRequest = [ [NSURLRequest alloc] initWithURL: URL cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:10.0];
+      int delta=[[NSDate date] timeIntervalSinceDate:ZeitVor];
+      //NSLog(@"Delta: %2.4F", delta);
+      [NotificationDic setObject:[NSNumber numberWithFloat:delta] forKey:@"delta"];
+      
+      //HomeCentralData = [[NSURLConnection alloc] initWithRequest:HomeCentralRequest delegate:self];
+      
+      StromCentralData = (NSMutableData*)[ NSURLConnection sendSynchronousRequest:StromCentralRequest returningResponse: nil error: nil ];      
+      
+      if (StromCentralData==NULL)
+      {
+         //NSLog(@"LastStromData: Fehler beim Download:_ Data ist NULL");
+         [NotificationDic setObject:@"Fehler beim Download" forKey:@"err"];
+         NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
+         [nc postNotificationName:@"StromDataDownload" object:self userInfo:NotificationDic];
+         return NULL;
+      }
+      NSString *DataString = [[NSString alloc] initWithBytes: [StromCentralData bytes] length:[StromCentralData length] encoding: NSUTF8StringEncoding];
+      
+      
+      //      NSString* DataString= [NSString stringWithContentsOfURL:URL];
+      
+      if ([DataString length])
+      {
+         //NSLog(@"LastSolarData: DataString: %@",DataString);
+         char first=[DataString characterAtIndex:0];
+         
+         // eventuellen Leerschlag am Anfang entfernen
+         
+         if (![CharOK characterIsMember:first])
+         {
+            DataString=[DataString substringFromIndex:1];
+         }
+         
+         NSMutableArray* tempDataArray = (NSMutableArray*)[DataString componentsSeparatedByString:@"\t"];
+         //NSLog(@"LastStromData tempDataArray: %@",[tempDataArray description]);
+         
+         int tempZeit= [[tempDataArray  objectAtIndex:3]intValue] * 3600 + [[tempDataArray  objectAtIndex:4]intValue]*60 + [[tempDataArray  objectAtIndex:5]intValue];
+         
+         [tempDataArray replaceObjectAtIndex:0 withObject:[NSNumber numberWithInt:tempZeit]];
+         [tempDataArray replaceObjectAtIndex:1 withObject:[tempDataArray objectAtIndex:6]];
+         [tempDataArray replaceObjectAtIndex:2 withObject:[NSNumber numberWithInt:0]];
+         [tempDataArray replaceObjectAtIndex:2 withObject:[NSNumber numberWithInt:0]];
+         [tempDataArray replaceObjectAtIndex:3 withObject:[NSNumber numberWithInt:0]];
+         [tempDataArray replaceObjectAtIndex:4 withObject:[NSNumber numberWithInt:0]];
+         [tempDataArray replaceObjectAtIndex:5 withObject:[NSNumber numberWithInt:0]];
+         [tempDataArray replaceObjectAtIndex:6 withObject:[NSNumber numberWithInt:0]];
+         [tempDataArray replaceObjectAtIndex:7 withObject:[NSNumber numberWithInt:0]];
+         [tempDataArray replaceObjectAtIndex:8 withObject:[NSNumber numberWithInt:0]];
+
+         
+         //NSLog(@"LastStromData tempDataArray korrigiert: %@",[tempDataArray description]);
+         
+         NSArray* prevDataArray = [prevStromDataString componentsSeparatedByString:@"\t"];
+         if ([prevDataArray count]>3)
+         {
+            
+            float prevVorlauf=[[prevDataArray objectAtIndex:1]floatValue];
+            float prevRuecklauf=[[prevDataArray objectAtIndex:2]floatValue];
+            
+          
+         }
+         
+         DataString = [tempDataArray componentsJoinedByString:@"\t"];
+         prevStromDataString= [DataString copy];
+         
+         lastStromDataZeit=tempZeit;
+         
+         
+         [NotificationDic setObject:[NSNumber numberWithInt:downloadFlag] forKey:@"downloadflag"];
+         [NotificationDic setObject:[NSNumber numberWithInt:lastStromDataZeit] forKey:@"lastdatazeit"];
+         [NotificationDic setObject:DataString forKey:@"datastring"];
+         
+         NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
+         [nc postNotificationName:@"StromDataDownload" object:self userInfo:NotificationDic];
+         
+         StromCentralRequest = NULL;
+         return DataString;
+      }
+      else
+      {
+         //NSLog(@"LastSolarData: kein String");
+         [self setErrString:@"lastData: kein String"];
+         
+      }
+      //NSLog(@"LastSolarData: D");
+      NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
+      [nc postNotificationName:@"StromDataDownload" object:self userInfo:NotificationDic];
+      
+      
+   }
+   
+   return returnString;
+}
+
 #pragma mark EEPROM
 - (void)EEPROMUpdateAktion:(NSNotification*)note
 {
@@ -1747,7 +1951,7 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
          // 115          2       0        3           04       24    204 0	3 0 2 2 255 255	0        3           130103
          
          NSArray* tempZeilenArray = [tempZeile componentsSeparatedByString:@"\t"];
-         NSLog(@"i: %d tempZeilenArray: %@",i,tempZeilenArray);
+         //NSLog(@"i: %d tempZeilenArray: %@",i,tempZeilenArray);
          int zeilennummer = [[tempZeilenArray objectAtIndex:0]intValue];
          [ZeilenIndex addIndex:zeilennummer];
          if ([tempZeilenArray count] >= (6+8))

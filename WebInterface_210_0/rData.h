@@ -236,6 +236,7 @@ rTagGitterlinien*					SolarTagGitterlinien;
 rTagGitterlinien*             SolarStatistikTagGitterlinien;
 
    // StromTab
+
    IBOutlet NSScrollView*                     StromDiagrammScroller;
    rStromDiagramm*               StromDiagramm;
    rDiagrammGitterlinien*         StromGitterlinien;
@@ -251,7 +252,7 @@ rTagGitterlinien*             SolarStatistikTagGitterlinien;
    int                           AnzStromDaten;
    int                           anzstromLoads;
    IBOutlet   id                     AnzahlStromDatenFeld;
-   IBOutlet   id                     StromWertFeld;
+   IBOutlet   id                   StromWertFeld;
    IBOutlet id                     stromZaehlerFeld;
    IBOutlet   id                     StromLaufzeitFeld;
    IBOutlet   id                     StromZeitKompressionTaste;
@@ -323,6 +324,9 @@ rTagGitterlinien*             SolarStatistikTagGitterlinien;
 - (int)SolarStatistikJahr;
 - (int)SolarStatistikMonat;
 - (NSDictionary*)SolarStatistikDatum;
+
+- (void)setStromKalenderBlocker:(int)derStatus;
+
 -(BOOL)windowShouldClose:(id)sender;
 @end
 

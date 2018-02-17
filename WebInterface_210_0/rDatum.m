@@ -116,7 +116,7 @@
    [tagcalendar setFirstWeekday:2];
    NSDateComponents *components = [tagcalendar components:( NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay | NSCalendarUnitWeekday | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond ) fromDate:now];
    NSDate *tagdatum = [tagcalendar dateFromComponents:components];
-   NSLog(@"tagdatum: %@",[tagdatum description]);
+   //NSLog(@"tagdatum: %@",[tagdatum description]);
    return tagdatum;
 }
 

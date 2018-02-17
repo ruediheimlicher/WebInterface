@@ -379,6 +379,17 @@ void IOWarriorCallback ()
               name:@"SolarStatistikDaten"
             object:nil];
    
+   
+   [nc addObserver:self
+          selector:@selector(StromDataDownloadAktion:)
+              name:@"StromDataDownload"
+            object:nil];
+   
+   [nc addObserver:self
+          selector:@selector(StromDatenVonHeuteAktion:)
+              name:@"stromdatenvonheute"
+            object:nil];
+
    //AVR=[[rAVR alloc]init];
    
    localNetz = NO; 
@@ -453,7 +464,7 @@ void IOWarriorCallback ()
    
    if (AktuelleDaten &&[AktuelleDaten length])
    {
-      NSLog(@"awake openWithString\n\n");
+      //NSLog(@"awake openWithString\n\n");
       
       [self openWithString:AktuelleDaten];
       
@@ -476,7 +487,7 @@ void IOWarriorCallback ()
 
       //[Data setRouter_IP:@"192.168.1.210"];
    }
-   NSLog(@"end DatenVonHeute");
+   //NSLog(@"end DatenVonHeute");
    
    
 #pragma mark awake Solar
@@ -799,7 +810,7 @@ HomeDataDownload
 
 
 */
-   NSLog(@"HomeDataDownloadAktion userInfo: *%@*",[[note userInfo] objectForKey:@"lastdatazeit" ]);
+   //NSLog(@"HomeDataDownloadAktion userInfo: *%@*",[[note userInfo] objectForKey:@"lastdatazeit" ]);
 	
 	
 	if ([AVR WriteWoche_busy]) // Woche wird noch geschrieben
@@ -831,7 +842,7 @@ HomeDataDownload
 			if ([[note userInfo] objectForKey:@"lastdatazeit"])
 			{
 				lastDataZeit=[[[note userInfo] objectForKey:@"lastdatazeit"]intValue];
-            NSLog(@"IOW HomeDataDownloadAktion case heute: lastDataZeit: %d", lastDataZeit);
+            //NSLog(@"IOW HomeDataDownloadAktion case heute: lastDataZeit: %d", lastDataZeit);
 			}
 			else
 			{
@@ -953,6 +964,14 @@ HomeDataDownload
 	{
 		NSLog(@"DownloadFunktion: AktuelleSolarDaten von HomeData ist NULL");
 	}
+  
+   NSString* AktuelleStromDaten=[HomeData LastStromData];
+   if (AktuelleStromDaten == NULL)
+   {
+      NSLog(@"DownloadFunktion: AktuelleStromDaten von HomeData ist NULL");
+   }
+
+   
 
 }
 
@@ -1030,6 +1049,16 @@ HomeDataDownload
 
 }
 
+- (void)StromDatenVonHeuteAktion:(NSNotification*)note
+{
+   NSLog(@"StromDatenVonHeuteAktion");
+   [Data setStromKalenderBlocker:0];
+   [self openWithStromString:[HomeData StromDataVonHeute]];
+   
+}
+
+
+
 
 -(IBAction)reportHeute:(id)sender
 {
@@ -1050,7 +1079,7 @@ NSLog(@"IOWarr WindowController reportPrint");
 {
    // Daten aus HomeDaten.txt auslesen. Enthaelt beim Start die Daten des aktuellen Tages
    
-	NSLog(@"openWithString DatenString length; %d",[derDatenString length]);
+	//NSLog(@"openWithString DatenString length; %d",[derDatenString length]);
 	NSArray* rohDatenArray = [NSArray array];
 	NSString* TagString = [NSString string];
 	int Tag=0;
@@ -1680,7 +1709,7 @@ return;
 				//[NotificationDic setObject:[[StartZeit description] copy]forKey:@"startzeit"];
             [NotificationDic setObject:StartZeitString forKey:@"startzeit"];
 				[NotificationDic setObject:[DatenArray copy] forKey:@"datenarray"];
-				NSLog(@"openWithSolarString NotificationDic: %@",[NotificationDic objectForKey:@"startzeit"] );
+				//NSLog(@"openWithSolarString NotificationDic: %@",[NotificationDic objectForKey:@"startzeit"] );
 				NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
 				[nc postNotificationName:@"externesolardaten" object:self userInfo:NotificationDic];
 				
@@ -1699,9 +1728,156 @@ return;
 #pragma mark end solar
 
 #pragma mark strom
+
+
+-(void)StromDataDownloadAktion:(NSNotification*)note
+{
+   /*
+    Ausgeloest von Funktionen in rHomeData:
+    downloadDidFinish: downloadflag, lastdatazeit, datastring, 
+    LastSolarData: downloadflag, lastdatazeit, datastring,
+    SolarDataVon: downloadflag, lastdatazeit, datastring,
+    SolarDataDownload
+    
+    */
+   //NSLog(@"StromDataDownloadAktion: %@",[note userInfo]);
+   
+   if ([AVR WriteWoche_busy]) // Woche wird noch geschrieben
+   {
+      return;
+   }
+   
+   int flag=downloadpause;
+   NSString* DataString=@"";
+   if ([[note userInfo] objectForKey:@"downloadflag"])
+   {
+      flag=[[[note userInfo] objectForKey:@"downloadflag"]intValue];
+   }
+   
+   if ([[note userInfo] objectForKey:@"datastring"])
+   {
+      DataString=[[note userInfo] objectForKey:@"datastring"];
+   }
+   
+   //NSLog(@"SolarDataDownloadAktion flag: %d\n DataString: \n%@",flag, DataString);
+   //NSLog(@"SolarDataDownloadAktion flag: %d length: %d",flag,[DataString length]);
+   
+   switch (flag)
+   {
+      case heute:
+      {
+         if ([[note userInfo] objectForKey:@"lastdatazeit"])
+         {
+            lastSolarDataZeit=[[[note userInfo] objectForKey:@"lastdatazeit"]intValue];
+         }
+         else
+         {
+            lastSolarDataZeit=0;
+         }
+         
+         if ([DataString length])
+         {
+            // 12.08.09 [self openWithString:DataString];// im Aufruf von DataVonHeute ausgelšst
+            /*
+             if (![SolarDownloadTimer isValid])
+             {
+             SolarDownloadTimer=[[NSTimer scheduledTimerWithTimeInterval:12
+             target:self 
+             selector:@selector(SolarDownloadFunktion:) 
+             userInfo:nil 
+             repeats:YES]retain];
+             
+             
+             //NSRunLoop *runLoop = [NSRunLoop currentRunLoop];
+             //[runLoop addTimer:DownloadTimer forMode:NSDefaultRunLoopMode];
+             
+             //[DownloadTimer release];
+             }
+             */
+         }
+         else
+         {
+            NSLog(@"Kein Input");
+         }
+         
+      }break;
+         
+      case last:
+      {
+         NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
+         [NotificationDic setObject:[NSNumber numberWithInt:lastStromDataZeit] forKey:@"previouslastdatazeit"];
+         int tempLastDataZeit=0;
+         if ([[note userInfo] objectForKey:@"lastdatazeit"])
+         {
+            tempLastDataZeit=[[[note userInfo] objectForKey:@"lastdatazeit"]intValue];
+         }
+         //NSLog(@"StromDataDownloadAktion lastDataZeit: %d tempLastDataZeit: %d",lastDataZeit,tempLastDataZeit);
+         if (!(tempLastDataZeit==lastStromDataZeit))   // nicht jede Serie in Diagramm laden
+         {
+            //NSLog(@"Neue Daten: neuer DataString: %@",DataString);
+            lastStromDataZeit=tempLastDataZeit;
+            
+            if ([DataString length])
+            {
+               NSArray* tempDataArray = [DataString componentsSeparatedByString:@"\n"];
+               if ([tempDataArray count])
+               {
+                  //NSLog(@"tempDataArray: %@",[[tempDataArray objectAtIndex:0]description]);
+                  NSArray* tempZeilenArray=[[tempDataArray objectAtIndex:0]componentsSeparatedByString:@"\t"];
+                  //NSLog(@"tempZeilenArray: %@",[tempZeilenArray description]);
+                  
+                  [NotificationDic setObject:tempZeilenArray forKey:@"lastdatenarray"];
+                  NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
+                  [nc postNotificationName:@"laststromdata" object:self userInfo:NotificationDic];
+                  
+                  
+                  
+               }//count
+               
+               
+            }// length
+         }
+         
+         
+      }break;//last
+         
+      case datum:
+      {
+         NSLog(@"StromDataDownloadAktion datum");
+         
+         
+         //if ([DownloadTimer isValid])
+         {
+            NSLog(@"  SolarDataDownloadAktion DownloadTimer invalidate");
+            
+            [DownloadTimer invalidate];
+            DownloadTimer = nil;
+         }
+         
+         if ([[note userInfo] objectForKey:@"lastdatazeit"])
+         {
+            lastSolarDataZeit=[[[note userInfo] objectForKey:@"lastdatazeit"]intValue];
+         }
+         else
+         {
+            lastSolarDataZeit=0;
+         }
+         
+         if ([DataString length])
+         {
+            [Data reportSolarClear:NULL];
+            //         [self openWithString:DataString];
+         }
+      }//datum
+         
+   }//switch flag
+   
+   flag=downloadpause;
+}
+
 -(void)openWithStromString:(NSString*)derDatenString
 {
-   //NSLog(@"openWithStromString DatenString length: %d", [derDatenString length]);
+   NSLog(@"openWithStromString DatenString length: %d", [derDatenString length]);
    NSArray* rohDatenArray = [NSArray array];
    NSString* TagString = [NSString string];
    int Tag=0;
@@ -1899,7 +2075,7 @@ return;
             //[NotificationDic setObject:[[StartZeit description] copy]forKey:@"startzeit"];
             [NotificationDic setObject:StartZeitString forKey:@"startzeit"];
             [NotificationDic setObject:[DatenArray copy] forKey:@"datenarray"];
-            NSLog(@"openWithSolarString NotificationDic: %@",[NotificationDic objectForKey:@"startzeit"] );
+            //NSLog(@"openWithStromString NotificationDic: %@",[NotificationDic objectForKey:@"startzeit"] );
             NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
             [nc postNotificationName:@"externestromdaten" object:self userInfo:NotificationDic];
             

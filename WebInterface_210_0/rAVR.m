@@ -53,7 +53,7 @@
                   for (int i = 0; i < 6; i++) // datapaket hat 6 bytes mit Tagplandaten
                   {
                      uint8_t byte = (const uint8_t )daySettingArray[linie][i+4];
-                     NSLog(@"byte: %02X",byte);
+                     //NSLog(@"byte: %02X",byte);
                      data[i] = byte;
                      NSString* tempdatastring = [NSString stringWithFormat:@"%02X", byte];
                      
@@ -400,7 +400,7 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
 
    if (SettingData)
    {
-      NSLog(@"SettingData: %@",SettingData);
+      //NSLog(@"SettingData: %@",SettingData);
    }
    else
    {
@@ -410,7 +410,7 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
          for (uint8_t byte=0;byte<16;byte++)
          {
             uint8_t code = (pos << 4) | byte;
-            NSLog(@"pos: %d byte %d code: %d %02X",pos,byte,code,code);
+            //NSLog(@"pos: %d byte %d code: %d %02X",pos,byte,code,code);
             
           //  uint8_t p = (code & 0xF0) >>4;
           //  uint8_t b = code & 0x0F;
@@ -425,9 +425,9 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
       [SettingData writeToFile:HomeDaySettingPfad atomically:YES ];
    }
    NSData* returndata = [NSData dataWithContentsOfFile:HomeDaySettingPfad];
-   NSLog(@"returndata: %@",returndata);
+   //NSLog(@"returndata: %@",returndata);
    NSString* returndatastring = [returndata description];
-   NSLog(@"returndatastring: %@",returndatastring);
+   //NSLog(@"returndatastring: %@",returndatastring);
    NSArray* returndataarray = [returndatastring componentsSeparatedByString:@" "];
    //NSArray* temparray = [NSArray arrayWithBytes:returndata];
    uint8_t           tempdaySettingArray[8][16]; // 1 Zeile pro Tag, 4 bytes code, 6 bytes Data 
@@ -467,7 +467,7 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
    
    NSArray* tempArray = [NSArray  arrayWithArray:[string componentsSeparatedByString:@"\n"]];
    //NSLog(@"string: \n%@ \ndaySettingStringArray: %@",string,daySettingStringArray);
-   NSLog(@"string: \n%@ ",string);
+   //NSLog(@"string: \n%@ ",string);
    NSDictionary* daySettingDic = [NSDictionary dictionaryWithObject:daySettingStringArray forKey:@"daysettingarray"];
    [nc postNotificationName:@"daysetting" object:self userInfo:daySettingDic];
   
@@ -981,7 +981,7 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
    
    // check freeline in daysettingarray
    uint8_t freielinie = self.freeDaySettingline;
-   NSLog(@"freeDaySettingline: %d",freielinie);
+   //NSLog(@"freeDaySettingline: %d",freielinie);
    
    NSArray* d = [self daySettingDataVon:0 vonObjekt:1 anWochentag:0];
    if (d)

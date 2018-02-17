@@ -161,7 +161,7 @@ extern NSMutableArray* DatenplanTabelle;
    [components setMonth:monat];
    [components setYear:jahr];
    NSDate *tagdatum = [tagcalendar dateFromComponents:components];
-   NSLog(@"tagdatum: %@",[tagdatum description]);
+   //NSLog(@"tagdatum: %@",[tagdatum description]);
  //  NSCalendar *gregorian =[[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
   // int dayOfYear =(int)[gregorian ordinalityOfUnit:NSCalendarUnitDay inUnit:NSCalendarUnitYear forDate:tagdatum];
    return tagdatum;
@@ -271,7 +271,15 @@ extern NSMutableArray* DatenplanTabelle;
               name:@"externestromdaten"
             object:nil];
    
-  
+   [nc addObserver:self
+          selector:@selector(StromDataDownloadAktion:) // Loadmark aktivieren
+              name:@"StromDataDownload"
+            object:nil];
+
+   [nc addObserver:self
+          selector:@selector(LastStromDatenAktion:)
+              name:@"laststromdata"
+            object:nil];
 
 	
 	Raumnamen=[NSArray arrayWithObjects:@"Heizung", @"Werkstatt",@"WoZi",@"Buero",@"Labor",@"OG 1",@"OG 2",@"Estrich",NULL];
@@ -322,7 +330,7 @@ extern NSMutableArray* DatenplanTabelle;
 	//NSLog(@"Data OK");
 	NSRect DruckViewRect=NSMakeRect(0,0,200,800);
 	DruckDatenView=[[NSTextView alloc]initWithFrame:DruckViewRect];
-	Scrollermass=15;
+	Scrollermass=16;
 	Kalenderblocker=0;
 	SolarKalenderblocker=0;
 	Heuteblocker=0;
@@ -1316,7 +1324,7 @@ extern NSMutableArray* DatenplanTabelle;
    int StromTabIndex=8;
    [[DatenplanTab tabViewItemAtIndex:StromTabIndex] setLabel:@"Strom"];
    StromZeitKompression=[[StromZeitKompressionTaste titleOfSelectedItem]floatValue];
-   float StromDiagrammLage=10.0;
+   float StromDiagrammLage=15.0;// Abstand vom unteren Rand des Scrollviews
    
    [StromDiagrammScroller setHasHorizontalScroller:YES];
    [StromDiagrammScroller setHasVerticalScroller:NO];
@@ -1346,6 +1354,17 @@ extern NSMutableArray* DatenplanTabelle;
    //NSLog(@"[StromBalkenRahmen: w: %2.2f",StromBalkenRahmen.size.width);
    //[[StromDiagrammScroller documentView]setFrame:StromBalkenRahmen];
    
+   NSMutableDictionary* StromEinheitenDic=[[NSMutableDictionary alloc]initWithCapacity:0];
+   [StromEinheitenDic setObject:[NSNumber numberWithInt:2]forKey:@"minorteile"];
+   [StromEinheitenDic setObject:[NSNumber numberWithInt:5]forKey:@"majorteile"];
+   [StromEinheitenDic setObject:[NSNumber numberWithInt:20]forKey:@"nullpunkt"];
+   [StromEinheitenDic setObject:[NSNumber numberWithInt:10]forKey:@"maxy"];
+   //[StromEinheitenDic setObject:[NSNumber numberWithInt:0]forKey:@"miny"];
+   //[StromEinheitenDic setObject:[NSNumber numberWithFloat:[[SolarZeitKompressionTaste titleOfSelectedItem]floatValue]]forKey:@"zeitkompression"];
+   [StromEinheitenDic setObject:@" kW"forKey:@"einheit"];
+   
+  
+
    NSRect StromFeld=StromScrollerRect;
    StromFeld.origin.x += 0.1;
    StromFeld.origin.y += 0.1;
@@ -1357,7 +1376,7 @@ extern NSMutableArray* DatenplanTabelle;
    [StromDiagramm setMaxOrdinate:200];
    //[StromDiagramm setMaxEingangswert:40];
    [StromDiagramm  setPostsFrameChangedNotifications:YES];
-   [StromDiagramm setTag:400];
+   [StromDiagramm setTag:500];
    [StromDiagramm setGraphFarbe:[NSColor greenColor] forKanal:0]; // KV
    [StromDiagramm setGraphFarbe:[NSColor redColor] forKanal:1]; // KR
    [StromDiagramm setGraphFarbe:[NSColor blueColor] forKanal:2];// BU
@@ -1366,10 +1385,50 @@ extern NSMutableArray* DatenplanTabelle;
    [StromDiagramm setGraphFarbe:[NSColor orangeColor] forKanal:5];// KT
    //[StromDiagramm setGraphFarbe:[NSColor redColor] forKanal:6];//
    [StromDiagramm setZeitKompression:[[StromZeitKompressionTaste titleOfSelectedItem]floatValue]];
-   
+ //   [StromDiagramm setEinheitenDicY:StromEinheitenDic];
    [[StromDiagrammScroller documentView]addSubview:StromDiagramm];
    
+   NSRect StromGitterlinienFeld=StromScrollerRect;
+   StromGitterlinienFeld.origin.x += 0.1;
    
+   
+   StromGitterlinien =[[rDiagrammGitterlinien alloc] initWithFrame: StromGitterlinienFeld];
+   [StromGitterlinien setZeitKompression:[[StromZeitKompressionTaste titleOfSelectedItem]floatValue]];
+   
+   [StromGitterlinien setEinheitenDicY:[NSDictionary dictionaryWithObject:[NSNumber numberWithInt:30] forKey:@"intervall"]];
+   [StromGitterlinien setNeedsDisplay:YES];
+   
+   [[StromDiagrammScroller documentView]addSubview:StromGitterlinien positioned:NSWindowBelow relativeTo:StromDiagramm];
+
+   NSRect StromOrdinatenFeld=[StromDiagrammScroller  frame];
+   
+   
+   StromOrdinatenFeld.size.width=36;
+   StromOrdinatenFeld.size.height=[StromDiagramm frame].size.height;
+   
+   StromOrdinatenFeld.origin.x-=38;
+   StromOrdinatenFeld.origin.y+=Scrollermass;
+   StromOrdinate=[[rOrdinate alloc]initWithFrame:StromOrdinatenFeld];
+   [StromOrdinate setTag:202];
+   [StromOrdinate setOrdinatenlageY:StromDiagrammLage]; // Gleiche Lage wie Diagramm
+   
+ //  [StromOrdinate setGrundlinienOffset:4.1];
+   //int MehrkanalTabIndex=[DatenplanTab indexOfTabViewItemWithIdentifier:@"mehrkanal"];
+   //   NSLog(@"MehrkanalTabIndex: %d",MehrkanalTabIndex);
+   [StromOrdinate setEinheit:@"kW"];
+   [StromOrdinate setAchsenDic:StromEinheitenDic];
+   [[[DatenplanTab tabViewItemAtIndex:8]view]addSubview:StromOrdinate];
+   int maxstromord=[StromDiagramm MaxOrdinate];
+   //NSLog(@"Solar maxord: %d",maxstromord);
+   [StromOrdinate setMaxOrdinate:maxstromord];
+   
+   int StromGLOffset=[StromDiagramm GrundlinienOffset];
+   //NSLog(@"Strom StromGLOffset: %d",StromGLOffset);
+   [StromOrdinate setGrundlinienOffset:StromGLOffset];
+   
+   [StromDiagramm setOrdinate:StromOrdinate];
+   
+
    
    
    // end StromDiagramm
@@ -1714,7 +1773,7 @@ extern NSMutableArray* DatenplanTabelle;
       int anz = (int)[dataArray count];
       if (anz > 2)
       {
-         NSLog(@"dataArray last: %@ anz: %ld",[dataArray objectAtIndex:[dataArray count]-2],[dataArray count]);
+         //NSLog(@"dataArray last: %@ anz: %ld",[dataArray objectAtIndex:[dataArray count]-2],[dataArray count]);
          tempString =[dataArray objectAtIndex:[dataArray count]-2];
       }
       if ([dataArray count]>9)
@@ -1798,19 +1857,19 @@ extern NSMutableArray* DatenplanTabelle;
     
     uebertragen in d5
     */
-
-	Quelle=1;
-	if ([[note userInfo]objectForKey:@"startzeit"])
-	{
-		NSString* StartzeitString = [[note userInfo]objectForKey:@"startzeit"];
-		NSLog(@"ExterneDatenAktion: Startzeit: *%@* StartzeitString: *%@*",[[note userInfo]objectForKey:@"startzeit"],StartzeitString);
-		
-	//	NSString* Kalenderformat=[[NSCalendarDate calendarDate]calendarFormat];
-	//	DatenserieStartZeit=[NSCalendarDate dateWithString:[[note userInfo]objectForKey:@"startzeit"] calendarFormat:Kalenderformat];
-		
+   
+   Quelle=1;
+   if ([[note userInfo]objectForKey:@"startzeit"])
+   {
+      NSString* StartzeitString = [[note userInfo]objectForKey:@"startzeit"];
+      //NSLog(@"ExterneDatenAktion: Startzeit: *%@* StartzeitString: *%@*",[[note userInfo]objectForKey:@"startzeit"],StartzeitString);
+      
+      //	NSString* Kalenderformat=[[NSCalendarDate calendarDate]calendarFormat];
+      //	DatenserieStartZeit=[NSCalendarDate dateWithString:[[note userInfo]objectForKey:@"startzeit"] calendarFormat:Kalenderformat];
+      
       //int tag=[DatenserieStartZeit dayOfMonth];
       //DatenserieStartZeit=(NSDate*)[[note userInfo]objectForKey:@"startzeit"] ;
-       
+      
       NSString *formatString = @"yyyy-mm-dd hh:mm:ss";  
       NSString* datumstring = [[note userInfo]objectForKey:@"startzeit"];
       NSString* datumteil = [[datumstring componentsSeparatedByString:@" "]objectAtIndex:0];
@@ -1821,12 +1880,12 @@ extern NSMutableArray* DatenplanTabelle;
       
       DatenserieStartZeit = [self DatumvonJahr:jr Monat:mon Tag: tg];
       
-      NSLog(@"ExterneDatenAktion: DatenserieStartZeit: %@",DatenserieStartZeit);
-		NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
-		[NotificationDic setObject:@"datastart"forKey:@"data"];
+      //NSLog(@"ExterneDatenAktion: DatenserieStartZeit: %@",DatenserieStartZeit);
+      NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
+      [NotificationDic setObject:@"datastart"forKey:@"data"];
       [NotificationDic setObject:DatenserieStartZeit forKey:@"datenseriestartzeit"];
-    
-		
+      
+      
       //NSString * str = @"20160522115200";
       NSString * str = @"2018-01-02 00:00:50";
       NSDateFormatter * d1 = [[NSDateFormatter alloc] init];
@@ -1835,12 +1894,12 @@ extern NSMutableArray* DatenplanTabelle;
       d1.dateFormat = @"yyyy-MM-dd hh:mm:ss";
       str = [d1 stringFromDate: date];
       
-		//NSCalendarDate* AnzeigeDatum= [DatenserieStartZeit copy];
-		//[AnzeigeDatum setCalendarFormat:@"%d.%m.%y %H:%M"];
+      //NSCalendarDate* AnzeigeDatum= [DatenserieStartZeit copy];
+      //[AnzeigeDatum setCalendarFormat:@"%d.%m.%y %H:%M"];
       
       //NSDateFormatter *dateformat = [[NSDateFormatter alloc] init];
-     // [dateformat setDateFormat:@"%d.%m.%y %H:%M"];
-    //  NSString *AnzeigeDatum  = [dateformat stringFromDate:DatenserieStartZeit];
+      // [dateformat setDateFormat:@"%d.%m.%y %H:%M"];
+      //  NSString *AnzeigeDatum  = [dateformat stringFromDate:DatenserieStartZeit];
       //[StartzeitFeld setStringValue:[AnzeigeDatum description]];
       NSCalendar *tagcalendar = [NSCalendar currentCalendar];
       [tagcalendar setFirstWeekday:2];
@@ -1856,9 +1915,9 @@ extern NSMutableArray* DatenplanTabelle;
       
       
       NSString* StartZeitFull = [NSString stringWithFormat:@"%02ld.%02ld.%02ld %02ld:%02ld:%02ld",(long)tagdesmonats,(long)monat,(long)jahr,(long)stunde,(long)minute,(long)sekunde];
-
+      
       NSString* StartZeitString = [NSString stringWithFormat:@"%02ld.%02ld.%02ld %02ld:%02ld",(long)tagdesmonats,(long)monat,(long)jahr,(long)stunde,(long)minute];
-
+      
       
       NSDateFormatter *dateformat = [[NSDateFormatter alloc] init];
       //[dateformat setDateFormat:@"%d.%m.%y %H:%M"];
@@ -1868,215 +1927,215 @@ extern NSMutableArray* DatenplanTabelle;
       NSString *AnzeigeString  = [dateformat stringFromDate:DatenserieStartZeit];
       
       [StartzeitFeld setStringValue:AnzeigeString];
-
-		
+      
+      
       [StartzeitFeld setStringValue:StartZeitString];
       
-		NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
-		[nc postNotificationName:@"data" object:NULL userInfo:NotificationDic];
-		
-		//NSLog(@"ExterneDatenAktion DatenserieStartZeit: %@ tag: %d",  [DatenserieStartZeit description], tag);
-	}
-	
-	if ([[note userInfo]objectForKey:@"datumtag"])
-	{
-		
-	}
-	
-	if ([[note userInfo]objectForKey:@"datenarray"])
-	{
-		
-		NSArray* TemperaturKanalArray=	[NSArray arrayWithObjects:@"1",@"1",@"1",@"0" ,@"0",@"0",@"0",@"1",nil];
-//		NSArray* BrennerKanalArray=		[NSArray arrayWithObjects:@"1",@"1",@"0",@"0" ,@"0",@"0",@"0",@"0",nil];
-		
-		NSArray* tempDatenArray = [[note userInfo]objectForKey:@"datenarray"];
-		
+      NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
+      [nc postNotificationName:@"data" object:NULL userInfo:NotificationDic];
+      
+      //NSLog(@"ExterneDatenAktion DatenserieStartZeit: %@ tag: %d",  [DatenserieStartZeit description], tag);
+   }
+   
+   if ([[note userInfo]objectForKey:@"datumtag"])
+   {
+      
+   }
+   
+   if ([[note userInfo]objectForKey:@"datenarray"])
+   {
+      
+      NSArray* TemperaturKanalArray=	[NSArray arrayWithObjects:@"1",@"1",@"1",@"0" ,@"0",@"0",@"0",@"1",nil];
+      //		NSArray* BrennerKanalArray=		[NSArray arrayWithObjects:@"1",@"1",@"0",@"0" ,@"0",@"0",@"0",@"0",nil];
+      
+      NSArray* tempDatenArray = [[note userInfo]objectForKey:@"datenarray"];
+      
       
       //NSLog(@"ExterneDatenAktion tempDatenArray last Data:%@",[[tempDatenArray lastObject]description]);
-		
-		// Zeit des ersten Datensatzes
-		int firstZeit = [[[[tempDatenArray objectAtIndex:0] componentsSeparatedByString:@"\t"]objectAtIndex:0]intValue];
-		//NSLog(@"firstZeit: %d",firstZeit);
-		
-		// Zeit des letzten Datensatzes
-		int lastZeit = [[[[tempDatenArray lastObject] componentsSeparatedByString:@"\t"]objectAtIndex:0]intValue];
-		NSLog(@"ExterneDatenAktion lastZeit: %d",lastZeit);
-		[LaufzeitFeld setStringValue:[self stringAusZeit:lastZeit]]; 
-		
-		// Breite des DocumentViews bestimmen
-		lastZeit -= firstZeit;
-		lastZeit *= ZeitKompression;
-		//NSLog(@"ExterneDatenaktion Zeitkompression: %2f2",ZeitKompression);
-		//	Origin des vorhandenen DocumentViews
-		NSPoint tempOrigin=[[TemperaturDiagrammScroller documentView] frame].origin;
-		//NSLog(@"ExterneDatenaktion tempOrigin: x: %2.2f y: %2.2f",tempOrigin.x, tempOrigin.y);
-		//28.7.09
-		tempOrigin.x=0;
-		[[TemperaturDiagrammScroller documentView] setFrameOrigin:tempOrigin];
-		
-		
-		//	Frame des vorhandenen DocumentViews
-		NSRect tempFrame=[[TemperaturDiagrammScroller documentView] frame];
-		//NSLog(@"ExterneDatenaktion  tempOrigin: x: %2.2f  tempFrame width: x: %2.2f y: %2.2f",tempOrigin.x,tempFrame.size.width);
-		
-		//	Verschiebedistanz des angezeigten Fensters
-		
-		if (tempFrame.size.width < lastZeit)
-		{
-			//NSLog(@"tempFrame.size.width < lastZeit width: %2.2f lastZeit: %5d",tempFrame.size.width,lastZeit);
-			//float delta=[[TemperaturDiagrammScroller contentView]frame].size.width-150;
-			int PlatzRechts = 80;
-			float delta=lastZeit- [[TemperaturDiagrammScroller documentView]bounds].size.width+PlatzRechts; // Abstand vom rechten Rand, Platz fuer Datentitel und Wert
-			NSPoint scrollPoint=[[TemperaturDiagrammScroller documentView]bounds].origin;
-			//NSLog(@"delta: %2.2f",delta);
-			//	DocumentView vergroessern
-			tempFrame.size.width+=delta;
-			
-			//	Origin des DocumentView verschieben
-			//NSLog(@"tempOrigin.x vor: %2.2f",tempOrigin.x);
-			tempOrigin.x-=delta;
-			//NSLog(@"tempOrigin.x nach: %2.2f",tempOrigin.x);
-			
-			//	Origin der Bounds verschieben
-			//NSLog(@"scrollPoint.x vor: %2.2f",scrollPoint.x);
-			scrollPoint.x += delta;
-			//NSLog(@"scrollPoint.x nach: %2.2f",scrollPoint.x);
-			
-			//NSLog(@"tempOrigin neu  x: %2.2f y: %2.2f",tempOrigin.x,tempOrigin.y);
-			//NSLog(@"tempFrame: neu x %2.2f y %2.2f heigt %2.2f width %2.2f",tempFrame.origin.x, tempFrame.origin.y, tempFrame.size.height, tempFrame.size.width);
-			
-			NSRect MKDiagrammRect=[TemperaturMKDiagramm frame];
-			MKDiagrammRect.size.width=tempFrame.size.width;
-			//NSLog(@"MKDiagrammRect.size.width: %2.2f",MKDiagrammRect.size.width);
-			[TemperaturMKDiagramm setFrame:MKDiagrammRect];
-			
-			NSRect BrennerRect=[BrennerDiagramm frame];
-			BrennerRect.size.width=tempFrame.size.width;
-			//NSLog(@"BrennerRect.size.width: %2.2f",BrennerRect.size.width);
-			
-			[BrennerDiagramm setFrame:BrennerRect];
-			
-			NSRect GitterlinienRect=[Gitterlinien frame];
-			GitterlinienRect.size.width=tempFrame.size.width;
-			//NSLog(@"GitterlinienRect.size.width: %2.2f",GitterlinienRect.size.width);
-			
-			[Gitterlinien setFrame:GitterlinienRect];
-			
-			NSRect DocRect=[[TemperaturDiagrammScroller documentView]frame];
-			//NSLog(@"DocRect.size.width vor: %2.2f",DocRect.size.width);
-			DocRect.size.width=tempFrame.size.width;
-			//NSLog(@"DocRect.size.width nach: %2.2f",DocRect.size.width);
-			
-			[[TemperaturDiagrammScroller documentView] setFrame:DocRect];
-			//NSLog(@"tempOrigin end  x: %2.2f y: %2.2f",tempOrigin.x,tempOrigin.y);
-			[[TemperaturDiagrammScroller documentView] setFrameOrigin:tempOrigin];
-			
-			//NSLog(@"ExterneDatenaktion  tempOrigin: x: %2.2f  *   DocRect width: %2.2f",tempOrigin.x,DocRect.size.width);
-			
-			//NSLog(@"scrollPoint end  x: %2.2f y: %2.2f",scrollPoint.x,scrollPoint.y);
-			[[TemperaturDiagrammScroller contentView] scrollPoint:scrollPoint];
-			[TemperaturDiagrammScroller setNeedsDisplay:YES];
-			
-		}
-		
-		NSString* TemperaturDatenString= [NSString string];
-		NSEnumerator* DatenEnum = [tempDatenArray objectEnumerator];
-		id einDatenString;
-		
-		while (einDatenString = [DatenEnum nextObject])
-		{
-			//NSString* tempDatenString=(NSString*)[einDatenString substringWithRange:NSMakeRange(0,[einDatenString length]-1)];
-			
-			//NSMutableArray* tempZeilenArray= (NSMutableArray*)[einDatenString componentsSeparatedByString:@"\t"];
+      
+      // Zeit des ersten Datensatzes
+      int firstZeit = [[[[tempDatenArray objectAtIndex:0] componentsSeparatedByString:@"\t"]objectAtIndex:0]intValue];
+      //NSLog(@"firstZeit: %d",firstZeit);
+      
+      // Zeit des letzten Datensatzes
+      int lastZeit = [[[[tempDatenArray lastObject] componentsSeparatedByString:@"\t"]objectAtIndex:0]intValue];
+      //NSLog(@"ExterneDatenAktion lastZeit: %d",lastZeit);
+      [LaufzeitFeld setStringValue:[self stringAusZeit:lastZeit]]; 
+      
+      // Breite des DocumentViews bestimmen
+      lastZeit -= firstZeit;
+      lastZeit *= ZeitKompression;
+      //NSLog(@"ExterneDatenaktion Zeitkompression: %2f2",ZeitKompression);
+      //	Origin des vorhandenen DocumentViews
+      NSPoint tempOrigin=[[TemperaturDiagrammScroller documentView] frame].origin;
+      //NSLog(@"ExterneDatenaktion tempOrigin: x: %2.2f y: %2.2f",tempOrigin.x, tempOrigin.y);
+      //28.7.09
+      tempOrigin.x=0;
+      [[TemperaturDiagrammScroller documentView] setFrameOrigin:tempOrigin];
+      
+      
+      //	Frame des vorhandenen DocumentViews
+      NSRect tempFrame=[[TemperaturDiagrammScroller documentView] frame];
+      //NSLog(@"ExterneDatenaktion  tempOrigin: x: %2.2f  tempFrame width: x: %2.2f y: %2.2f",tempOrigin.x,tempFrame.size.width);
+      
+      //	Verschiebedistanz des angezeigten Fensters
+      
+      if (tempFrame.size.width < lastZeit)
+      {
+         //NSLog(@"tempFrame.size.width < lastZeit width: %2.2f lastZeit: %5d",tempFrame.size.width,lastZeit);
+         //float delta=[[TemperaturDiagrammScroller contentView]frame].size.width-150;
+         int PlatzRechts = 80;
+         float delta=lastZeit- [[TemperaturDiagrammScroller documentView]bounds].size.width+PlatzRechts; // Abstand vom rechten Rand, Platz fuer Datentitel und Wert
+         NSPoint scrollPoint=[[TemperaturDiagrammScroller documentView]bounds].origin;
+         //NSLog(@"delta: %2.2f",delta);
+         //	DocumentView vergroessern
+         tempFrame.size.width+=delta;
          
-			// Datenstring aufteilen in Komponenten
+         //	Origin des DocumentView verschieben
+         //NSLog(@"tempOrigin.x vor: %2.2f",tempOrigin.x);
+         tempOrigin.x-=delta;
+         //NSLog(@"tempOrigin.x nach: %2.2f",tempOrigin.x);
          
-			NSMutableArray* tempZeilenArray= (NSMutableArray*)[einDatenString componentsSeparatedByString:@"\r"];
-			
-			//NSLog(@"ExterneDatenAktion einDatenString: %@\n tempZeilenArray:%@\n", einDatenString,[tempZeilenArray description]);
-			//NSLog(@"ExterneDatenAktion einDatenString: %@ count: %d", einDatenString, [tempZeilenArray count]);
-			if ([tempZeilenArray count]== 9) // Daten vollständig
-			{
-	//			NSLog(@"ExterneDatenAktion tempZeilenArray:%@",[tempZeilenArray description]);
-				// Datenserie auf Startzeit synchronisieren
-				int tempZeit=[[tempZeilenArray objectAtIndex:0]intValue];
-				
-				tempZeit -= firstZeit;
-				[tempZeilenArray replaceObjectAtIndex:0 withObject:[NSNumber numberWithInt:tempZeit]];
-				
-				[TemperaturMKDiagramm setWerteArray:tempZeilenArray mitKanalArray:TemperaturKanalArray];
-				
-				
-				[TemperaturMKDiagramm setNeedsDisplay:YES];
-				NSMutableDictionary* tempVorgabenDic = [[NSMutableDictionary alloc]initWithCapacity:0];
-				[tempVorgabenDic setObject:[NSNumber numberWithInt:5]forKey:@"anzbalken"];
-				[tempVorgabenDic setObject:[NSNumber numberWithInt:3]forKey:@"datenindex"];
-				
-
-				[BrennerDiagramm setWerteArray:tempZeilenArray mitKanalArray:BrennerKanalArray mitVorgabenDic:tempVorgabenDic];
-				
-		//		[BrennerDiagramm setWerteArray:tempZeilenArray mitKanalArray:BrennerKanalArray];
-				[BrennerDiagramm setNeedsDisplay:YES];
-				[Gitterlinien setWerteArray:tempZeilenArray mitKanalArray:BrennerKanalArray];
-				[Gitterlinien setNeedsDisplay:YES];
-				//TemperaturDatenString=[NSString stringWithFormat:@"%@\r\t%@",TemperaturDatenString,tempDatenString];
-				
-				// Aus TempZeilenarray einen tab-getrennten String bilden
-				NSString* tempZeilenString=[tempZeilenArray componentsJoinedByString:@"\t"];
-				//				NSLog(@"tempZeilenString: %@", tempZeilenString);
-				TemperaturDatenString=[NSString stringWithFormat:@"%@\r\t%@",TemperaturDatenString,tempZeilenString];
-				//				TemperaturDatenString=[NSString stringWithFormat:@"%@\r\t%@",TemperaturDatenString,einDatenString];
-				
-			}
-			
-		}	// while
-		AnzDaten= (int)[tempDatenArray count];
-		//NSLog(@"ExterneDatenAktion AnzDaten: %d",AnzDaten);
-		[AnzahlDatenFeld setIntValue:(int)[tempDatenArray count]];
-		
-		[TemperaturDatenFeld setString:TemperaturDatenString];
+         //	Origin der Bounds verschieben
+         //NSLog(@"scrollPoint.x vor: %2.2f",scrollPoint.x);
+         scrollPoint.x += delta;
+         //NSLog(@"scrollPoint.x nach: %2.2f",scrollPoint.x);
+         
+         //NSLog(@"tempOrigin neu  x: %2.2f y: %2.2f",tempOrigin.x,tempOrigin.y);
+         //NSLog(@"tempFrame: neu x %2.2f y %2.2f heigt %2.2f width %2.2f",tempFrame.origin.x, tempFrame.origin.y, tempFrame.size.height, tempFrame.size.width);
+         
+         NSRect MKDiagrammRect=[TemperaturMKDiagramm frame];
+         MKDiagrammRect.size.width=tempFrame.size.width;
+         //NSLog(@"MKDiagrammRect.size.width: %2.2f",MKDiagrammRect.size.width);
+         [TemperaturMKDiagramm setFrame:MKDiagrammRect];
+         
+         NSRect BrennerRect=[BrennerDiagramm frame];
+         BrennerRect.size.width=tempFrame.size.width;
+         //NSLog(@"BrennerRect.size.width: %2.2f",BrennerRect.size.width);
+         
+         [BrennerDiagramm setFrame:BrennerRect];
+         
+         NSRect GitterlinienRect=[Gitterlinien frame];
+         GitterlinienRect.size.width=tempFrame.size.width;
+         //NSLog(@"GitterlinienRect.size.width: %2.2f",GitterlinienRect.size.width);
+         
+         [Gitterlinien setFrame:GitterlinienRect];
+         
+         NSRect DocRect=[[TemperaturDiagrammScroller documentView]frame];
+         //NSLog(@"DocRect.size.width vor: %2.2f",DocRect.size.width);
+         DocRect.size.width=tempFrame.size.width;
+         //NSLog(@"DocRect.size.width nach: %2.2f",DocRect.size.width);
+         
+         [[TemperaturDiagrammScroller documentView] setFrame:DocRect];
+         //NSLog(@"tempOrigin end  x: %2.2f y: %2.2f",tempOrigin.x,tempOrigin.y);
+         [[TemperaturDiagrammScroller documentView] setFrameOrigin:tempOrigin];
+         
+         //NSLog(@"ExterneDatenaktion  tempOrigin: x: %2.2f  *   DocRect width: %2.2f",tempOrigin.x,DocRect.size.width);
+         
+         //NSLog(@"scrollPoint end  x: %2.2f y: %2.2f",scrollPoint.x,scrollPoint.y);
+         [[TemperaturDiagrammScroller contentView] scrollPoint:scrollPoint];
+         [TemperaturDiagrammScroller setNeedsDisplay:YES];
+         
+      }
+      
+      NSString* TemperaturDatenString= [NSString string];
+      NSEnumerator* DatenEnum = [tempDatenArray objectEnumerator];
+      id einDatenString;
+      
+      while (einDatenString = [DatenEnum nextObject])
+      {
+         //NSString* tempDatenString=(NSString*)[einDatenString substringWithRange:NSMakeRange(0,[einDatenString length]-1)];
+         
+         //NSMutableArray* tempZeilenArray= (NSMutableArray*)[einDatenString componentsSeparatedByString:@"\t"];
+         
+         // Datenstring aufteilen in Komponenten
+         
+         NSMutableArray* tempZeilenArray= (NSMutableArray*)[einDatenString componentsSeparatedByString:@"\r"];
+         
+         //NSLog(@"ExterneDatenAktion einDatenString: %@\n tempZeilenArray:%@\n", einDatenString,[tempZeilenArray description]);
+         //NSLog(@"ExterneDatenAktion einDatenString: %@ count: %d", einDatenString, [tempZeilenArray count]);
+         if ([tempZeilenArray count]== 9) // Daten vollständig
+         {
+            //			NSLog(@"ExterneDatenAktion tempZeilenArray:%@",[tempZeilenArray description]);
+            // Datenserie auf Startzeit synchronisieren
+            int tempZeit=[[tempZeilenArray objectAtIndex:0]intValue];
+            
+            tempZeit -= firstZeit;
+            [tempZeilenArray replaceObjectAtIndex:0 withObject:[NSNumber numberWithInt:tempZeit]];
+            
+            [TemperaturMKDiagramm setWerteArray:tempZeilenArray mitKanalArray:TemperaturKanalArray];
+            
+            
+            [TemperaturMKDiagramm setNeedsDisplay:YES];
+            NSMutableDictionary* tempVorgabenDic = [[NSMutableDictionary alloc]initWithCapacity:0];
+            [tempVorgabenDic setObject:[NSNumber numberWithInt:5]forKey:@"anzbalken"];
+            [tempVorgabenDic setObject:[NSNumber numberWithInt:3]forKey:@"datenindex"];
+            
+            
+            [BrennerDiagramm setWerteArray:tempZeilenArray mitKanalArray:BrennerKanalArray mitVorgabenDic:tempVorgabenDic];
+            
+            //		[BrennerDiagramm setWerteArray:tempZeilenArray mitKanalArray:BrennerKanalArray];
+            [BrennerDiagramm setNeedsDisplay:YES];
+            [Gitterlinien setWerteArray:tempZeilenArray mitKanalArray:BrennerKanalArray];
+            [Gitterlinien setNeedsDisplay:YES];
+            //TemperaturDatenString=[NSString stringWithFormat:@"%@\r\t%@",TemperaturDatenString,tempDatenString];
+            
+            // Aus TempZeilenarray einen tab-getrennten String bilden
+            NSString* tempZeilenString=[tempZeilenArray componentsJoinedByString:@"\t"];
+            //				NSLog(@"tempZeilenString: %@", tempZeilenString);
+            TemperaturDatenString=[NSString stringWithFormat:@"%@\r\t%@",TemperaturDatenString,tempZeilenString];
+            //				TemperaturDatenString=[NSString stringWithFormat:@"%@\r\t%@",TemperaturDatenString,einDatenString];
+            
+         }
+         
+      }	// while
+      AnzDaten= (int)[tempDatenArray count];
+      //NSLog(@"ExterneDatenAktion AnzDaten: %d",AnzDaten);
+      [AnzahlDatenFeld setIntValue:(int)[tempDatenArray count]];
+      
+      [TemperaturDatenFeld setString:TemperaturDatenString];
       NSLog(@"ExterneDatenaktion length %d",[[TemperaturDatenFeld textStorage] length]);
-
-		NSRange insertAtEnd=NSMakeRange([[TemperaturDatenFeld textStorage] length],0);
-		[TemperaturDatenFeld scrollRangeToVisible:insertAtEnd];
-
-		[ClearTaste setEnabled:YES];
-		
-// 14.4.10 Doppeltes Laden verhindern.
-		NSTimer* KalenderTimer=[NSTimer scheduledTimerWithTimeInterval:1
-																			  target:self 
-																			selector:@selector(KalenderFunktion:) 
-																			userInfo:nil 
-																			 repeats:NO];
-		
-		NSRunLoop *runLoop = [NSRunLoop currentRunLoop];
-		[runLoop addTimer:KalenderTimer forMode:NSDefaultRunLoopMode];
-		
-
-		//Kalenderblocker=0;
-	}
-	//NSBeep();
-	NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
-	[NotificationDic setObject:[NSNumber numberWithInt:1] forKey:@"loaddataok"];
-	NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
-	[nc postNotificationName:@"LoadData" object:self userInfo:NotificationDic];
-	
+      
+      NSRange insertAtEnd=NSMakeRange([[TemperaturDatenFeld textStorage] length],0);
+      [TemperaturDatenFeld scrollRangeToVisible:insertAtEnd];
+      
+      [ClearTaste setEnabled:YES];
+      
+      // 14.4.10 Doppeltes Laden verhindern.
+      NSTimer* KalenderTimer=[NSTimer scheduledTimerWithTimeInterval:1
+                                                              target:self 
+                                                            selector:@selector(KalenderFunktion:) 
+                                                            userInfo:nil 
+                                                             repeats:NO];
+      
+      NSRunLoop *runLoop = [NSRunLoop currentRunLoop];
+      [runLoop addTimer:KalenderTimer forMode:NSDefaultRunLoopMode];
+      
+      
+      //Kalenderblocker=0;
+   }
+   //NSBeep();
+   NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
+   [NotificationDic setObject:[NSNumber numberWithInt:1] forKey:@"loaddataok"];
+   NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
+   [nc postNotificationName:@"LoadData" object:self userInfo:NotificationDic];
+   
    [Kalender setEnabled:YES];
-	
-	NSMutableDictionary* BalkendatenDic=[[NSMutableDictionary alloc]initWithCapacity:0];
-	[BalkendatenDic setObject:[NSNumber numberWithInt:1]forKey:@"aktion"];
-	
-	//NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
-	
+   
+   NSMutableDictionary* BalkendatenDic=[[NSMutableDictionary alloc]initWithCapacity:0];
+   [BalkendatenDic setObject:[NSNumber numberWithInt:1]forKey:@"aktion"];
+   
+   //NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
+   
    
    
    [nc postNotificationName:@"StatistikDaten" object:NULL userInfo:BalkendatenDic];
-
+   
    
    [TemperaturStatistikDiagramm setNeedsDisplay:YES];
-	[TagGitterlinien setNeedsDisplay:YES];
-	//NSLog(@"ExterneDatenAktion end");
-	
+   [TagGitterlinien setNeedsDisplay:YES];
+   //NSLog(@"ExterneDatenAktion end");
+   
 }
 
 
@@ -2996,7 +3055,7 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
 	if ([[note userInfo]objectForKey:@"startzeit"])
 	{
 		NSString* datumstring = [[note userInfo]objectForKey:@"startzeit"];
-		NSLog(@"ExterneSolarDatenAktion: Startzeit: *%@* StartzeitString: *%@*",[[note userInfo]objectForKey:@"startzeit"],datumstring);
+		//NSLog(@"ExterneSolarDatenAktion: Startzeit: *%@* StartzeitString: *%@*",[[note userInfo]objectForKey:@"startzeit"],datumstring);
       
       NSString* datumteil = [[datumstring componentsSeparatedByString:@" "]objectAtIndex:0];
       NSString* zeitteil = [[datumstring componentsSeparatedByString:@" "] objectAtIndex:1];
@@ -3006,7 +3065,7 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
       
       SolarDatenserieStartZeit = [self DatumvonJahr:jr Monat:mon Tag: tg];
       
-      NSLog(@"ExterneSolarDatenAktion: SolarDatenserieStartZeit: %@",SolarDatenserieStartZeit);
+      //NSLog(@"ExterneSolarDatenAktion: SolarDatenserieStartZeit: %@",SolarDatenserieStartZeit);
 
       NSCalendar *tagcalendar = [NSCalendar currentCalendar];
       [tagcalendar setFirstWeekday:2];
@@ -3101,7 +3160,7 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
       // 170818 Korr Kollektortemp aus in solar.pl korrigiertem Wert(kein /2 mehr)
       tempWertString=[NSString stringWithFormat:@"%2.1f",tempTemperatur];
       
-      NSLog(@"externeSolarDatenAktion tempWertString: %@",tempWertString);
+      //NSLog(@"externeSolarDatenAktion tempWertString: %@",tempWertString);
       
 		// Zeit des ersten Datensatzes
 		//int firstZeit = [[[[tempDatenArray objectAtIndex:0] componentsSeparatedByString:@"\t"]objectAtIndex:0]intValue];
@@ -3109,7 +3168,7 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
 		
 		// Zeit des letzten Datensatzes
 		int lastZeit = [[[[tempDatenArray lastObject] componentsSeparatedByString:@"\t"]objectAtIndex:0]intValue];
-		NSLog(@"ExterneSolarDatenAktion lastZeit: %d tempWertString: %@",lastZeit,tempWertString);
+		//NSLog(@"ExterneSolarDatenAktion lastZeit: %d tempWertString: %@",lastZeit,tempWertString);
 		[SolarLaufzeitFeld setStringValue:[self stringAusZeit:lastZeit]]; 
 		
 		// Breite des DocumentViews bestimmen
@@ -3276,7 +3335,7 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
 		[AnzahlSolarDatenFeld setIntValue:[tempDatenArray count]];
 		
 		[SolarDatenFeld setString:TemperaturDatenString];
-      NSLog(@"ExterneSolardatenaktion length %d",[[SolarDatenFeld textStorage] length]);
+      //NSLog(@"ExterneSolardatenaktion length %d",[[SolarDatenFeld textStorage] length]);
 		NSRange insertAtEnd=NSMakeRange([[SolarDatenFeld textStorage] length],0);
 		[SolarDatenFeld scrollRangeToVisible:insertAtEnd];
 		
@@ -3348,7 +3407,7 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
       }
       //NSString* StartDatenString=[[[SolarDatenFeld string]componentsSeparatedByString:@"\r"]objectAtIndex:1];
       NSString* StartDatenString=[StartDatenArray objectAtIndex:0];
-      //	NSLog(@"LastSolarDatenAktion StartDatenString: %@",StartDatenString);
+      //NSLog(@"LastSolarDatenAktion StartDatenString: %@",StartDatenString);
       //NSString* Kalenderformat=[[NSCalendarDate calendarDate]calendarFormat];
       //NSLog(@"LastSolarDatenaktion note: %@",[[note userInfo]description]);
       if ([[note userInfo]objectForKey:@"startzeit"])
@@ -3416,6 +3475,7 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
 		[BoilerobenFeld setStringValue:tempWertString];
 		
       int tempTemperatur = [[lastDatenArray objectAtIndex:6]intValue];
+      float tempTemperaturFloat = [[lastDatenArray objectAtIndex:6]floatValue];
       /*
       if ([[lastDatenArray objectAtIndex:7]intValue]&0x01)
       {
@@ -3423,9 +3483,10 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
          [lastDatenArray replaceObjectAtIndex:6 withObject: [NSNumber numberWithInt:tempTemperatur]];
       }
 		*/
-//      tempWertString=[NSString stringWithFormat:@"%2.1f",[[lastDatenArray objectAtIndex:6]intValue]/2.0];
-      tempWertString=[NSString stringWithFormat:@"%2.1f",tempTemperatur];
-      //NSLog(@"lastSolarDatenAktion tempWertString: %@",tempWertString);
+      tempWertString=[NSString stringWithFormat:@"%2.1f",[[lastDatenArray objectAtIndex:6]intValue]/1.0];
+      //tempWertString=[NSString stringWithFormat:@"%2.1d",tempTemperatur];
+      
+      NSLog(@"lastSolarDatenAktion tempTemperatur: %d tempWertString: %@",tempTemperatur,tempWertString);
 
       [KollektorTemperaturFeld setStringValue:tempWertString];
 		
@@ -3709,13 +3770,102 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
 
 
 #pragma mark strom
+
+- (void)setStromKalenderBlocker:(int)derStatus
+{
+   StromKalenderblocker=derStatus;
+}
+
+-(void)StromDataDownloadAktion:(NSNotification*)note
+{
+   /*
+    Ausgeloest von Funktionen in rHomeData:
+    downloadDidFinish: downloadflag, lastdatazeit, datastring, 
+    LastSolarData: downloadflag, lastdatazeit, datastring,
+    SolarDataVon: downloadflag, lastdatazeit, datastring,
+    SolarDataDownload
+    */
+   {
+      /*
+       Aufgerufen von rHomeData.
+       Setzt Feldwerte im Fenster Data.
+       
+       */
+      
+      //NSLog(@"rData StromDataDownloadAktion*");
+      [StromLoadMark performClick:NULL];
+      
+      if ([[note userInfo]objectForKey:@"err"])
+      {
+         [LastStromDataFeld setStringValue:[[note userInfo]objectForKey:@"err"]];
+      }
+      /*
+       if ([[note userInfo]objectForKey:@"erfolg"])
+       {
+       [LastSolarDataFeld setStringValue:[[note userInfo]objectForKey:@"erfolg"]];
+       }
+       */   
+      if ([[note userInfo]objectForKey:@"lasttimestring"])
+      {
+         [LastStromDatazeitFeld setStringValue:[[note userInfo]objectForKey:@"lasttimestring"]];
+      }
+      else
+      {
+         [LastStromDatazeitFeld setStringValue:@"--"];
+      }
+      
+      anzstromLoads++;
+      [stromZaehlerFeld setIntValue:anzstromLoads];
+      if (anzstromLoads > 8)
+      {
+         NSBeep();
+         [self reload:NULL];
+         
+      }
+      
+      //NSLog(@"anzSolarLoads: %d",anzSolarLoads);
+      [LastStromDataFeld setStringValue:@"***"];
+      
+      if ([[note userInfo]objectForKey:@"datastring"])
+      {
+         NSString* tempString = [[note userInfo]objectForKey:@"datastring"];
+         //   NSLog(@"SolarDataDownloadAktion tempString: \n%@",tempString);
+         //tempString= [[[[NSNumber numberWithInt:anzSolarLoads]stringValue]stringByAppendingString:@": "]stringByAppendingString:tempString];
+         
+         [LastStromDataFeld setStringValue:tempString];
+      }
+      else
+      {
+      }
+      
+      /*
+       if ([[note userInfo]objectForKey:@"lastdatazeit"])
+       {
+       int tempLastdataZeit=[[[note userInfo]objectForKey:@"lastdatazeit"] intValue];
+       NSLog(@"lastdatazeit: %d * LastLoadzeit: %d",tempLastdataZeit,LastLoadzeit );
+       
+       int   tempZeit=[[NSDate date] timeIntervalSinceDate:DatenserieStartZeit];      
+       //[LastDatazeitFeld setStringValue:[[note userInfo]objectForKey:@"lastdatazeit"]];
+       [LastDatazeitFeld setIntValue:tempLastdataZeit-LastLoadzeit];
+       }
+       */
+      if ([[note userInfo]objectForKey:@"delta"])
+      {
+         NSString* deltaString=[NSString stringWithFormat:@"%2.4F",[[[note userInfo]objectForKey:@"delta"]floatValue]];
+         [StromLoadtimeFeld setStringValue:deltaString];
+      }
+      
+   }
+    
+    }
+
 - (void)ExterneStromDatenAktion:(NSNotification*)note
 {
    Quelle=1;
    if ([[note userInfo]objectForKey:@"startzeit"])
    {
       NSString* datumstring = [[note userInfo]objectForKey:@"startzeit"];
-      //NSLog(@"ExterneStromDatenAktion: Startzeit: *%@* StartzeitString: *%@*",[[note userInfo]objectForKey:@"startzeit"],StartzeitString);
+      NSLog(@"ExterneStromDatenAktion: datumstring: *%@* datumstring: **",[[note userInfo]objectForKey:@"startzeit"]);
       
       NSString* datumteil = [[datumstring componentsSeparatedByString:@" "]objectAtIndex:0];
       NSString* zeitteil = [[datumstring componentsSeparatedByString:@" "]objectAtIndex:1];
@@ -3770,8 +3920,8 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
    
    if ([[note userInfo]objectForKey:@"datenarray"])
    {
-      NSLog(@"ExterneStromDatenAktion datenarray da");
-      NSArray* StromTemperaturKanalArray=   [NSArray arrayWithObjects:@"1",@"1",@"1",@"1" ,@"1",@"1",@"0",@"0",nil];
+      //NSLog(@"ExterneStromDatenAktion datenarray da");
+      NSArray* StromTemperaturKanalArray=   [NSArray arrayWithObjects:@"1",@"0",@"0",@"0" ,@"0",@"0",@"0",@"0",nil];
       
       //                                  [NSArray arrayWithObjects:@"0",@"1",@"1",@"1" ,@"0",@"0",@"0",@"0",nil]];
       
@@ -3779,52 +3929,35 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
       
       NSArray* tempDatenArray = [[note userInfo]objectForKey:@"datenarray"];
       //NSLog(@"ExterneStromDatenAktion tempDatenArray last Data:%@",[[tempDatenArray lastObject]description]);
-      
+      //NSLog(@"ExterneStromDatenAktion tempDatenArray:%@",[tempDatenArray description]);
+
       NSArray* tempZeilenArray= (NSArray*)[[tempDatenArray lastObject] componentsSeparatedByString:@"\r"];
       //NSLog(@"tempZeilenArray: \n%@",[tempZeilenArray description]);
+      int stromwert = [[tempZeilenArray objectAtIndex:6]intValue];
       NSString* tempWertString;
-      tempWertString=[NSString stringWithFormat:@"%2.1f",[[tempZeilenArray objectAtIndex:1]intValue]/2.0];
-      [KollektorVorlaufFeld setStringValue:tempWertString];
-      tempWertString=[NSString stringWithFormat:@"%2.1f",[[tempZeilenArray objectAtIndex:2]intValue]/2.0];
-      [KollektorRuecklaufFeld setStringValue:tempWertString];
-      tempWertString=[NSString stringWithFormat:@"%2.1f",[[tempZeilenArray objectAtIndex:3]intValue]/2.0];
-      [BoileruntenFeld setStringValue:tempWertString];
-      tempWertString=[NSString stringWithFormat:@"%2.1f",[[tempZeilenArray objectAtIndex:4]intValue]/2.0];
-      [BoilermitteFeld setStringValue:tempWertString];
-      tempWertString=[NSString stringWithFormat:@"%2.1f",[[tempZeilenArray objectAtIndex:5]intValue]/2.0];
-      [BoilerobenFeld setStringValue:tempWertString];
       
-      //      tempWertString=[NSString stringWithFormat:@"%2.1f",[[tempZeilenArray objectAtIndex:6]intValue]/2.0];
-      // 170818 Korr Kollektortemp aus in Strom.pl korrigiertem Wert(kein /2 mehr)
-      tempWertString=[NSString stringWithFormat:@"%2.1f",[[tempZeilenArray objectAtIndex:6]intValue]];
+      tempWertString=[NSString stringWithFormat:@"%d W",[[tempZeilenArray objectAtIndex:6]intValue]];
+      [StromWertFeld setStringValue:tempWertString];
       
-      [KollektorTemperaturFeld setStringValue:tempWertString];
+         
       
-      
-      
+      // letzten Wert einsetzen
       int tempTemperatur = [[tempZeilenArray objectAtIndex:6]intValue];
-      /*
-       if ([[tempZeilenArray objectAtIndex:7]intValue]&0x01)
-       {
-       tempTemperatur += 255;
-       }
-       */
-      
-      //      tempWertString=[NSString stringWithFormat:@"%2.1f",[[lastDatenArray objectAtIndex:6]intValue]/2.0];
-      //      tempWertString=[NSString stringWithFormat:@"%2.1f",tempTemperatur/2.0];
-      
-      // 170818 Korr Kollektortemp aus in Strom.pl korrigiertem Wert(kein /2 mehr)
-      tempWertString=[NSString stringWithFormat:@"%2.1f",tempTemperatur];
-      
-      NSLog(@"ExterneStromDatenAktion tempWertString: %@",tempWertString);
+       
+      //NSLog(@"ExterneStromDatenAktion tempWertString: %@",tempWertString);
       
       // Zeit des ersten Datensatzes
       //int firstZeit = [[[[tempDatenArray objectAtIndex:0] componentsSeparatedByString:@"\t"]objectAtIndex:0]intValue];
       //NSLog(@"ExterneStromDatenAktion firstZeit: %d",firstZeit);
       
       // Zeit des letzten Datensatzes
-      int lastZeit = [[[[tempDatenArray lastObject] componentsSeparatedByString:@"\t"]objectAtIndex:0]intValue];
-      NSLog(@"ExterneStromDatenAktion lastZeit: %d tempWertString: %@",lastZeit,tempWertString);
+      //int lastZeit = [[[[tempDatenArray lastObject] componentsSeparatedByString:@"\t"]objectAtIndex:0]intValue];
+      NSArray* lastzeilenArray = [[tempDatenArray lastObject]componentsSeparatedByString:@"\r"];
+      
+      int lastZeit = [[lastzeilenArray  objectAtIndex:3]intValue] * 3600 + [[lastzeilenArray  objectAtIndex:4]intValue]*60 + [[lastzeilenArray  objectAtIndex:5]intValue];
+
+      
+      //NSLog(@"ExterneStromDatenAktion lastZeit: %d tempWertString: %@",lastZeit,tempWertString);
       [StromLaufzeitFeld setStringValue:[self stringAusZeit:lastZeit]]; 
       
       // Breite des DocumentViews bestimmen
@@ -3914,11 +4047,11 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
        - Index des Wertes im Werterray, der darzustellen ist (nur Daten, erster Wert ist Abszisse. Zaheler beginnt bei Obj 1 mit Index 0)
        */
       
-      [tempVorgabenDic setObject:[NSNumber numberWithInt:4]forKey:@"anzbalken"];
+      [tempVorgabenDic setObject:[NSNumber numberWithInt:1]forKey:@"anzbalken"];
       [tempVorgabenDic setObject:[NSNumber numberWithInt:6]forKey:@"datenindex"];
       
       
-      NSString* TemperaturDatenString= [NSString string];
+      NSString* StromDatenString= [NSString string];
       NSEnumerator* DatenEnum = [tempDatenArray objectEnumerator];
       id einDatenString;
       //NSLog(@"ExterneStromDatenAktion begin while");
@@ -3935,17 +4068,30 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
          {
             //NSLog(@"ExterneStromDatenAktion tempZeilenArray:%@",[tempZeilenArray description]);
             // Datenserie auf Startzeit synchronisieren
-            int tempZeit=[[tempZeilenArray objectAtIndex:0]intValue];
-            
+            //int tempZeit=[[tempZeilenArray objectAtIndex:0]intValue];
+            int tempZeit = [[tempZeilenArray  objectAtIndex:3]intValue] * 3600 + [[tempZeilenArray  objectAtIndex:4]intValue]*60 + [[tempZeilenArray  objectAtIndex:5]intValue];
+
             if (tempZeit-lastzeit >30) // nicht alle Daten laden
             {
                lastzeit=tempZeit;
                //tempZeit*= StromZeitKompression;
                //tempZeit -= firstZeit;
+               // Array fuer Diagrammm neu aufbauen
                [tempZeilenArray replaceObjectAtIndex:0 withObject:[NSNumber numberWithInt:tempZeit]];
                
-               int kollektortemperatur =[[tempZeilenArray objectAtIndex:6]intValue];
-               int kollektorcode =[[tempZeilenArray objectAtIndex:7]intValue];
+               // Stromwert verschieben auf Platz 1
+               [tempZeilenArray replaceObjectAtIndex:1 withObject:[tempZeilenArray objectAtIndex:6]];
+               [tempZeilenArray replaceObjectAtIndex:2 withObject:[NSNumber numberWithInt:0]];
+                [tempZeilenArray replaceObjectAtIndex:2 withObject:[NSNumber numberWithInt:0]];
+                [tempZeilenArray replaceObjectAtIndex:3 withObject:[NSNumber numberWithInt:0]];
+                [tempZeilenArray replaceObjectAtIndex:4 withObject:[NSNumber numberWithInt:0]];
+                [tempZeilenArray replaceObjectAtIndex:5 withObject:[NSNumber numberWithInt:0]];
+               [tempZeilenArray replaceObjectAtIndex:6 withObject:[NSNumber numberWithInt:0]];
+                
+                
+               int stromwert =[[tempZeilenArray objectAtIndex:1]intValue];
+                
+               //int kollektorcode =[[tempZeilenArray objectAtIndex:7]intValue];
                
                //             [tempZeilenArray replaceObjectAtIndex:6 withObject:[NSNumber numberWithInt:kollektortemperatur]];
                
@@ -3974,8 +4120,9 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
                // Aus TempZeilenarray einen tab-getrennten String bilden
                NSString* tempZeilenString=[tempZeilenArray componentsJoinedByString:@"\t"];
                //            NSLog(@"tempZeilenString: %@", tempZeilenString);
-               TemperaturDatenString=[NSString stringWithFormat:@"%@\r\t%@",TemperaturDatenString,tempZeilenString];
+               StromDatenString=[NSString stringWithFormat:@"%@\r\t%@",StromDatenString,tempZeilenString];
                //            TemperaturDatenString=[NSString stringWithFormat:@"%@\r\t%@",TemperaturDatenString,einDatenString];
+            
             }   // if Zeitabstand genuegend gross
          }// Daten vollständig
          
@@ -3990,7 +4137,7 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
       //NSLog(@"ExterneStromdatenaktion AnzStromDaten: %d",AnzStromDaten);
       [AnzahlStromDatenFeld setIntValue:[tempDatenArray count]];
       
-      [StromDatenFeld setString:TemperaturDatenString];
+      [StromDatenFeld setString:StromDatenString];
       NSRange insertAtEnd=NSMakeRange([[StromDatenFeld textStorage] length],0);
       [StromDatenFeld scrollRangeToVisible:insertAtEnd];
       
@@ -4032,10 +4179,314 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
    
 }
 
+- (void)LastStromDatenAktion:(NSNotification*)note
+{
+   //NSLog(@"LastStromDatenAktion");
+   int firstZeit=0;
+   
+   if (Kalenderblocker)
+   {
+      //NSLog(@"LastStromDatenAktion   Kalenderblocker");
+      return;
+   }
+   
+   NSMutableArray* StartDatenArray=(NSMutableArray*)[[StromDatenFeld string]componentsSeparatedByString:@"\r"];
+   if ([StartDatenArray count])
+   {
+      if (([[StartDatenArray objectAtIndex:0]length]==0))
+      {
+         //[StartDatenArray removeObjectAtIndex:0];
+      }
+      //NSString* StartDatenString=[[[SolarDatenFeld string]componentsSeparatedByString:@"\r"]objectAtIndex:1];
+      NSString* StartDatenString=[StartDatenArray objectAtIndex:0];
+      //NSLog(@"LastStromDatenAktion StartDatenString: *%@*",StartDatenString);
+      //NSString* Kalenderformat=[[NSCalendarDate calendarDate]calendarFormat];
+      //NSLog(@"LastStromDatenAktion note: %@",[[note userInfo]description]);
+      if ([[note userInfo]objectForKey:@"startzeit"])
+      {
+         //SolarDatenserieStartZeit=[NSCalendarDate dateWithString:[[note userInfo]objectForKey:@"startzeit"] calendarFormat:Kalenderformat];
+         StromDatenserieStartZeit= [[note userInfo]objectForKey:@"startzeit"];
+         NSString* n = [self stringFromDate:[[note userInfo]objectForKey:@"startzeit"]];
+      }
+      //int firsttag=[SolarDatenserieStartZeit dayOfMonth];
+      
+      if (StartDatenString && [StartDatenString length])
+      {
+         // Zeit des ersten Datensatzes
+         
+         firstZeit = [[[StartDatenString componentsSeparatedByString:@"\t"]objectAtIndex:0]intValue];
+         //      NSLog(@"LastStromDatenAktion firstZeit: %d",firstZeit);
+      }
+   }
+   
+   if ([[note userInfo]objectForKey:@"lastdatazeit"])
+   {
+      //   [LastDataFeld setStringValue:[[note userInfo]objectForKey:@"lastdatazeit"]];
+   }
+   anzstromLoads=0;
+   [stromZaehlerFeld setIntValue:anzstromLoads];
+   NSNumberFormatter *numberFormatter =[[NSNumberFormatter alloc] init];
+   // specify just positive format
+   [numberFormatter setFormat:@"##0.00"];
+   
+   //   [LoadMark  performClick:NULL];
+   
+   //NSLog(@"LastSolarDatenAktion note: %@",[[note userInfo]description]);
+   /*
+    lastdatenarray =     (
+    48849,   Laufzeit
+    47,      Kollektor Vorlauf
+    46,      Kollektor Ruecklauf
+    40,      Boiler unten
+    128,   Boiler mitte
+    136,   Boiler oben
+    82,      Kollektortemperatur
+    0,
+    255
+    );
+    Alle Temperaturerte doppelt
+    */
+   NSString* tempWertString;
+   
+   NSPoint tempOrigin=[[StromDiagrammScroller documentView] frame].origin;
+   NSRect tempFrame=[[StromDiagrammScroller documentView] frame];
+   
+   if ([[note userInfo]objectForKey:@"lastdatenarray"])
+   {
+      NSMutableArray* lastDatenArray=(NSMutableArray*)[[note userInfo]objectForKey:@"lastdatenarray"];
+      //NSLog(@"LastStromDatenAktion lastDatenArray: %@",lastDatenArray);
+      tempWertString=[NSString stringWithFormat:@"%d",[[lastDatenArray objectAtIndex:1]intValue]];
+      
+      /*
+      [KollektorVorlaufFeld setStringValue:tempWertString];
+      tempWertString=[NSString stringWithFormat:@"%2.1f",[[lastDatenArray objectAtIndex:2]intValue]/2.0];
+      [KollektorRuecklaufFeld setStringValue:tempWertString];
+      tempWertString=[NSString stringWithFormat:@"%2.1f",[[lastDatenArray objectAtIndex:3]intValue]/2.0];
+      [BoileruntenFeld setStringValue:tempWertString];
+      tempWertString=[NSString stringWithFormat:@"%2.1f",[[lastDatenArray objectAtIndex:4]intValue]/2.0];
+      [BoilermitteFeld setStringValue:tempWertString];
+      tempWertString=[NSString stringWithFormat:@"%2.1f",[[lastDatenArray objectAtIndex:5]intValue]/2.0];
+      [BoilerobenFeld setStringValue:tempWertString];
+      */
+      int tempLeistung = [[lastDatenArray objectAtIndex:1]intValue];
+      
+      /*
+       if ([[lastDatenArray objectAtIndex:7]intValue]&0x01)
+       {
+       tempTemperatur += 255;
+       [lastDatenArray replaceObjectAtIndex:6 withObject: [NSNumber numberWithInt:tempTemperatur]];
+       }
+       */
+      //      tempWertString=[NSString stringWithFormat:@"%2.1f",[[lastDatenArray objectAtIndex:6]intValue]/2.0];
+      tempWertString=[NSString stringWithFormat:@"%d W",tempLeistung];
+      
+      NSLog(@"lastStromDatenAktion Leistung  tempWertString: %@",tempWertString);
+      [StromWertFeld setStringValue:tempWertString];
+
+      
+     // [KollektorTemperaturFeld setStringValue:tempWertString];
+      
+      //      int Raum=0, Stunde=0,Minuten=0;
+      
+      //float tempZeit=0;
+      int tempZeit=0;
+      
+      //NSString* tabSeparator=@"\t";
+      //NSString* crSeparator=@"\r";
+      
+      //      NSMutableString* tempWertString=(NSMutableString*)[TemperaturWertFeld string];//Vorhandene Daten im Wertfeld
+      //NSLog(@"TemperaturZeilenString: %@",TemperaturZeilenString);
+      
+      
+      NSArray* TemperaturKanalArray=   [NSArray arrayWithObjects:@"1",@"0",@"0",@"0",@"0",@"0",@"0",@"0",nil];
+      NSArray* StatusKanalArray=      [NSArray arrayWithObjects:@"1",@"1",@"0",@"0" ,@"0",@"0",@"0",@"0",nil];
+      
+      // Mark des Datenpaketes:   0: Schluss, Null-Werte   1: Gueltige Daten
+      //NSLog(@"mark: %d",mark);
+      
+      
+      
+      //tempZeit=[[NSDate date] timeIntervalSinceDate:DatenserieStartZeit];//*ZeitKompression;
+      
+      // 6.2.10   
+      
+ //     tempZeit== [[lastDatenArray  objectAtIndex:3]intValue] * 3600 + [[lastDatenArray  objectAtIndex:4]intValue]*60 + [[lastDatenArray  objectAtIndex:5]intValue];
+      tempZeit= [[lastDatenArray  objectAtIndex:0]intValue] ;
+      //tempZeit-= firstZeit;
+      LastStromLoadzeit=tempZeit;
+      [LastStromDataFeld setIntValue:tempZeit];
+      
+      //NSLog(@"LastSolarDatenaktion tempZeit: %d ",tempZeit);
+      
+      
+      if ([lastDatenArray count]==9) // richtige Anzahl Daten
+      {
+            
+         AnzStromDaten++;
+         //errString =[NSString stringWithFormat:@"%@\rAnzDaten: %d AllOK DatenpaketArray: %@",errString,AnzSolarDaten,[DatenpaketArray description]];
+         //[errString retain];
+         
+         
+         [AnzahlStromDatenFeld setIntValue:AnzStromDaten];
+         //NSLog(@"DatenpaketArray: %@" ,[DatenpaketArray description]);
+         //NSLog(@"LastSolarDatenAktion lastDatenArray: %@" ,[lastDatenArray description]);
+         
+         //NSLog(@"LastSolarDatenAktion lastDatenArray\n%@",lastDatenArray);
+         
+         [StromDiagramm setWerteArray:lastDatenArray mitKanalArray:TemperaturKanalArray];
+         [StromDiagramm setNeedsDisplay:YES];
+         
+         NSMutableDictionary* tempVorgabenDic = [[NSMutableDictionary alloc]initWithCapacity:0];
+         
+         /*
+          derVorgabenDic enthaelt:
+          - anzahl der Balken, die darzustellen sind. key: anzbalken
+          - Index des Wertes im Werterray, der darzustellen ist (nur Daten, erster Wert ist Abszisse. Zaheler beginnt bei Obj 1 mit Index 0)
+          */
+         
+         [tempVorgabenDic setObject:[NSNumber numberWithInt:1]forKey:@"anzbalken"];
+         [tempVorgabenDic setObject:[NSNumber numberWithInt:6]forKey:@"datenindex"];
+         
+         
+         
+         
+#pragma mark Simulation
+         // Simulation
+         /*
+          NSNumber* filler=[NSNumber numberWithInt:1];
+          NSNumber* ON=[NSNumber numberWithInt:24];
+          NSNumber* OFF=[NSNumber numberWithInt:0];
+          NSArray* tempArray;
+          //NSArray* tempArray=[NSArray arrayWithObjects:[lastDatenArray objectAtIndex:0], [lastDatenArray objectAtIndex:1],[lastDatenArray objectAtIndex:2],filler,filler,,filler,filler,ON,filler,NULL];
+          
+          if (([[lastDatenArray objectAtIndex:0]intValue]%100)<50)
+          {
+          tempArray=[NSArray arrayWithObjects:[lastDatenArray objectAtIndex:0],[lastDatenArray objectAtIndex:1],[lastDatenArray objectAtIndex:2],filler,filler,filler,filler,ON,[lastDatenArray lastObject],NULL];
+          }
+          else 
+          {
+          tempArray=[NSArray arrayWithObjects:[lastDatenArray objectAtIndex:0],[lastDatenArray objectAtIndex:1],[lastDatenArray objectAtIndex:2],filler,filler,filler,filler,OFF,[lastDatenArray lastObject],NULL];
+          }
+          
+          
+          //NSLog(@"Sim tempArray: %@",[tempArray description]);
+          [SolarEinschaltDiagramm setWerteArray:tempArray mitKanalArray:StatusKanalArray mitVorgabenDic:tempVorgabenDic];
+          */         
+         
+//         [SolarEinschaltDiagramm setWerteArray:lastDatenArray mitKanalArray:StatusKanalArray mitVorgabenDic:tempVorgabenDic];
+//         [SolarEinschaltDiagramm setNeedsDisplay:YES];
+         
+         
+         //         [BrennerDiagramm setWerteArray:HomeDatenArray mitKanalArray:BrennerKanalArray];
+         //         [BrennerDiagramm setNeedsDisplay:YES];
+         [StromGitterlinien setWerteArray:lastDatenArray mitKanalArray:StatusKanalArray];
+         [StromGitterlinien setNeedsDisplay:YES];
+         //NSLog(@"DatenpaketArray: %@",[HomeDatenArray description]);
+         
+         AnzReports=0;
+         ReportErrIndex=-1;
+         NSRange r=NSMakeRange(1,[lastDatenArray count]-1); // Erster Wert ist Abszisse
+         NSString* TemperaturwerteString=[[lastDatenArray subarrayWithRange:r] componentsJoinedByString:@"\t"];
+         
+         [StromLaufzeitFeld setStringValue:[self stringAusZeit:tempZeit]]; 
+         //NSString* tempWertFeldString=[NSString stringWithFormat:@"\t%2.2f\t%@",tempZeit,TemperaturwerteString];
+         NSString* tempWertFeldString=[NSString stringWithFormat:@"\t%d\t%@",tempZeit,TemperaturwerteString];
+         //[TemperaturWertFeld setString:tempWertFeldString];
+         
+         NSString* TemperaturDatenString=[NSString stringWithFormat:@"%@\r%@",[StromDatenFeld string],tempWertFeldString];
+         
+         [StromDatenFeld setString:TemperaturDatenString];
+         
+         //[DruckDatenView setString:TemperaturDatenString];
+         NSRange insertAtEnd=NSMakeRange([[StromDatenFeld textStorage] length],0);
+         [StromDatenFeld scrollRangeToVisible:insertAtEnd];
+         
+         //[TemperaturWertFeld setStringValue:[TemperaturZeilenString copy]];
+         //NSLog(@"TemperaturDatenString: %@",TemperaturDatenString);
+         //               Origin des vorhandenen DocumentViews
+         //               NSPoint tempOrigin=[[TemperaturDiagrammScroller documentView] frame].origin;
+         
+         //               Frame des vorhandenen DocumentViews
+         //               NSRect tempFrame=[[TemperaturDiagrammScroller documentView] frame];
+         
+         //               Abszisse der Anzeige
+         tempZeit*= StromZeitKompression; // fuer Anzeige
+         
+         //NSLog(@"tempFrame: alt x %2.2f y %2.2f heigt %2.2f width %2.2f",tempFrame.origin.x, tempFrame.origin.y, tempFrame.size.height, tempFrame.size.width);
+         //NSLog(@"SolarDatenAktion tempFrame.size.width: %2.2f   tempZeit: %d",tempFrame.size.width,tempZeit);
+         //NSLog(@"SolarDatenAktion tempOrigin alt  x: %2.2f y: %2.2f",tempOrigin.x,tempOrigin.y);
+         float rest=tempFrame.size.width-(float)tempZeit; // tempframe von documentView
+         //NSLog(@"SolarDatenAktion rest: %2.2f",rest);
+         
+         //if ((rest<120)&& (!IOW_busy))
+         if ((rest<120)) // Platz wird knapp oder neue tempZeit ist groesser als bestehender tempFrame
+         {
+            //NSLog(@"Solar rest zu klein: %2.2f",rest);
+            //NSLog(@"tempOrigin alt  x: %2.2f y: %2.2f",tempOrigin.x,tempOrigin.y);
+            //NSLog(@"tempFrame: alt x %2.2f y %2.2f heigt %2.2f width %2.2f",tempFrame.origin.x, tempFrame.origin.y, tempFrame.size.height, tempFrame.size.width);
+            
+            //                  Verschiebedistanz des angezeigten Fensters
+            
+            float delta=0;
+            if (rest && (rest<160))
+            {
+               delta=[[StromDiagrammScroller contentView]frame].size.width-120;
+            }
+            else 
+            {
+               delta=[[StromDiagrammScroller contentView]frame].size.width-rest-120;
+            }
+            
+            //NSLog(@"SolarDatenAktion rest zu klein    rest: %2.2f  delta: %2.2f",rest, delta);
+            NSPoint scrollPoint=[[StromDiagrammScroller documentView]bounds].origin;
+            
+            //   DocumentView vergroessern
+            tempFrame.size.width+=delta;
+            
+            //   Origin des DocumentView verschieben
+            tempOrigin.x-=delta;
+            
+            //   Origin der Bounds verschieben
+            scrollPoint.x += delta;
+            
+            //NSLog(@"SolarDatenAktion tempOrigin neu  x: %2.2f y: %2.2f",tempOrigin.x,tempOrigin.y);
+            //NSLog(@"SolarDatenAktion tempFrame: neu x %2.2f y %2.2f heigt %2.2f width %2.2f",tempFrame.origin.x, tempFrame.origin.y, tempFrame.size.height, tempFrame.size.width);
+            
+            NSRect MKDiagrammRect=[StromDiagramm frame];
+            MKDiagrammRect.size.width=tempFrame.size.width;
+            [StromDiagramm setFrame:MKDiagrammRect];
+            
+ //           NSRect SolarEinschaltRect=[SolarEinschaltDiagramm frame];
+ //           SolarEinschaltRect.size.width=tempFrame.size.width;
+  //          [SolarEinschaltDiagramm setFrame:SolarEinschaltRect];
+            
+            NSRect GitterlinienRect=[Gitterlinien frame];
+            GitterlinienRect.size.width=tempFrame.size.width;
+            [SolarGitterlinien setFrame:GitterlinienRect];
+            
+            NSRect DocRect=   [[StromDiagrammScroller documentView]frame];
+            DocRect.size.width=tempFrame.size.width;
+            
+            [[StromDiagrammScroller documentView] setFrame:DocRect];
+            [[StromDiagrammScroller documentView] setFrameOrigin:tempOrigin];
+            
+            
+            [[StromDiagrammScroller contentView] scrollPoint:scrollPoint];
+            [StromDiagrammScroller setNeedsDisplay:YES];
+            
+         }
+      }// 7 Daten
+      
+      
+   }// if dataenarray
+   
+}
+
 - (void)StromKalenderFunktion:(NSTimer*)derTimer
 {
    StromKalenderblocker=0;
 }
+
 
 #pragma mark end strom
 

@@ -200,8 +200,6 @@ DatenserieStartZeit = dasDatum;
 	{
 		Einheit=[derEinheitenDic objectForKey:@"einheit"];
 	}
-   
-
 	
 	if ([derEinheitenDic objectForKey:@"majorteile"])
 	{
@@ -270,7 +268,7 @@ StartwertX=x;
 	return GrundlinienOffset;
 }
 
-- (void)setGrundlinienOffset:(float)offset
+- (void)setGrundlinienOffset:(float)offset // offset des Nullpunkts
 {
 	//NSLog(@"setGrundlinienOffset: %2.2f",offset);
 	GrundlinienOffset=offset;

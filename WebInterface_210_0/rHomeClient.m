@@ -70,12 +70,12 @@ unsigned char h2int(char c)
    NSString* PasswortTabellePfad=[[[NSBundle mainBundle]bundlePath]stringByAppendingPathComponent:@"Contents/Resources/Passwort.txt"];
    NSString* PasswortTabelleString = [NSString stringWithContentsOfFile:PasswortTabellePfad];
    
-   NSLog(@"PasswortString: \n%@",PasswortTabelleString);
+   //NSLog(@"PasswortString: \n%@",PasswortTabelleString);
    NSArray* PasswortTabelle = [PasswortTabelleString componentsSeparatedByString:@"\n"];
-   NSLog(@"PasswortArray: \n%@",PasswortTabelle  );
-   NSLog(@"PasswortArray 6: \n%@",[PasswortTabelle objectAtIndex:6] );
+   //NSLog(@"PasswortArray: \n%@",PasswortTabelle  );
+   //NSLog(@"PasswortArray 6: \n%@",[PasswortTabelle objectAtIndex:6] );
    NSString* tempPW = [[[PasswortTabelle objectAtIndex:6]componentsSeparatedByString:@"\t"]objectAtIndex:3];
-   NSLog(@"tempPW: %@",tempPW);
+   //NSLog(@"tempPW: %@",tempPW);
    
    /*
     pw_array = {0x47,	0x3E,	0xD,	0x5,	0x21,	0x3D,	0x42,	0x25,
@@ -90,10 +90,10 @@ unsigned char h2int(char c)
 
    srand((unsigned int)time(NULL));   // should only be called once
    int randomnummer1 = rand()%64+1;
-   NSLog(@"passwortstring randomnummer 1: *%d* reminder: %d mantisse: %d",randomnummer1 ,randomnummer1%8,randomnummer1/8);
+   //NSLog(@"passwortstring randomnummer 1: *%d* reminder: %d mantisse: %d",randomnummer1 ,randomnummer1%8,randomnummer1/8);
    int randomzeile = randomnummer1%8;
    int randomkolonne = randomnummer1/8;
-   NSLog(@"passwortstring randomnummer 1: *%d* randomzeile: %d randomkolonne: %d",randomnummer1 ,randomzeile,randomkolonne);
+   //NSLog(@"passwortstring randomnummer 1: *%d* randomzeile: %d randomkolonne: %d",randomnummer1 ,randomzeile,randomkolonne);
    NSString* passwort = [[[PasswortTabelle objectAtIndex:randomzeile]componentsSeparatedByString:@"\t"]objectAtIndex:randomkolonne];
    returnstring = [NSString stringWithFormat:@"%02X%02X",randomnummer1,[passwort intValue]];
    
@@ -632,7 +632,7 @@ unsigned char h2int(char c)
 
 - (void)LocalStatusAktion:(NSNotification*)note
 {
-   NSLog(@"HomeClient LocalStatusAktion note: %@",[[note userInfo]description]);
+   //NSLog(@"HomeClient LocalStatusAktion note: %@",[[note userInfo]description]);
    
    int status = 0;
 
@@ -649,7 +649,7 @@ unsigned char h2int(char c)
          }
          
          //HomeCentralURL = @"http://192.168.1.210";
-         NSLog(@"LocalStatusAktion local: HomeCentralURL: %@",HomeCentralURL);
+         //NSLog(@"LocalStatusAktion local: HomeCentralURL: %@",HomeCentralURL);
       }
       else
       {
@@ -658,10 +658,10 @@ unsigned char h2int(char c)
          {
             HomeCentralURL = [[note userInfo]objectForKey:@"localhostip"];
          }
-         NSLog(@"LocalStatusAktion global: HomeCentralURL: %@",HomeCentralURL);
+         //NSLog(@"LocalStatusAktion global: HomeCentralURL: %@",HomeCentralURL);
       }
    }
-   NSLog(@"HomeClient LocalStatusAktion HomeCentralURL: %@",HomeCentralURL);
+   //NSLog(@"HomeClient LocalStatusAktion HomeCentralURL: %@",HomeCentralURL);
 }
 
 - (void)LoadTestAktion:(NSNotification*)note
@@ -2523,7 +2523,7 @@ unsigned char h2int(char c)
     if (frame == [sender mainFrame])
 	 {
         NSString *provurl = [[[[frame provisionalDataSource] request] URL] absoluteString];
-		  NSLog(@"HomeClient didStartProvisionalLoadForFrame: URL: %@",provurl);
+		  //NSLog(@"HomeClient didStartProvisionalLoadForFrame: URL: %@",provurl);
        
        // URL: http://ruediheimlicher.dyndns.org/twi?pw=ideur00&rdata=10
        

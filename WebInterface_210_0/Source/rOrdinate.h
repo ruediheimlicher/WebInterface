@@ -25,5 +25,6 @@ NSMutableArray*			EinheitenArray;
 - (void)setGrundlinienOffset:(float)offset;
 - (void)AchseZeichnen;
 - (void)setMaxOrdinate:(int)laenge;
+- (void)setEinheit:(NSString*)einheit;
 - (void)setAchsenDic:(NSDictionary*)derAchsenDic;
 @end

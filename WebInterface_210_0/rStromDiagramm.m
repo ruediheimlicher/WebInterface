@@ -14,13 +14,23 @@
    self = [super initWithFrame:frame];
    if (self) 
    {
-      [DatenTitelArray replaceObjectAtIndex:0 withObject:@"K V"]; // Vorlauf
+      [DatenTitelArray replaceObjectAtIndex:0 withObject:@"I"]; // Vorlauf
       [DatenTitelArray replaceObjectAtIndex:1 withObject:@"K R"];
       [DatenTitelArray replaceObjectAtIndex:2 withObject:@"B U"];
       [DatenTitelArray replaceObjectAtIndex:3 withObject:@"B M"];
       [DatenTitelArray replaceObjectAtIndex:4 withObject:@"B O"];
       [DatenTitelArray replaceObjectAtIndex:5 withObject:@"K T"];
-      
+      MaxY = frame.size.height*0.8;
+      FaktorY=(frame.size.height-15.0)/255.0; // Reduktion auf Feldhoehe
+      FaktorY=1;
+      OffsetY=0;
+      MinorTeileY=2;
+      MajorTeileY=10;
+      MinY=0.0;
+      NullpunktY = 0.0;
+      Einheit = @"W";
+      DiagrammEcke = NSMakePoint(10.0,0.0);
+
    }
    return self;
 }
@@ -35,7 +45,7 @@
 }
 - (void)setEinheitenDicY:(NSDictionary*)derEinheitenDic
 {
-   //NSLog(@"SolarDiagramm setEinheitenDicY: %@",[derEinheitenDic description]);
+   //NSLog(@"StromDiagramm setEinheitenDicY: %@",[derEinheitenDic description]);
    [super setEinheitenDicY:derEinheitenDic];
    
 }
@@ -51,13 +61,16 @@
 
 - (void)setWerteArray:(NSArray*)derWerteArray mitKanalArray:(NSArray*)derKanalArray
 {
-   //NSLog(@"SolarDiagramm setWerteArray WerteArray: %@ KanalArray: %@",[derWerteArray description],[derKanalArray description]);
+   //NSLog(@"StromDiagramm setWerteArray WerteArray: %@ KanalArray: %@",[derWerteArray description],[derKanalArray description]);
    int i;
    
-   float   maxSortenwert=127.5;   // Temperatur, 100° entspricht 200
-   float   SortenFaktor= 1.0;
-   float   maxAnzeigewert=MaxY-MinY;
-   float AnzeigeFaktor= maxSortenwert/maxAnzeigewert;
+   float   maxSortenwert=10.0;   // Maximaler EingangsWert für Kanal: 10kW 
+   //float   SortenFaktor= 1.0;
+   float   SortenFaktor= 0.001; // Anzeige in kW
+   float   maxAnzeigewert=MaxY-MinY; // Diagrammhoehe in px, pos und neg Bereich
+   [self setGraphFarbe:[NSColor blueColor]forKanal:0];
+   float AnzeigeFaktor= (maxAnzeigewert/maxSortenwert); // Umrechnen auf px
+   
    //NSLog(@"setWerteArray: FaktorY: %2.2f MaxY; %2.2F MinY: %2.2F maxAnzeigewert: %2.2F AnzeigeFaktor: %2.2F",FaktorY,MaxY,MinY,maxAnzeigewert, AnzeigeFaktor);
    //NSLog(@"setWerteArray:SortenFaktor: %2.2f",SortenFaktor);
    
@@ -68,9 +81,10 @@
          // NSLog(@"+++         Temperatur  setWerteArray: Kanal: %d   y: %2.2f",i,[[derWerteArray objectAtIndex:i]floatValue]);
          //NSLog(@"+++         Temperatur  setWerteArray: Kanal: %d   x: %2.2f",i,[[derWerteArray objectAtIndex:0]floatValue]);
          NSPoint neuerPunkt=DiagrammEcke;
+         
          neuerPunkt.x+=[[derWerteArray objectAtIndex:0]floatValue]*ZeitKompression;   //   Zeit, x-Wert, erster Wert im Array
          float InputZahl=[[derWerteArray objectAtIndex:i+1]floatValue];   // Input vom HC, 0-255
-         
+         //NSLog(@"setWerteArray neuerPunkt.x: **%@** %f InputZahl: %2.2f",[derWerteArray objectAtIndex:0],neuerPunkt.x,InputZahl);
          switch (i)
          {
             case 2: // Kollektortemperatur 8 Bit
@@ -79,13 +93,13 @@
             case 5:
             {
                //NSLog(@"InputZahl: %2.2f",InputZahl);
-               InputZahl *= 2; // andere Werte sind mit Faktor 2 gespeichert
+              
             }break;
                
          }// switch i   
          
          
-         float graphZahl=(InputZahl-2*MinY)*FaktorY;                        // Red auf reale Diagrammhoehe
+         float graphZahl=(InputZahl-MinY);//*FaktorY;                        // Red auf reale Diagrammhoehe
          
          float rawWert=graphZahl*SortenFaktor;                     // Wert fuer Anzeige des ganzen Bereichs
          
@@ -98,7 +112,7 @@
          
          //NSLog(@"setWerteArray: Kanal: %d InputZahl: %2.2F FaktorY: %2.2f graphZahl: %2.2F rawWert: %2.2F DiagrammWert: %2.2F ",i,InputZahl,FaktorY, graphZahl,rawWert,DiagrammWert);
          
-         NSString* tempWertString=[NSString stringWithFormat:@"%2.1f",InputZahl/2.0];
+         NSString* tempWertString=[NSString stringWithFormat:@"%2.0f",InputZahl];
          //NSLog(@"neuerPunkt.y: %2.2f tempWertString: %@",neuerPunkt.y,tempWertString);
          
          NSArray* tempDatenArray=[NSArray arrayWithObjects:[NSNumber numberWithFloat:neuerPunkt.x],[NSNumber numberWithFloat:neuerPunkt.y],tempWertString,nil];
@@ -126,9 +140,11 @@
    //   [self setNeedsDisplay:YES];
 }
 
+
+
 - (void)setWerteArray:(NSArray*)derWerteArray mitKanalArray:(NSArray*)derKanalArray mitVorgabenDic:(NSDictionary*)dieVorgaben
 {
-   //NSLog(@"setWerteArray WerteArray: %@",[derWerteArray description]);//,[derKanalArray description]);
+   NSLog(@"Stromdiagramm setWerteArray mit Vorgabendic WerteArray: %@",[derWerteArray description]);//,[derKanalArray description]);
    int i;
    float faktorX=1.0;
    if ([dieVorgaben objectForKey:@"faktorx"])
@@ -173,7 +189,7 @@
             //      InputZahl=80;
          }
          
-         float graphZahl=(InputZahl-2*MinY)*FaktorY;                        // Red auf reale Diagrammhoehe
+         float graphZahl=(InputZahl-MinY)*FaktorY;                        // Red auf reale Diagrammhoehe
          
          float rawWert=graphZahl*SortenFaktor;                     // Wert fuer Anzeige des ganzen Bereichs
          

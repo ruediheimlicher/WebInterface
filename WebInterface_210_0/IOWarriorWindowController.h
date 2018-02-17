@@ -79,6 +79,9 @@
    int									lastSolarDataZeit;
 	NSTimer*									SolarDownloadTimer;
 
+   
+   int                           lastStromDataZeit;
+
 }
 
 //- (NSDateComponents*) heute;

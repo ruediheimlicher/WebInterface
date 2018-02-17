@@ -96,4 +96,5 @@
 -(void)setFluidLeistungsfaktor:(float)faktor;
 
 - (NSString*)StromDataVonHeute;
+- (NSString*)LastStromData;
 @end

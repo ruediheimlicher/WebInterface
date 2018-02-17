@@ -10,6 +10,7 @@
             <connections>
                 <outlet property="AnzahlDatenFeld" destination="297" id="299"/>
                 <outlet property="AnzahlSolarDatenFeld" destination="1191" id="1256"/>
+                <outlet property="AnzahlStromDatenFeld" destination="IpR-FC-4dg" id="gv5-1w-rTE"/>
                 <outlet property="BoilermitteFeld" destination="1268" id="1306"/>
                 <outlet property="BoilerobenFeld" destination="1266" id="1304"/>
                 <outlet property="BoileruntenFeld" destination="1270" id="1305"/>
@@ -26,7 +27,7 @@
                 <outlet property="LastSolarDataFeld" destination="1201" id="1214"/>
                 <outlet property="LastSolarDatazeitFeld" destination="1203" id="1215"/>
                 <outlet property="LastStromDataFeld" destination="q6B-KJ-9g6" id="bur-AG-oJ7"/>
-                <outlet property="LastStromDatazeitFeld" destination="Cyr-Jf-8cf" id="GqL-eN-pVy"/>
+                <outlet property="LastStromDatazeitFeld" destination="Cyr-Jf-8cf" id="5Fv-Gx-v5V"/>
                 <outlet property="LaufzeitFeld" destination="319" id="320"/>
                 <outlet property="LoadMark" destination="629" id="631"/>
                 <outlet property="SolarDatenFeld" destination="1200" id="1254"/>
@@ -53,7 +54,11 @@
                 <outlet property="StromDatenFeld" destination="6KD-ML-7ZC" id="igB-zm-Z7B"/>
                 <outlet property="StromDiagrammScroller" destination="Fvu-NG-luz" id="wB2-xN-X4P"/>
                 <outlet property="StromKalender" destination="O3J-zH-7sz" id="nDs-DR-rIB"/>
-                <outlet property="StromWertFeld" destination="yei-Pi-OSd" id="gIR-qv-7GU"/>
+                <outlet property="StromLaufzeitFeld" destination="4LE-tu-wYu" id="ELr-pe-Oun"/>
+                <outlet property="StromLoadMark" destination="uWr-n2-x6h" id="HbZ-Tv-ZUw"/>
+                <outlet property="StromStartzeitFeld" destination="FUm-wh-Caf" id="RMP-uB-cXr"/>
+                <outlet property="StromWertFeld" destination="Itg-V1-8lS" id="TZj-ze-MsY"/>
+                <outlet property="StromZeitKompressionTaste" destination="hMj-WW-9LM" id="obK-dY-Z3b"/>
                 <outlet property="TagPop" destination="83" id="94"/>
                 <outlet property="TemperaturDatenFeld" destination="274" id="281"/>
                 <outlet property="TemperaturDiagrammScroller" destination="300" id="301"/>
@@ -63,12 +68,7 @@
                 <outlet property="ZeitKompressionTaste" destination="83" id="310"/>
                 <outlet property="codeFeld" destination="tXi-cH-doy" id="Vly-dU-R3g"/>
                 <outlet property="hostIPFeld" destination="eWl-HP-chg" id="AKj-Q7-myF"/>
-                <outlet property="stromLaufzeitFeld" destination="4LE-tu-wYu" id="yCU-SF-Abg"/>
-                <outlet property="stromLoadMark" destination="uWr-n2-x6h" id="SiO-oB-SkF"/>
-                <outlet property="stromLoadtimeFeld" destination="Cyr-Jf-8cf" id="Y5S-oe-DS6"/>
-                <outlet property="stromStartzeitFeld" destination="FUm-wh-Caf" id="zGe-h5-1sh"/>
                 <outlet property="stromZaehlerFeld" destination="7vF-ak-DrQ" id="xrU-YM-58c"/>
-                <outlet property="stromZeitKompressionTaste" destination="hMj-WW-9LM" id="amJ-zX-rqr"/>
                 <outlet property="window" destination="5" id="41"/>
             </connections>
         </customObject>
@@ -294,8 +294,8 @@
                                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
                                         </textField>
-                                        <textField verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="YES" id="810">
-                                            <rect key="frame" x="124" y="10" width="63" height="13"/>
+                                        <textField verticalHuggingPriority="750" misplaced="YES" allowsCharacterPickerTouchBarItem="YES" id="810">
+                                            <rect key="frame" x="124" y="10" width="25" height="13"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <textFieldCell key="cell" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="anz:" id="1144">
                                                 <font key="font" metaFont="system" size="10"/>
@@ -685,8 +685,8 @@ AgEAAAAAAAAAVgAAAAAAAAAAAAAAAAAAAlo
                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
                                         </textField>
-                                        <textField verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="YES" id="1205">
-                                            <rect key="frame" x="128" y="31" width="63" height="13"/>
+                                        <textField verticalHuggingPriority="750" misplaced="YES" allowsCharacterPickerTouchBarItem="YES" id="1205">
+                                            <rect key="frame" x="128" y="31" width="25" height="13"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <textFieldCell key="cell" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="anz:" id="1206">
                                                 <font key="font" metaFont="system" size="10"/>
@@ -1252,7 +1252,7 @@ AgEAAAAAAAAAVgAAAAAAAAAAAAAAAAAAAlo
                                             </textFieldCell>
                                         </textField>
                                         <customView focusRingType="exterior" misplaced="YES" id="Fvu-NG-luz" customClass="NSScrollView">
-                                            <rect key="frame" x="43" y="266" width="390" height="320"/>
+                                            <rect key="frame" x="50" y="266" width="383" height="320"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                         </customView>
                                         <textField verticalHuggingPriority="750" misplaced="YES" allowsCharacterPickerTouchBarItem="YES" id="nFF-Wg-gJ3">
@@ -1301,10 +1301,10 @@ AgEAAAAAAAAAVgAAAAAAAAAAAAAAAAAAAlo
                                             </textFieldCell>
                                         </textField>
                                         <textField verticalHuggingPriority="750" misplaced="YES" allowsCharacterPickerTouchBarItem="YES" id="Itg-V1-8lS">
-                                            <rect key="frame" x="500" y="489" width="31" height="12"/>
+                                            <rect key="frame" x="479" y="477" width="52" height="24"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" state="on" id="BER-hY-u7y">
-                                                <font key="font" metaFont="miniSystem"/>
+                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="BER-hY-u7y">
+                                                <font key="font" metaFont="smallSystem"/>
                                                 <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>

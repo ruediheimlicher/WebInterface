@@ -114,7 +114,7 @@ void IOWarriorCallback ()
    NSDictionary *iperrorMessage = nil;
    NSAppleEventDescriptor *ipresult = [IP_appleScript executeAndReturnError:&iperrorMessage];
    NSString *scriptReturn = [ipresult stringValue];
-   NSLog(@"checkIP: %@",scriptReturn);
+//   NSLog(@"checkIP: %@",scriptReturn);
    NSDictionary* IPErr=nil;
    NSNotificationCenter * nc;
    nc=[NSNotificationCenter defaultCenter];
@@ -1877,7 +1877,7 @@ return;
 
 -(void)openWithStromString:(NSString*)derDatenString
 {
-   NSLog(@"openWithStromString DatenString length: %d", [derDatenString length]);
+   //NSLog(@"openWithStromString DatenString length: %d", [derDatenString length]);
    NSArray* rohDatenArray = [NSArray array];
    NSString* TagString = [NSString string];
    int Tag=0;

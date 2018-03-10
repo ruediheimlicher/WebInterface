@@ -3486,7 +3486,7 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
       tempWertString=[NSString stringWithFormat:@"%2.1f",[[lastDatenArray objectAtIndex:6]intValue]/1.0];
       //tempWertString=[NSString stringWithFormat:@"%2.1d",tempTemperatur];
       
-      NSLog(@"lastSolarDatenAktion tempTemperatur: %d tempWertString: %@",tempTemperatur,tempWertString);
+      //NSLog(@"lastSolarDatenAktion tempTemperatur: %d tempWertString: %@",tempTemperatur,tempWertString);
 
       [KollektorTemperaturFeld setStringValue:tempWertString];
 		
@@ -3865,7 +3865,7 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
    if ([[note userInfo]objectForKey:@"startzeit"])
    {
       NSString* datumstring = [[note userInfo]objectForKey:@"startzeit"];
-      NSLog(@"ExterneStromDatenAktion: datumstring: *%@* datumstring: **",[[note userInfo]objectForKey:@"startzeit"]);
+      //NSLog(@"ExterneStromDatenAktion: datumstring: *%@* datumstring: **",[[note userInfo]objectForKey:@"startzeit"]);
       
       NSString* datumteil = [[datumstring componentsSeparatedByString:@" "]objectAtIndex:0];
       NSString* zeitteil = [[datumstring componentsSeparatedByString:@" "]objectAtIndex:1];
@@ -4280,7 +4280,7 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
       //      tempWertString=[NSString stringWithFormat:@"%2.1f",[[lastDatenArray objectAtIndex:6]intValue]/2.0];
       tempWertString=[NSString stringWithFormat:@"%d W",tempLeistung];
       
-      NSLog(@"lastStromDatenAktion Leistung  tempWertString: %@",tempWertString);
+      //NSLog(@"lastStromDatenAktion Leistung  tempWertString: %@",tempWertString);
       [StromWertFeld setStringValue:tempWertString];
 
       

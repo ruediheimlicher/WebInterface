@@ -129,7 +129,10 @@
          }
          else
          {
-            [neuerGraph moveToPoint:[[GraphArray objectAtIndex:i]currentPoint]];//last Point         
+            [neuerGraph moveToPoint:[[GraphArray objectAtIndex:i]currentPoint]];//last Point   
+            NSPoint currPunkt = [[GraphArray objectAtIndex:i]currentPoint];
+            currPunkt.x = neuerPunkt.x;
+             [neuerGraph lineToPoint:currPunkt];
             [neuerGraph lineToPoint:neuerPunkt];
             [[GraphArray objectAtIndex:i]appendBezierPath:neuerGraph];
          }      
@@ -175,6 +178,7 @@
       {
          //NSLog(@"+++         Temperatur  setWerteArray: Kanal: %d   x: %2.2f",i,[[derWerteArray objectAtIndex:0]floatValue]);
          NSPoint neuerPunkt=DiagrammEcke;
+         NSPoint alterPunkt=DiagrammEcke;
          neuerPunkt.x+=[[derWerteArray objectAtIndex:0]floatValue]*ZeitKompression;   //   Zeit, x-Wert, erster Wert im Array
          float InputZahl=[[derWerteArray objectAtIndex:i+1]floatValue];   // Input vom IOW, 0-255
          NSLog(@"InputZahl: %2.2f",InputZahl);
@@ -203,7 +207,7 @@
          //NSLog(@"setWerteArray: Kanal: %d InputZahl: %2.2F FaktorY: %2.2f graphZahl: %2.2F rawWert: %2.2F DiagrammWert: %2.2F ",i,InputZahl,FaktorY, graphZahl,rawWert,DiagrammWert);
          
          NSString* tempWertString=[NSString stringWithFormat:@"%2.1f",InputZahl/2.0];
-         //NSLog(@"neuerPunkt.y: %2.2f tempWertString: %@",neuerPunkt.y,tempWertString);
+         NSLog(@"neuerPunkt.y: %2.2f tempWertString: %@",neuerPunkt.y,tempWertString);
          
          NSArray* tempDatenArray=[NSArray arrayWithObjects:[NSNumber numberWithFloat:neuerPunkt.x],[NSNumber numberWithFloat:neuerPunkt.y],tempWertString,nil];
          NSDictionary* tempWerteDic=[NSDictionary dictionaryWithObjects:tempDatenArray forKeys:[NSArray arrayWithObjects:@"x",@"y",@"wert",nil]];
@@ -219,8 +223,15 @@
          }
          else
          {
-            [neuerGraph moveToPoint:[[GraphArray objectAtIndex:i]currentPoint]];//last Point         
+            alterPunkt = [[GraphArray objectAtIndex:i]currentPoint];
+            NSLog(@"alterPunkt x: %2.2f y: %2.2f ",alterPunkt.x,alterPunkt.y);
+            alterPunkt.x = neuerPunkt.x;
+            neuerPunkt.x=DiagrammEcke.x;
+            [neuerGraph moveToPoint:[[GraphArray objectAtIndex:i]currentPoint]];//last Point 
+            
+            [neuerGraph lineToPoint:alterPunkt];
             [neuerGraph lineToPoint:neuerPunkt];
+            
             [[GraphArray objectAtIndex:i]appendBezierPath:neuerGraph];
          }      
       }// if Kanal
@@ -396,7 +407,6 @@
          [(NSColor*)[GraphFarbeArray objectAtIndex:i]set];
          [[GraphArray objectAtIndex:i]stroke];
          
-         
          NSPoint cP=[[GraphArray objectAtIndex:i]currentPoint];
          NSBezierPath* legendeGraph=[NSBezierPath bezierPath];
          [legendeGraph setLineWidth:0.5];
@@ -410,13 +420,14 @@
          
          [legendeGraph lineToPoint:cP];
          cP.x+=4;
-         [legendeGraph lineToPoint:cP];
+         [legendeGraph lineToPoint:cP]; // waagrechter Teil der Linie
          [legendeGraph stroke];
          
          cP.y-=10;
+         
          [[DatenFeldArray objectAtIndex:i]setFrameOrigin:cP];
          
-         cP.x+=20;
+         cP.x+=10; // Abstand Zahl zur Linie
          [[DatenWertArray objectAtIndex:i]setFrameOrigin:cP];
          [[DatenFeldArray objectAtIndex:i]setStringValue:[NSString stringWithFormat:@"%@:",[DatenTitelArray objectAtIndex:i]]];
          [[DatenWertArray objectAtIndex:i]setStringValue:[NSString stringWithFormat:@"%@",[[[DatenArray objectAtIndex:i]lastObject]objectForKey:@"wert"]]];

@@ -1053,7 +1053,7 @@ unsigned char h2int(char c)
            NSLog(@"TWIStatusAktion Status > 0 TWIStatusURL: %@",TWIStatusURLString);
          
          NSURL *URL = [NSURL URLWithString:TWIStatusURLString];
-			//NSLog(@"TWIStatusAktion URL: %@",URL);
+			NSLog(@"TWIStatusAktion URL: %@",URL);
          downloadflag = 1;
 			[self loadURL:URL];
 			
@@ -1078,14 +1078,15 @@ unsigned char h2int(char c)
            
          }
          int sendResetDelay=1.0;
-			//NSLog(@"EEPROMReadDataAktion  confirmTimerDic: %@",[confirmTimerDic description]);
+			NSLog(@"TWIStatusAktion  confirmTimerDic: %@",[confirmTimerDic description]);
          downloadflag = 1;
-			confirmStatusTimer=[NSTimer scheduledTimerWithTimeInterval:sendResetDelay
+	
+         confirmStatusTimer=[NSTimer scheduledTimerWithTimeInterval:sendResetDelay
                                                               target:self
                                                             selector:@selector(statusTimerFunktion:)
                                                             userInfo:confirmTimerDic
                                                              repeats:YES];
-			
+		
 		}
 		
 	}// if status
@@ -1099,7 +1100,7 @@ unsigned char h2int(char c)
 - (void)statusTimerFunktion:(NSTimer*) derTimer
 {
 	NSMutableDictionary* statusTimerDic=(NSMutableDictionary*) [derTimer userInfo];
-	//NSLog(@"statusTimerFunktion  statusTimerDic: %@",[statusTimerDic description]);
+	NSLog(@"statusTimerFunktion  statusTimerDic: %@",[statusTimerDic description]);
 
 	if ([statusTimerDic objectForKey:@"anzahl"])
 	{		
@@ -2088,7 +2089,7 @@ unsigned char h2int(char c)
 
 - (void)loadURL:(NSURL *)URL
 {
-   //NSLog(@"loadURL: %@",URL);
+   NSLog(@"loadURL: %@",URL);
    if (downloadflag)
    {
       NSMutableURLRequest *HCRequest = [ [NSMutableURLRequest alloc] initWithURL: URL cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:10.0];
@@ -2149,7 +2150,7 @@ unsigned char h2int(char c)
 	NSMutableDictionary* tempDataDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 	
    [tempDataDic setObject:[NSNumber numberWithInt:WebTask] forKey:@"webtask"];
-	//NSLog(@"***       HomeClient Webview didFinishLoadForFrame  ***");
+	NSLog(@"***       HomeClient Webview didFinishLoadForFrame  ***");
 	//NSLog(@"sender: %@",[sender description]);
 	// Only report feedback for the main frame.
 	NSString* HTML_Inhalt=[self dataRepresentationOfType:HTMLDocumentType];
@@ -2523,7 +2524,7 @@ unsigned char h2int(char c)
     if (frame == [sender mainFrame])
 	 {
         NSString *provurl = [[[[frame provisionalDataSource] request] URL] absoluteString];
-		  //NSLog(@"HomeClient didStartProvisionalLoadForFrame: URL: %@",provurl);
+		  NSLog(@"HomeClient didStartProvisionalLoadForFrame: URL: %@",provurl);
        
        // URL: http://ruediheimlicher.dyndns.org/twi?pw=ideur00&rdata=10
        

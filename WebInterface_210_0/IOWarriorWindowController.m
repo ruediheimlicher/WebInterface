@@ -242,7 +242,8 @@ void IOWarriorCallback ()
    [dumpTable setDelegate:Dump_DS];
    [dumpTable setDataSource:Dump_DS];
    dumpCounter=0;
-   [self tableViewSelectionDidChange:nil];
+   NSNotification* note ;
+   [self tableViewSelectionDidChange:note];
    logEntries = [[NSMutableArray alloc] init];
    [logTable setTarget:self];
    [logTable setDoubleAction:@selector(logTableDoubleClicked)];

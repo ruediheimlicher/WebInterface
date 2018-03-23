@@ -1864,16 +1864,20 @@ extern NSMutableArray* DatenplanTabelle;
       NSString* StartzeitString = [[note userInfo]objectForKey:@"startzeit"];
       //NSLog(@"ExterneDatenAktion: Startzeit: *%@* StartzeitString: *%@*",[[note userInfo]objectForKey:@"startzeit"],StartzeitString);
       
-      //	NSString* Kalenderformat=[[NSCalendarDate calendarDate]calendarFormat];
-      //	DatenserieStartZeit=[NSCalendarDate dateWithString:[[note userInfo]objectForKey:@"startzeit"] calendarFormat:Kalenderformat];
-      
-      //int tag=[DatenserieStartZeit dayOfMonth];
-      //DatenserieStartZeit=(NSDate*)[[note userInfo]objectForKey:@"startzeit"] ;
-      
+       
       NSString *formatString = @"yyyy-mm-dd hh:mm:ss";  
+      
+      // Datenseriestartzeit fuer ausgewaehltes Datum anpassen
       NSString* datumstring = [[note userInfo]objectForKey:@"startzeit"];
-      NSString* datumteil = [[datumstring componentsSeparatedByString:@" "]objectAtIndex:0];
-      NSString* zeitteil = [[datumstring componentsSeparatedByString:@" "]objectAtIndex:1];
+      NSMutableArray * startzeitarray = (NSMutableArray *)[datumstring componentsSeparatedByString:@" "];
+      if ([[startzeitarray objectAtIndex:0] length ]== 0)
+      {
+         [startzeitarray removeObjectAtIndex:0];
+      }
+      //NSString* datumteil = [[datumstring componentsSeparatedByString:@" "]objectAtIndex:0];
+      NSString* datumteil = [startzeitarray objectAtIndex:0];
+      //NSString* zeitteil = [[datumstring componentsSeparatedByString:@" "]objectAtIndex:1];
+      NSString* zeitteil = [startzeitarray objectAtIndex:1];
       int jr = [[[datumteil componentsSeparatedByString:@"-"]objectAtIndex:0]intValue];
       int mon = [[[datumteil componentsSeparatedByString:@"-"]objectAtIndex:1]intValue];
       int tg = [[[datumteil componentsSeparatedByString:@"-"]objectAtIndex:2] intValue];
@@ -5509,8 +5513,6 @@ if ([[note userInfo]objectForKey:@"lasttimestring"])
          [tempWerteArray addObject:[NSNumber numberWithFloat:0.0]];
       }
 
-
-      
 		//		if ([[StatistikArray objectAtIndex:i]objectForKey:@"calenderdatum"])
 		{
 			//			[tempWerteArray addObject:[[StatistikArray objectAtIndex:i]objectForKey:@"calenderdatum"]];

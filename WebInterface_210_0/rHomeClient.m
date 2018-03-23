@@ -50,7 +50,7 @@ unsigned char h2int(char c)
 
 - (int)HexStringZuInt:(NSString*) derHexString
 {
-	int returnInt=-1;
+	unsigned int returnInt=-1;
 	NSScanner* theScanner = [NSScanner scannerWithString:derHexString];
 	
 	if ([theScanner scanHexInt:&returnInt])
@@ -68,7 +68,8 @@ unsigned char h2int(char c)
    NSString* ResourcenPfad=[[[NSBundle mainBundle]bundlePath]stringByAppendingPathComponent:@"Contents/Resources"];
    //NSLog(@"ResourcenPfad: %@",ResourcenPfad);
    NSString* PasswortTabellePfad=[[[NSBundle mainBundle]bundlePath]stringByAppendingPathComponent:@"Contents/Resources/Passwort.txt"];
-   NSString* PasswortTabelleString = [NSString stringWithContentsOfFile:PasswortTabellePfad];
+   NSError* err=0;
+   NSString* PasswortTabelleString = [NSString stringWithContentsOfFile:PasswortTabellePfad encoding:NSMacOSRomanStringEncoding error: &err];
    
    //NSLog(@"PasswortString: \n%@",PasswortTabelleString);
    NSArray* PasswortTabelle = [PasswortTabelleString componentsSeparatedByString:@"\n"];

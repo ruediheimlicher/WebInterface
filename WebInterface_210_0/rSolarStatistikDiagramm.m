@@ -209,7 +209,7 @@ return dayOfYear;
    // unterer Wert: Nachtmittel
    
    float nachtmittel=[[derWerteArray objectAtIndex:3]floatValue];	// nachtmitteltemperatur
-
+   
    
    nachtmittel = (nachtmittel-MinY)*FaktorY;								// Red auf reale Diagrammhoehe
    nachtpunkt.y += nachtmittel;
@@ -217,6 +217,9 @@ return dayOfYear;
    
    // oberer Wert: tagmittel
    float tagmittel=[[derWerteArray objectAtIndex:1]floatValue];	// tagmitteltemperatur
+   
+   NSLog(@"tagmittel: %2.2f nachtmittel: %2.2f",tagmittel,nachtmittel);
+   
    //NSLog(@"setWerteArray FaktorY: %2.2f",FaktorY);
    tagmittel = (tagmittel-MinY)*FaktorY;								// Red auf reale Diagrammhoehe
    //float rawWert=nachtmittel;//*SortenFaktor;							// Wert fuer Anzeige des ganzen Bereichs
@@ -364,7 +367,7 @@ return dayOfYear;
 
 		
 	continue;
-		
+		/*
 		// 
 		int Monat;
 		int Jahr;
@@ -391,7 +394,7 @@ return dayOfYear;
 	//		TagDesJahres=[aktDatum dayOfYear];
 	//		NSLog(@"TagDesMonats: %d Monat: %d Jahr: %d TagDesJahres: %d",TagDesMonats, Monat, Jahr,TagDesJahres);
 		}// if datum
-		
+		*/
 		continue;
 		
 		

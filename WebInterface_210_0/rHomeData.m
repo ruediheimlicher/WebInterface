@@ -408,7 +408,7 @@ tempURLString= [tempURLString stringByAppendingString:@".txt"];
 		
 		NSString* DataString=[NSString stringWithContentsOfURL:URL encoding:NSMacOSRomanStringEncoding error:NULL];
 		NSLog(@"DataVon... laden von URL: %@",URL);
-		//NSLog(@"DataVon... laden von URL: %@ DataString: %@",URL,DataString);
+		NSLog(@"DataVon... laden von URL: %@ DataString: %@",URL,DataString);
 		
 		if (DataString)
 		{

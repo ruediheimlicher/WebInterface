@@ -282,7 +282,7 @@
 		
 		if ([[derWerteArray objectAtIndex:i]objectForKey:@"calenderdatum"])
 		{
-			NSCalendarDate* aktDatum=[[derWerteArray objectAtIndex:i]objectForKey:@"calenderdatum"];
+		//	NSCalendarDate* aktDatum=[[derWerteArray objectAtIndex:i]objectForKey:@"calenderdatum"];
 	//		TagDesMonats = [aktDatum dayOfMonth];
 	//		Monat = [aktDatum monthOfYear];
 	//		Jahr = [aktDatum yearOfCommonEra];

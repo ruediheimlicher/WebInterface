@@ -615,7 +615,7 @@ NSMutableDictionary* tempDic=(NSMutableDictionary*)[StundenArray objectAtIndex:d
 		[NotificationDic setObject:[StundenArray valueForKey:@"code"] forKey:@"stundenarray"];
 		[NotificationDic setObject:[self StundenByteArray] forKey:@"stundenbytearray"];
 		
-		NSLog(@"WriteTasteAktion  Standard Notific: %@",[NotificationDic description]);
+//		NSLog(@"WriteTasteAktion  Standard Notific: %@",[NotificationDic description]);
       //NSLog(@"WriteTasteAktion  Standard: %@",[[self StundenByteArray] description]);
 			
 		// Notific an Wochenplan  und von dort an WriteStandardaktion in AVRClient schicken

@@ -521,7 +521,7 @@ unsigned char h2int(char c)
 		{
 			if ([sendTimerDic objectForKey:@"rdata"])
 			{
-				//NSLog(@"sendTimer fire  Anzahl: %d",anz);
+				NSLog(@"sendTimer fire  Anzahl: %d",anz);
 		//		int d=[[sendTimerDic objectForKey:@"rdata"]intValue];
 				int d=[[sendTimerDic objectForKey:@"anzahl"]intValue];
 				NSString* TWIReadDataURLSuffix = [NSString stringWithFormat:@"pw=%@&rdata=%d",pw,d]; 
@@ -2151,11 +2151,11 @@ unsigned char h2int(char c)
 	NSMutableDictionary* tempDataDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 	
    [tempDataDic setObject:[NSNumber numberWithInt:WebTask] forKey:@"webtask"];
-	NSLog(@"***       HomeClient Webview didFinishLoadForFrame  ***");
+	//NSLog(@"***       HomeClient Webview didFinishLoadForFrame  ***");
 	//NSLog(@"sender: %@",[sender description]);
 	// Only report feedback for the main frame.
 	NSString* HTML_Inhalt=[self dataRepresentationOfType:HTMLDocumentType];
-//	NSLog(@"didFinishLoadForFrame Antwort: \nHTML_Inhalt: \t%@\n",HTML_Inhalt);
+	NSLog(@"didFinishLoadForFrame Antwort: \nHTML_Inhalt: \t%@\n",HTML_Inhalt);
 	loadAlertOK=1;
 	NSRange CheckRange;
 	NSString* Code_String= @"okcode=";
@@ -2368,7 +2368,7 @@ unsigned char h2int(char c)
 		{
          // data ist angekommen, sendTimer ausschalten
          
-         //NSLog(@"didFinishLoadForFrame read EEPROM Antwort: \nHTML_Inhalt: \t\t\t\t%@",HTML_Inhalt);
+         NSLog(@"didFinishLoadForFrame read EEPROM Antwort: \nHTML_Inhalt: \t\t\t\t%@",HTML_Inhalt);
 			//NSLog(@"didFinishLoadForFrame: data ist da  loc: %d",CheckRange.location);
 			[tempDataDic setObject:[NSNumber numberWithInt:1] forKey:@"data"];
 			int datastart=0, dataend=0;

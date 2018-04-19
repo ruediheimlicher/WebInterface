@@ -218,7 +218,7 @@ return dayOfYear;
    // oberer Wert: tagmittel
    float tagmittel=[[derWerteArray objectAtIndex:1]floatValue];	// tagmitteltemperatur
    
-   NSLog(@"tagmittel: %2.2f nachtmittel: %2.2f",tagmittel,nachtmittel);
+   //NSLog(@"tagmittel: %2.2f nachtmittel: %2.2f",tagmittel,nachtmittel);
    
    //NSLog(@"setWerteArray FaktorY: %2.2f",FaktorY);
    tagmittel = (tagmittel-MinY)*FaktorY;								// Red auf reale Diagrammhoehe

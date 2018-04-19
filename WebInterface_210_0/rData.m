@@ -1928,9 +1928,10 @@ extern NSMutableArray* DatenplanTabelle;
       dateformat.dateStyle = NSDateFormatterLongStyle;
       dateformat.timeStyle = NSDateFormatterMediumStyle;
       
+     
       NSString *AnzeigeString  = [dateformat stringFromDate:DatenserieStartZeit];
       
-      [StartzeitFeld setStringValue:AnzeigeString];
+     // [StartzeitFeld setStringValue:AnzeigeString];
       
       
       [StartzeitFeld setStringValue:StartZeitString];

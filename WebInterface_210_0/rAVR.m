@@ -870,7 +870,7 @@ void mountVolumeAppleScript (NSString *usr, NSString *pwd, NSString *serv, NSStr
 	
 	
 	
-	//NSLog(@"EEPROMbalken tempByteArray: %@",[tempByteArray description]);
+	NSLog(@"EEPROMbalken tempByteArray: %@",[tempByteArray description]);
 	//	[EEPROMbalken setStundenArrayAusByteArray:tempByteArray];
 	[EEPROMbalken setStundenArrayAusByteArray:tempByteArray];
 	

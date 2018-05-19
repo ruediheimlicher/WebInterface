@@ -1427,7 +1427,7 @@ unsigned char h2int(char c)
    
    NSString* HomeClientURLString =[NSString stringWithFormat:@"%@/twi?%@",HomeCentralURL, WriteDataSuffix];
    
-   NSLog(@"HomeClientWriteStandardAktion HomeClientURLString: %@",HomeClientURLString);
+   //NSLog(@"HomeClientWriteStandardAktion HomeClientURLString: %@",HomeClientURLString);
    
   
    NSData *EEPROM_Data = [WriteDataSuffix dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES];

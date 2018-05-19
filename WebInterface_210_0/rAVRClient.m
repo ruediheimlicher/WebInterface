@@ -2251,7 +2251,8 @@ if (Webserver_busy)
 
 - (void)FinishLoadAktion:(NSNotification*)note
 {
-	//NSLog(@"FinishLoadAktion: %@",[[note userInfo]description]);
+      NSLog(@"\n\nFinishLoadAktion: %@",[[note userInfo]description]);
+
 	//NSString* Status_String= @"status";
 	
 	//NSString* Status0_String= @"status0";

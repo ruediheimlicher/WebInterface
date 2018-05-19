@@ -265,7 +265,7 @@ NSMutableDictionary* tempDic=(NSMutableDictionary*)[StundenArray objectAtIndex:d
 
 - (void)setStundenArray:(NSArray*)derStundenArray forKey:(NSString*)derKey
 {
-	//NSLog(@"setStundenArray StundenArray: %@", [derStundenArray description]);
+	NSLog(@"setStundenArray StundenArray: %@", [derStundenArray description]);
 	
 	int i;
 	for (i=0;i<[derStundenArray count];i++)
